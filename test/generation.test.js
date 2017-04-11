@@ -66,7 +66,7 @@ describe('Generation()', function() {
     });
 
     after(async function() {
-      pj.disconnect();
+      await pj.disconnect();
     });
   });
 
@@ -232,7 +232,7 @@ describe('Generation()', function() {
     });
 
     after(async function() {
-      pj.disconnect();
+      await pj.disconnect();
     });
   });
 });

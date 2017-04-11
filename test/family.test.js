@@ -20,7 +20,7 @@ describe('Family()', function() {
         );
         let result = await sqlite.all('SELECT familyId, familyName FROM families');
         result.should.deepEqual([{'familyId': 1, 'familyName': 'testName'}]);
-        pj.disconnect();
+        await pj.disconnect();
       });
 
       it('should throw `Missing options.familyName` error if no options.familyName is provided', async function() {
@@ -34,7 +34,7 @@ describe('Family()', function() {
           err.message.should.equal('Missing options.familyName');
         }
         catched.should.be.true();
-        pj.disconnect();
+        await pj.disconnect();
       });
     });
 
@@ -125,7 +125,7 @@ describe('Family()', function() {
       });
 
       after(async function() {
-        pj.disconnect();
+        await pj.disconnect();
       })
     });
 });
