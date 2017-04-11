@@ -50,7 +50,7 @@ describe('Generation()', function() {
     it('should throw error if options.phenotypeId is not set and options.generationId does not reference an existing generationId', async function() {
       let catched = false;
       try {
-        await pj.Plant.create({generationId: 42});
+        await pj.Plant.create({generationId: 42, plantName: 'test'});
       } catch(err) {
         catched = true;
         err.message.should.eql('options.generationId does not reference an existing Generation');
