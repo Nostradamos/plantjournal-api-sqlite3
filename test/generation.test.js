@@ -115,6 +115,7 @@ describe('Generation()', function() {
         }
       });
     });
+
     it('should not have an familie property if familyName is not in options.fields', async function() {
       let generations = await pj.Generation.get(
         {
@@ -143,7 +144,7 @@ describe('Generation()', function() {
       });
     });
 
-    it('should only skip x generations specified with options.offset and limit the count of results to option.limit', async function() {
+    it('should skip x generations specified with options.offset and limit the count of results to option.limit', async function() {
       let generations = await pj.Generation.get({'limit':2, 'offset': 1});
 
       generations.should.deepEqual({

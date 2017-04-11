@@ -141,6 +141,126 @@ describe('Generation()', function() {
       );
     });
 
+    it('should not have an empty families property object if not familyName is in options.fields', async function() {
+      let phenotypes = await pj.Phenotype.get(
+        {
+          'fields': ['familyId', 'generationName']
+        }
+      );
+      phenotypes.should.deepEqual({
+        phenotypes: {
+         '1': { phenotypeId: 1, generationId: 1, familyId: 1 },
+         '2': { phenotypeId: 2, generationId: 2, familyId: 1 },
+         '3': { phenotypeId: 3, generationId: 3, familyId: 2 }
+        },
+        generations: {
+          '1': { generationId: 1, familyId: 1, generationName: 'F1' },
+          '2': { generationId: 2, familyId: 1, generationName: 'F2' },
+          '3': { generationId: 3, familyId: 2, generationName: 'S1' }
+         },
+      })
+    });
+
+    it('should not have an empty generations property object if not generationName is in options.fields', async function() {
+      let phenotypes = await pj.Phenotype.get(
+        {
+          'fields': ['familyId']
+        }
+      );
+      phenotypes.should.deepEqual({
+        phenotypes: {
+          '1': { phenotypeId: 1, generationId: 1, familyId: 1 },
+          '2': { phenotypeId: 2, generationId: 2, familyId: 1 },
+          '3': { phenotypeId: 3, generationId: 3, familyId: 2 }
+        }
+      });
+    });
+
+    it('should skip x phenotypes specified with options.offset and limit the count of results to option.limit', async function() {
+      let phenotypes = await pj.Phenotype.get(
+        {
+          'fields': ['phenotypeName'],
+          'limit': 3,
+          'offset': 2
+        }
+      );
+      phenotypes.should.deepEqual({
+        'phenotypes': {
+          '3': {
+            'phenotypeId': 3,
+            'phenotypeName': 'testPhenotype3',
+            'generationId': 3,
+            'familyId': 2
+          }
+        }
+      });
+    });
+
+    it('should only return phenotypes where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for phenotype fields)', async function() {
+      let phenotypes = await pj.Phenotype.get(
+        {
+          'fields': ['phenotypeName'],
+          'where': {
+            'phenotypeId': 2
+          }
+        }
+      );
+      phenotypes.should.deepEqual({
+        'phenotypes': {
+          '2': {
+            'phenotypeId': 2,
+            'phenotypeName': 'testPhenotype2',
+            'generationId': 2,
+            'familyId': 1
+          }
+        }
+      });
+    });
+
+    it('should only return phenotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for phenotype fields)', async function() {
+      let phenotypes = await pj.Phenotype.get({
+        'fields': ['phenotypeName'],
+        'where': {
+          'phenotypeName': 'testPhenotype3'
+        }
+      });
+      phenotypes.should.deepEqual({
+        'phenotypes': {
+          '3': {
+            'phenotypeId': 3,
+            'phenotypeName': 'testPhenotype3',
+            'generationId': 3,
+            'familyId': 2
+          }
+        }
+      });
+    });
+
+    it('should only return phenotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family fields)', async function() {
+      let phenotypes = await pj.Phenotype.get({
+        'fields': ['phenotypeName'],
+        'where': {
+          'familyName': 'testFamily1'
+        }
+      });
+      phenotypes.should.deepEqual({
+        'phenotypes': {
+          '1': {
+            'phenotypeId': 1,
+            'phenotypeName': 'testPhenotype1',
+            'generationId': 1,
+            'familyId': 1
+          },
+          '2': {
+            'phenotypeId': 2,
+            'phenotypeName': 'testPhenotype2',
+            'generationId': 2,
+            'familyId': 1
+          }
+        },
+      });
+    });
+
     after(async function() {
       pj.disconnect();
     });
