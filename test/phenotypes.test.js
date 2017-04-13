@@ -86,7 +86,7 @@ describe('Generation()', function() {
       await pj.Phenotype.create({generationId: 3, phenotypeName: 'testPhenotype3'});
     });
 
-    it('should get phenotypes, referenced generations and referenced families', async function() {
+    it('should get phenotypes, referenced generations and families', async function() {
       let phenotypes = await pj.Phenotype.get();
       phenotypes.should.deepEqual(
         {
@@ -226,6 +226,7 @@ describe('Generation()', function() {
       });
       phenotypes.should.deepEqual({
         'phenotypes': {
+  it('should get plants, referenced phenotypes, generations and families', async function() {
           '3': {
             'phenotypeId': 3,
             'phenotypeName': 'testPhenotype3',

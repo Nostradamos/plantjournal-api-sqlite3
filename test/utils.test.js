@@ -49,5 +49,125 @@ describe('Utils', function() {
       Utils.setLimitAndOffset(q, {'limit': 42});
       q.toString().should.eql('SELECT * FROM test LIMIT 42');
     });
-  })
+  });
+
+  describe('#addFamilyFromRowToReturnObject()', function() {
+    it('should add family object to returnObject.families[familyId]', function() {
+      let row = {'familyId': 42, 'familyName': 'testFam'};
+      let returnObject = {'families': {}};
+      Utils.addFamilyFromRowToReturnObject(row, returnObject, {});
+      returnObject.should.deepEqual(
+        {
+          'families': {
+            '42': {
+              'familyId': 42,
+              'familyName': 'testFam'
+            }
+          }
+        }
+      );
+    });
+
+    it('should not add family object to returnObject.families if row.familyName is not set', function() {
+      let row = {'familyId': 42};
+      let returnObject = {'families': {}};
+      Utils.addFamilyFromRowToReturnObject(row, returnObject, {});
+
+      returnObject.should.deepEqual(
+        {
+          'families': {}
+        }
+      );
+    });
+  });
+
+  describe('#addGenerationFromRowToReturnObject()', function() {
+    it('should add generation object to returnObject.generations[generationId]', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4'};
+      let returnObject = {'families': {}, 'generations': {}};
+      Utils.addGenerationFromRowToReturnObject(row, returnObject, {});
+
+      returnObject.should.deepEqual(
+        {
+          'families': {},
+          'generations': {
+            '13': {
+              'generationId': 13,
+              'generationName': 'F4',
+              'familyId': 42
+            }
+          }
+        }
+      );
+    });
+
+    it('should not add generation object to returnObject.generations[generationId] if row.generationName is not defined', function() {
+      let row = {'familyId': 42, 'generationId': 13};
+      let returnObject = {'families': {}, 'generations': {}};
+      Utils.addGenerationFromRowToReturnObject(row, returnObject, {});
+      returnObject.should.deepEqual({'families': {}, 'generations': {}});
+    });
+  });
+
+  describe('#addPhenotypeFromRowToReturnObject', function() {
+    it('should add phenotype object to returnObject.phenotypes[phenotypeId]', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337, 'phenotypeName': 'testpheno'};
+      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}};
+      Utils.addPhenotypeFromRowToReturnObject(row, returnObject, {});
+
+      returnObject.should.deepEqual(
+        {
+          'families': {},
+          'generations': {},
+          'phenotypes': {
+            '1337': {
+              'phenotypeId': 1337,
+              'phenotypeName': 'testpheno',
+              'generationId': 13,
+              'familyId': 42
+            }
+          }
+        }
+      );
+    });
+
+    it('should not add phenotype object to returnObject.phenotypes[phenotypeId] if row.phenotypeName is not defined', function() {
+        let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337};
+        let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}};
+        Utils.addPhenotypeFromRowToReturnObject(row, returnObject, {});
+        returnObject.should.deepEqual({'families': {}, 'generations': {}, 'phenotypes': {}});
+    });
+  });
+
+  describe('#addPlantFromRowToReturnObject()', function() {
+    it('should add plant object to returnObject.plants[plantId]', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337, 'phenotypeName': 'testpheno', 'plantId': 12, 'plantName': 'testPlant'};
+      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}, 'plants': {}};
+      Utils.addPlantFromRowToReturnObject(row, returnObject, {});
+
+      returnObject.should.deepEqual(
+        {
+          'families': {},
+          'generations': {},
+          'phenotypes': {},
+          'plants': {
+            '12': {
+              'plantId': 12,
+              'plantName': 'testPlant',
+              'phenotypeId': 1337,
+              'generationId': 13,
+              'familyId': 42
+            }
+          }
+        }
+      );
+    });
+
+    it('should not add plant object to returnObject.plants[plantId] if row.plantName is not defined', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337, 'phenotypeName': 'testpheno', 'plantId': 12};
+      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}, 'plants': {}};
+      Utils.addPlantFromRowToReturnObject(row, returnObject, {});
+      returnObject.should.deepEqual({'families': {}, 'generations': {}, 'phenotypes': {}, 'plants': {}});
+    });
+  });
 });

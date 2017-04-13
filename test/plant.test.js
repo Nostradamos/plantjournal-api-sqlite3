@@ -80,8 +80,160 @@ describe('Generation()', function() {
       catched.should.be.true();
     });
 
+    it('should only create a new plant entry if options.phenotypeId is set and return plant object with plant fields + phenotypeId', async function() {
+      let plant = await pj.Plant.create({phenotypeId: 1, plantName: 'testPlant1'});
+      plant.should.deepEqual({
+        'plants': {
+          '1': {
+            'plantId': 1,
+            'plantName': 'testPlant1',
+            'phenotypeId': 1
+          }
+        }
+      });
+      let rowsPlants = await sqlite.all('SELECT plantId, plantName, phenotypeId FROM plants');
+      rowsPlants.should.deepEqual([{'plantId': 1, 'plantName': 'testPlant1', 'phenotypeId': 1}]);
+      let rowsPhenotypes = await sqlite.all('SELECT phenotypeId, phenotypeName, generationId FROM phenotypes');
+      rowsPhenotypes.should.deepEqual([{'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1}]);
+    });
+
+    it('should create a new plant and phenotype entry if options.phenotypeId is not set and return plant object + phenotype object', async function() {
+      let plant = await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
+      plant.should.deepEqual({
+        'phenotypes': {
+          '2': {
+            'phenotypeId': 2,
+            'phenotypeName': null,
+            'generationId': 1
+          }
+        },
+        'plants': {
+          '1': {
+            'plantId': 1,
+            'plantName': 'testPlant1',
+            'phenotypeId': 2
+          }
+        }
+      });
+    });
+
     afterEach(async function() {
       pj.disconnect();
+    });
+  });
+  describe('#get()', function() {
+    let pj;
+
+    before(async function() {
+      pj = new plantJournal(':memory:');
+      await pj.connect();
+      await pj.Family.create({familyName: 'testFamily1'});
+      await pj.Family.create({familyName: 'testFamily2'});
+      await pj.Generation.create({familyId: 1, generationName: 'F1'});
+      await pj.Generation.create({familyId: 1, generationName: 'F2'});
+      await pj.Generation.create({familyId: 2, generationName: 'S1'});
+      await pj.Phenotype.create({generationId: 1, phenotypeName: 'testPhenotype1'});
+      await pj.Phenotype.create({generationId: 2, phenotypeName: 'testPhenotype2'});
+      await pj.Phenotype.create({generationId: 3, phenotypeName: 'testPhenotype3'});
+      await pj.Plant.create({phenotypeId: 1, plantName: 'testPlant1'});
+      await pj.Plant.create({phenotypeId: 2, plantName: 'testPlant2'});
+      await pj.Plant.create({phenotypeId: 3, plantName: 'testPlant3'});
+      await pj.Plant.create({generationId: 3, plantName: 'testPlant4'});
+    });
+
+    it('should get plants, referenced phenotypes, generations and families', async function() {
+      let plants = await pj.Plant.get();
+      plants.should.deepEqual(
+        {
+          'plants': {
+            '1': {
+              'plantId': 1,
+              'plantName': 'testPlant1',
+              'phenotypeId': 1,
+              'generationId': 1,
+              'familyId': 1
+            },
+            '2': {
+              'plantId': 2,
+              'plantName': 'testPlant2',
+              'phenotypeId': 2,
+              'generationId': 2,
+              'familyId': 1
+            },
+            '3': {
+              'plantId': 3,
+              'plantName': 'testPlant3',
+              'phenotypeId': 3,
+              'generationId': 3,
+              'familyId': 2
+            },
+            '4': {
+              'plantId': 4,
+              'plantName': 'testPlant4',
+              'phenotypeId': 4,
+              'generationId': 3,
+              'familyId': 2
+            }
+          },
+          'phenotypes': {
+            '1': {
+              'phenotypeId': 1,
+              'phenotypeName': 'testPhenotype1',
+              'generationId': 1,
+              'familyId': 1
+            },
+            '2': {
+              'phenotypeId': 2,
+              'phenotypeName': 'testPhenotype2',
+              'generationId': 2,
+              'familyId': 1
+            },
+            '3': {
+              'phenotypeId': 3,
+              'phenotypeName': 'testPhenotype3',
+              'generationId': 3,
+              'familyId': 2
+            },
+            '4': {
+              'phenotypeId': 4,
+              'phenotypeName': null,
+              'generationId': 3,
+              'familyId': 2
+            },
+          },
+          'generations': {
+            '1': {
+              'generationId': 1,
+              'generationName': 'F1',
+              'familyId': 1
+            },
+            '2': {
+              'generationId': 2,
+              'generationName': 'F2',
+              'familyId': 1
+            },
+            '3': {
+              'generationId': 3,
+              'generationName': 'S1',
+              'familyId': 2
+            }
+          },
+          'families': {
+            '1': {
+              'familyId': 1,
+              'familyName': 'testFamily1'
+            },
+            '2': {
+              'familyId': 2,
+              'familyName': 'testFamily2'
+            }
+          }
+        }
+      );
+    });
+
+    after(async function() {
+      await pj.disconnect();
     });
   });
 });

@@ -3,10 +3,16 @@ const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
 
 describe('Family()', function() {
+
     describe('#create()', function() {
-      it('should create a new Family and return family object', async function() {
-        let pj = new plantJournal(':memory:');
+      let pj;
+
+      beforeEach(async function() {
+        pj = new plantJournal(':memory:');
         await pj.connect();
+      });
+
+      it('should create a new Family and return family object', async function() {
         let family = await pj.Family.create({familyName: 'testName'});
         family.should.deepEqual(
           {
@@ -18,14 +24,11 @@ describe('Family()', function() {
             }
           }
         );
-        let result = await sqlite.all('SELECT familyId, familyName FROM families');
-        result.should.deepEqual([{'familyId': 1, 'familyName': 'testName'}]);
-        await pj.disconnect();
+        let rows = await sqlite.all('SELECT familyId, familyName FROM families');
+        rows.should.deepEqual([{'familyId': 1, 'familyName': 'testName'}]);
       });
 
       it('should throw `Missing options.familyName` error if no options.familyName is provided', async function() {
-        let pj = new plantJournal(':memory:');
-        await pj.connect();
         let catched = false;
         try {
           await pj.Family.create({});
@@ -34,6 +37,9 @@ describe('Family()', function() {
           err.message.should.equal('Missing options.familyName');
         }
         catched.should.be.true();
+      });
+
+      afterEach(async function() {
         await pj.disconnect();
       });
     });
