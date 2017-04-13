@@ -2,7 +2,7 @@ const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
 
-describe('Generation()', function() {
+describe('Phenotype()', function() {
   describe('#create()', function() {
     let pj;
 
@@ -141,7 +141,7 @@ describe('Generation()', function() {
       );
     });
 
-    it('should not have an empty families property object if not familyName is in options.fields', async function() {
+    it('should not have an empty families property object if familyName is NOT in options.fields', async function() {
       let phenotypes = await pj.Phenotype.get(
         {
           'fields': ['familyId', 'generationName']
