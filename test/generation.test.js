@@ -70,6 +70,40 @@ describe('Generation()', function() {
     });
   });
 
+  describe('#create() (with options.parents)', function() {
+    let pj;
+
+    before(async function() {
+      pj = new plantJournal(':memory:');
+      await pj.connect();
+      await pj.Family.create({familyName: 'testName'});
+      await pj.Generation.create({familyId: 1, generationName: 'F1'});
+      await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
+      await pj.Plant.create({generationId: 1, plantName: 'testPlant2'});
+    });
+
+    it('should also add parents if options.parents is specified', async function() {
+      let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testWithParents', 'generationParents': [1,2]});
+      generation.should.deepEqual({
+        'generations': {
+          '2': {
+            'generationId': 2,
+            'generationName': 'testWithParents',
+            'generationParents': [1,2],
+            'familyId': 1
+          }
+        }
+      });
+      let rows = await sqlite.all('SELECT * FROM parents');
+      rows.should.deepEqual(
+        [
+          {'parentId': 1, 'generationId': 2, 'plantId': 1},
+          {'parentId': 2, 'generationId': 2, 'plantId': 2}
+        ]
+      );
+    });
+  });
+
   describe('#get()', function() {
     let pj;
 
