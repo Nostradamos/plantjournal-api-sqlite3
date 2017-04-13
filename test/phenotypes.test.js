@@ -226,7 +226,6 @@ describe('Generation()', function() {
       });
       phenotypes.should.deepEqual({
         'phenotypes': {
-  it('should get plants, referenced phenotypes, generations and families', async function() {
           '3': {
             'phenotypeId': 3,
             'phenotypeName': 'testPhenotype3',
