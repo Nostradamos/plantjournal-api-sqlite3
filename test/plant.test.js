@@ -232,6 +232,100 @@ describe('Generation()', function() {
       );
     });
 
+    it('should not have an empty families property object if familyName is NOT in options.fields', async function() {
+      let plants = await pj.Plant.get(
+        {
+          'fields': ['familyId', 'generationName', 'phenotypeName']
+        }
+      );
+      plants.should.deepEqual({
+        'phenotypes': {
+         '1': { 'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1, 'familyId': 1 },
+         '2': { 'phenotypeId': 2, 'phenotypeName': 'testPhenotype2', 'generationId': 2, 'familyId': 1 },
+         '3': { 'phenotypeId': 3, 'phenotypeName': 'testPhenotype3', 'generationId': 3, 'familyId': 2 },
+         '4': { 'phenotypeId': 4, 'phenotypeName': null, 'generationId': 3, 'familyId': 2 },
+        },
+        'generations': {
+          '1': { 'generationId': 1, 'familyId': 1, 'generationName': 'F1' },
+          '2': { 'generationId': 2, 'familyId': 1, 'generationName': 'F2' },
+          '3': { 'generationId': 3, 'familyId': 2, 'generationName': 'S1' }
+        },
+        'plants': {
+          '1': { 'plantId': 1, 'phenotypeId': 1, 'generationId': 1, 'familyId': 1 },
+          '2': { 'plantId': 2, 'phenotypeId': 2, 'generationId': 2, 'familyId': 1 },
+          '3': { 'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
+          '4': { 'plantId': 4, 'phenotypeId': 4, 'generationId': 3, 'familyId': 2 }
+        }
+      });
+    });
+
+    it('should not have an empty generations property object if generationName is NOT in options.fields', async function() {
+      let plants = await pj.Plant.get(
+        {
+          'fields': ['familyId', 'phenotypeName']
+        }
+      );
+      plants.should.deepEqual({
+        'phenotypes': {
+         '1': { 'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1, 'familyId': 1 },
+         '2': { 'phenotypeId': 2, 'phenotypeName': 'testPhenotype2', 'generationId': 2, 'familyId': 1 },
+         '3': { 'phenotypeId': 3, 'phenotypeName': 'testPhenotype3', 'generationId': 3, 'familyId': 2 },
+         '4': { 'phenotypeId': 4, 'phenotypeName': null, 'generationId': 3, 'familyId': 2 },
+        },
+        'plants': {
+          '1': { 'plantId': 1, 'phenotypeId': 1, 'generationId': 1, 'familyId': 1 },
+          '2': { 'plantId': 2, 'phenotypeId': 2, 'generationId': 2, 'familyId': 1 },
+          '3': { 'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
+          '4': { 'plantId': 4, 'phenotypeId': 4, 'generationId': 3, 'familyId': 2 }
+        }
+      });
+    });
+
+    it('should not have an empty phenotypes object if phenotyeName is NOT in options.fields', async function() {
+      let plants = await pj.Plant.get(
+        {
+          'fields': ['familyId']
+        }
+      );
+      plants.should.deepEqual({
+        'plants': {
+          '1': { 'plantId': 1, 'phenotypeId': 1, 'generationId': 1, 'familyId': 1 },
+          '2': { 'plantId': 2, 'phenotypeId': 2, 'generationId': 2, 'familyId': 1 },
+          '3': { 'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
+          '4': { 'plantId': 4, 'phenotypeId': 4, 'generationId': 3, 'familyId': 2 }
+        }
+      });
+    });
+
+    it('should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1', async function() {
+      let plants = await pj.Plant.get({'offset': 2, 'limit': 1, 'fields': ['plantName']});
+      plants.should.deepEqual({
+        'plants': {
+          '3': { 'plantId': 3, 'plantName': 'testPlant3', 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
+        }
+      })
+    });
+
+    it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant fields)', async function() {
+      let plants = await pj.Plant.get({'where': {'plantName': 'testPlant3'}, 'fields': ['plantId']});
+      plants.should.deepEqual({
+        'plants': {
+          '3': {'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2}
+        }
+
+      })
+    });
+
+    it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for phenotype fields)', async function() {
+      let plants = await pj.Plant.get({'where': {'phenotypeName': 'testPhenotype3'}, 'fields': ['plantId']});
+      plants.should.deepEqual({
+        'plants': {
+          '3': {'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2}
+        }
+
+      })
+    });
+
     after(async function() {
       await pj.disconnect();
     });
