@@ -84,6 +84,10 @@ describe('Phenotype()', function() {
       await pj.Phenotype.create({generationId: 1, phenotypeName: 'testPhenotype1'});
       await pj.Phenotype.create({generationId: 2, phenotypeName: 'testPhenotype2'});
       await pj.Phenotype.create({generationId: 3, phenotypeName: 'testPhenotype3'});
+      await pj.Plant.create({phenotypeId: 1, plantName: 'testPlant1'});
+      await pj.Plant.create({phenotypeId: 2, plantName: 'testPlant2'});
+      await pj.Generation.create({familyId: 2, generationName: 'generationWithParents', generationParents: [1,2]});
+      await pj.Phenotype.create({generationId: 4, phenotypeName: 'testPhenotype4'});
     });
 
     it('should get phenotypes, referenced generations and families', async function() {
@@ -108,24 +112,39 @@ describe('Phenotype()', function() {
               'phenotypeName': 'testPhenotype3',
               'generationId': 3,
               'familyId': 2
+            },
+            '4': {
+              'phenotypeId': 4,
+              'phenotypeName': 'testPhenotype4',
+              'generationId': 4,
+              'familyId': 2
             }
           },
           'generations': {
             '1': {
               'generationId': 1,
               'generationName': 'F1',
+              'generationParents': [],
               'familyId': 1
             },
             '2': {
               'generationId': 2,
               'generationName': 'F2',
+              'generationParents': [],
               'familyId': 1
             },
             '3': {
               'generationId': 3,
               'generationName': 'S1',
+              'generationParents': [],
               'familyId': 2
-            }
+            },
+            '4': {
+              'generationId': 4,
+              'generationName': 'generationWithParents',
+              'generationParents': [1, 2],
+              'familyId': 2
+            },
           },
           'families': {
             '1': {
@@ -151,12 +170,14 @@ describe('Phenotype()', function() {
         phenotypes: {
          '1': { phenotypeId: 1, generationId: 1, familyId: 1 },
          '2': { phenotypeId: 2, generationId: 2, familyId: 1 },
-         '3': { phenotypeId: 3, generationId: 3, familyId: 2 }
+         '3': { phenotypeId: 3, generationId: 3, familyId: 2 },
+         '4': { phenotypeId: 4, generationId: 4, familyId: 2 },
         },
         generations: {
           '1': { generationId: 1, familyId: 1, generationName: 'F1' },
           '2': { generationId: 2, familyId: 1, generationName: 'F2' },
-          '3': { generationId: 3, familyId: 2, generationName: 'S1' }
+          '3': { generationId: 3, familyId: 2, generationName: 'S1' },
+          '4': { generationId: 4, familyId: 2, generationName: 'generationWithParents' },
          },
       })
     });
@@ -171,7 +192,8 @@ describe('Phenotype()', function() {
         phenotypes: {
           '1': { phenotypeId: 1, generationId: 1, familyId: 1 },
           '2': { phenotypeId: 2, generationId: 2, familyId: 1 },
-          '3': { phenotypeId: 3, generationId: 3, familyId: 2 }
+          '3': { phenotypeId: 3, generationId: 3, familyId: 2 },
+          '4': { phenotypeId: 4, generationId: 4, familyId: 2 }
         }
       });
     });
@@ -190,6 +212,12 @@ describe('Phenotype()', function() {
             'phenotypeId': 3,
             'phenotypeName': 'testPhenotype3',
             'generationId': 3,
+            'familyId': 2
+          },
+          '4': {
+            'phenotypeId': 4,
+            'phenotypeName': 'testPhenotype4',
+            'generationId': 4,
             'familyId': 2
           }
         }
@@ -259,6 +287,30 @@ describe('Phenotype()', function() {
           }
         },
       });
+    });
+
+    it('should only return phenotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
+      let phenotypes = await pj.Phenotype.get({'fields': ['generationParents', 'generationName', 'phenotypeName'], 'where': {'generationParents': [1,2]}});
+      phenotypes.should.deepEqual(
+        {
+          'phenotypes': {
+            '4': {
+              'phenotypeId': 4,
+              'phenotypeName': 'testPhenotype4',
+              'generationId': 4,
+              'familyId': 2
+            }
+          },
+          'generations': {
+            '4': {
+              'generationId': 4,
+              'generationName': 'generationWithParents',
+              'generationParents': [1, 2],
+              'familyId': 2
+            }
+          }
+        }
+      );
     });
 
     after(async function() {
