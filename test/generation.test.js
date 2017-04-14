@@ -116,6 +116,9 @@ describe('Generation()', function() {
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
       await pj.Generation.create({familyId: 1, generationName: 'F2'});
       await pj.Generation.create({familyId: 2, generationName: 'S1'});
+      await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
+      await pj.Plant.create({generationId: 1, plantName: 'testPlant2'});
+      await pj.Generation.create({familyId: 2, generationName: 'S2', generationParents: [1,2]})
     });
 
     it('should get generations and referenced families', async function() {
@@ -125,16 +128,25 @@ describe('Generation()', function() {
           '1': {
             'generationId': 1,
             'generationName': 'F1',
+            'generationParents': [],
             'familyId': 1
           },
           '2': {
             'generationId': 2,
             'generationName': 'F2',
+            'generationParents': [],
             'familyId': 1
           },
           '3': {
             'generationId': 3,
             'generationName': 'S1',
+            'generationParents': [],
+            'familyId': 2
+          },
+          '4': {
+            'generationId': 4,
+            'generationName': 'S2',
+            'generationParents': [1,2],
             'familyId': 2
           }
         },
@@ -163,16 +175,25 @@ describe('Generation()', function() {
           '1': {
             'generationId': 1,
             'generationName': 'F1',
+            'generationParents': [],
             'familyId': 1
           },
           '2': {
             'generationId': 2,
             'generationName': 'F2',
+            'generationParents': [],
             'familyId': 1
           },
           '3': {
             'generationId': 3,
             'generationName': 'S1',
+            'generationParents': [],
+            'familyId': 2
+          },
+          '4': {
+            'generationId': 4,
+            'generationName': 'S2',
+            'generationParents': [1,2],
             'familyId': 2
           }
         }
@@ -187,11 +208,13 @@ describe('Generation()', function() {
           '2': {
             'generationId': 2,
             'generationName': 'F2',
-            'familyId': 1
+            'generationParents': [],
+            'familyId': 1,
           },
           '3': {
             'generationId': 3,
             'generationName': 'S1',
+            'generationParents': [],
             'familyId': 2
           }
         },
@@ -226,11 +249,13 @@ describe('Generation()', function() {
           '1': {
             'generationId': 1,
             'generationName': 'F1',
+            'generationParents': [],
             'familyId': 1
           },
           '2': {
             'generationId': 2,
             'generationName': 'F2',
+            'generationParents': [],
             'familyId': 1
           }
         }
@@ -255,11 +280,13 @@ describe('Generation()', function() {
           '1': {
             'generationId': 1,
             'generationName': 'F1',
+            'generationParents': [],
             'familyId': 1
           },
           '2': {
             'generationId': 2,
             'generationName': 'F2',
+            'generationParents': [],
             'familyId': 1
           }
         }

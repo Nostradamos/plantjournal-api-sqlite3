@@ -98,7 +98,7 @@ describe('Utils', function() {
 
   describe('#addGenerationFromRowToReturnObject()', function() {
     it('should add generation object to returnObject.generations[generationId]', function() {
-      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4'};
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'generationParents': '13,14'};
       let returnObject = {'families': {}, 'generations': {}};
       Utils.addGenerationFromRowToReturnObject(row, returnObject, {});
 
@@ -109,6 +109,7 @@ describe('Utils', function() {
             '13': {
               'generationId': 13,
               'generationName': 'F4',
+              'generationParents': [13,14],
               'familyId': 42
             }
           }
@@ -116,7 +117,7 @@ describe('Utils', function() {
       );
     });
 
-    it('should not add generation object to returnObject.generations[generationId] if row.generationName is not defined', function() {
+    it('should not add generation object to returnObject.generations[generationId] if the only generation* field which is set is row.generationId', function() {
       let row = {'familyId': 42, 'generationId': 13};
       let returnObject = {'families': {}, 'generations': {}};
       Utils.addGenerationFromRowToReturnObject(row, returnObject, {});
@@ -136,6 +137,21 @@ describe('Utils', function() {
               'familyId': 42
             }
           },
+        }
+      );
+    });
+
+    it('should add generation object to returnObject... if row.generationParents is defined and it should split it and cast to integers', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationParents': '27,100'};
+      let returnObject = {'families': {}, 'generations': {}};
+      Utils.addGenerationFromRowToReturnObject(row, returnObject, {});
+      returnObject.generations.should.deepEqual(
+        {
+          '13': {
+            'generationId': 13,
+            'generationParents': [27, 100],
+            'familyId': 42
+          }
         }
       );
     });
@@ -240,6 +256,61 @@ describe('Utils', function() {
           }
         }
       );
+    });
+  });
+
+  describe('#setWhere', function() {
+    let q;
+    beforeEach(function() {
+      q = squel.select().from('test');
+    });
+
+    it('should not do anything if options.where is not an plainObject', function() {
+      Utils.setWhere(q, [], {});
+      q.toString().should.eql('SELECT * FROM test');
+    });
+
+    it('should set WHERE (translated)field = fieldValue if options.where[field] = fieldValue is an integer and correctly translate field to database.databasefield', function() {
+      Utils.setWhere(q, ['familyId'], {where: {'familyId': 42}});
+      q.toString().should.eql(`SELECT * FROM test WHERE ('families'.'familyId' = 42)`);
+    });
+
+    it('should set WHERE (translated)field = "fieldValue" if options.where[field] = fieldValue is a string', function() {
+      Utils.setWhere(q, ['generationName'], {where: {'generationName': 'testGenerationName'}});
+      q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationName' = 'testGenerationName')`);
+    });
+
+    it('should not set WHERE if field is not in allowedFields', function() {
+      Utils.setWhere(q, [], {where: {'generationName': 'testGenerationName', 'generationParents': [1,2]}});
+      q.toString().should.eql('SELECT * FROM test');
+    });
+
+    it('should set WHERE generationId IN (SELECT generations.generationId...WHERE plantId=parentIdA OR plantId=parentIdB...HAVING count(plantId)=2) if options.where.generationParents = [parentIdA, parentIdB] is an array', function() {
+      Utils.setWhere(q, ['generationParents'], {where: {'generationParents': [42,43]}});
+      q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN ((SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE (generation_parents.plantId = 42 OR generation_parents.plantId = 43) GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) = 2))))`);
+    });
+
+  });
+
+  describe('#whichTableForField', function() {
+    it('should return "families" for any field starting with "family"', function() {
+      Utils.whichTableForField('familyId').should.eql('families');
+      Utils.whichTableForField('familyName').should.eql('families');
+    });
+    it('should return "generations" for any field starting with "generation" (except of generationParents)', function() {
+      Utils.whichTableForField('generationId').should.eql('generations');
+      Utils.whichTableForField('generationName').should.eql('generations');
+    });
+    it('should return "generation_parents" if field === "generationParents"', function() {
+      Utils.whichTableForField('generationParents').should.eql('generation_parents');
+    });
+    it('should return "phenotypes" for any field starting with "phenotype"', function() {
+      Utils.whichTableForField('phenotypeId').should.eql('phenotypes');
+      Utils.whichTableForField('phenotypeName').should.eql('phenotypes');
+    });
+    it('should return "plants" for any field starting with "plant"', function() {
+      Utils.whichTableForField('plantId').should.eql('plants');
+      Utils.whichTableForField('plantName').should.eql('plants');
     });
   });
 });
