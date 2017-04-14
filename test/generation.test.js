@@ -19,6 +19,7 @@ describe('Generation()', function() {
           '1': {
             'generationId': 1,
             'generationName': 'testGeneration',
+            'generationParents': [],
             'familyId': 1
           }
         }
@@ -94,7 +95,7 @@ describe('Generation()', function() {
           }
         }
       });
-      let rows = await sqlite.all('SELECT * FROM parents');
+      let rows = await sqlite.all('SELECT * FROM generation_parents');
       rows.should.deepEqual(
         [
           {'parentId': 1, 'generationId': 2, 'plantId': 1},
