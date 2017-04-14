@@ -166,7 +166,7 @@ describe('Generation()', function() {
     it('should not have an familie property if familyName is not in options.fields', async function() {
       let generations = await pj.Generation.get(
         {
-          'fields': ['familyId', 'generationName']
+          'fields': ['familyId', 'generationName', 'generationParents']
         }
       );
 
@@ -288,6 +288,20 @@ describe('Generation()', function() {
             'generationName': 'F2',
             'generationParents': [],
             'familyId': 1
+          }
+        }
+      });
+    });
+
+    it('should only return generations where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
+      let generations = await pj.Generation.get({'fields': ['generationParents', 'generationName'], 'where': {'generationParents': [1,2]}});
+      generations.should.deepEqual({
+        'generations': {
+          '4': {
+            'generationId': 4,
+            'generationName': 'S2',
+            'generationParents': [1,2],
+            'familyId': 2
           }
         }
       });

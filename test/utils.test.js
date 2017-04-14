@@ -292,22 +292,26 @@ describe('Utils', function() {
 
   });
 
-  describe('#whichTableForField', function() {
+  describe('#whichTableForField()', function() {
     it('should return "families" for any field starting with "family"', function() {
       Utils.whichTableForField('familyId').should.eql('families');
       Utils.whichTableForField('familyName').should.eql('families');
     });
+
     it('should return "generations" for any field starting with "generation" (except of generationParents)', function() {
       Utils.whichTableForField('generationId').should.eql('generations');
       Utils.whichTableForField('generationName').should.eql('generations');
     });
+
     it('should return "generation_parents" if field === "generationParents"', function() {
       Utils.whichTableForField('generationParents').should.eql('generation_parents');
     });
+
     it('should return "phenotypes" for any field starting with "phenotype"', function() {
       Utils.whichTableForField('phenotypeId').should.eql('phenotypes');
       Utils.whichTableForField('phenotypeName').should.eql('phenotypes');
     });
+
     it('should return "plants" for any field starting with "plant"', function() {
       Utils.whichTableForField('plantId').should.eql('plants');
       Utils.whichTableForField('plantName').should.eql('plants');
