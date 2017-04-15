@@ -2,7 +2,7 @@ const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
 
-describe('Phenotype()', function() {
+describe('Genotype()', function() {
   describe('#create()', function() {
     let pj;
 
@@ -13,29 +13,29 @@ describe('Phenotype()', function() {
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
     });
 
-    it('should create a new phenotypes entry and return Phenotypes Object', async function() {
-      let phenotype = await pj.Phenotype.create({generationId: 1, phenotypeName: 'testPhenotype1'});
-      phenotype.should.deepEqual({
-        'phenotypes': {
+    it('should create a new genotypes entry and return Genotypes Object', async function() {
+      let genotype = await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
+      genotype.should.deepEqual({
+        'genotypes': {
           '1': {
-            'phenotypeId': 1,
-            'phenotypeName': 'testPhenotype1',
+            'genotypeId': 1,
+            'genotypeName': 'testGenotype1',
             'generationId': 1
           }
         }
       });
 
-      let rows = await sqlite.all('SELECT phenotypeId, phenotypeName, generationId FROM phenotypes');
-      rows.should.deepEqual([{'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1}]);
+      let rows = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
+      rows.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
     });
 
-    it('should be possible to create a new phenotype with options.phenotypeName = null or options.phenotypeName = undefined (or not even set)', async function() {
-      let phenotype = await pj.Phenotype.create({generationId: 1});
-      phenotype.should.deepEqual({
-        'phenotypes': {
+    it('should be possible to create a new genotype with options.genotypeName = null or options.genotypeName = undefined (or not even set)', async function() {
+      let genotype = await pj.Genotype.create({generationId: 1});
+      genotype.should.deepEqual({
+        'genotypes': {
           '1': {
-            'phenotypeId': 1,
-            'phenotypeName': null,
+            'genotypeId': 1,
+            'genotypeName': null,
             'generationId': 1
           }
         }
@@ -45,7 +45,7 @@ describe('Phenotype()', function() {
     it('should throw an error if options.generationId is not set', async function() {
       let catched = false;
       try {
-        await pj.Phenotype.create({});
+        await pj.Genotype.create({});
       } catch (err) {
         catched = true;
         err.message.should.equal('options.generationId is not set');
@@ -57,7 +57,7 @@ describe('Phenotype()', function() {
     it('should throw an error if options.generationId does not reference a generation', async function() {
       let catched = false;
       try {
-        await pj.Phenotype.create({generationId: 1337});
+        await pj.Genotype.create({generationId: 1337});
       } catch (err) {
         catched = true;
         err.message.should.equal('options.generationId does not reference an existing Generation');
@@ -81,41 +81,41 @@ describe('Phenotype()', function() {
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
       await pj.Generation.create({familyId: 1, generationName: 'F2'});
       await pj.Generation.create({familyId: 2, generationName: 'S1'});
-      await pj.Phenotype.create({generationId: 1, phenotypeName: 'testPhenotype1'});
-      await pj.Phenotype.create({generationId: 2, phenotypeName: 'testPhenotype2'});
-      await pj.Phenotype.create({generationId: 3, phenotypeName: 'testPhenotype3'});
-      await pj.Plant.create({phenotypeId: 1, plantName: 'testPlant1'});
-      await pj.Plant.create({phenotypeId: 2, plantName: 'testPlant2'});
+      await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
+      await pj.Genotype.create({generationId: 2, genotypeName: 'testGenotype2'});
+      await pj.Genotype.create({generationId: 3, genotypeName: 'testGenotype3'});
+      await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'});
+      await pj.Plant.create({genotypeId: 2, plantName: 'testPlant2'});
       await pj.Generation.create({familyId: 2, generationName: 'generationWithParents', generationParents: [1,2]});
-      await pj.Phenotype.create({generationId: 4, phenotypeName: 'testPhenotype4'});
+      await pj.Genotype.create({generationId: 4, genotypeName: 'testGenotype4'});
     });
 
-    it('should get phenotypes, referenced generations and families', async function() {
-      let phenotypes = await pj.Phenotype.get();
-      phenotypes.should.deepEqual(
+    it('should get genotypes, referenced generations and families', async function() {
+      let genotypes = await pj.Genotype.get();
+      genotypes.should.deepEqual(
         {
-          'phenotypes': {
+          'genotypes': {
             '1': {
-              'phenotypeId': 1,
-              'phenotypeName': 'testPhenotype1',
+              'genotypeId': 1,
+              'genotypeName': 'testGenotype1',
               'generationId': 1,
               'familyId': 1
             },
             '2': {
-              'phenotypeId': 2,
-              'phenotypeName': 'testPhenotype2',
+              'genotypeId': 2,
+              'genotypeName': 'testGenotype2',
               'generationId': 2,
               'familyId': 1
             },
             '3': {
-              'phenotypeId': 3,
-              'phenotypeName': 'testPhenotype3',
+              'genotypeId': 3,
+              'genotypeName': 'testGenotype3',
               'generationId': 3,
               'familyId': 2
             },
             '4': {
-              'phenotypeId': 4,
-              'phenotypeName': 'testPhenotype4',
+              'genotypeId': 4,
+              'genotypeName': 'testGenotype4',
               'generationId': 4,
               'familyId': 2
             }
@@ -161,17 +161,17 @@ describe('Phenotype()', function() {
     });
 
     it('should not have an empty families property object if familyName is NOT in options.fields', async function() {
-      let phenotypes = await pj.Phenotype.get(
+      let genotypes = await pj.Genotype.get(
         {
           'fields': ['familyId', 'generationName']
         }
       );
-      phenotypes.should.deepEqual({
-        phenotypes: {
-         '1': { phenotypeId: 1, generationId: 1, familyId: 1 },
-         '2': { phenotypeId: 2, generationId: 2, familyId: 1 },
-         '3': { phenotypeId: 3, generationId: 3, familyId: 2 },
-         '4': { phenotypeId: 4, generationId: 4, familyId: 2 },
+      genotypes.should.deepEqual({
+        genotypes: {
+         '1': { genotypeId: 1, generationId: 1, familyId: 1 },
+         '2': { genotypeId: 2, generationId: 2, familyId: 1 },
+         '3': { genotypeId: 3, generationId: 3, familyId: 2 },
+         '4': { genotypeId: 4, generationId: 4, familyId: 2 },
         },
         generations: {
           '1': { generationId: 1, familyId: 1, generationName: 'F1' },
@@ -183,40 +183,40 @@ describe('Phenotype()', function() {
     });
 
     it('should not have an empty generations property object if not generationName is in options.fields', async function() {
-      let phenotypes = await pj.Phenotype.get(
+      let genotypes = await pj.Genotype.get(
         {
           'fields': ['familyId']
         }
       );
-      phenotypes.should.deepEqual({
-        phenotypes: {
-          '1': { phenotypeId: 1, generationId: 1, familyId: 1 },
-          '2': { phenotypeId: 2, generationId: 2, familyId: 1 },
-          '3': { phenotypeId: 3, generationId: 3, familyId: 2 },
-          '4': { phenotypeId: 4, generationId: 4, familyId: 2 }
+      genotypes.should.deepEqual({
+        genotypes: {
+          '1': { genotypeId: 1, generationId: 1, familyId: 1 },
+          '2': { genotypeId: 2, generationId: 2, familyId: 1 },
+          '3': { genotypeId: 3, generationId: 3, familyId: 2 },
+          '4': { genotypeId: 4, generationId: 4, familyId: 2 }
         }
       });
     });
 
-    it('should skip x phenotypes specified with options.offset and limit the count of results to option.limit', async function() {
-      let phenotypes = await pj.Phenotype.get(
+    it('should skip x genotypes specified with options.offset and limit the count of results to option.limit', async function() {
+      let genotypes = await pj.Genotype.get(
         {
-          'fields': ['phenotypeName'],
+          'fields': ['genotypeName'],
           'limit': 3,
           'offset': 2
         }
       );
-      phenotypes.should.deepEqual({
-        'phenotypes': {
+      genotypes.should.deepEqual({
+        'genotypes': {
           '3': {
-            'phenotypeId': 3,
-            'phenotypeName': 'testPhenotype3',
+            'genotypeId': 3,
+            'genotypeName': 'testGenotype3',
             'generationId': 3,
             'familyId': 2
           },
           '4': {
-            'phenotypeId': 4,
-            'phenotypeName': 'testPhenotype4',
+            'genotypeId': 4,
+            'genotypeName': 'testGenotype4',
             'generationId': 4,
             'familyId': 2
           }
@@ -224,20 +224,20 @@ describe('Phenotype()', function() {
       });
     });
 
-    it('should only return phenotypes where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for phenotype fields)', async function() {
-      let phenotypes = await pj.Phenotype.get(
+    it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype fields)', async function() {
+      let genotypes = await pj.Genotype.get(
         {
-          'fields': ['phenotypeName'],
+          'fields': ['genotypeName'],
           'where': {
-            'phenotypeId': 2
+            'genotypeId': 2
           }
         }
       );
-      phenotypes.should.deepEqual({
-        'phenotypes': {
+      genotypes.should.deepEqual({
+        'genotypes': {
           '2': {
-            'phenotypeId': 2,
-            'phenotypeName': 'testPhenotype2',
+            'genotypeId': 2,
+            'genotypeName': 'testGenotype2',
             'generationId': 2,
             'familyId': 1
           }
@@ -245,18 +245,18 @@ describe('Phenotype()', function() {
       });
     });
 
-    it('should only return phenotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for phenotype fields)', async function() {
-      let phenotypes = await pj.Phenotype.get({
-        'fields': ['phenotypeName'],
+    it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
+      let genotypes = await pj.Genotype.get({
+        'fields': ['genotypeName'],
         'where': {
-          'phenotypeName': 'testPhenotype3'
+          'genotypeName': 'testGenotype3'
         }
       });
-      phenotypes.should.deepEqual({
-        'phenotypes': {
+      genotypes.should.deepEqual({
+        'genotypes': {
           '3': {
-            'phenotypeId': 3,
-            'phenotypeName': 'testPhenotype3',
+            'genotypeId': 3,
+            'genotypeName': 'testGenotype3',
             'generationId': 3,
             'familyId': 2
           }
@@ -264,24 +264,24 @@ describe('Phenotype()', function() {
       });
     });
 
-    it('should only return phenotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family fields)', async function() {
-      let phenotypes = await pj.Phenotype.get({
-        'fields': ['phenotypeName'],
+    it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family fields)', async function() {
+      let genotypes = await pj.Genotype.get({
+        'fields': ['genotypeName'],
         'where': {
           'familyName': 'testFamily1'
         }
       });
-      phenotypes.should.deepEqual({
-        'phenotypes': {
+      genotypes.should.deepEqual({
+        'genotypes': {
           '1': {
-            'phenotypeId': 1,
-            'phenotypeName': 'testPhenotype1',
+            'genotypeId': 1,
+            'genotypeName': 'testGenotype1',
             'generationId': 1,
             'familyId': 1
           },
           '2': {
-            'phenotypeId': 2,
-            'phenotypeName': 'testPhenotype2',
+            'genotypeId': 2,
+            'genotypeName': 'testGenotype2',
             'generationId': 2,
             'familyId': 1
           }
@@ -289,14 +289,14 @@ describe('Phenotype()', function() {
       });
     });
 
-    it('should only return phenotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
-      let phenotypes = await pj.Phenotype.get({'fields': ['generationParents', 'generationName', 'phenotypeName'], 'where': {'generationParents': [1,2]}});
-      phenotypes.should.deepEqual(
+    it('should only return genotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
+      let genotypes = await pj.Genotype.get({'fields': ['generationParents', 'generationName', 'genotypeName'], 'where': {'generationParents': [1,2]}});
+      genotypes.should.deepEqual(
         {
-          'phenotypes': {
+          'genotypes': {
             '4': {
-              'phenotypeId': 4,
-              'phenotypeName': 'testPhenotype4',
+              'genotypeId': 4,
+              'genotypeName': 'testGenotype4',
               'generationId': 4,
               'familyId': 2
             }

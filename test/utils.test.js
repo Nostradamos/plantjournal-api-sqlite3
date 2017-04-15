@@ -16,19 +16,19 @@ describe('Utils', function() {
 
   describe('#_setFields()', function() {
     it('should return an array of field aliases where the non field alias is specified in fieldsToSelect and ignore unknown/wrong fields', function() {
-      Utils._setFields({'phenotypeName': 'phenotypes.phenotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, ['familyName', 'test'])
+      Utils._setFields({'genotypeName': 'genotypes.genotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, ['familyName', 'test'])
         .should.eql(['families.familyName']);
     });
     it('should return all field aliases if fieldsToSelect is empty', function() {
-      Utils._setFields({'phenotypeName': 'phenotypes.phenotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, [])
-        .should.eql(['phenotypes.phenotypeName', 'generations.generationName', 'families.familyName']);
+      Utils._setFields({'genotypeName': 'genotypes.genotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, [])
+        .should.eql(['genotypes.genotypeName', 'generations.generationName', 'families.familyName']);
     });
   });
 
   describe('#setFields()', function() {
     it('should set query.fields() with the return value of _setFields()', function() {
       let q = squel.select().from('test');
-      Utils.setFields(q, {'phenotypeName': 'phenotypes.phenotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, ['familyName', 'test']);
+      Utils.setFields(q, {'genotypeName': 'genotypes.genotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, ['familyName', 'test']);
       q.toString().should.equal('SELECT families.familyName FROM test');
     })
   });
@@ -157,20 +157,20 @@ describe('Utils', function() {
     });
   });
 
-  describe('#addPhenotypeFromRowToReturnObject', function() {
-    it('should add phenotype object to returnObject.phenotypes[phenotypeId]', function() {
-      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337, 'phenotypeName': 'testpheno'};
-      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}};
-      Utils.addPhenotypeFromRowToReturnObject(row, returnObject, {});
+  describe('#addGenotypeFromRowToReturnObject', function() {
+    it('should add genotype object to returnObject.genotypes[genotypeId]', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno'};
+      let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}};
+      Utils.addGenotypeFromRowToReturnObject(row, returnObject, {});
 
       returnObject.should.deepEqual(
         {
           'families': {},
           'generations': {},
-          'phenotypes': {
+          'genotypes': {
             '1337': {
-              'phenotypeId': 1337,
-              'phenotypeName': 'testpheno',
+              'genotypeId': 1337,
+              'genotypeName': 'testpheno',
               'generationId': 13,
               'familyId': 42
             }
@@ -179,24 +179,24 @@ describe('Utils', function() {
       );
     });
 
-    it('should not add phenotype object to returnObject.phenotypes[phenotypeId] if row.phenotypeName is not defined', function() {
-        let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337};
-        let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}};
-        Utils.addPhenotypeFromRowToReturnObject(row, returnObject, {});
-        returnObject.should.deepEqual({'families': {}, 'generations': {}, 'phenotypes': {}});
+    it('should not add genotype object to returnObject.genotypes[genotypeId] if row.genotypeName is not defined', function() {
+        let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337};
+        let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}};
+        Utils.addGenotypeFromRowToReturnObject(row, returnObject, {});
+        returnObject.should.deepEqual({'families': {}, 'generations': {}, 'genotypes': {}});
     });
 
-    it('should add phenotype object to returnObject.phenotypes[phenotypeId] if row.phenotypeName is not defined but forceAdd=true', function() {
-      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337};
-      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}};
-      Utils.addPhenotypeFromRowToReturnObject(row, returnObject, {}, true);
+    it('should add genotype object to returnObject.genotypes[genotypeId] if row.genotypeName is not defined but forceAdd=true', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337};
+      let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}};
+      Utils.addGenotypeFromRowToReturnObject(row, returnObject, {}, true);
       returnObject.should.deepEqual(
         {
           'families': {},
           'generations': {},
-          'phenotypes': {
+          'genotypes': {
             '1337': {
-              'phenotypeId': 1337,
+              'genotypeId': 1337,
               'generationId': 13,
               'familyId': 42
             }
@@ -208,20 +208,20 @@ describe('Utils', function() {
 
   describe('#addPlantFromRowToReturnObject()', function() {
     it('should add plant object to returnObject.plants[plantId]', function() {
-      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337, 'phenotypeName': 'testpheno', 'plantId': 12, 'plantName': 'testPlant'};
-      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}, 'plants': {}};
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12, 'plantName': 'testPlant'};
+      let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
       Utils.addPlantFromRowToReturnObject(row, returnObject, {});
 
       returnObject.should.deepEqual(
         {
           'families': {},
           'generations': {},
-          'phenotypes': {},
+          'genotypes': {},
           'plants': {
             '12': {
               'plantId': 12,
               'plantName': 'testPlant',
-              'phenotypeId': 1337,
+              'genotypeId': 1337,
               'generationId': 13,
               'familyId': 42
             }
@@ -231,25 +231,25 @@ describe('Utils', function() {
     });
 
     it('should not add plant object to returnObject.plants[plantId] if row.plantName is not defined', function() {
-      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337, 'phenotypeName': 'testpheno', 'plantId': 12};
-      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}, 'plants': {}};
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12};
+      let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
       Utils.addPlantFromRowToReturnObject(row, returnObject, {});
-      returnObject.should.deepEqual({'families': {}, 'generations': {}, 'phenotypes': {}, 'plants': {}});
+      returnObject.should.deepEqual({'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}});
     });
 
     it('should add plant object to returnObject.plants[plantId] if row.plantName is not defined but forceAdd=true', function() {
-      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'phenotypeId': 1337, 'plantId': 12};
-      let returnObject = {'families': {}, 'generations': {}, 'phenotypes': {}, 'plants': {}};
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'plantId': 12};
+      let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
       Utils.addPlantFromRowToReturnObject(row, returnObject, {}, true);
       returnObject.should.deepEqual(
         {
           'families': {},
           'generations': {},
-          'phenotypes': {},
+          'genotypes': {},
           'plants': {
             '12': {
               'plantId': 12,
-              'phenotypeId': 1337,
+              'genotypeId': 1337,
               'generationId': 13,
               'familyId': 42
             }
@@ -307,9 +307,9 @@ describe('Utils', function() {
       Utils.whichTableForField('generationParents').should.eql('generation_parents');
     });
 
-    it('should return "phenotypes" for any field starting with "phenotype"', function() {
-      Utils.whichTableForField('phenotypeId').should.eql('phenotypes');
-      Utils.whichTableForField('phenotypeName').should.eql('phenotypes');
+    it('should return "genotypes" for any field starting with "genotype"', function() {
+      Utils.whichTableForField('genotypeId').should.eql('genotypes');
+      Utils.whichTableForField('genotypeName').should.eql('genotypes');
     });
 
     it('should return "plants" for any field starting with "plant"', function() {

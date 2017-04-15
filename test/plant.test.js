@@ -11,16 +11,16 @@ describe('Plant()', function() {
       await pj.connect();
       await pj.Family.create({familyName: 'testFamily1'});
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
-      await pj.Phenotype.create({generationId: 1, phenotypeName: 'testPhenotype1'});
+      await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
     });
 
-    it('should throw error if neither options.generationId nor options.phenotypeId is set', async function() {
+    it('should throw error if neither options.generationId nor options.genotypeId is set', async function() {
       let catched = false;
       try {
         await pj.Plant.create({});
       } catch(err) {
         catched = true;
-        err.message.should.eql('Either options.generationId, options.phenotypeId or options.plantClonedFrom has to be set');
+        err.message.should.eql('Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set');
       }
       catched.should.be.true();
     });
@@ -36,18 +36,18 @@ describe('Plant()', function() {
       catched.should.be.true();
     });
 
-    it('should throw error if options.phenotypeId is not an integer', async function() {
+    it('should throw error if options.genotypeId is not an integer', async function() {
       let catched = false;
       try {
-        await pj.Plant.create({phenotypeId: null});
+        await pj.Plant.create({genotypeId: null});
       } catch(err) {
         catched = true;
-        err.message.should.eql('options.phenotypeId has to be an integer');
+        err.message.should.eql('options.genotypeId has to be an integer');
       }
       catched.should.be.true();
     });
 
-    it('should throw error if options.phenotypeId is not set and options.generationId does not reference an existing generationId', async function() {
+    it('should throw error if options.genotypeId is not set and options.generationId does not reference an existing generationId', async function() {
       let catched = false;
       try {
         await pj.Plant.create({generationId: 42, plantName: 'test'});
@@ -61,7 +61,7 @@ describe('Plant()', function() {
     it('should throw error if options.plantName is not set', async function() {
       let catched = false;
       try {
-        await pj.Plant.create({phenotypeId: 2});
+        await pj.Plant.create({genotypeId: 2});
       } catch(err) {
         catched = true;
         err.message.should.eql('options.plantName has to be set');
@@ -69,42 +69,43 @@ describe('Plant()', function() {
       catched.should.be.true();
     });
 
-    it('should throw error if options.phenotypeId does not reference an existing phenotypeId', async function() {
+    it('should throw error if options.genotypeId does not reference an existing genotypeId', async function() {
       let catched = false;
       try {
-        await pj.Plant.create({phenotypeId: 2, plantName: 'test'});
+        await pj.Plant.create({genotypeId: 2, plantName: 'test'});
       } catch(err) {
         catched = true;
-        err.message.should.eql('options.phenotypeId does not reference an existing Phenotype');
+        err.message.should.eql('options.genotypeId does not reference an existing Genotype');
       }
       catched.should.be.true();
     });
 
-    it('should only create a new plant entry if options.phenotypeId is set and return plant object with plant fields + phenotypeId', async function() {
-      let plant = await pj.Plant.create({phenotypeId: 1, plantName: 'testPlant1'});
+    it('should only create a new plant entry if options.genotypeId is set and return plant object with plant fields + genotypeId', async function() {
+      let plant = await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'});
       plant.should.deepEqual({
         'plants': {
           '1': {
             'plantId': 1,
             'plantName': 'testPlant1',
             'plantClonedFrom': null,
-            'phenotypeId': 1
+            'plantSex': null,
+            'genotypeId': 1
           }
         }
       });
-      let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, phenotypeId FROM plants');
-      rowsPlants.should.deepEqual([{'plantId': 1, 'plantName': 'testPlant1', 'plantClonedFrom': null, 'phenotypeId': 1}]);
-      let rowsPhenotypes = await sqlite.all('SELECT phenotypeId, phenotypeName, generationId FROM phenotypes');
-      rowsPhenotypes.should.deepEqual([{'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1}]);
+      let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, genotypeId FROM plants');
+      rowsPlants.should.deepEqual([{'plantId': 1, 'plantName': 'testPlant1', 'plantClonedFrom': null, 'genotypeId': 1}]);
+      let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
+      rowsGenotypes.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
     });
 
-    it('should create a new plant and phenotype entry if options.phenotypeId is not set and return plant object + phenotype object', async function() {
+    it('should create a new plant and genotype entry if options.genotypeId is not set and return plant object + genotype object', async function() {
       let plant = await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
       plant.should.deepEqual({
-        'phenotypes': {
+        'genotypes': {
           '2': {
-            'phenotypeId': 2,
-            'phenotypeName': null,
+            'genotypeId': 2,
+            'genotypeName': null,
             'generationId': 1
           }
         },
@@ -113,14 +114,15 @@ describe('Plant()', function() {
             'plantId': 1,
             'plantName': 'testPlant1',
             'plantClonedFrom': null,
-            'phenotypeId': 2
+            'plantSex': null,
+            'genotypeId': 2
           }
         }
       });
     });
 
-    it('should only create a new plant entry if options.plantClonedFrom is set, and not options.phenotypeId is not set but resolve the phenotypeId from the mother plant', async function() {
-      let plantMother = await pj.Plant.create({phenotypeId: 1, plantName: 'motherPlant1'});
+    it('should only create a new plant entry if options.plantClonedFrom is set, and not options.genotypeId is not set but resolve the genotypeId from the mother plant', async function() {
+      let plantMother = await pj.Plant.create({genotypeId: 1, plantName: 'motherPlant1'});
       let plantClone = await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1});
       plantClone.should.deepEqual({
         'plants': {
@@ -128,19 +130,20 @@ describe('Plant()', function() {
             'plantId': 2,
             'plantName': 'clonePlant2',
             'plantClonedFrom': 1,
-            'phenotypeId': 1
+            'plantSex': null,
+            'genotypeId': 1
           }
         }
       });
-      let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, phenotypeId FROM plants');
+      let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, plantSex, genotypeId FROM plants');
       rowsPlants.should.deepEqual(
         [
-          {'plantId': 1, 'plantName': 'motherPlant1', 'plantClonedFrom': null, 'phenotypeId': 1},
-          {'plantId': 2, 'plantName': 'clonePlant2', 'plantClonedFrom': 1, 'phenotypeId': 1}
+          {'plantId': 1, 'plantName': 'motherPlant1', 'plantClonedFrom': null, 'plantSex': null, 'genotypeId': 1},
+          {'plantId': 2, 'plantName': 'clonePlant2', 'plantClonedFrom': 1, 'plantSex': null, 'genotypeId': 1}
         ]
       );
-      let rowsPhenotypes = await sqlite.all('SELECT phenotypeId, phenotypeName, generationId FROM phenotypes');
-      rowsPhenotypes.should.deepEqual([{'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1}]);
+      let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
+      rowsGenotypes.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
     });
 
     it('should throw error if options.plantClonedFrom does not reference an existing plant', async function() {
@@ -179,18 +182,18 @@ describe('Plant()', function() {
       await pj.Family.create({familyName: 'testFamily2'});
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
       await pj.Generation.create({familyId: 1, generationName: 'F2'});
-      await pj.Phenotype.create({generationId: 1, phenotypeName: 'testPhenotype1'});
-      await pj.Phenotype.create({generationId: 2, phenotypeName: 'testPhenotype2'});
-      await pj.Plant.create({phenotypeId: 1, plantName: 'testPlant1'});
-      await pj.Plant.create({phenotypeId: 2, plantName: 'testPlant2'});
+      await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
+      await pj.Genotype.create({generationId: 2, genotypeName: 'testGenotype2'});
+      await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'});
+      await pj.Plant.create({genotypeId: 2, plantName: 'testPlant2', plantSex: 'male'});
 
       await pj.Generation.create({familyId: 2, generationName: 'S1', generationParents: [1,2]});
-      await pj.Phenotype.create({generationId: 3, phenotypeName: 'testPhenotype3'});
-      await pj.Plant.create({phenotypeId: 3, plantName: 'testPlant3'});
-      await pj.Plant.create({plantName: 'testPlant4', plantClonedFrom: 3});
+      await pj.Genotype.create({generationId: 3, genotypeName: 'testGenotype3'});
+      await pj.Plant.create({genotypeId: 3, plantName: 'testPlant3', plantSex: 'male'});
+      await pj.Plant.create({plantName: 'testPlant4', plantClonedFrom: 3, plantSex: 'female'});
     });
 
-    it('should get plants, referenced phenotypes, generations and families', async function() {
+    it('should get plants, referenced genotypes, generations and families', async function() {
       let plants = await pj.Plant.get();
       plants.should.deepEqual(
         {
@@ -199,7 +202,8 @@ describe('Plant()', function() {
               'plantId': 1,
               'plantName': 'testPlant1',
               'plantClonedFrom': null,
-              'phenotypeId': 1,
+              'plantSex': null,
+              'genotypeId': 1,
               'generationId': 1,
               'familyId': 1
             },
@@ -207,7 +211,8 @@ describe('Plant()', function() {
               'plantId': 2,
               'plantName': 'testPlant2',
               'plantClonedFrom': null,
-              'phenotypeId': 2,
+              'plantSex': 'male',
+              'genotypeId': 2,
               'generationId': 2,
               'familyId': 1
             },
@@ -215,7 +220,8 @@ describe('Plant()', function() {
               'plantId': 3,
               'plantName': 'testPlant3',
               'plantClonedFrom': null,
-              'phenotypeId': 3,
+              'plantSex': 'male',
+              'genotypeId': 3,
               'generationId': 3,
               'familyId': 2
             },
@@ -223,27 +229,28 @@ describe('Plant()', function() {
               'plantId': 4,
               'plantName': 'testPlant4',
               'plantClonedFrom': 3,
-              'phenotypeId': 3,
+              'plantSex': 'female',
+              'genotypeId': 3,
               'generationId': 3,
               'familyId': 2
             }
           },
-          'phenotypes': {
+          'genotypes': {
             '1': {
-              'phenotypeId': 1,
-              'phenotypeName': 'testPhenotype1',
+              'genotypeId': 1,
+              'genotypeName': 'testGenotype1',
               'generationId': 1,
               'familyId': 1
             },
             '2': {
-              'phenotypeId': 2,
-              'phenotypeName': 'testPhenotype2',
+              'genotypeId': 2,
+              'genotypeName': 'testGenotype2',
               'generationId': 2,
               'familyId': 1
             },
             '3': {
-              'phenotypeId': 3,
-              'phenotypeName': 'testPhenotype3',
+              'genotypeId': 3,
+              'genotypeName': 'testGenotype3',
               'generationId': 3,
               'familyId': 2
             }
@@ -285,14 +292,14 @@ describe('Plant()', function() {
     it('should not have an empty families property object if familyName is NOT in options.fields', async function() {
       let plants = await pj.Plant.get(
         {
-          'fields': ['familyId', 'generationName', 'phenotypeName']
+          'fields': ['familyId', 'generationName', 'genotypeName']
         }
       );
       plants.should.deepEqual({
-        'phenotypes': {
-         '1': { 'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1, 'familyId': 1 },
-         '2': { 'phenotypeId': 2, 'phenotypeName': 'testPhenotype2', 'generationId': 2, 'familyId': 1 },
-         '3': { 'phenotypeId': 3, 'phenotypeName': 'testPhenotype3', 'generationId': 3, 'familyId': 2 }
+        'genotypes': {
+         '1': { 'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'familyId': 1 },
+         '2': { 'genotypeId': 2, 'genotypeName': 'testGenotype2', 'generationId': 2, 'familyId': 1 },
+         '3': { 'genotypeId': 3, 'genotypeName': 'testGenotype3', 'generationId': 3, 'familyId': 2 }
         },
         'generations': {
           '1': { 'generationId': 1, 'familyId': 1, 'generationName': 'F1' },
@@ -300,10 +307,10 @@ describe('Plant()', function() {
           '3': { 'generationId': 3, 'familyId': 2, 'generationName': 'S1' }
         },
         'plants': {
-          '1': { 'plantId': 1, 'phenotypeId': 1, 'generationId': 1, 'familyId': 1 },
-          '2': { 'plantId': 2, 'phenotypeId': 2, 'generationId': 2, 'familyId': 1 },
-          '3': { 'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
-          '4': { 'plantId': 4, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 }
+          '1': { 'plantId': 1, 'genotypeId': 1, 'generationId': 1, 'familyId': 1 },
+          '2': { 'plantId': 2, 'genotypeId': 2, 'generationId': 2, 'familyId': 1 },
+          '3': { 'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2 },
+          '4': { 'plantId': 4, 'genotypeId': 3, 'generationId': 3, 'familyId': 2 }
         }
       });
     });
@@ -311,25 +318,25 @@ describe('Plant()', function() {
     it('should not have an empty generations property object if generationName is NOT in options.fields', async function() {
       let plants = await pj.Plant.get(
         {
-          'fields': ['familyId', 'phenotypeName']
+          'fields': ['familyId', 'genotypeName']
         }
       );
       plants.should.deepEqual({
-        'phenotypes': {
-         '1': { 'phenotypeId': 1, 'phenotypeName': 'testPhenotype1', 'generationId': 1, 'familyId': 1 },
-         '2': { 'phenotypeId': 2, 'phenotypeName': 'testPhenotype2', 'generationId': 2, 'familyId': 1 },
-         '3': { 'phenotypeId': 3, 'phenotypeName': 'testPhenotype3', 'generationId': 3, 'familyId': 2 }
+        'genotypes': {
+         '1': { 'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'familyId': 1 },
+         '2': { 'genotypeId': 2, 'genotypeName': 'testGenotype2', 'generationId': 2, 'familyId': 1 },
+         '3': { 'genotypeId': 3, 'genotypeName': 'testGenotype3', 'generationId': 3, 'familyId': 2 }
         },
         'plants': {
-          '1': { 'plantId': 1, 'phenotypeId': 1, 'generationId': 1, 'familyId': 1 },
-          '2': { 'plantId': 2, 'phenotypeId': 2, 'generationId': 2, 'familyId': 1 },
-          '3': { 'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
-          '4': { 'plantId': 4, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 }
+          '1': { 'plantId': 1, 'genotypeId': 1, 'generationId': 1, 'familyId': 1 },
+          '2': { 'plantId': 2, 'genotypeId': 2, 'generationId': 2, 'familyId': 1 },
+          '3': { 'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2 },
+          '4': { 'plantId': 4, 'genotypeId': 3, 'generationId': 3, 'familyId': 2 }
         }
       });
     });
 
-    it('should not have an empty phenotypes object if phenotyeName is NOT in options.fields', async function() {
+    it('should not have an empty genotypes object if phenotyeName is NOT in options.fields', async function() {
       let plants = await pj.Plant.get(
         {
           'fields': ['familyId']
@@ -337,10 +344,10 @@ describe('Plant()', function() {
       );
       plants.should.deepEqual({
         'plants': {
-          '1': { 'plantId': 1, 'phenotypeId': 1, 'generationId': 1, 'familyId': 1 },
-          '2': { 'plantId': 2, 'phenotypeId': 2, 'generationId': 2, 'familyId': 1 },
-          '3': { 'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
-          '4': { 'plantId': 4, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 }
+          '1': { 'plantId': 1, 'genotypeId': 1, 'generationId': 1, 'familyId': 1 },
+          '2': { 'plantId': 2, 'genotypeId': 2, 'generationId': 2, 'familyId': 1 },
+          '3': { 'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2 },
+          '4': { 'plantId': 4, 'genotypeId': 3, 'generationId': 3, 'familyId': 2 }
         }
       });
     });
@@ -349,7 +356,7 @@ describe('Plant()', function() {
       let plants = await pj.Plant.get({'offset': 2, 'limit': 1, 'fields': ['plantName']});
       plants.should.deepEqual({
         'plants': {
-          '3': { 'plantId': 3, 'plantName': 'testPlant3', 'phenotypeId': 3, 'generationId': 3, 'familyId': 2 },
+          '3': { 'plantId': 3, 'plantName': 'testPlant3', 'genotypeId': 3, 'generationId': 3, 'familyId': 2 },
         }
       })
     });
@@ -358,18 +365,18 @@ describe('Plant()', function() {
       let plants = await pj.Plant.get({'where': {'plantName': 'testPlant3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
         'plants': {
-          '3': {'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2}
+          '3': {'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2}
         }
 
       })
     });
 
-    it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for phenotype fields)', async function() {
-      let plants = await pj.Plant.get({'where': {'phenotypeName': 'testPhenotype3'}, 'fields': ['plantId']});
+    it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
+      let plants = await pj.Plant.get({'where': {'genotypeName': 'testGenotype3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
         'plants': {
-          '3': {'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2},
-          '4': {'plantId': 4, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2}
+          '3': {'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2},
+          '4': {'plantId': 4, 'genotypeId': 3, 'generationId': 3, 'familyId': 2}
         }
       });
     });
@@ -381,14 +388,14 @@ describe('Plant()', function() {
           '3': {
             'plantId': 3,
             'plantName': 'testPlant3',
-            'phenotypeId': 3,
+            'genotypeId': 3,
             'generationId': 3,
             'familyId': 2
           },
           '4': {
             'plantId': 4,
             'plantName': 'testPlant4',
-            'phenotypeId': 3,
+            'genotypeId': 3,
             'generationId': 3,
             'familyId': 2
           }
