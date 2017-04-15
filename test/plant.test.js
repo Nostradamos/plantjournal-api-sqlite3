@@ -2,7 +2,7 @@ const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
 
-describe('Generation()', function() {
+describe('Plant()', function() {
   describe('#create()', function() {
     let pj;
 
@@ -131,12 +131,13 @@ describe('Generation()', function() {
       await pj.Family.create({familyName: 'testFamily2'});
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
       await pj.Generation.create({familyId: 1, generationName: 'F2'});
-      await pj.Generation.create({familyId: 2, generationName: 'S1'});
       await pj.Phenotype.create({generationId: 1, phenotypeName: 'testPhenotype1'});
       await pj.Phenotype.create({generationId: 2, phenotypeName: 'testPhenotype2'});
-      await pj.Phenotype.create({generationId: 3, phenotypeName: 'testPhenotype3'});
       await pj.Plant.create({phenotypeId: 1, plantName: 'testPlant1'});
       await pj.Plant.create({phenotypeId: 2, plantName: 'testPlant2'});
+
+      await pj.Generation.create({familyId: 2, generationName: 'S1', generationParents: [1,2]});
+      await pj.Phenotype.create({generationId: 3, phenotypeName: 'testPhenotype3'});
       await pj.Plant.create({phenotypeId: 3, plantName: 'testPlant3'});
       await pj.Plant.create({generationId: 3, plantName: 'testPlant4'});
     });
@@ -205,16 +206,19 @@ describe('Generation()', function() {
             '1': {
               'generationId': 1,
               'generationName': 'F1',
+              'generationParents': [],
               'familyId': 1
             },
             '2': {
               'generationId': 2,
               'generationName': 'F2',
+              'generationParents': [],
               'familyId': 1
             },
             '3': {
               'generationId': 3,
               'generationName': 'S1',
+              'generationParents': [1, 2],
               'familyId': 2
             }
           },
@@ -322,8 +326,38 @@ describe('Generation()', function() {
         'plants': {
           '3': {'plantId': 3, 'phenotypeId': 3, 'generationId': 3, 'familyId': 2}
         }
+      });
+    });
 
+    it('should only return plants where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
+      let plants = await pj.Plant.get({'where': {'generationParents': [1,2]}, 'fields': ['plantId', 'plantName', 'generationParents', 'generationName']});
+      plants.should.deepEqual({
+        'plants': {
+          '3': {
+            'plantId': 3,
+            'plantName': 'testPlant3',
+            'phenotypeId': 3,
+            'generationId': 3,
+            'familyId': 2
+          },
+          '4': {
+            'plantId': 4,
+            'plantName': 'testPlant4',
+            'phenotypeId': 4,
+            'generationId': 3,
+            'familyId': 2
+          }
+        },
+        'generations': {
+          '3': {
+            'generationId': 3,
+            'generationName': 'S1',
+            'generationParents': [1, 2],
+            'familyId': 2
+          }
+        }
       })
+
     });
 
     after(async function() {

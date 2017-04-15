@@ -300,7 +300,7 @@ describe('Generation()', function() {
           '4': {
             'generationId': 4,
             'generationName': 'S2',
-            'generationParents': [1,2],
+            'generationParents': [1, 2],
             'familyId': 2
           }
         }
