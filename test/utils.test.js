@@ -1,6 +1,7 @@
 const should = require('should');
 const Utils = require('../lib/utils');
 const squel = require('squel');
+const Constants = require('../lib/constants');
 
 describe('Utils', function() {
   describe('#deleteEmptyProperties()', function() {
@@ -315,6 +316,43 @@ describe('Utils', function() {
     it('should return "plants" for any field starting with "plant"', function() {
       Utils.whichTableForField('plantId').should.eql('plants');
       Utils.whichTableForField('plantName').should.eql('plants');
+    });
+
+    it('should throw error if can\'t resolve table', function() {
+      let table;
+      let catched = false;
+      try {
+        table = Utils.whichTableForField('blubbField');
+      } catch (err) {
+        catched = true;
+        err.message.should.eql('cannot associate field with a table');
+      }
+      catched.should.be.true();
+    });
+  });
+
+  describe('#leftJoinFamilies()', function() {
+    it('should join `families` on familyId', function() {
+      let q = squel.select().from(Constants.tableGenerations, 'generations');
+      Utils.leftJoinFamilies(q);
+      q.toString().should.eql('SELECT * FROM ' + Constants.tableGenerations +' `generations` LEFT JOIN ' + Constants.tableFamilies + ' `families` ON (generations.familyId = families.familyId)');
+    });
+  });
+
+  describe('#leftJoinGenerations()', function() {
+    it('should join `generations` and `generation_parents` on generationId', function() {
+      let q = squel.select().from(Constants.tableGenotypes, 'genotypes');
+      Utils.leftJoinGenerations(q);
+      q.toString().should.eql('SELECT * FROM ' + Constants.tableGenotypes +' `genotypes` LEFT JOIN ' + Constants.tableGenerations + ' `generations` ON (genotypes.generationId = generations.generationId) LEFT JOIN ' + Constants.tableGenerationParents +' `generation_parents` ON (generations.generationId = generation_parents.generationId)');
+    });
+  });
+
+  describe('#leftJoinGenotypes()', function () {
+    it('should join `genotypes`', function() {
+      let q = squel.select().from(Constants.tablePlants, 'plants');
+      Utils.leftJoinGenotypes(q);
+      q.toString().should.eql('SELECT * FROM ' + Constants.tablePlants +' `plants` LEFT JOIN ' + Constants.tableGenotypes + ' `genotypes` ON (plants.genotypeId = genotypes.genotypeId)');
+
     });
   });
 });
