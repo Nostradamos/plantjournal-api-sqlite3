@@ -156,6 +156,21 @@ describe('Utils', function() {
         }
       );
     });
+
+    it('should set returnObject.generationParents = [] if row.generationParents = null', function() {
+      let row = {'familyId': 42, 'generationId': 13, 'generationParents': null};
+      let returnObject = {'families': {}, 'generations': {}};
+      Utils.addGenerationFromRowToReturnObject(row, returnObject, {});
+      returnObject.generations.should.deepEqual(
+        {
+          '13': {
+            'generationId': 13,
+            'generationParents': [],
+            'familyId': 42
+          }
+        }
+      );
+    });
   });
 
   describe('#addGenotypeFromRowToReturnObject', function() {
@@ -209,7 +224,7 @@ describe('Utils', function() {
 
   describe('#addPlantFromRowToReturnObject()', function() {
     it('should add plant object to returnObject.plants[plantId]', function() {
-      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12, 'plantName': 'testPlant'};
+      let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12, 'plantName': 'testPlant', 'plantClonedFrom': null, 'plantSex': 'male'};
       let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
       Utils.addPlantFromRowToReturnObject(row, returnObject, {});
 
@@ -222,6 +237,8 @@ describe('Utils', function() {
             '12': {
               'plantId': 12,
               'plantName': 'testPlant',
+              'plantClonedFrom': null,
+              'plantSex': 'male',
               'genotypeId': 1337,
               'generationId': 13,
               'familyId': 42
@@ -231,7 +248,7 @@ describe('Utils', function() {
       );
     });
 
-    it('should not add plant object to returnObject.plants[plantId] if row.plantName is not defined', function() {
+    it('should not add plant object to returnObject.plants[plantId] if only id fields (plantId, generationId...) are defined (and forceAdd=false)', function() {
       let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12};
       let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
       Utils.addPlantFromRowToReturnObject(row, returnObject, {});
@@ -260,7 +277,7 @@ describe('Utils', function() {
     });
   });
 
-  describe('#setWhere', function() {
+  describe('#setWhere()', function() {
     let q;
     beforeEach(function() {
       q = squel.select().from('test');
@@ -291,6 +308,15 @@ describe('Utils', function() {
       q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN ((SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE (generation_parents.plantId = 42 OR generation_parents.plantId = 43) GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) = 2))))`);
     });
 
+    it('should do nothing if options.where key is valid but value is something we don\'t know how to handle (for field !== generationParents)', function() {
+      Utils.setWhere(q, ['generationName'], {where: {'generationName': function(){}}});
+      q.toString().should.eql(`SELECT * FROM test`);
+    });
+
+    it('should do nothing if options.where key is valid but value is something we don\'t know how to handle (for field === generationParents)', function() {
+      Utils.setWhere(q, ['generationParents'], {where: {'generationParents': function(){}}});
+      q.toString().should.eql(`SELECT * FROM test`);
+    });
   });
 
   describe('#whichTableForField()', function() {

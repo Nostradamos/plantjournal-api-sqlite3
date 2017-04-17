@@ -1,6 +1,7 @@
 const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
+const _ = require('lodash');
 
 describe('Family()', function() {
 
@@ -28,13 +29,42 @@ describe('Family()', function() {
         rows.should.deepEqual([{'familyId': 1, 'familyName': 'testName'}]);
       });
 
-      it('should throw `Missing options.familyName` error if no options.familyName is provided', async function() {
+      it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async function() {
+        let tested = 0;
+        _.each([[1,2], null, 'string', 1, true, undefined, {}], async function(value) {
+          console.log('test', value, tested);
+          let catched = false;
+          try {
+            await pj.Family.create(value);
+          } catch (err) {
+            catched = true;
+            console.log('test2', err.message);
+            should(err.message).eql('First argument has to be an associative array');
+          }
+          catched.should.be.true();
+          tested += 1;
+        });
+        tested.should.eql(7);
+      })
+
+      it('should throw `options.familyName has to be set` error if no options.familyName is provided', async function() {
         let catched = false;
         try {
           await pj.Family.create({});
         } catch (err) {
           catched = true;
-          err.message.should.equal('Missing options.familyName');
+          err.message.should.equal('options.familyName has to be set');
+        }
+        catched.should.be.true();
+      });
+
+      it('should throw error if options.familyName is not a string', async function() {
+        let catched = false;
+        try {
+          await pj.Family.create({'familyName': 1});
+        } catch (err) {
+          catched = true;
+          err.message.should.equal('options.familyName has to be a string');
         }
         catched.should.be.true();
       });

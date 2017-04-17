@@ -29,6 +29,10 @@ describe('Generation()', function() {
       result.should.deepEqual([{'familyId': 1, 'generationId': 1, 'generationName': 'testGeneration'}]);
     });
 
+    it('should throw error if options is not set or not an associative array', async function() {
+
+    });
+
     it('should throw Error if options.familyId is not set', async function() {
       let catched = false;
 
