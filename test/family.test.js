@@ -31,20 +31,18 @@ describe('Family()', function() {
 
       it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async function() {
         let tested = 0;
-        _.each([[1,2], null, 'string', 1, true, undefined, {}], async function(value) {
-          console.log('test', value, tested);
+        await _.each([[1,2], null, 'string', 1, true, undefined], async function(value) {
           let catched = false;
           try {
             await pj.Family.create(value);
           } catch (err) {
             catched = true;
-            console.log('test2', err.message);
             should(err.message).eql('First argument has to be an associative array');
           }
           catched.should.be.true();
-          tested += 1;
+          tested = tested + 1;
         });
-        tested.should.eql(7);
+        tested.should.eql(6);
       })
 
       it('should throw `options.familyName has to be set` error if no options.familyName is provided', async function() {
