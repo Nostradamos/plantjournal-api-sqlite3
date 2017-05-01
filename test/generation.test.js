@@ -1,6 +1,7 @@
 const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
+const _ = require('lodash');
 
 describe('Generation()', function() {
   describe('#create()', function() {
@@ -30,7 +31,19 @@ describe('Generation()', function() {
     });
 
     it('should throw error if options is not set or not an associative array', async function() {
-
+      let tested = 0;
+      await _.each([[1,2], null, 'string', 1, true, undefined], async function(value) {
+        let catched = false;
+        try {
+          await pj.Generation.create(value);
+        } catch (err) {
+          catched = true;
+          should(err.message).eql('First argument has to be an associative array');
+        }
+        catched.should.be.true();
+        tested = tested + 1;
+      });
+      tested.should.eql(6);
     });
 
     it('should throw Error if options.familyId is not set', async function() {
@@ -45,6 +58,19 @@ describe('Generation()', function() {
       catched.should.be.true();
     });
 
+    it('should throw error if options.familyId is not an integer', async function() {
+      let catched = false;
+
+      try {
+        await pj.Generation.create({'generationName': 'testGeneration2', 'familyId': '1'});
+      } catch(err) {
+        catched = true;
+        err.message.should.equal('options.familyId has to be an integer');
+      }
+      catched.should.be.true();
+
+    });
+
     it('should throw Error if options.generationName is not set', async function() {
       let catched = false;
 
@@ -55,6 +81,31 @@ describe('Generation()', function() {
         err.message.should.equal('options.generationName is not set');
       }
       catched.should.be.true();
+    });
+
+    it('should throw error if options.generationName is not a string', async function() {
+      let catched = false;
+
+      try {
+        await pj.Generation.create({'familyId': 1, 'generationName': 1});
+      } catch(err) {
+        catched = true;
+        err.message.should.equal('options.generationName has to be a string');
+      }
+      catched.should.be.true();
+    });
+
+    it('should throw error if generationParents is set but not an array', async function() {
+      let catched = false;
+
+      try {
+        await pj.Generation.create({'familyId': 1, 'generationName': 'test', 'generationParents': {}});
+      } catch(err) {
+        catched = true;
+        err.message.should.equal('options.generationParents has to be an array');
+      }
+      catched.should.be.true();
+
     });
 
     it('should throw Error if familyId does not reference an entry in families', async function() {
