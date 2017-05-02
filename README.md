@@ -7,8 +7,8 @@ plantJournal
 ToDo
 =====
 
-* Complete code coverage
 * Complete setWhere()
+* add count/skip stuff to get
 * Add description fields
 * Add sorting for get
 * Add update
