@@ -31,40 +31,22 @@ describe('Family()', function() {
 
       it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async function() {
         let tested = 0;
-        await _.each([[1,2], null, 'string', 1, true, undefined], async function(value) {
-          let catched = false;
-          try {
-            await pj.Family.create(value);
-          } catch (err) {
-            catched = true;
-            should(err.message).eql('First argument has to be an associative array');
-          }
-          catched.should.be.true();
-          tested = tested + 1;
-        });
+        for(value in [[1,2], null, 'string', 1, true, undefined]) {
+          await pj.Family.create(value)
+            .should.be.rejectedWith('First argument has to be an associative array');
+          tested++;
+        }
         tested.should.eql(6);
-      })
+      });
 
       it('should throw `options.familyName has to be set` error if no options.familyName is provided', async function() {
-        let catched = false;
-        try {
-          await pj.Family.create({});
-        } catch (err) {
-          catched = true;
-          err.message.should.equal('options.familyName has to be set');
-        }
-        catched.should.be.true();
+        await pj.Family.create({})
+          .should.be.rejectedWith('options.familyName has to be set');
       });
 
       it('should throw error if options.familyName is not a string', async function() {
-        let catched = false;
-        try {
-          await pj.Family.create({'familyName': 1});
-        } catch (err) {
-          catched = true;
-          err.message.should.equal('options.familyName has to be a string');
-        }
-        catched.should.be.true();
+        await pj.Family.create({'familyName': 1})
+          .should.be.rejectedWith('options.familyName has to be a string');
       });
 
       afterEach(async function() {

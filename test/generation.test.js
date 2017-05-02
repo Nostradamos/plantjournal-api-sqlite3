@@ -32,91 +32,42 @@ describe('Generation()', function() {
 
     it('should throw error if options is not set or not an associative array', async function() {
       let tested = 0;
-      await _.each([[1,2], null, 'string', 1, true, undefined], async function(value) {
-        let catched = false;
-        try {
-          await pj.Generation.create(value);
-        } catch (err) {
-          catched = true;
-          should(err.message).eql('First argument has to be an associative array');
-        }
-        catched.should.be.true();
-        tested = tested + 1;
-      });
+      for(value in [[1,2], null, 'string', 1, true, undefined]) {
+        await pj.Generation.create(value)
+          .should.be.rejectedWith('First argument has to be an associative array');
+        tested++;
+      }
       tested.should.eql(6);
     });
 
     it('should throw Error if options.familyId is not set', async function() {
-      let catched = false;
-
-      try {
-        await pj.Generation.create({'generationName': 'testGeneration2'});
-      } catch(err) {
-        catched = true;
-        err.message.should.equal('options.familyId is not set');
-      }
-      catched.should.be.true();
+      await pj.Generation.create({'generationName': 'testGeneration2'})
+        .should.be.rejectedWith('options.familyId is not set');
     });
 
     it('should throw error if options.familyId is not an integer', async function() {
-      let catched = false;
-
-      try {
-        await pj.Generation.create({'generationName': 'testGeneration2', 'familyId': '1'});
-      } catch(err) {
-        catched = true;
-        err.message.should.equal('options.familyId has to be an integer');
-      }
-      catched.should.be.true();
-
+      await pj.Generation.create({'generationName': 'testGeneration2', 'familyId': '1'})
+        .should.be.rejectedWith('options.familyId has to be an integer');
     });
 
     it('should throw Error if options.generationName is not set', async function() {
-      let catched = false;
-
-      try {
-        await pj.Generation.create({'familyId': 1});
-      } catch(err) {
-        catched = true;
-        err.message.should.equal('options.generationName is not set');
-      }
-      catched.should.be.true();
+      await pj.Generation.create({'familyId': 1})
+        .should.be.rejectedWith('options.generationName is not set');
     });
 
     it('should throw error if options.generationName is not a string', async function() {
-      let catched = false;
-
-      try {
-        await pj.Generation.create({'familyId': 1, 'generationName': 1});
-      } catch(err) {
-        catched = true;
-        err.message.should.equal('options.generationName has to be a string');
-      }
-      catched.should.be.true();
+      await pj.Generation.create({'familyId': 1, 'generationName': 1})
+        .should.be.rejectedWith('options.generationName has to be a string');
     });
 
     it('should throw error if generationParents is set but not an array', async function() {
-      let catched = false;
-
-      try {
-        await pj.Generation.create({'familyId': 1, 'generationName': 'test', 'generationParents': {}});
-      } catch(err) {
-        catched = true;
-        err.message.should.equal('options.generationParents has to be an array');
-      }
-      catched.should.be.true();
-
+      await pj.Generation.create({'familyId': 1, 'generationName': 'test', 'generationParents': {}})
+        .should.be.rejectedWith('options.generationParents has to be an array');
     });
 
     it('should throw Error if familyId does not reference an entry in families', async function() {
-      let catched = false;
-      try {
-        await pj.Generation.create({'familyId': 1337, 'generationName': 'testGeneration3'});
-      } catch(err) {
-        catched = true;
-        err.message.should.equal('options.familyId does not reference an existing Family');
-      }
-      catched.should.be.true();
+      await pj.Generation.create({'familyId': 1337, 'generationName': 'testGeneration3'})
+        .should.be.rejectedWith('options.familyId does not reference an existing Family');
       let result = await sqlite.all('SELECT familyId, generationId, generationName FROM generations WHERE generationName = "testGeneration3"');
       result.should.deepEqual([]);
     });
