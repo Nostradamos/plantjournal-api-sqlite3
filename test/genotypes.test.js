@@ -1,6 +1,7 @@
 const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
+const _ = require('lodash');
 
 describe('Genotype()', function() {
   describe('#create()', function() {
@@ -42,6 +43,22 @@ describe('Genotype()', function() {
       });
     });
 
+    it('should throw error if options is not set or not an associative array', async function() {
+      let tested = 0;
+      await _.each([[1,2], null, 'string', 1, true, undefined], async function(value) {
+        let catched = false;
+        try {
+          await pj.Genotype.create(value);
+        } catch (err) {
+          catched = true;
+          should(err.message).eql('First argument has to be an associative array');
+        }
+        catched.should.be.true();
+        tested = tested + 1;
+      });
+      tested.should.eql(6);
+    });
+
     it('should throw an error if options.generationId is not set', async function() {
       let catched = false;
       try {
@@ -51,7 +68,17 @@ describe('Genotype()', function() {
         err.message.should.equal('options.generationId is not set');
       }
       catched.should.be.true();
+    });
 
+    it('should throw error if options.generationId is not an integer', async function() {
+      let catched = false;
+      try {
+        await pj.Genotype.create({generationId: "1"});
+      } catch (err) {
+        catched = true;
+        err.message.should.equal('options.generationId has to be an integer');
+      }
+      catched.should.be.true();
     });
 
     it('should throw an error if options.generationId does not reference a generation', async function() {
@@ -61,6 +88,17 @@ describe('Genotype()', function() {
       } catch (err) {
         catched = true;
         err.message.should.equal('options.generationId does not reference an existing Generation');
+      }
+      catched.should.be.true();
+    });
+
+    it('should throw error if options.genotypeName is not a string', async function() {
+      let catched = false;
+      try {
+        await pj.Genotype.create({generationId: 1, genotypeName: 1});
+      } catch (err) {
+        catched = true;
+        err.message.should.equal('options.genotypeName has to be a string');
       }
       catched.should.be.true();
     });

@@ -1,6 +1,7 @@
 const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
+const _ = require('lodash');
 
 describe('Plant()', function() {
   describe('#create()', function() {
@@ -13,6 +14,23 @@ describe('Plant()', function() {
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
       await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
     });
+
+    it('should throw error if options is not set or not an associative array', async function() {
+      let tested = 0;
+      await _.each([[1,2], null, 'string', 1, true, undefined], async function(value) {
+        let catched = false;
+        try {
+          await pj.Plant.create(value);
+        } catch (err) {
+          catched = true;
+          should(err.message).eql('First argument has to be an associative array');
+        }
+        catched.should.be.true();
+        tested = tested + 1;
+      });
+      tested.should.eql(6);
+    });
+
 
     it('should throw error if neither options.generationId nor options.genotypeId is set', async function() {
       let catched = false;
@@ -65,6 +83,28 @@ describe('Plant()', function() {
       } catch(err) {
         catched = true;
         err.message.should.eql('options.plantName has to be set');
+      }
+      catched.should.be.true();
+    });
+
+    it('should throw error if options.plantName is not a string', async function() {
+      let catched = false;
+      try {
+        await pj.Plant.create({genotypeId: 2, plantName: 1});
+      } catch(err) {
+        catched = true;
+        err.message.should.eql('options.plantName has to be a string');
+      }
+      catched.should.be.true();
+    });
+
+    it('should throw error if options.plantSex is not a valid sex', async function() {
+      let catched = false;
+      try {
+        await pj.Plant.create({genotypeId: 2, plantName: 'test', plantSex: 'notavalidsex'});
+      } catch(err) {
+        catched = true;
+        err.message.should.eql('options.plantSex has to be null, male, female or hermaphrodite');
       }
       catched.should.be.true();
     });
