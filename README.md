@@ -13,6 +13,6 @@ ToDo
 * Add sorting for get
 * Add update
 * Add delete
-* Add environment
 * Add medium
+* Add environment
 * Add strain

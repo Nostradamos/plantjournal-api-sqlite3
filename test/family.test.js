@@ -69,6 +69,8 @@ describe('Family()', function() {
       it('should return all families', async function() {
         let families = await pj.Family.get();
         families.should.deepEqual({
+          found: 4,
+          remaining: 0,
           families: {
             '1': { familyId: 1, familyName: 'test1' },
             '2': { familyId: 2, familyName: 'testB' },
@@ -81,6 +83,8 @@ describe('Family()', function() {
       it('should only return the first two families if options.limit=2', async function() {
         let families = await pj.Family.get({limit: 2});
         families.should.deepEqual({
+          found: 4,
+          remaining: 2,
           families: {
             '1': { familyId: 1, familyName: 'test1' },
             '2': { familyId: 2, familyName: 'testB' }
@@ -91,6 +95,8 @@ describe('Family()', function() {
       it('should only return the the last two families if options.offset=2 and options.limit=2', async function() {
         let families = await pj.Family.get({offset: 2, limit: 2});
         families.should.deepEqual({
+          found: 4,
+          remaining: 0,
           families: {
             '3': { familyId: 3, familyName: 'test3' },
             '4': { familyId: 4, familyName: 'testD' }
@@ -120,6 +126,8 @@ describe('Family()', function() {
           }
         );
         families.should.deepEqual({
+          found: 1,
+          remaining: 0,
           families: {
             '3': { familyId: 3, familyName: 'test3' }
           }
@@ -135,6 +143,8 @@ describe('Family()', function() {
           }
         );
         families.should.deepEqual({
+          found: 1,
+          remaining: 0,
           families: {
             '4': { familyId: 4, familyName: 'testD' }
           }
