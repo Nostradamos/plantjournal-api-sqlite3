@@ -277,6 +277,24 @@ describe('Utils', function() {
     });
   });
 
+  describe('#addFoundAndRemainingFromCountToReturnObject()', function() {
+    it('should calculate remaining count and add with found to returnObject', function() {
+      let returnObject = {};
+      let options = {offset: 42};
+      let count = {'count': 130};
+      Utils.addFoundAndRemainingFromCountToReturnObject(count, 5, returnObject, options);
+      returnObject.should.deepEqual({'found': 130, 'remaining': 83});
+    });
+
+    it('should calculate remaining count if options.offset is not defined and add with found to returnObject', function() {
+      let returnObject = {};
+      let options = {};
+      let count = {'count': 42};
+      Utils.addFoundAndRemainingFromCountToReturnObject(count, 30, returnObject, options);
+      returnObject.should.deepEqual({'found': 42, 'remaining': 12});
+    });
+  });
+
   describe('#setWhere()', function() {
     let q;
     beforeEach(function() {
