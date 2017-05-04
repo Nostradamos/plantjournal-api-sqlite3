@@ -130,6 +130,8 @@ describe('Generation()', function() {
     it('should get generations and referenced families', async function() {
       let generations = await pj.Generation.get();
       generations.should.deepEqual({
+        'found': 4,
+        'remaining': 0,
         'generations': {
           '1': {
             'generationId': 1,
@@ -177,6 +179,8 @@ describe('Generation()', function() {
       );
 
       generations.should.deepEqual({
+        'found': 4,
+        'remaining': 0,
         'generations': {
           '1': {
             'generationId': 1,
@@ -210,6 +214,8 @@ describe('Generation()', function() {
       let generations = await pj.Generation.get({'limit':2, 'offset': 1});
 
       generations.should.deepEqual({
+        'found': 4,
+        'remaining': 1,
         'generations': {
           '2': {
             'generationId': 2,
@@ -245,12 +251,8 @@ describe('Generation()', function() {
       });
 
       generations.should.deepEqual({
-        'families': {
-          '1': {
-            'familyId': 1,
-            'familyName': 'testFamily1'
-          }
-        },
+        'found': 2,
+        'remaining': 0,
         'generations': {
           '1': {
             'generationId': 1,
@@ -264,6 +266,12 @@ describe('Generation()', function() {
             'generationParents': [],
             'familyId': 1
           }
+        },
+        'families': {
+          '1': {
+            'familyId': 1,
+            'familyName': 'testFamily1'
+          }
         }
       })
     });
@@ -276,6 +284,8 @@ describe('Generation()', function() {
       });
 
       generations.should.deepEqual({
+        'found': 2,
+        'remaining': 0,
         'families': {
           '1': {
             'familyId': 1,
@@ -302,6 +312,8 @@ describe('Generation()', function() {
     it('should only return generations where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
       let generations = await pj.Generation.get({'fields': ['generationParents', 'generationName'], 'where': {'generationParents': [1,2]}});
       generations.should.deepEqual({
+        'found': 1,
+        'remaining': 0,
         'generations': {
           '4': {
             'generationId': 4,
