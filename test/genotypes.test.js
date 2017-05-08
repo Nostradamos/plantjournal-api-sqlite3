@@ -102,6 +102,8 @@ describe('Genotype()', function() {
       let genotypes = await pj.Genotype.get();
       genotypes.should.deepEqual(
         {
+          'found': 4,
+          'remaining': 0,
           'genotypes': {
             '1': {
               'genotypeId': 1,
@@ -175,13 +177,15 @@ describe('Genotype()', function() {
         }
       );
       genotypes.should.deepEqual({
-        genotypes: {
+        'found': 4,
+        'remaining': 0,
+        'genotypes': {
          '1': { genotypeId: 1, generationId: 1, familyId: 1 },
          '2': { genotypeId: 2, generationId: 2, familyId: 1 },
          '3': { genotypeId: 3, generationId: 3, familyId: 2 },
          '4': { genotypeId: 4, generationId: 4, familyId: 2 },
         },
-        generations: {
+        'generations': {
           '1': { generationId: 1, familyId: 1, generationName: 'F1' },
           '2': { generationId: 2, familyId: 1, generationName: 'F2' },
           '3': { generationId: 3, familyId: 2, generationName: 'S1' },
@@ -197,7 +201,9 @@ describe('Genotype()', function() {
         }
       );
       genotypes.should.deepEqual({
-        genotypes: {
+        'found': 4,
+        'remaining': 0,
+        'genotypes': {
           '1': { genotypeId: 1, generationId: 1, familyId: 1 },
           '2': { genotypeId: 2, generationId: 2, familyId: 1 },
           '3': { genotypeId: 3, generationId: 3, familyId: 2 },
@@ -215,6 +221,8 @@ describe('Genotype()', function() {
         }
       );
       genotypes.should.deepEqual({
+        'found': 4,
+        'remaining': 0,
         'genotypes': {
           '3': {
             'genotypeId': 3,
@@ -242,6 +250,8 @@ describe('Genotype()', function() {
         }
       );
       genotypes.should.deepEqual({
+        'found': 1,
+        'remaining': 0,
         'genotypes': {
           '2': {
             'genotypeId': 2,
@@ -261,6 +271,8 @@ describe('Genotype()', function() {
         }
       });
       genotypes.should.deepEqual({
+        'found': 1,
+        'remaining': 0,
         'genotypes': {
           '3': {
             'genotypeId': 3,
@@ -280,6 +292,8 @@ describe('Genotype()', function() {
         }
       });
       genotypes.should.deepEqual({
+        'found': 2,
+        'remaining': 0,
         'genotypes': {
           '1': {
             'genotypeId': 1,
@@ -298,9 +312,16 @@ describe('Genotype()', function() {
     });
 
     it('should only return genotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
-      let genotypes = await pj.Genotype.get({'fields': ['generationParents', 'generationName', 'genotypeName'], 'where': {'generationParents': [1,2]}});
+      let genotypes = await pj.Genotype.get(
+        {
+          'fields': ['generationParents', 'generationName', 'genotypeName'],
+          'where': {'generationParents': [1,2]}
+        }
+      );
       genotypes.should.deepEqual(
         {
+          'found': 1,
+          'remaining': 0,
           'genotypes': {
             '4': {
               'genotypeId': 4,
