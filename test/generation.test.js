@@ -42,7 +42,7 @@ describe('Generation()', function() {
 
     it('should throw Error if options.familyId is not set', async function() {
       await pj.Generation.create({'generationName': 'testGeneration2'})
-        .should.be.rejectedWith('options.familyId is not set');
+        .should.be.rejectedWith('options.familyId has to be set');
     });
 
     it('should throw error if options.familyId is not an integer', async function() {
@@ -50,9 +50,9 @@ describe('Generation()', function() {
         .should.be.rejectedWith('options.familyId has to be an integer');
     });
 
-    it('should throw Error if options.generationName is not set', async function() {
+    it('should throw error if options.generationName is not set', async function() {
       await pj.Generation.create({'familyId': 1})
-        .should.be.rejectedWith('options.generationName is not set');
+        .should.be.rejectedWith('options.generationName has to be set');
     });
 
     it('should throw error if options.generationName is not a string', async function() {
@@ -62,7 +62,7 @@ describe('Generation()', function() {
 
     it('should throw error if generationParents is set but not an array', async function() {
       await pj.Generation.create({'familyId': 1, 'generationName': 'test', 'generationParents': {}})
-        .should.be.rejectedWith('options.generationParents has to be an array');
+        .should.be.rejectedWith('options.generationParents has to be an array of integers');
     });
 
     it('should throw Error if familyId does not reference an entry in families', async function() {

@@ -39,7 +39,7 @@ describe('Family()', function() {
         tested.should.eql(6);
       });
 
-      it('should throw error if no options.familyName is provided', async function() {
+      it('should throw `options.familyName has to be set` error if no options.familyName is provided', async function() {
         await pj.Family.create({})
           .should.be.rejectedWith('options.familyName has to be set');
       });
