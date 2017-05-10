@@ -40,7 +40,7 @@ describe('Plant()', function() {
         .should.be.rejectedWith('options.genotypeId has to be an integer');
     });
 
-    it('should throw error if options.genotypeId is not set and options.generationId does not reference an existing generationId', async function() {
+    it('should throw error if options.generationId does not reference an existing generationId', async function() {
       await pj.Plant.create({generationId: 42, plantName: 'test'})
         .should.be.rejectedWith('options.generationId does not reference an existing Generation');
     });

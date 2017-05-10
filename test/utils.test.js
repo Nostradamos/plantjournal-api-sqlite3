@@ -377,9 +377,9 @@ describe('Utils', function() {
 
   describe('#leftJoinFamilies()', function() {
     it('should join `families` on familyId', function() {
-      let q = squel.select().from(Constants.tableGenerations, 'generations');
+      let q = squel.select().from(Constants.TABLE_GENERATIONS, 'generations');
       Utils.leftJoinFamilies(q);
-      q.toString().should.eql('SELECT * FROM ' + Constants.tableGenerations +' `generations` LEFT JOIN ' + Constants.tableFamilies + ' `families` ON (generations.familyId = families.familyId)');
+      q.toString().should.eql('SELECT * FROM ' + Constants.TABLE_GENERATIONS +' `generations` LEFT JOIN ' + Constants.TABLE_FAMILIES + ' `families` ON (generations.familyId = families.familyId)');
     });
   });
 
@@ -387,7 +387,7 @@ describe('Utils', function() {
     it('should join `generations` and `generation_parents` on generationId', function() {
       let q = squel.select().from(Constants.tableGenotypes, 'genotypes');
       Utils.leftJoinGenerations(q);
-      q.toString().should.eql('SELECT * FROM ' + Constants.tableGenotypes +' `genotypes` LEFT JOIN ' + Constants.tableGenerations + ' `generations` ON (genotypes.generationId = generations.generationId) LEFT JOIN ' + Constants.tableGenerationParents +' `generation_parents` ON (generations.generationId = generation_parents.generationId)');
+      q.toString().should.eql('SELECT * FROM ' + Constants.tableGenotypes +' `genotypes` LEFT JOIN ' + Constants.TABLE_GENERATIONS + ' `generations` ON (genotypes.generationId = generations.generationId) LEFT JOIN ' + Constants.tableGenerationParents +' `generation_parents` ON (generations.generationId = generation_parents.generationId)');
     });
   });
 
