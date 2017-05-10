@@ -1,5 +1,3 @@
-const _ = require('lodash');
+const Family = require('./lib/family');
 
-let arr = "test";
-
-console.log(_.every(_.isInteger));
+Family.create({familyName: 'test'});

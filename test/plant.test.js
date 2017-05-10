@@ -26,17 +26,17 @@ describe('Plant()', function() {
 
 
     it('should throw error if neither options.generationId nor options.genotypeId is set', async function() {
-      await pj.Plant.create({})
+      await pj.Plant.create({plantName: 'testPlant'})
         .should.be.rejectedWith('Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set');
     });
 
     it('should throw error if options.generationId is not an integer', async function() {
-      await pj.Plant.create({generationId: 'test'})
+      await pj.Plant.create({plantName: 'testPlant', generationId: 'test'})
         .should.be.rejectedWith('options.generationId has to be an integer');
     });
 
     it('should throw error if options.genotypeId is not an integer', async function() {
-      await pj.Plant.create({genotypeId: null})
+      await pj.Plant.create({plantName: 'testPlant', genotypeId: null})
         .should.be.rejectedWith('options.genotypeId has to be an integer');
     });
 

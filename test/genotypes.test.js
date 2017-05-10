@@ -55,7 +55,7 @@ describe('Genotype()', function() {
 
     it('should throw an error if options.generationId is not set', async function() {
       await pj.Genotype.create({})
-        .should.be.rejectedWith('options.generationId is not set');
+        .should.be.rejectedWith('options.generationId has to be set');
     });
 
     it('should throw error if options.generationId is not an integer', async function() {
