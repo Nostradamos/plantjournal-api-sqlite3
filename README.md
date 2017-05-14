@@ -7,8 +7,7 @@ plantJournal
 ToDo
 =====
 
-* change constants to upper case
-* refactor get and rename to find
+* refactor get (like create) and rename to find
 * add created_at and modified_at fields
 * Complete setWhere()
 * Add description fields
