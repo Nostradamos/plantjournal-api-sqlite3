@@ -78,7 +78,7 @@ describe('Genotype()', function() {
     });
   });
 
-  describe('#get()', function() {
+  describe('#find()', function() {
     let pj;
 
     before(async function() {
@@ -98,8 +98,8 @@ describe('Genotype()', function() {
       await pj.Genotype.create({generationId: 4, genotypeName: 'testGenotype4'});
     });
 
-    it('should get genotypes, referenced generations and families', async function() {
-      let genotypes = await pj.Genotype.get();
+    it('should find genotypes, referenced generations and families', async function() {
+      let genotypes = await pj.Genotype.find();
       genotypes.should.deepEqual(
         {
           'found': 4,
@@ -171,7 +171,7 @@ describe('Genotype()', function() {
     });
 
     it('should not have an empty families property object if familyName is NOT in options.fields', async function() {
-      let genotypes = await pj.Genotype.get(
+      let genotypes = await pj.Genotype.find(
         {
           'fields': ['familyId', 'generationName']
         }
@@ -195,7 +195,7 @@ describe('Genotype()', function() {
     });
 
     it('should not have an empty generations property object if not generationName is in options.fields', async function() {
-      let genotypes = await pj.Genotype.get(
+      let genotypes = await pj.Genotype.find(
         {
           'fields': ['familyId']
         }
@@ -213,7 +213,7 @@ describe('Genotype()', function() {
     });
 
     it('should skip x genotypes specified with options.offset and limit the count of results to option.limit', async function() {
-      let genotypes = await pj.Genotype.get(
+      let genotypes = await pj.Genotype.find(
         {
           'fields': ['genotypeName'],
           'limit': 3,
@@ -241,7 +241,7 @@ describe('Genotype()', function() {
     });
 
     it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype fields)', async function() {
-      let genotypes = await pj.Genotype.get(
+      let genotypes = await pj.Genotype.find(
         {
           'fields': ['genotypeName'],
           'where': {
@@ -264,7 +264,7 @@ describe('Genotype()', function() {
     });
 
     it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
-      let genotypes = await pj.Genotype.get({
+      let genotypes = await pj.Genotype.find({
         'fields': ['genotypeName'],
         'where': {
           'genotypeName': 'testGenotype3'
@@ -285,7 +285,7 @@ describe('Genotype()', function() {
     });
 
     it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family fields)', async function() {
-      let genotypes = await pj.Genotype.get({
+      let genotypes = await pj.Genotype.find({
         'fields': ['genotypeName'],
         'where': {
           'familyName': 'testFamily1'
@@ -312,7 +312,7 @@ describe('Genotype()', function() {
     });
 
     it('should only return genotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
-      let genotypes = await pj.Genotype.get(
+      let genotypes = await pj.Genotype.find(
         {
           'fields': ['generationParents', 'generationName', 'genotypeName'],
           'where': {'generationParents': [1,2]}

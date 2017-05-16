@@ -145,7 +145,7 @@ describe('Plant()', function() {
       pj.disconnect();
     });
   });
-  describe('#get()', function() {
+  describe('#find()', function() {
     let pj;
 
     before(async function() {
@@ -166,8 +166,8 @@ describe('Plant()', function() {
       await pj.Plant.create({plantName: 'testPlant4', plantClonedFrom: 3, plantSex: 'female'});
     });
 
-    it('should get plants, referenced genotypes, generations and families', async function() {
-      let plants = await pj.Plant.get();
+    it('should find plants, referenced genotypes, generations and families', async function() {
+      let plants = await pj.Plant.find();
       plants.should.deepEqual(
         {
           'found': 4,
@@ -265,7 +265,7 @@ describe('Plant()', function() {
     });
 
     it('should not have an empty families property object if familyName is NOT in options.fields', async function() {
-      let plants = await pj.Plant.get(
+      let plants = await pj.Plant.find(
         {
           'fields': ['familyId', 'generationName', 'genotypeName']
         }
@@ -293,7 +293,7 @@ describe('Plant()', function() {
     });
 
     it('should not have an empty generations property object if generationName is NOT in options.fields', async function() {
-      let plants = await pj.Plant.get(
+      let plants = await pj.Plant.find(
         {
           'fields': ['familyId', 'genotypeName']
         }
@@ -316,7 +316,7 @@ describe('Plant()', function() {
     });
 
     it('should not have an empty genotypes object if phenotyeName is NOT in options.fields', async function() {
-      let plants = await pj.Plant.get(
+      let plants = await pj.Plant.find(
         {
           'fields': ['familyId']
         }
@@ -334,7 +334,7 @@ describe('Plant()', function() {
     });
 
     it('should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1', async function() {
-      let plants = await pj.Plant.get({'offset': 2, 'limit': 1, 'fields': ['plantName']});
+      let plants = await pj.Plant.find({'offset': 2, 'limit': 1, 'fields': ['plantName']});
       plants.should.deepEqual({
         'found': 4,
         'remaining': 1,
@@ -345,7 +345,7 @@ describe('Plant()', function() {
     });
 
     it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant fields)', async function() {
-      let plants = await pj.Plant.get({'where': {'plantName': 'testPlant3'}, 'fields': ['plantId']});
+      let plants = await pj.Plant.find({'where': {'plantName': 'testPlant3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
         'found': 1,
         'remaining': 0,
@@ -357,7 +357,7 @@ describe('Plant()', function() {
     });
 
     it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
-      let plants = await pj.Plant.get({'where': {'genotypeName': 'testGenotype3'}, 'fields': ['plantId']});
+      let plants = await pj.Plant.find({'where': {'genotypeName': 'testGenotype3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
         'found': 2,
         'remaining': 0,
@@ -369,7 +369,7 @@ describe('Plant()', function() {
     });
 
     it('should only return plants where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
-      let plants = await pj.Plant.get({'where': {'generationParents': [1,2]}, 'fields': ['plantId', 'plantName', 'generationParents', 'generationName']});
+      let plants = await pj.Plant.find({'where': {'generationParents': [1,2]}, 'fields': ['plantId', 'plantName', 'generationParents', 'generationName']});
       plants.should.deepEqual({
         'found': 2,
         'remaining': 0,

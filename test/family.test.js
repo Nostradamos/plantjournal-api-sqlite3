@@ -54,7 +54,7 @@ describe('Family()', function() {
       });
     });
 
-    describe('#get()', function() {
+    describe('#find()', function() {
       let pj;
 
       before(async function() {
@@ -67,7 +67,7 @@ describe('Family()', function() {
       });
 
       it('should return all families', async function() {
-        let families = await pj.Family.get();
+        let families = await pj.Family.find();
         families.should.deepEqual({
           found: 4,
           remaining: 0,
@@ -81,7 +81,7 @@ describe('Family()', function() {
       });
 
       it('should only return the first two families if options.limit=2', async function() {
-        let families = await pj.Family.get({limit: 2});
+        let families = await pj.Family.find({limit: 2});
         families.should.deepEqual({
           found: 4,
           remaining: 2,
@@ -93,7 +93,7 @@ describe('Family()', function() {
       });
 
       it('should only return the the last two families if options.offset=2 and options.limit=2', async function() {
-        let families = await pj.Family.get({offset: 2, limit: 2});
+        let families = await pj.Family.find({offset: 2, limit: 2});
         families.should.deepEqual({
           found: 4,
           remaining: 0,
@@ -106,7 +106,7 @@ describe('Family()', function() {
 
       // ToDo: Improve fields, change this test
       /*it('should only return fields specified in options.fields', async function() {
-        let families = await pj.Family.get({fields: ['familyName']});
+        let families = await pj.Family.find({fields: ['familyName']});
         families.should.deepEqual({
           families: {
             '1': { familyName: 'test1' },
@@ -118,7 +118,7 @@ describe('Family()', function() {
       });*/
 
       it('should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches extactly', async function() {
-        let families = await pj.Family.get(
+        let families = await pj.Family.find(
           {
             where : {
               'familyId': 3
@@ -135,7 +135,7 @@ describe('Family()', function() {
       });
 
       it('should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly', async function() {
-        let families = await pj.Family.get(
+        let families = await pj.Family.find(
           {
             where : {
               'familyName': 'testD'
