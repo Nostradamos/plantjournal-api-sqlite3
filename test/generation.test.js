@@ -15,19 +15,23 @@ describe('Generation()', function() {
 
     it('should create a new generations entry and return generation object', async function() {
       let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testGeneration'});
+      let [createdAt, modifiedAt] = [generation.generations[1].createdAt, generation.generations[1].modifiedAt];
+      createdAt.should.eql(modifiedAt);
       generation.should.deepEqual({
         generations: {
           '1': {
             'generationId': 1,
             'generationName': 'testGeneration',
             'generationParents': [],
-            'familyId': 1
+            'familyId': 1,
+            'createdAt': createdAt,
+            'modifiedAt': modifiedAt
           }
         }
       });
 
-      let result = await sqlite.all('SELECT familyId, generationId, generationName FROM generations');
-      result.should.deepEqual([{'familyId': 1, 'generationId': 1, 'generationName': 'testGeneration'}]);
+      let result = await sqlite.all('SELECT familyId, generationId, generationName, createdAt, modifiedAt FROM generations');
+      result.should.deepEqual([{'familyId': 1, 'generationId': 1, 'generationName': 'testGeneration', 'createdAt': createdAt, 'modifiedAt': modifiedAt}]);
     });
 
     it('should throw error if options is not set or not an associative array', async function() {
@@ -91,13 +95,16 @@ describe('Generation()', function() {
 
     it('should also add parents if options.parents is specified', async function() {
       let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testWithParents', 'generationParents': [1,2]});
+      let [createdAt, modifiedAt] = [generation.generations[2].createdAt, generation.generations[2].modifiedAt];
       generation.should.deepEqual({
         'generations': {
           '2': {
             'generationId': 2,
             'generationName': 'testWithParents',
             'generationParents': [1,2],
-            'familyId': 1
+            'familyId': 1,
+            'createdAt': createdAt,
+            'modifiedAt': modifiedAt,
           }
         }
       });

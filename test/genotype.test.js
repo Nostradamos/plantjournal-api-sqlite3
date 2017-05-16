@@ -16,28 +16,34 @@ describe('Genotype()', function() {
 
     it('should create a new genotypes entry and return Genotypes Object', async function() {
       let genotype = await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
+      let [createdAt, modifiedAt] = [genotype.genotypes[1].createdAt, genotype.genotypes[1].modifiedAt]
       genotype.should.deepEqual({
         'genotypes': {
           '1': {
             'genotypeId': 1,
             'genotypeName': 'testGenotype1',
-            'generationId': 1
+            'generationId': 1,
+            'createdAt': createdAt,
+            'modifiedAt': modifiedAt
           }
         }
       });
 
-      let rows = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
-      rows.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
+      let rows = await sqlite.all('SELECT genotypeId, genotypeName, generationId, createdAt, modifiedAt FROM genotypes');
+      rows.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'createdAt': createdAt, 'modifiedAt': modifiedAt}]);
     });
 
     it('should be possible to create a new genotype with options.genotypeName = null or options.genotypeName = undefined (or not even set)', async function() {
       let genotype = await pj.Genotype.create({generationId: 1});
+      let [createdAt, modifiedAt] = [genotype.genotypes[1].createdAt, genotype.genotypes[1].modifiedAt]
       genotype.should.deepEqual({
         'genotypes': {
           '1': {
             'genotypeId': 1,
             'genotypeName': null,
-            'generationId': 1
+            'generationId': 1,
+            'createdAt': createdAt,
+            'modifiedAt': modifiedAt
           }
         }
       });
