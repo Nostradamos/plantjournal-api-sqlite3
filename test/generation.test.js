@@ -15,7 +15,7 @@ describe('Generation()', function() {
 
     it('should create a new generations entry and return generation object', async function() {
       let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testGeneration'});
-      let [createdAt, modifiedAt] = [generation.generations[1].createdAt, generation.generations[1].modifiedAt];
+      let [createdAt, modifiedAt] = [generation.generations[1].generationCreatedAt, generation.generations[1].generationModifiedAt];
       createdAt.should.eql(modifiedAt);
       generation.should.deepEqual({
         generations: {
@@ -24,14 +24,24 @@ describe('Generation()', function() {
             'generationName': 'testGeneration',
             'generationParents': [],
             'familyId': 1,
-            'createdAt': createdAt,
-            'modifiedAt': modifiedAt
+            'generationCreatedAt': createdAt,
+            'generationModifiedAt': modifiedAt
           }
         }
       });
 
-      let result = await sqlite.all('SELECT familyId, generationId, generationName, createdAt, modifiedAt FROM generations');
-      result.should.deepEqual([{'familyId': 1, 'generationId': 1, 'generationName': 'testGeneration', 'createdAt': createdAt, 'modifiedAt': modifiedAt}]);
+      let result = await sqlite.all('SELECT familyId, generationId, generationName, generationCreatedAt, generationModifiedAt FROM generations');
+      result.should.deepEqual(
+        [
+          {
+            'familyId': 1,
+            'generationId': 1,
+            'generationName': 'testGeneration',
+            'generationCreatedAt': createdAt,
+            'generationModifiedAt': modifiedAt
+          }
+        ]
+      );
     });
 
     it('should throw error if options is not set or not an associative array', async function() {
