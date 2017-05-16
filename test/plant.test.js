@@ -170,6 +170,8 @@ describe('Plant()', function() {
       let plants = await pj.Plant.get();
       plants.should.deepEqual(
         {
+          'found': 4,
+          'remaining': 0,
           'plants': {
             '1': {
               'plantId': 1,
@@ -269,6 +271,8 @@ describe('Plant()', function() {
         }
       );
       plants.should.deepEqual({
+        'found': 4,
+        'remaining': 0,
         'genotypes': {
          '1': { 'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'familyId': 1 },
          '2': { 'genotypeId': 2, 'genotypeName': 'testGenotype2', 'generationId': 2, 'familyId': 1 },
@@ -295,6 +299,8 @@ describe('Plant()', function() {
         }
       );
       plants.should.deepEqual({
+        'found': 4,
+        'remaining': 0,
         'genotypes': {
          '1': { 'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'familyId': 1 },
          '2': { 'genotypeId': 2, 'genotypeName': 'testGenotype2', 'generationId': 2, 'familyId': 1 },
@@ -316,6 +322,8 @@ describe('Plant()', function() {
         }
       );
       plants.should.deepEqual({
+        'found': 4,
+        'remaining': 0,
         'plants': {
           '1': { 'plantId': 1, 'genotypeId': 1, 'generationId': 1, 'familyId': 1 },
           '2': { 'plantId': 2, 'genotypeId': 2, 'generationId': 2, 'familyId': 1 },
@@ -328,6 +336,8 @@ describe('Plant()', function() {
     it('should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1', async function() {
       let plants = await pj.Plant.get({'offset': 2, 'limit': 1, 'fields': ['plantName']});
       plants.should.deepEqual({
+        'found': 4,
+        'remaining': 1,
         'plants': {
           '3': { 'plantId': 3, 'plantName': 'testPlant3', 'genotypeId': 3, 'generationId': 3, 'familyId': 2 },
         }
@@ -337,6 +347,8 @@ describe('Plant()', function() {
     it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant fields)', async function() {
       let plants = await pj.Plant.get({'where': {'plantName': 'testPlant3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
+        'found': 1,
+        'remaining': 0,
         'plants': {
           '3': {'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2}
         }
@@ -347,6 +359,8 @@ describe('Plant()', function() {
     it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
       let plants = await pj.Plant.get({'where': {'genotypeName': 'testGenotype3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
+        'found': 2,
+        'remaining': 0,
         'plants': {
           '3': {'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2},
           '4': {'plantId': 4, 'genotypeId': 3, 'generationId': 3, 'familyId': 2}
@@ -357,6 +371,8 @@ describe('Plant()', function() {
     it('should only return plants where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
       let plants = await pj.Plant.get({'where': {'generationParents': [1,2]}, 'fields': ['plantId', 'plantName', 'generationParents', 'generationName']});
       plants.should.deepEqual({
+        'found': 2,
+        'remaining': 0,
         'plants': {
           '3': {
             'plantId': 3,
