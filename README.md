@@ -7,7 +7,6 @@ plantJournal
 ToDo
 =====
 
-* add created_at and modified_at fields
 * Complete setWhere()
 * Add description fields
 * Add sorting for get
