@@ -2,6 +2,7 @@ const should = require('should');
 const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
 const _ = require('lodash');
+const helpers = require('./helper-functions');
 
 describe('Family()', function() {
 
@@ -60,6 +61,8 @@ describe('Family()', function() {
 
     describe('#find()', function() {
       let pj;
+      let createdAt = [];
+      let modifiedAt = [];
 
       before(async function() {
         pj = new plantJournal(':memory:');
@@ -72,7 +75,7 @@ describe('Family()', function() {
 
       it('should return all families', async function() {
         let families = await pj.Family.find();
-        families.should.deepEqual({
+        families.should.containDeep({
           found: 4,
           remaining: 0,
           families: {
@@ -82,10 +85,11 @@ describe('Family()', function() {
             '4': { familyId: 4, familyName: 'testD' }
           }
         });
+        helpers.allFamiliesShouldHaveCreatedAtAndModifiedAtFields(families);
       });
 
       it('should only return the first two families if options.limit=2', async function() {
-        let families = await pj.Family.find({limit: 2});
+        let families = await pj.Family.find({limit: 2, fields: ['familyId', 'familyName']});
         families.should.deepEqual({
           found: 4,
           remaining: 2,
@@ -97,7 +101,7 @@ describe('Family()', function() {
       });
 
       it('should only return the the last two families if options.offset=2 and options.limit=2', async function() {
-        let families = await pj.Family.find({offset: 2, limit: 2});
+        let families = await pj.Family.find({offset: 2, limit: 2, fields: ['familyId', 'familyName']});
         families.should.deepEqual({
           found: 4,
           remaining: 0,
@@ -126,7 +130,8 @@ describe('Family()', function() {
           {
             where : {
               'familyId': 3
-            }
+            },
+            fields: ['familyId', 'familyName']
           }
         );
         families.should.deepEqual({
@@ -143,7 +148,8 @@ describe('Family()', function() {
           {
             where : {
               'familyName': 'testD'
-            }
+            },
+            fields: ['familyId', 'familyName']
           }
         );
         families.should.deepEqual({

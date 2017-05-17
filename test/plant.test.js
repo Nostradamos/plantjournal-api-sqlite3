@@ -1,6 +1,8 @@
 const should = require('should');
-const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
+
+const plantJournal = require('../lib/pj');
+const helpers = require('./helper-functions');
 
 describe('Plant()', function() {
   describe('#create()', function() {
@@ -181,7 +183,7 @@ describe('Plant()', function() {
 
     it('should find plants, referenced genotypes, generations and families', async function() {
       let plants = await pj.Plant.find();
-      plants.should.deepEqual(
+      plants.should.containDeep(
         {
           'found': 4,
           'remaining': 0,
@@ -275,6 +277,15 @@ describe('Plant()', function() {
           }
         }
       );
+
+      helpers
+        .allPlantsShouldHaveCreatedAtAndModifiedAtFields(plants);
+      helpers
+        .allGenotypesShouldHaveCreatedAtAndModifiedAtFields(plants);
+      helpers
+        .allGenerationsShouldHaveCreatedAtAndModifiedAtFields(plants);
+      helpers
+        .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(plants);
     });
 
     it('should not have an empty families property object if familyName is NOT in options.fields', async function() {

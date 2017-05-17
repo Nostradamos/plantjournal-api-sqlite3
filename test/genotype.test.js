@@ -3,6 +3,8 @@ const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
 const _ = require('lodash');
 
+const helpers = require('./helper-functions');
+
 describe('Genotype()', function() {
   describe('#create()', function() {
     let pj;
@@ -106,7 +108,7 @@ describe('Genotype()', function() {
 
     it('should find genotypes, referenced generations and families', async function() {
       let genotypes = await pj.Genotype.find();
-      genotypes.should.deepEqual(
+      genotypes.should.containDeep(
         {
           'found': 4,
           'remaining': 0,
@@ -174,6 +176,12 @@ describe('Genotype()', function() {
           }
         }
       );
+      helpers
+        .allGenotypesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
+      helpers
+        .allGenerationsShouldHaveCreatedAtAndModifiedAtFields(genotypes);
+      helpers
+        .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
     });
 
     it('should not have an empty families property object if familyName is NOT in options.fields', async function() {

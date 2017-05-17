@@ -3,6 +3,8 @@ const plantJournal = require('../lib/pj');
 const sqlite = require('sqlite');
 const _ = require('lodash');
 
+const helpers = require('./helper-functions');
+
 describe('Generation()', function() {
   describe('#create()', function() {
     let pj;
@@ -146,7 +148,7 @@ describe('Generation()', function() {
 
     it('should find generations and referenced families', async function() {
       let generations = await pj.Generation.find();
-      generations.should.deepEqual({
+      generations.should.containDeep({
         'found': 4,
         'remaining': 0,
         'generations': {
@@ -186,6 +188,11 @@ describe('Generation()', function() {
           }
         }
       });
+      helpers
+        .allGenerationsShouldHaveCreatedAtAndModifiedAtFields(generations);
+      helpers
+        .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(generations);
+
     });
 
     it('should not have an familie property if familyName is not in options.fields', async function() {
@@ -228,9 +235,15 @@ describe('Generation()', function() {
     });
 
     it('should skip x generations specified with options.offset and limit the count of results to option.limit', async function() {
-      let generations = await pj.Generation.find({'limit':2, 'offset': 1});
+      let generations = await pj.Generation
+        .find(
+          {
+            'limit':2,
+            'offset': 1
+          }
+        );
 
-      generations.should.deepEqual({
+      generations.should.containDeep({
         'found': 4,
         'remaining': 1,
         'generations': {
@@ -267,7 +280,7 @@ describe('Generation()', function() {
         }
       });
 
-      generations.should.deepEqual({
+      generations.should.containDeep({
         'found': 2,
         'remaining': 0,
         'generations': {
@@ -300,7 +313,7 @@ describe('Generation()', function() {
         }
       });
 
-      generations.should.deepEqual({
+      generations.should.containDeep({
         'found': 2,
         'remaining': 0,
         'families': {
