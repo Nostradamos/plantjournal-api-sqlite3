@@ -67,7 +67,7 @@ describe('Plant()', function() {
 
     it('should only create a new plant entry if options.genotypeId is set and return plant object with plant fields + genotypeId', async function() {
       let plant = await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'});
-      let [createdAt, modifiedAt] = [plant.plants[1].createdAt, plant.plants[1].modifiedAt];
+      let [createdAt, modifiedAt] = [plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt];
       plant.should.deepEqual({
         'plants': {
           '1': {
@@ -75,30 +75,30 @@ describe('Plant()', function() {
             'plantName': 'testPlant1',
             'plantClonedFrom': null,
             'plantSex': null,
+            'plantCreatedAt': createdAt,
+            'plantModifiedAt': modifiedAt,
             'genotypeId': 1,
-            'createdAt': createdAt,
-            'modifiedAt': modifiedAt,
           }
         }
       });
-      let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, genotypeId, createdAt, modifiedAt FROM plants');
-      rowsPlants.should.deepEqual([{'plantId': 1, 'plantName': 'testPlant1', 'plantClonedFrom': null, 'genotypeId': 1, 'createdAt': createdAt, 'modifiedAt': modifiedAt}]);
+      let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, genotypeId, plantCreatedAt, plantModifiedAt FROM plants');
+      rowsPlants.should.deepEqual([{'plantId': 1, 'plantName': 'testPlant1', 'plantClonedFrom': null, 'genotypeId': 1, 'plantCreatedAt': createdAt, 'plantModifiedAt': modifiedAt}]);
       let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
       rowsGenotypes.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
     });
 
     it('should create a new plant and genotype entry if options.genotypeId is not set and return plant object + genotype object', async function() {
       let plant = await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
-      let [createdAtPlant, modifiedAtPlant] = [plant.plants[1].createdAt, plant.plants[1].modifiedAt];
-      let [createdAtGenotype, modifiedAtGenotype] = [plant.genotypes[2].createdAt, plant.genotypes[2].modifiedAt];
+      let [createdAtPlant, modifiedAtPlant] = [plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt];
+      let [createdAtGenotype, modifiedAtGenotype] = [plant.genotypes[2].genotypeCreatedAt, plant.genotypes[2].genotypeModifiedAt];
       plant.should.deepEqual({
         'genotypes': {
           '2': {
             'genotypeId': 2,
             'genotypeName': null,
             'generationId': 1,
-            'createdAt': createdAtGenotype,
-            'modifiedAt': modifiedAtGenotype
+            'genotypeCreatedAt': createdAtGenotype,
+            'genotypeModifiedAt': modifiedAtGenotype
           }
         },
         'plants': {
@@ -108,8 +108,8 @@ describe('Plant()', function() {
             'plantClonedFrom': null,
             'plantSex': null,
             'genotypeId': 2,
-            'createdAt': createdAtPlant,
-            'modifiedAt': modifiedAtPlant
+            'plantCreatedAt': createdAtPlant,
+            'plantModifiedAt': modifiedAtPlant
           }
         }
       });
@@ -118,7 +118,7 @@ describe('Plant()', function() {
     it('should only create a new plant entry if options.plantClonedFrom is set, and not options.genotypeId is not set but resolve the genotypeId from the mother plant', async function() {
       let plantMother = await pj.Plant.create({genotypeId: 1, plantName: 'motherPlant1'});
       let plantClone = await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1});
-      let [createdAtClone, modifiedAtClone] = [plantClone.plants[2].createdAt, plantClone.plants[2].modifiedAt];
+      let [createdAtClone, modifiedAtClone] = [plantClone.plants[2].plantCreatedAt, plantClone.plants[2].plantModifiedAt];
       createdAtClone.should.eql(modifiedAtClone);
       plantClone.should.deepEqual({
         'plants': {
@@ -128,8 +128,8 @@ describe('Plant()', function() {
             'plantClonedFrom': 1,
             'plantSex': null,
             'genotypeId': 1,
-            'createdAt': createdAtClone,
-            'modifiedAt': modifiedAtClone
+            'plantCreatedAt': createdAtClone,
+            'plantModifiedAt': modifiedAtClone
           }
         }
       });

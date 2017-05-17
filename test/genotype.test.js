@@ -16,34 +16,34 @@ describe('Genotype()', function() {
 
     it('should create a new genotypes entry and return Genotypes Object', async function() {
       let genotype = await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
-      let [createdAt, modifiedAt] = [genotype.genotypes[1].createdAt, genotype.genotypes[1].modifiedAt]
+      let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt]
       genotype.should.deepEqual({
         'genotypes': {
           '1': {
             'genotypeId': 1,
             'genotypeName': 'testGenotype1',
             'generationId': 1,
-            'createdAt': createdAt,
-            'modifiedAt': modifiedAt
+            'genotypeCreatedAt': createdAt,
+            'genotypeModifiedAt': modifiedAt
           }
         }
       });
 
-      let rows = await sqlite.all('SELECT genotypeId, genotypeName, generationId, createdAt, modifiedAt FROM genotypes');
-      rows.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'createdAt': createdAt, 'modifiedAt': modifiedAt}]);
+      let rows = await sqlite.all('SELECT genotypeId, genotypeName, generationId, genotypeCreatedAt, genotypeModifiedAt FROM genotypes');
+      rows.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'genotypeCreatedAt': createdAt, 'genotypeModifiedAt': modifiedAt}]);
     });
 
     it('should be possible to create a new genotype with options.genotypeName = null or options.genotypeName = undefined (or not even set)', async function() {
       let genotype = await pj.Genotype.create({generationId: 1});
-      let [createdAt, modifiedAt] = [genotype.genotypes[1].createdAt, genotype.genotypes[1].modifiedAt]
+      let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt]
       genotype.should.deepEqual({
         'genotypes': {
           '1': {
             'genotypeId': 1,
             'genotypeName': null,
+            'genotypeCreatedAt': createdAt,
+            'genotypeModifiedAt': modifiedAt,
             'generationId': 1,
-            'createdAt': createdAt,
-            'modifiedAt': modifiedAt
           }
         }
       });

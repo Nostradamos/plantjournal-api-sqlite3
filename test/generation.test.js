@@ -105,16 +105,16 @@ describe('Generation()', function() {
 
     it('should also add parents if options.parents is specified', async function() {
       let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testWithParents', 'generationParents': [1,2]});
-      let [createdAt, modifiedAt] = [generation.generations[2].createdAt, generation.generations[2].modifiedAt];
+      let [createdAt, modifiedAt] = [generation.generations[2].generationCreatedAt, generation.generations[2].generationModifiedAt];
       generation.should.deepEqual({
         'generations': {
           '2': {
             'generationId': 2,
             'generationName': 'testWithParents',
             'generationParents': [1,2],
+            'generationCreatedAt': createdAt,
+            'generationModifiedAt': modifiedAt,
             'familyId': 1,
-            'createdAt': createdAt,
-            'modifiedAt': modifiedAt,
           }
         }
       });
