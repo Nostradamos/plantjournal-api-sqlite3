@@ -1,7 +1,7 @@
 const should = require('should');
-const Utils = require('../lib/utils');
+const Utils = require('../src/utils');
 const squel = require('squel');
-const CONSTANTS = require('../lib/constants');
+const CONSTANTS = require('../src/constants');
 
 describe('Utils', function() {
   describe('#deleteEmptyProperties()', function() {

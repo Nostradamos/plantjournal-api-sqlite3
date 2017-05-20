@@ -1,7 +1,7 @@
 'use strict';
 
-const PlantCreate = require('./plant-create');
-const PlantFind = require('./plant-find');
+const PlantCreate = require('../controller/plant-create');
+const PlantFind = require('../controller/plant-find');
 
 let Plant = exports;
 

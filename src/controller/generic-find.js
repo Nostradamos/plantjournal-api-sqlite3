@@ -4,9 +4,9 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const logger = require('./logger');
-const CONSTANTS = require('./constants');
-const Utils = require('./utils');
+const logger = require('../logger');
+const CONSTANTS = require('../constants');
+const Utils = require('../utils');
 
 /**
  * Generic find class which is the skeleton for all *find methods

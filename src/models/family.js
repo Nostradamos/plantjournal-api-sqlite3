@@ -1,7 +1,7 @@
 'use strict';
 
-const FamilyCreate = require('./family-create');
-const FamilyFind = require('./family-find');
+const FamilyCreate = require('../controller/family-create');
+const FamilyFind = require('../controller/family-find');
 
 let Family = exports;
 

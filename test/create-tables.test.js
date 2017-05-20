@@ -1,5 +1,5 @@
 const should = require('should');
-const createTables = require('../lib/create-tables');
+const createTables = require('../src/create-tables');
 const sqlite = require('sqlite');
 
 describe('#createTables()', function() {

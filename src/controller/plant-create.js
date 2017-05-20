@@ -1,13 +1,14 @@
 'use strict';
 
+const _ = require('lodash');
 const sqlite = require('sqlite');
 const squel = require('squel');
-const _ = require('lodash');
-const CONSTANTS = require('./constants');
+
+const CONSTANTS = require('../constants');
+const logger = require('../logger');
+const Utils = require('../utils');
+const Genotype = require('../models/genotype');
 const GenericCreate = require('./generic-create');
-const logger = require('./logger');
-const Utils = require('./utils');
-const Genotype = require('./genotype');
 
 
 class PlantCreate extends GenericCreate {

@@ -1,12 +1,13 @@
 'use strict';
 
-const CONSTANTS = require('./constants');
-const GenericCreate = require('./generic-create');
-const logger = require('./logger');
 const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
-const Utils = require('./utils');
+
+const CONSTANTS = require('../constants');
+const logger = require('../logger');
+const Utils = require('../utils');
+const GenericCreate = require('./generic-create');
 
 
 class GenerationCreate extends GenericCreate {

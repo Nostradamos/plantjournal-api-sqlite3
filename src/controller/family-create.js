@@ -1,10 +1,10 @@
 'use strict';
 
-const CONSTANTS = require('./constants');
+const CONSTANTS = require('../constants');
 const GenericCreate = require('./generic-create');
-const logger = require('./logger');
+const logger = require('../logger');
 const squel = require('squel');
-const Utils = require('./utils');
+const Utils = require('../utils');
 
 
 class FamilyCreate extends GenericCreate {
@@ -32,7 +32,6 @@ class FamilyCreate extends GenericCreate {
   }
 }
 
-//FamilyCreate.name = "FamilyCreate";
 FamilyCreate.table = CONSTANTS.TABLE_FAMILIES;
 FamilyCreate.fieldCreatedAt = 'familyCreatedAt';
 FamilyCreate.fieldModifiedAt = 'familyModifiedAt';

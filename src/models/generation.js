@@ -1,7 +1,7 @@
 'use strict';
 
-const GenerationCreate = require('./generation-create');
-const GenerationFind = require('./generation-find');
+const GenerationCreate = require('../controller/generation-create');
+const GenerationFind = require('../controller/generation-find');
 
 let Generation = exports;
 

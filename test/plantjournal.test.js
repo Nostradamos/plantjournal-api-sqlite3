@@ -1,5 +1,5 @@
 const should = require('should');
-const plantJournal = require('../lib/pj');
+const plantJournal = require('../src/pj');
 
 describe('plantJournal()', function() {
   describe('#constructor()', function () {

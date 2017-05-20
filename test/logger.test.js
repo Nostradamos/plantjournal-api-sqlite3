@@ -1,5 +1,5 @@
 const should = require('should');
-const logger = require('../lib/logger');
+const logger = require('../src/logger');
 const winston = require('winston');
 
 describe('logger()', function() {

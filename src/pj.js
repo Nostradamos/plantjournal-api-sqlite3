@@ -41,9 +41,9 @@ class plantJournal {
   }
 }
 
-plantJournal.prototype.Family = require('./family');
-plantJournal.prototype.Generation = require('./generation');
-plantJournal.prototype.Genotype = require('./genotype');
-plantJournal.prototype.Plant = require('./plant');
+plantJournal.prototype.Family = require('./models/family');
+plantJournal.prototype.Generation = require('./models/generation');
+plantJournal.prototype.Genotype = require('./models/genotype');
+plantJournal.prototype.Plant = require('./models/plant');
 
 module.exports = plantJournal;

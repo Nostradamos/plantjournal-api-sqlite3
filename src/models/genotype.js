@@ -1,7 +1,7 @@
 'use strict';
 
-const GenotypeCreate = require('./genotype-create');
-const GenotypeFind = require('./genotype-find');
+const GenotypeCreate = require('../controller/genotype-create');
+const GenotypeFind = require('../controller/genotype-find');
 
 let Genotype = exports;
 

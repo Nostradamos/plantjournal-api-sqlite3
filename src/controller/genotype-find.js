@@ -2,9 +2,9 @@
 
 const _ = require('lodash');
 
-const logger = require('./logger');
-const CONSTANTS = require('./constants');
-const Utils = require('./utils');
+const logger = require('../logger');
+const CONSTANTS = require('../constants');
+const Utils = require('../utils');
 const GenericFind = require('./generic-find');
 
 class GenotypeFind extends GenericFind {

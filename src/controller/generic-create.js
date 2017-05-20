@@ -1,10 +1,11 @@
 'use strict';
 
-const logger = require('./logger');
 const squel = require('squel');
 const sqlite = require('sqlite');
-const Utils = require('./utils');
-const CONSTANTS = require('./constants');
+
+const CONSTANTS = require('../constants');
+const logger = require('../logger');
+const Utils = require('../utils');
 
 /**
  * Generic create class which is the skeleton for all *-create classes.
