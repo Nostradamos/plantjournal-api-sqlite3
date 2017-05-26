@@ -23,6 +23,20 @@ Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
   return obj;
 }
 
+
+/**
+ * Takes an squel query object and sets all field alisaes of fieldsToSelect which are
+ * in allowedFields as a key property. Mutates query object.
+ * See Utils._setFields() for more information.
+ * @param {squel} fieldsToSelect - Squel obejct. Has to be in select() state or similiar to
+ *                                 take a fields() call.
+ * @param {object} allowedFields - Plain object where key is field name, and value is alias.
+ * @param {array} fieldsToSelect - Array of strings/field names. Typically options.fields
+ */
+Utils.setFields = function setFields(query, allowedFields, fieldsToSelect) {
+  query.fields(Utils._setFields(allowedFields, fieldsToSelect));
+}
+
 /**
  * Helper function of Utils.setFields(), decides which fields should find selected
  * later in the main function. Criterias: field has to be in allowedFields. Will
@@ -44,18 +58,7 @@ Utils._setFields = function _setFields(allowedFields, fieldsToSelect) {
   return fields;
 }
 
-/**
- * Takes an squel query object and sets all field alisaes of fieldsToSelect which are
- * in allowedFields as a key property. Mutates query object.
- * See Utils._setFields() for more information.
- * @param {squel} fieldsToSelect - Squel obejct. Has to be in select() state or similiar to
- *                                 take a fields() call.
- * @param {object} allowedFields - Plain object where key is field name, and value is alias.
- * @param {array} fieldsToSelect - Array of strings/field names. Typically options.fields
- */
-Utils.setFields = function setFields(query, allowedFields, fieldsToSelect) {
-  query.fields(Utils._setFields(allowedFields, fieldsToSelect));
-}
+
 
 /**
  * Takes an squel query object and sets limit() and offset() depending on the
@@ -320,36 +323,78 @@ Utils.leftJoinPlantsDownwards = function leftJoinPlantsDownwards(query) {
   query.left_join(CONSTANTS.TABLE_PLANTS, 'plants', 'genotypes.genotypeId = plants.genotypeId');
 }
 
+/**
+ * Make sure obj is an assoc array/object with key/value pairs.
+ * If not, throws an error.
+ * @param  {Object}  obj                       - Object to check
+ * @param  {String}  [prefix='First argument'] - Name of object for error message.
+ */
 Utils.hasToBeAssocArray = function hasToBeAssocArray(obj, prefix = 'First argument') {
   if(!_.isObjectLike(obj) || _.isArray(obj)) {
     throw new Error(prefix + ' has to be an associative array');
   }
 }
 
+/**
+ * Make sure obj.property is a string. If not, throws an error.
+ * @param  {Object}  obj              - Object to look at
+ * @param  {String}  property         - Name of the property which should be a
+ *                                      String
+ * @param  {String}  [name='options'] - In case of an error, how to name the
+ *                                      Object? Defaults to options.
+ */
 Utils.hasToBeString = function optionsHasString(obj, property, name = 'options') {
   if(_.has(obj, property) && !_.isString(obj[property])) {
     throw new Error(name + '.' + property + ' has to be a string');
   }
 }
 
+/**
+ * Make sure obj.property is an integer. If not, throws an error.
+ * @param  {Object}  obj              - Object to look at
+ * @param  {String}  property         - Name of the property which should be an
+ *                                      int
+ * @param  {String}  [name='options'] - In case of an error, how to name the
+ *                                      Object? Defaults to options.
+ */
 Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
   if(_.has(obj, property) && !_.isInteger(obj[property])) {
     throw new Error(name + '.' + property + ' has to be an integer');
   }
 }
 
+/**
+ * Make sure obj.property is an array only consisting of integers.
+ * If not, throws an error.
+ * @param  {Object}  obj              - Object to look at
+ * @param  {String}  property         - Name of the property which should be an
+ *                                      array of integers
+ * @param  {String}  [name='options'] - In case of an error, how to name the
+ *                                      Object? Defaults to options.
+ */
 Utils.hasToBeIntArray = function hasToBeIntArray(obj, property, name = 'options') {
   if(_.has(obj, property) && (!_.isArray(obj[property]) || !_.every(obj[property], _.isInteger))) {
     throw new Error(name + '.' + property + ' has to be an array of integers');
   }
 }
 
+/**
+ * Make sure obj.property is set, and if not, throw an error.
+ * @param  {Object}  obj              - Object to look at
+ * @param  {String}  property         - Name of the property which should be set
+ * @param  {String}  [name='options'] - In case of an error, how to name the
+ *                                      Object? Defaults to options.
+ */
 Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
   if(!_.has(obj, property)) {
     throw new Error(name + '.' + property + ' has to be set');
   }
 }
 
+/**
+ * Return a unix timestamp (seconds)
+ * @return {int} Unix Timestamp
+ */
 Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
   return Math.floor(new Date() / 1000);
 }

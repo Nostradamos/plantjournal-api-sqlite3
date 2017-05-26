@@ -53,6 +53,8 @@ describe('Family()', function() {
         'plants': [1, 2]
       });
 
+      // Make sure we deleted also from database
+
       let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
       rowsFam.should.deepEqual(
         [
@@ -80,7 +82,12 @@ describe('Family()', function() {
         ]
       );
 
-
+      let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANTS);
+      rowsPlant.should.deepEqual(
+        [
+          {'plantId': 3, 'plantName': 'blubb'}
+        ]
+      );
     });
   });
 
