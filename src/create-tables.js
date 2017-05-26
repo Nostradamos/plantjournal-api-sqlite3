@@ -21,7 +21,7 @@ module.exports =  async function createTables() {
       generationModifiedAt DATETIME NOT NULL,
       familyId INTEGER NOT NULL,
       PRIMARY KEY (generationId),
-      FOREIGN KEY(familyId) REFERENCES families(familyId)
+      FOREIGN KEY(familyId) REFERENCES families(familyId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
   await sqlite.run(`
@@ -32,7 +32,7 @@ module.exports =  async function createTables() {
       genotypeModifiedAt DATETIME NOT NULL,
       generationId INTEGER NOT NULL,
       PRIMARY KEY (genotypeId),
-      FOREIGN KEY(generationId) REFERENCES generations(generationId)
+      FOREIGN KEY(generationId) REFERENCES generations(generationId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
   await sqlite.run(`
@@ -45,8 +45,8 @@ module.exports =  async function createTables() {
       plantModifiedAt DATETIME NOT NULL,
       genotypeId INTEGER NOT NULL,
       PRIMARY KEY (plantId),
-      FOREIGN KEY (plantClonedFrom) REFERENCES plants(plantId),
-      FOREIGN KEY(genotypeId) REFERENCES genotypes(genotypeId)
+      FOREIGN KEY (plantClonedFrom) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE SET NULL,
+      FOREIGN KEY(genotypeId) REFERENCES genotypes(genotypeId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
   // We have to this after plant & generation creation becaus of the
@@ -57,9 +57,8 @@ module.exports =  async function createTables() {
       generationId NOT NULL,
       plantId NOT NULL,
       PRIMARY KEY (parentId),
-      FOREIGN KEY (generationId) REFERENCES generations(generationId),
-      FOREIGN KEY (plantId) REFERENCES plants(plantId)
+      FOREIGN KEY (generationId) REFERENCES generations(generationId) ON UPDATE CASCADE ON DELETE CASCADE,
+      FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
-
 }

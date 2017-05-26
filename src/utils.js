@@ -270,7 +270,7 @@ Utils.addFoundAndRemainingFromCountToReturnObject = function addFoundAndRemainin
 
 
 /**
- * Left joins families to query. Mutates query
+ * Left joins families by referencing to generations.familyId. Mutates query
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 Utils.leftJoinFamilies = function leftJoinFamilies(query) {
@@ -278,7 +278,8 @@ Utils.leftJoinFamilies = function leftJoinFamilies(query) {
 }
 
 /**
- * Left joins generations and generation_parents. Mutates query
+ * Left joins generations and generation_parents by referencing to
+ * genotypes.generationId. Mutates query
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 Utils.leftJoinGenerations = function leftJoinGenerations(query) {
@@ -287,11 +288,36 @@ Utils.leftJoinGenerations = function leftJoinGenerations(query) {
 }
 
 /**
- * Left joins genotypes. Mutates query
+ * Left joins genotypes by referencing to plants.genotypeId. Mutates query
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 Utils.leftJoinGenotypes = function leftJoinGenotypes(query) {
   query.left_join(CONSTANTS.TABLE_GENOTYPES, 'genotypes', 'plants.genotypeId = genotypes.genotypeId');
+}
+
+/**
+ * Left joins generations by referencing to families.familyId.
+ * @param  {squel} query - Squel query capable of an .left_join()
+ */
+Utils.leftJoinGenerationsDownwards = function leftJoinGenerationsDownwards(query) {
+  query.left_join(CONSTANTS.TABLE_GENERATIONS, 'generations', 'families.familyId = generations.familyId');
+  query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS, 'generation_parents', 'generations.generationId = generation_parents.generationId');
+}
+
+/**
+ * Left joins Genotypes by referencing to generations.generationId
+ * @param  {squel} query - Squel query capable of an .left_join()
+ */
+Utils.leftJoinGenotypesDownwards = function leftJoinGenotypesDownwards(query) {
+  query.left_join(CONSTANTS.TABLE_GENOTYPES, 'genotypes', 'generations.generationId = genotypes.generationId');
+}
+
+/**
+ * Left joins Plants by referencing to genotypes.genotypeId
+ * @param  {squel} query - Squel query capable of an .left_join()
+ */
+Utils.leftJoinPlantsDownwards = function leftJoinPlantsDownwards(query) {
+  query.left_join(CONSTANTS.TABLE_PLANTS, 'plants', 'genotypes.genotypeId = plants.genotypeId');
 }
 
 Utils.hasToBeAssocArray = function hasToBeAssocArray(obj, prefix = 'First argument') {
@@ -326,4 +352,14 @@ Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
 
 Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
   return Math.floor(new Date() / 1000);
+}
+
+/**
+ * Converts Set to array and filters out null. Mutates set.
+ * @param  {Set} set - Set to filter and convert
+ * @return {Array}
+ */
+Utils.filterSetNotNull = function filterSetNotNull(set) {
+  set.delete(null);
+  return Array.from(set);
 }

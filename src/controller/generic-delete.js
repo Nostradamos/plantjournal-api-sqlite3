@@ -13,14 +13,14 @@ class GenericDelete {
     logger.debug(this.name, ' #delete() criteria:', criteria);
     let context = {};
 
-    this.initQueryWhere(context, criteria);
-    this.setQueryWhereIdField(context, criteria);
-    this.setQueryWhereWhere(context, criteria);
-    this.setQueryWhereJoin(context, criteria);
-    this.setQueryWhereLimitAndOffset(context, criteria);
-    this.stringifyQueryWhere(context, criteria);
+    this.initQueryRelated(context, criteria);
+    this.setQueryRelatedJoin(context, criteria);
+    this.setQueryRelatedFields(context, criteria);
+    this.setQueryRelatedWhere(context, criteria);
+    this.setQueryRelatedLimitAndOffset(context, criteria);
+    this.stringifyQueryRelated(context, criteria);
 
-    await this.executeQueryWhere(context, criteria);
+    await this.executeQueryRelated(context, criteria);
 
     this.extractIdsToDelete(context, criteria);
 
@@ -38,36 +38,38 @@ class GenericDelete {
 
   }
 
-  static initQueryWhere(context, criteria) {
-    context.queryWhere = squel
+    static initQueryRelated(context, criteria) {
+    context.queryRelated = squel
       .select()
       .from(this.table, this.table)
   }
 
-  static setQueryWhereIdField(context, criteria) {
-  }
-
-  static setQueryWhereWhere(context, criteria) {
-    Utils.setWhere(context.queryWhere, this.allowedFields, criteria);
-  }
-
-  static setQueryWhereJoin(context, criteria) {
+  static setQueryRelatedJoin(context, criteria) {
 
   }
 
-  static setQueryWhereLimitAndOffset(context, criteria) {
-    if(criteria.limit) context.queryWhere.limit(criteria.limit);
-    if(criteria.offset) context.queryWhere.offset(criteria.offset);
+
+  static setQueryRelatedFields(context, criteria) {
   }
 
-  static stringifyQueryWhere(context, criteria) {
-    context.queryWhere = context.queryWhere.toString();
-    logger.debug(this.name, '#delete() queryWhere:', context.queryWhere);
+  static setQueryRelatedWhere(context, criteria) {
+    Utils.setWhere(context.queryRelated, this.allowedFields, criteria);
   }
 
-  static async executeQueryWhere(context, criteria) {
-    context.rowsWhere = await sqlite.all(context.queryWhere);
-    logger.debug(this.name, '#delete() rowsWhere:', context.rowsWhere);
+
+  static setQueryRelatedLimitAndOffset(context, criteria) {
+    if(criteria.limit) context.queryRelated.limit(criteria.limit);
+    if(criteria.offset) context.queryRelated.offset(criteria.offset);
+  }
+
+  static stringifyQueryRelated(context, criteria) {
+    context.queryRelated = context.queryRelated.toString();
+    logger.debug(this.name, '#delete() queryRelated:', context.queryRelated);
+  }
+
+  static async executeQueryRelated(context, criteria) {
+    context.rowsRelated = await sqlite.all(context.queryRelated);
+    logger.debug(this.name, '#delete() rowsRelated:', context.rowsRelated);
   }
 
   static extractIdsToDelete(context, criteria) {
