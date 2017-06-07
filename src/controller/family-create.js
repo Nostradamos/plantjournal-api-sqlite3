@@ -33,7 +33,7 @@ class FamilyCreate extends GenericCreate {
 }
 
 FamilyCreate.TABLE = CONSTANTS.TABLE_FAMILIES;
-FamilyCreate.fieldCreatedAt = 'familyCreatedAt';
-FamilyCreate.fieldModifiedAt = 'familyModifiedAt';
+FamilyCreate.ALIAS_CREATED_AT = 'familyCreatedAt';
+FamilyCreate.ALIAS_MODIFIED_AT = 'familyModifiedAt';
 
 module.exports = FamilyCreate;

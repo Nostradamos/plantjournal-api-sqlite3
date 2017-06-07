@@ -32,7 +32,7 @@ class GenerationDelete extends GenericDelete {
     context.plantIdsToDelete = new Set();
 
     _.each(context.rowsRelated, function(row) {
-      // now we iterate over each row and add all ids to the matching
+      //   now we iterate over each row and add all ids to the matching
       // context.xyzIdsToDelete. It's possible that we also add a null
       // field, but we will take care of that later
       context.generationIdsToDelete.add(row.generationId);
@@ -61,7 +61,7 @@ class GenerationDelete extends GenericDelete {
   }
 }
 
-GenerationDelete.TABLE = CONSTANTS.TABLE_FAMILIES;
-GenerationDelete.SEARCHABLE_ALIASES = CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_ALL_GENERATION;
+GenerationDelete.TABLE = CONSTANTS.TABLE_GENERATIONS;
+GenerationDelete.SEARCHABLE_ALIASES = CONSTANTS.ALIASES_ALL_GENERATION;
 
 module.exports = GenerationDelete;

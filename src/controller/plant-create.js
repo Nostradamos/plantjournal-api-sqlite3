@@ -117,7 +117,7 @@ class PlantCreate extends GenericCreate {
 }
 
 PlantCreate.TABLE = CONSTANTS.TABLE_PLANTS;
-PlantCreate.fieldCreatedAt = 'plantCreatedAt';
-PlantCreate.fieldModifiedAt = 'plantModifiedAt';
+PlantCreate.ALIAS_CREATED_AT = 'plantCreatedAt';
+PlantCreate.ALIAS_MODIFIED_AT = 'plantModifiedAt';
 
 module.exports = PlantCreate;

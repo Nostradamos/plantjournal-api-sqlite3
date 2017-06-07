@@ -47,14 +47,14 @@ class GenerationCreate extends GenericCreate {
     logger.debug(
       this.name,
       '#create()',
-      this.fieldCreatedAt + ':',
+      this.ALIAS_CREATED_AT + ':',
       context.createdAt,
-      this.fieldModifiedAt + ':',
+      this.ALIAS_MODIFIED_AT + ':',
       context.modifiedAt
     );
     context.queryGeneration
-      .set(this.fieldCreatedAt, context.createdAt)
-      .set(this.fieldModifiedAt, context.modifiedAt);
+      .set(this.ALIAS_CREATED_AT, context.createdAt)
+      .set(this.ALIAS_MODIFIED_AT, context.modifiedAt);
   }
 
 
@@ -112,7 +112,7 @@ class GenerationCreate extends GenericCreate {
 
 GenerationCreate.TABLE = CONSTANTS.TABLE_GENERATIONS;
 GenerationCreate.TABLEParents = CONSTANTS.TABLE_GENERATION_PARENTS;
-GenerationCreate.fieldCreatedAt = 'generationCreatedAt';
-GenerationCreate.fieldModifiedAt = 'generationModifiedAt';
+GenerationCreate.ALIAS_CREATED_AT = 'generationCreatedAt';
+GenerationCreate.ALIAS_MODIFIED_AT = 'generationModifiedAt';
 
 module.exports = GenerationCreate;

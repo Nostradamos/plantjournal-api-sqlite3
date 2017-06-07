@@ -118,14 +118,14 @@ class GenericCreate {
     logger.debug(
       this.name,
       '#find()',
-      this.fieldCreatedAt + ':',
+      this.ALIAS_CREATED_AT + ':',
       context.createdAt,
-      this.fieldModifiedAt + ':',
+      this.ALIAS_MODIFIED_AT + ':',
       context.modifiedAt
     );
     context.query
-      .set(this.fieldCreatedAt, context.createdAt)
-      .set(this.fieldModifiedAt, context.modifiedAt);
+      .set(this.ALIAS_CREATED_AT, context.createdAt)
+      .set(this.ALIAS_MODIFIED_AT, context.modifiedAt);
   }
 
   /**
@@ -188,7 +188,7 @@ class GenericCreate {
 
 // set this field for the default table name used in #initQuery()
 GenericCreate.TABLE = null;
-GenericCreate.fieldCreatedAt;
-GenericCreate.fieldModifiedAt;
+GenericCreate.ALIAS_CREATED_AT;
+GenericCreate.ALIAS_MODIFIED_AT;
 
 module.exports = GenericCreate;

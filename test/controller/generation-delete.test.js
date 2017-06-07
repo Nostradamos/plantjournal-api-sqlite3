@@ -6,8 +6,8 @@ const sqlite = require('sqlite');
 const plantJournal = require('../../src/pj');
 const CONSTANTS = require('../../src/constants');
 
-describe('Family()', function() {
-  describe('#delete()', function() {
+describe('Generation()', function() {
+  describe('#delete()', async function() {
     let pj;
 
     before(async function() {
@@ -33,31 +33,33 @@ describe('Family()', function() {
     });
 
     it('should throw error if no criteria object got passed', async function() {
-      await pj.Family.delete()
+      await pj.Generation.delete()
         .should.be.rejectedWith('No criteria object passed');
     });
 
-    it('should delete specified family in criteria.where.familyId and return the id', async function() {
-      let deletedFam = await pj.Family.delete(
+    it('should delete generation specified in criteria.where.generationId and downwards referenced genotypes/plants', async function() {
+      let deletedGen = await pj.Generation.delete(
         {
           'where': {
-            'familyId': 1
+            'generationId': 1
           }
         }
       );
 
-      deletedFam.should.deepEqual({
-        'families': [1],
-        'generations': [1],
-        'genotypes': [1, 2],
-        'plants': [1, 2]
-      });
+      deletedGen.should.deepEqual(
+        {
+          'generations': [1],
+          'genotypes': [1,2],
+          'plants': [1,2]
+        }
+      );
 
       // Make sure we deleted also from database
 
       let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
       rowsFam.should.deepEqual(
         [
+          {'familyId': 1, 'familyName': 'test1'},
           {'familyId': 2, 'familyName': 'testB'},
           {'familyId': 3, 'familyName': 'test3'},
           {'familyId': 4, 'familyName': 'testD'}
