@@ -63,7 +63,7 @@ class GenericFind {
   /**
    * Init queries. Basically defines two properties in context
    * for queryWhere and queryCount. Besides that it sets
-   * queryWhere to a select() and table to this.table.
+   * queryWhere to a select() and table to this.TABLE.
    * @param  {object} context   - Internal context object
    * @param  {object} criteria  - Criteria object passed to find()
    */
@@ -73,7 +73,7 @@ class GenericFind {
     // query ignores the limit part and uses the COUNT() function in sqlite.
     // To make it easier we first set everything which is the same for both queries
     // to queryWhere and clone it into queryCount. So we have to do things only once.
-    context.queryWhere = squel.select().from(this.table, this.table);
+    context.queryWhere = squel.select().from(this.TABLE, this.TABLE);
     context.queryCount;
   }
 
@@ -89,13 +89,13 @@ class GenericFind {
 
   /**
    * This method just applies Utils.setWhere to the context.queryWhere query.
-   * Normally you shouldn't overwrite this, you can use this.allowedFields to
+   * Normally you shouldn't overwrite this, you can use this.SEARCHABLE_ALIASES to
    * adjust the behaviour.
    * @param  {object} context   - Internal context object
    * @param  {object} criteria  - Criteria object passed to find()
    */
   static setQueryWhere(context, criteria) {
-    Utils.setWhere(context.queryWhere, this.allowedFields, criteria);
+    Utils.setWhere(context.queryWhere, this.SEARCHABLE_ALIASES, criteria);
   }
 
   /**
@@ -110,7 +110,7 @@ class GenericFind {
   }
 
   /**
-   * Only sets the this.idField to queryWhere. Overwrite this if you want
+   * Only sets the this.ID_ALIAS to queryWhere. Overwrite this if you want
    * more selected fields in the queryWhere query. Does not mutate queryCount.
    * @param  {object} context   - Internal context object
    * @param  {object} criteria  - Criteria object passed to find()
@@ -118,18 +118,18 @@ class GenericFind {
   static setQueryWhereDefaultFields(context, criteria) {
     // For queryWhere we always have to set familyId, because it's needed
     // for the object key.
-    context.queryWhere.field(this.idField);
+    context.queryWhere.field(this.ID_ALIAS);
   }
 
   /**
-   * Applies Utils.setFields() to context.queryWhere with this.fieldAliases.
+   * Applies Utils.setFields() to context.queryWhere with this.ALIASES_TO_FIELD_WITHOUT_ID.
    * Normally you shouldn't overwrite this function.
    * @param  {object} context   - Internal context object
    * @param  {object} criteria  - Criteria object passed to find()
    */
   static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set fields specified if options.fields, otherwise all.
-    Utils.setFields(context.queryWhere, this.fieldAliases, context.fields);
+    Utils.setFields(context.queryWhere, this.ALIASES_TO_FIELD_WITHOUT_ID, context.fields);
   }
 
   /**
@@ -140,7 +140,7 @@ class GenericFind {
    * @param  {object} criteria  - Criteria object passed to find()
    */
   static setQueryCountFields(context, criteria) {
-    context.queryCount.field('count(' + this.idField + ')', 'count');
+    context.queryCount.field('count(' + this.ID_ALIAS + ')', 'count');
   }
 
   /**
@@ -226,9 +226,24 @@ class GenericFind {
   }
 }
 
-GenericFind.table; // main table name
-GenericFind.allowedFields;
-GenericFind.idField;
-GenericFind.fieldAliases;
+/**
+ * Table name. Eg: families
+ * @type {String}
+ */
+GenericFind.TABLE;
+
+/**
+ * Array of all queryable aliases. Eg. ['familyId', 'familyName'...]
+ * @type {String[]}
+ */
+GenericFind.SEARCHABLE_ALIASES;
+
+/**
+ * Alias for id field. Eg. familyId
+ * @type {String}
+ */
+GenericFind.ID_ALIAS;
+
+GenericFind.ALIASES_TO_FIELD_WITHOUT_ID;
 
 module.exports = GenericFind;

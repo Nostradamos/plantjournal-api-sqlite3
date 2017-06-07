@@ -41,7 +41,7 @@ class GenericDelete {
     static initQueryRelated(context, criteria) {
     context.queryRelated = squel
       .select()
-      .from(this.table, this.table)
+      .from(this.TABLE, this.TABLE)
   }
 
   static setQueryRelatedJoin(context, criteria) {
@@ -53,7 +53,7 @@ class GenericDelete {
   }
 
   static setQueryRelatedWhere(context, criteria) {
-    Utils.setWhere(context.queryRelated, this.allowedFields, criteria);
+    Utils.setWhere(context.queryRelated, this.SEARCHABLE_ALIASES, criteria);
   }
 
 
@@ -78,7 +78,7 @@ class GenericDelete {
   static initQueryDelete(context, criteria) {
     context.queryDelete = squel
       .delete()
-      .from(this.table);
+      .from(this.TABLE);
   }
 
   static setQueryDeleteWhere(context, criteria) {
@@ -101,7 +101,7 @@ class GenericDelete {
 
 }
 
-GenericDelete.table;
-GenericDelete.allowedFields;
+GenericDelete.TABLE;
+GenericDelete.SEARCHABLE_ALIASES;
 
 module.exports = GenericDelete;

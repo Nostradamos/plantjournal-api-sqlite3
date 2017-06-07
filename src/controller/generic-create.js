@@ -88,14 +88,14 @@ class GenericCreate {
   /**
    * This function inits the context.query squel object.
    * By default it will be an insert query and the table will
-   * be this.table.
+   * be this.TABLE.
    * Overwrite this if you want to init more than one query or you're
    * not happy with the default behaviour.
    * @param  {object} context - internal context object in #create()
    * @param  {object} options - options object passed to #create()
    */
   static initQuery(context, options) {
-    context.query = squel.insert().into(this.table);
+    context.query = squel.insert().into(this.TABLE);
   }
 
   /**
@@ -187,7 +187,7 @@ class GenericCreate {
 }
 
 // set this field for the default table name used in #initQuery()
-GenericCreate.table = null;
+GenericCreate.TABLE = null;
 GenericCreate.fieldCreatedAt;
 GenericCreate.fieldModifiedAt;
 

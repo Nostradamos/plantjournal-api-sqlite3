@@ -24,7 +24,7 @@ class GenerationCreate extends GenericCreate {
   }
 
   static initQuery(context, options) {
-    context.queryGeneration = squel.insert().into(this.table);
+    context.queryGeneration = squel.insert().into(this.TABLE);
   }
 
   static buildQuery(context, options) {
@@ -69,7 +69,7 @@ class GenerationCreate extends GenericCreate {
       fieldsRows.push({parentId: null, generationId: context.insertId, plantId: parentPlantId});
     });
     console.log(context.queryGenerationParents);
-    context.queryGenerationParents = squel.insert().into(this.tableParents)
+    context.queryGenerationParents = squel.insert().into(this.TABLEParents)
       .setFieldsRows(fieldsRows)
       .toString();
     logger.debug(this.name, '#create() queryGenerationParents:', context.queryGenerationParents);
@@ -110,8 +110,8 @@ class GenerationCreate extends GenericCreate {
   }
 }
 
-GenerationCreate.table = CONSTANTS.TABLE_GENERATIONS;
-GenerationCreate.tableParents = CONSTANTS.TABLE_GENERATION_PARENTS;
+GenerationCreate.TABLE = CONSTANTS.TABLE_GENERATIONS;
+GenerationCreate.TABLEParents = CONSTANTS.TABLE_GENERATION_PARENTS;
 GenerationCreate.fieldCreatedAt = 'generationCreatedAt';
 GenerationCreate.fieldModifiedAt = 'generationModifiedAt';
 

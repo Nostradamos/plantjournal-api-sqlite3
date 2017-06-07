@@ -32,7 +32,7 @@ class FamilyCreate extends GenericCreate {
   }
 }
 
-FamilyCreate.table = CONSTANTS.TABLE_FAMILIES;
+FamilyCreate.TABLE = CONSTANTS.TABLE_FAMILIES;
 FamilyCreate.fieldCreatedAt = 'familyCreatedAt';
 FamilyCreate.fieldModifiedAt = 'familyModifiedAt';
 

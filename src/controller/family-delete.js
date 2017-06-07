@@ -68,7 +68,7 @@ class FamilyDelete extends GenericDelete {
   }
 }
 
-FamilyDelete.table = CONSTANTS.TABLE_FAMILIES;
-FamilyDelete.allowedFields = CONSTANTS.ALIASES_ALL_FAMILY;
+FamilyDelete.TABLE = CONSTANTS.TABLE_FAMILIES;
+FamilyDelete.SEARCHABLE_ALIASES = CONSTANTS.ALIASES_ALL_FAMILY;
 
 module.exports = FamilyDelete;

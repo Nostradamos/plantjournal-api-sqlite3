@@ -174,7 +174,7 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
     'generationId': row.generationId,
     'familyId': row.familyId
   };
-  _.each(CONSTANTS.FIELDS_PLANT, function(field) {
+  _.each(CONSTANTS.ALIASES_ONLY_PLANT, function(field) {
     if(_.has(row, field)) plant[field] = row[field];
   });
   if(forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
@@ -195,7 +195,7 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
       'generationId': row.generationId,
       'familyId': row.familyId
   };
-  _.each(CONSTANTS.FIELDS_GENOTYPE, function(field) {
+  _.each(CONSTANTS.ALIASES_ONLY_GENOTYPE, function(field) {
     if(_.has(row, field)) genotype[field] = row[field];
   });
   if(forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
@@ -218,7 +218,7 @@ Utils.addGenerationFromRowToReturnObject = function addGenerationFromRowToReturn
     'familyId': row.familyId
   }
 
-  _.each(CONSTANTS.FIELDS_GENERATION, function(field) {
+  _.each(CONSTANTS.ALIASES_ONLY_GENERATION, function(field) {
     if(_.has(row, field)) {
       let rowField = row[field];
       // if we have row.generationParents and it's null, set an empty array [], else split it into an array
@@ -244,7 +244,7 @@ Utils.addGenerationFromRowToReturnObject = function addGenerationFromRowToReturn
 Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(row, returnObject, options, forceAdd) {
   let familyId = row.familyId;
   let family = {};
-  _.each(CONSTANTS.FIELDS_FAMILY, function(field) {
+  _.each(CONSTANTS.ALIASES_ONLY_FAMILY, function(field) {
     if(_.has(row, field)) family[field] = row[field];
   });
 

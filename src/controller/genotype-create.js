@@ -49,7 +49,7 @@ class GenotypeCreate extends GenericCreate {
   }
 }
 
-GenotypeCreate.table = CONSTANTS.TABLE_GENOTYPES;
+GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPES;
 GenotypeCreate.fieldCreatedAt = "genotypeCreatedAt";
 GenotypeCreate.fieldModifiedAt = "genotypeModifiedAt";
 
