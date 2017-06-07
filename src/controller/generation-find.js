@@ -46,8 +46,8 @@ class GenerationFind extends GenericFind {
 }
 
 GenerationFind.table = CONSTANTS.TABLE_GENERATIONS
-GenerationFind.idField = CONSTANTS.ID_FIELD_GENERATION;
-GenerationFind.allowedFields = CONSTANTS.ALLOWED_FIELDS_GENERATION;
-GenerationFind.fieldAliases = _.merge({}, CONSTANTS.FIELD_ALIASES_FAMILY, CONSTANTS.FIELD_ALIASES_GENERATION);
+GenerationFind.idField = CONSTANTS.ID_ALIAS_GENERATION;
+GenerationFind.allowedFields = CONSTANTS.ALIASES_ALL_GENERATION;
+GenerationFind.fieldAliases = _.merge({}, CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_FAMILY, CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENERATION);
 
 module.exports = GenerationFind;

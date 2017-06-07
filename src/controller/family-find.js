@@ -18,8 +18,8 @@ class FamilyFind extends GenericFind {
 }
 
 FamilyFind.table = CONSTANTS.TABLE_FAMILIES;
-FamilyFind.idField = CONSTANTS.ID_FIELD_FAMILY;
-FamilyFind.allowedFields = CONSTANTS.ALLOWED_FIELDS_FAMILY;
-FamilyFind.fieldAliases = CONSTANTS.FIELD_ALIASES_FAMILY;
+FamilyFind.idField = CONSTANTS.ID_ALIAS_FAMILY;
+FamilyFind.allowedFields = CONSTANTS.ALIASES_ALL_FAMILY;
+FamilyFind.fieldAliases = CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_FAMILY;
 
 module.exports = FamilyFind;
