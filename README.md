@@ -4,6 +4,7 @@
 plantJournal
 ============
 
+
 ToDo
 =====
 
@@ -11,7 +12,6 @@ ToDo
 * Add description fields
 * Add sorting for get
 * Add update
-* Add delete
 * Add medium
 * Add environment
 * Add strain
