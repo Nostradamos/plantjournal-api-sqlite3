@@ -157,7 +157,9 @@ class GenericDelete {
   }
 
   /**
-   * 
+   * Init context.queryDelete squel query for the actual delete
+   * query. No need to overwrite, simply change GenericDelete.TABLE
+   * to the table name
    * @param  {object} context   - Internal context object
    * @param  {object} criteria  - Criteria object passed to find()
    */
@@ -167,19 +169,47 @@ class GenericDelete {
       .from(this.TABLE);
   }
 
+  /**
+   * Set where for queryDelete. Normally which entry ids
+   * should get deleted.
+   * @param  {object} context   - Internal context object
+   * @param  {object} criteria  - Criteria object passed to find()
+   */
   static setQueryDeleteWhere(context, criteria) {
   }
 
+  /**
+   * Stringifies queryDelete and logs the query string.
+   * No need to overwrite.
+   * @param  {object} context   - Internal context object
+   * @param  {object} criteria  - Criteria object passed to find()
+   */
   static stringifyQueryDelete(context, criteria) {
     context.queryDelete = context.queryDelete.toString();
     logger.debug(this.name, '#delete() queryDelete:', context.queryDelete);
   }
 
+  /**
+   * Executes queryDelete and puts result into context.resultDelete.
+   * Logs results too. No need to overwrite.
+   * @param  {object} context   - Internal context object
+   * @param  {object} criteria  - Criteria object passed to find()
+   */
   static async executeQueryDelete(context, criteria) {
     context.resultDelete = await sqlite.get(context.queryDelete);
     logger.debug(this.name, '#delete() resultDelete', context.resultDelete);
   }
 
+  /**
+   * Add all properties you want to have in your returnObject here.
+   * This should contain all ids for the different models which got
+   * deleted.
+   * @param  {object} returnObject - returnObject, an empty assoc array
+   *                                 which will get returned at the end of
+   *                                 #delete()
+   * @param  {object} context      - Internal context object
+   * @param  {object} criteria     - Criteria object passed to find()
+   */
   static async buildReturnObject(returnObject, context, criteria) {
 
   }
@@ -187,7 +217,11 @@ class GenericDelete {
 
 }
 
+// @var {String} Table name for all init queries like selecting the related ids
+// and deleting from.
 GenericDelete.TABLE;
+// @var {String[]} Array containing all allowed ALIASES which can we use in our
+// WHERE part.
 GenericDelete.SEARCHABLE_ALIASES;
 
 module.exports = GenericDelete;
