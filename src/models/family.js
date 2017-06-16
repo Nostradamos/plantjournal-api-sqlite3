@@ -3,6 +3,7 @@
 const FamilyCreate = require('../controller/family-create');
 const FamilyFind = require('../controller/family-find');
 const FamilyDelete = require('../controller/family-delete');
+const FamilyUpdate = require('../controller/family-update');
 
 let Family = exports;
 
@@ -21,4 +22,8 @@ Family.find = async function(criteria) {
 
 Family.delete = async function(criteria) {
   return await FamilyDelete.delete(criteria);
+}
+
+Family.update = async function(update, criteria) {
+  return await FamilyUpdate.update(update, criteria);
 }

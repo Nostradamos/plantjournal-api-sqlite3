@@ -1,3 +1,5 @@
+'use strict';
+
 const should = require('should');
 const plantJournal = require('../../src/pj');
 const sqlite = require('sqlite');
