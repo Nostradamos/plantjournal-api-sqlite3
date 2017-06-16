@@ -7,8 +7,23 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 
+/**
+ * Generic update class which is the skeleton for all *-update classes.
+ * It defines some general update behaviour and lets space to modifiy
+ * this behaviour for the different update classes.
+ */
 class GenericUpdate {
 
+  /**
+   * This Method executes the whole update process.
+   * Don't overwrite this method if possible, but overwrite the
+   * different sub methods to get the behaviour you want.
+   * @param  {object}  update   Object containing aliases as key to update with
+   *                            new value. Eg: {'familyName': 'newFamName'}
+   * @param  {object}  criteria Criteria Object describing which entries should
+   *                            get updated.
+   * @return {Promise}
+   */
   static async update(update, criteria){
     logger.debug(this.name, '#update() update:', update, 'criteria:', criteria || undefined);
 
@@ -41,42 +56,92 @@ class GenericUpdate {
     return context.idsToUpdate;
   }
 
-
+  /**
+   * Init queryFind as a select from this.TABLE.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static initQueryFind(context, update, criteria) {
     context.queryFind = squel.select().from(this.TABLE);
   }
 
+  /**
+   * Sets id field to select for queryFind
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryFindIdField(context, update, criteria) {
-    logger.debug(this.name, '#update() ID_FIELD:', this.ID_FIELD);
     context.queryFind.field(this.TABLE + '.' + this.ID_FIELD, this.ID_FIELD);
   }
 
+  /**
+   * In case you want to join other tables to make your where part working,
+   * overwrite this method. By default this method does nothing.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryFindJoin(context, update, criteria) {
   }
 
-
+  /**
+   * Sets where() for queryFind
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryFindWhere(context, update, criteria) {
     console.log(context.queryFind.field);
     Utils.setWhere(context.queryFind, this.FINDABLE_ALIASES, criteria);
   }
 
+  /**
+   * Sets limit and offset for queryFind
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryFindLimitAndOffset(context, update, criteria) {
     if(criteria.limit) context.queryFind.limit(criteria.limit);
     if(criteria.offset) context.queryFind.offset(criteria.offset);
   }
 
+  /**
+   * Stringifies queryFind and logs the query
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static stringifyQueryFind(context, update, criteria) {
     context.queryFind = context.queryFind.toString();
 
     logger.debug(this.name, '#update() queryFind:', context.queryFind);
   }
 
+  /**
+   * Executes queryFind and saves result to context.rowsFind.
+   * Logs rowsFind
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   * @return {Promise}
+   */
   static async executeQueryFind(context, update, criteria) {
     context.rowsFind = await sqlite.all(context.queryFind);
 
     logger.debug(this.name, '#update() rowsFind:', context.rowsFind);
   }
 
+  /**
+   * Extracts ids based on this.ID_FIELD from context.rowsFind
+   * and puts them into context.idsToUpdate.
+   * Logs idsToUpdate
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static extractIdsRowsFind(context, update, criteria) {
     context.idsToUpdate = [];
     _.each(context.rowsFind, function(row) {
@@ -86,10 +151,23 @@ class GenericUpdate {
     logger.debug(this.name, '#update() context.idsToUpdate:', context.idsToUpdate);
   }
 
+  /**
+   * Inits context.queryUpdate. No need to overwrite.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static initQueryUpdate(context, update, criteria) {
     context.queryUpdate = squel.update().table(this.TABLE);
   }
 
+  /**
+   * Sets fields for context.queryUpdate from update argument passed to
+   * #update(). Ignores any key which is not in this.UPDATABLE_ALIASES.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryUpdateFieldValues(context, update, criteria) {
     context.queryUpdate.setFields(
       // only set fields which are updatable and drop everything else

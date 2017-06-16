@@ -18,7 +18,10 @@ describe('Family()', function() {
       await pj.connect();
       await pj.Family.create({'familyName': 'testFamily1'});
       await pj.Family.create({'familyName': 'testFmily2'});
-
+      await pj.Generation.create({'generationName': 'testGen1', 'familyId': 1});
+      await pj.Generation.create({'generationName': 'testGen2', 'familyId': 1});
+      await pj.Plant.create({'plantName': 'testPlant1', 'generationId': 1});
+      await pj.Plant.create({'plantName': 'testPlant2', 'generationId': 2});
     });
 
     it('should throw error if no arguments got passed', async function() {
@@ -57,6 +60,5 @@ describe('Family()', function() {
     it('should ignore unknown update keys and not throw an error', async function() {
       await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'where': {'familyId': 2}});
     });
-
   });
 });
