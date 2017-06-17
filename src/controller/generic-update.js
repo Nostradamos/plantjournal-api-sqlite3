@@ -18,14 +18,15 @@ class GenericUpdate {
    * This Method executes the whole update process.
    * Don't overwrite this method if possible, but overwrite the
    * different sub methods to get the behaviour you want.
-   * @param  {object}  update   Object containing aliases as key to update with
-   *                            new value. Eg: {'familyName': 'newFamName'}
-   * @param  {object}  criteria Criteria Object describing which entries should
-   *                            get updated.
-   * @return {Promise}
+   * Returns an array of updated ids
+   * @param  {object}  update   - Object containing aliases as key to update with
+   *                              new value. Eg: {'familyName': 'newFamName'}
+   * @param  {object}  criteria - Criteria Object describing which entries should
+   *                              get updated.
+   * @return {Promise}          - Returns array of updated ids
    */
   static async update(update, criteria){
-    logger.debug(this.name, '#update() update:', update, 'criteria:', criteria || undefined);
+    logger.debug(this.name, '#update() update:', JSON.stringify(update), 'criteria:', JSON.stringify(criteria) || undefined);
 
     // Validate update and criteria arguments
     if(_.isUndefined(update) && _.isUndefined(criteria)) throw new Error('No Update and Critera Object got passed');
@@ -40,6 +41,7 @@ class GenericUpdate {
     this.setQueryFindIdField(context, update, criteria);
     this.setQueryFindWhere(context, update, criteria);
     this.setQueryFindLimitAndOffset(context, update, criteria);
+    this.setQueryFindGroup(context, update, criteria);
     this.stringifyQueryFind(context, update, criteria);
 
     await this.executeQueryFind(context, update, criteria);
@@ -53,6 +55,7 @@ class GenericUpdate {
 
     await this.executeQueryUpdate(context, update, criteria);
 
+    // No need to build a returnObject, just return context.idsToUpdate.
     return context.idsToUpdate;
   }
 
@@ -93,7 +96,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindWhere(context, update, criteria) {
-    console.log(context.queryFind.field);
+    console.log(this.FINDABLE_ALIASES);
     Utils.setWhere(context.queryFind, this.FINDABLE_ALIASES, criteria);
   }
 
@@ -108,6 +111,9 @@ class GenericUpdate {
     if(criteria.offset) context.queryFind.offset(criteria.offset);
   }
 
+  static setQueryFindGroup(context, update, criteria) {
+    context.queryFind.group(this.TABLE + '.' + this.ID_FIELD)
+  }
   /**
    * Stringifies queryFind and logs the query
    * @param  {object} context   - Internal context object
@@ -175,17 +181,38 @@ class GenericUpdate {
     );
   }
 
+  /**
+   * Sets where part for which ids to update.
+   * Uses context.idsToUpdate.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryUpdateWhere(context, update, criteria) {
     context.queryUpdate
       .where(this.TABLE + '.' + this.ID_FIELD + ' IN ?', context.idsToUpdate);
   }
 
+  /**
+   * Stringifies queryUpdate and logs it.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static stringifyQueryUpdate(context, update, criteria) {
     context.queryUpdate = context.queryUpdate.toString();
 
     logger.debug(this.name, '#update() queryUpdate:', context.queryUpdate.toString());
   }
 
+  /**
+   * Executes queryUpdate and saves result into context.resultUpdate.
+   * Logs resultUpdate.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   * @return {Promise}
+   */
   static async executeQueryUpdate(context, update, criteria) {
     context.resultUpdate = await sqlite.get(context.queryUpdate);
 
@@ -193,9 +220,9 @@ class GenericUpdate {
   }
 }
 
-GenericUpdate.TABLE;
-GenericUpdate.ID_FIELD;
-GenericUpdate.FINDABLE_ALIASES;
-GenericUpdate.UPDATABLE_ALIASES;
+GenericUpdate.TABLE; // Table name
+GenericUpdate.ID_FIELD; // name of id field
+GenericUpdate.FINDABLE_ALIASES; // array of aliases which we can search through
+GenericUpdate.UPDATABLE_ALIASES; // array of aliases which we can update, everything else will be ignored
 
 module.exports = GenericUpdate;
