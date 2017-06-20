@@ -60,23 +60,5 @@ describe('Family()', function() {
     it('should ignore unknown update keys and not throw an error', async function() {
       await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'where': {'familyId': 2}});
     });
-
-    it('should also possible to find families to update by related fields like generationName', async function() {
-      let updatedFamilies = await pj.Family
-        .update(
-          {'familyName': 'updatedFamilyName'},
-          {'where': {'generationName': 'testGen1'}}
-      );
-
-      updatedFamilies.should.eql([1]);
-
-      let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
-      rowsFam.should.deepEqual(
-        [
-          {'familyId': 1, 'familyName': 'updatedFamilyName'},
-          {'familyId': 2, 'familyName': 'testFamily2'}
-        ]
-      );
-    });
   });
 });
