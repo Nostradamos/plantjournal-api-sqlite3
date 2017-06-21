@@ -107,8 +107,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindLimitAndOffset(context, update, criteria) {
-    if(criteria.limit) context.queryFind.limit(criteria.limit);
-    if(criteria.offset) context.queryFind.offset(criteria.offset);
+    Utils.setLimitAndOffset(context.queryFind, criteria);
   }
 
   static setQueryFindGroup(context, update, criteria) {

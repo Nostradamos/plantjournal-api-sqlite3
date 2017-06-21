@@ -287,6 +287,12 @@ Utils.leftJoinFamilies = function leftJoinFamilies(query) {
  */
 Utils.leftJoinGenerations = function leftJoinGenerations(query) {
   query.left_join(CONSTANTS.TABLE_GENERATIONS, 'generations', 'genotypes.generationId = generations.generationId');
+  // We also have to join generation_parents
+  Utils.leftJoinGenerationParentsOnly(query);
+}
+
+
+Utils.leftJoinGenerationParentsOnly = function leftJoinGenerationParentsOnly(query) {
   query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS, 'generation_parents', 'generations.generationId = generation_parents.generationId');
 }
 

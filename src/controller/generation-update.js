@@ -1,14 +1,16 @@
 'use strict';
 
+const _ = require('lodash');
+
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 const CONSTANTS = require('../constants');
 const GenericUpdate = require('./generic-update');
 
 class GenerationUpdate extends GenericUpdate {
   static setQueryFindJoin(context, update, criteria) {
-    Utils.leftJoinGenotypesDownwards(context.queryFind);
-    Utils.leftJoinPlantsDownwards(context.queryFind);
+    QueryUtils.joinRelatedGenerations(context.queryFind);
   }
 }
 

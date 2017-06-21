@@ -118,8 +118,7 @@ class GenericDelete {
    * @param  {object} criteria  - Criteria object passed to find()
    */
   static setQueryRelatedLimitAndOffset(context, criteria) {
-    if(criteria.limit) context.queryRelated.limit(criteria.limit);
-    if(criteria.offset) context.queryRelated.offset(criteria.offset);
+    Utils.setLimitAndOffset(context.queryRelated, criteria);
   }
 
   /**
