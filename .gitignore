@@ -59,3 +59,6 @@ typings/
 .env
 
 test.js
+
+# vim sessions
+*.vim
