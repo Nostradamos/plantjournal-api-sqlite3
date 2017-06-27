@@ -113,6 +113,29 @@ describe('Generation()', function() {
       rowsGen[0].generationCreatedAt.should.not.eql(1);
     });
 
+    it('should throw error if familyId to update is invalid', async function() {
+      await pj.Generation.update(
+        {'familyId': 42},
+        {'where': {'generationId': 1}}
+      ).should.be.rejectedWith('update.familyId does not reference an existing Family');
+    });
+
+    it('should update familyId if not invalid', async function() {
+      let updatedGenerations = await pj.Generation.update(
+        {'familyId': 2},
+        {'where': {'generationId': 1}}
+      );
+
+      updatedGenerations.should.eql([1]);
+
+      let rowsGen = await sqlite.all(
+        'SELECT generationId, familyId FROM ' + CONSTANTS.TABLE_GENERATIONS  + ' WHERE generationId = 1'
+      );
+
+      rowsGen[0].familyId.should.eql(2);
+
+    });
+
     it('should be possible to update generationParents', async function() {
 
     });

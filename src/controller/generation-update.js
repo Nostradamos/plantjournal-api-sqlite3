@@ -23,6 +23,17 @@ class GenerationUpdate extends GenericUpdate {
   static setQueryFindJoin(context, update, criteria) {
     QueryUtils.joinRelatedGenerations(context.queryFind);
   }
+
+  static async executeQueryUpdate(context, update, criteria) {
+    try {
+      await super.executeQueryUpdate(context, update, criteria);
+    } catch(err) {
+      if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+        throw new Error('update.familyId does not reference an existing Family');
+      }
+      throw err;
+    }
+  }
 }
 
 GenerationUpdate.TABLE = CONSTANTS.TABLE_GENERATIONS;
@@ -38,6 +49,11 @@ GenerationUpdate.UPDATABLE_ALIASES = _.without(
   CONSTANTS.ID_ALIAS_GENERATION,
   CONSTANTS.MODIFIED_AT_ALIAS_GENERATION,
   CONSTANTS.CREATED_AT_ALIAS_GENERATION
+);
+
+GenerationUpdate.UPDATABLE_ALIASES = _.concat(
+  GenerationUpdate.UPDATABLE_ALIASES,
+  CONSTANTS.ID_ALIAS_FAMILY
 );
 
 module.exports = GenerationUpdate;
