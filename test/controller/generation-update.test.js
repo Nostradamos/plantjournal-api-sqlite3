@@ -85,7 +85,7 @@ describe('Generation()', function() {
 
     it('should not be possible to manually change generationModifiedAt', async function() {
       let updatedGenerations = await pj.Generation.update(
-        {'generationUpdatedAt': 1},
+        {'generationModifiedAt': 1},
         {'where': {'generationId': 1}}
       );
 

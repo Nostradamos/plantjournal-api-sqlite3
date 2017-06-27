@@ -40,7 +40,7 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
   // Because with Utils.leftJoinGenerations we already join
   // generation_parents and generations, we don't have to join
   // generation_parents again, therefore set false
-  QueryUtils.joinRelatedGenerations(queryObj, joinGenerationParents = false);
+  QueryUtils.joinRelatedGenerations(queryObj, false);
 }
 
 

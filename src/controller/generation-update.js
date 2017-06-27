@@ -14,7 +14,7 @@ const GenericUpdate = require('./generic-update');
  */
 class GenerationUpdate extends GenericUpdate {
   /**
-   * We need to join some tables to make all FINDABLE_ALIASES of family*
+   * We need to join some tables to make all FINDABLE_ALIASES of generation
    * work.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()

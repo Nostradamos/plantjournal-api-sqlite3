@@ -66,7 +66,7 @@ describe('Family()', function() {
 
     it('should not be possible to manually change familyModifiedAt', async function() {
       let updatedFamilies = await pj.Family.update(
-        {'familyUpdatedAt': 1},
+        {'familyModifiedAt': 1},
         {'where': {'familyId': 2}}
       );
 
