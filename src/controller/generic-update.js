@@ -36,6 +36,14 @@ class GenericUpdate {
 
     let context = {};
 
+    // First we pick fields to update. If nothing is to update,
+    // we will return right away.
+    this.pickFieldsToUpdate(context, update, criteria);
+    if(_.isEmpty(context.fieldsToUpdate)) {
+      logger.debug(this.name, '#update() fieldsToUpdate is empty, returning');
+      return [];
+    }
+
     this.initQueryFind(context, update, criteria);
     this.setQueryFindJoin(context, update, criteria);
     this.setQueryFindIdField(context, update, criteria);
@@ -58,6 +66,23 @@ class GenericUpdate {
 
     // No need to build a returnObject, just return context.idsToUpdate.
     return context.idsToUpdate;
+  }
+
+  /**
+   * Picks all fields to update. This means only keys in update,
+   * which are also in this.UPDATABLE_ALIASES will be copied into
+   * context.fieldsToUpdate. We do this at the beginning to return
+   * if nothing is to do.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
+  static pickFieldsToUpdate(context, update, criteria) {
+    // only take fields which are updatable and drop everything else
+    context.fieldsToUpdate = _.pick(update, this.UPDATABLE_ALIASES);
+
+    logger.debug(this.name, '#update() fieldsToUpdate:', context.fieldsToUpdate);
+
   }
 
   /**
@@ -97,7 +122,6 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindWhere(context, update, criteria) {
-    console.log(this.FINDABLE_ALIASES);
     Utils.setWhere(context.queryFind, this.FINDABLE_ALIASES, criteria);
   }
 
@@ -176,8 +200,7 @@ class GenericUpdate {
    */
   static setQueryUpdateFieldValues(context, update, criteria) {
     context.queryUpdate.setFields(
-      // only set fields which are updatable and drop everything else
-      _.pick(update, this.UPDATABLE_ALIASES)
+      context.fieldsToUpdate
     );
   }
 
@@ -189,7 +212,7 @@ class GenericUpdate {
    */
   static setQueryUpdateModifiedAt(context, update, criteria) {
     context.modifiedAt = Utils.getUnixTimestampUTC();
-    logger.debug(this.name, '#update() MODIFIED_AT_FIELD:', this.MODIFIED_AT_FIELD);  
+    logger.debug(this.name, '#update() MODIFIED_AT_FIELD:', this.MODIFIED_AT_FIELD);
     context.queryUpdate.set(
       this.MODIFIED_AT_FIELD,
       context.modifiedAt
