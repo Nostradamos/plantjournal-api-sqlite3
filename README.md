@@ -8,6 +8,7 @@ plantJournal
 ToDo
 =====
 
+* Refactor generic-find & constants
 * Complete setWhere()
 * Add description fields
 * Add sorting for get
