@@ -4,7 +4,6 @@ const should = require('should');
 const sqlite = require('sqlite');
 const _ = require('lodash');
 
-
 const plantJournal = require('../../src/pj');
 const CONSTANTS = require('../../src/constants');
 
@@ -82,7 +81,35 @@ describe('Generation()', function() {
         .update({'generationName': 'NoGoodGenName'}, {'where': {'familyId': 1}, 'offset': 1});
 
       updatedGen.should.eql([2]);
+    });
 
+    it('should not be possible to manually change generationModifiedAt', async function() {
+      let updatedGenerations = await pj.Generation.update(
+        {'generationUpdatedAt': 1},
+        {'where': {'generationId': 1}}
+      );
+
+      updatedGenerations.length.should.eql(0);
+
+      let rowsGen = await sqlite.all(
+        'SELECT generationId, generationModifiedAt FROM ' + CONSTANTS.TABLE_GENERATIONS  + ' WHERE generationId = 1'
+      );
+      rowsGen[0].generationModifiedAt.should.not.eql(1);
+    });
+
+    it('should not be possible to manually change generationCreatedAt', async function() {
+      let updatedGenerations = await pj.Generation.update(
+        {'generationCreatedAt': 1},
+        {'where': {'generationId': 1}}
+      );
+
+      updatedGenerations.length.should.eql(0);
+
+      let rowsGen = await sqlite.all(
+        'SELECT generationId, generationCreatedAt FROM ' + CONSTANTS.TABLE_GENERATIONS  + ' WHERE generationId = 1'
+      );
+
+      rowsGen[0].generationCreatedAt.should.not.eql(1);
     });
   });
 });

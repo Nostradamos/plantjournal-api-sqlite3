@@ -64,6 +64,31 @@ describe('Family()', function() {
 
     });
 
+    it('should not be possible to manually change familyModifiedAt', async function() {
+      let updatedFamilies = await pj.Family.update(
+        {'familyUpdatedAt': 1},
+        {'where': {'familyId': 2}}
+      );
+
+      updatedFamilies.length.should.eql(0);
+
+      let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+      rowsFam[0].familyModifiedAt.should.not.eql(1);
+    });
+
+    it('should not be possible to manually change familyCreatedAt', async function() {
+      let updatedFamilies = await pj.Family.update(
+        {'familyCreatedAt': 1},
+        {'where': {'familyId': 2}}
+      );
+
+      updatedFamilies.length.should.eql(0);
+
+      let rowsFam = await sqlite.all('SELECT familyId, familyCreatedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+      rowsFam[0].familyCreatedAt.should.not.eql(1);
+    });
+
+
     it('should ignore unknown update keys and not throw an error', async function() {
       await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'where': {'familyId': 2}});
     });

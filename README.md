@@ -12,6 +12,7 @@ ToDo
 * Complete setWhere()
 * Add description fields
 * Add sorting for get
+* Add resolveParents to find
 * Add update
 * Add medium
 * Add environment
