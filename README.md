@@ -8,12 +8,13 @@ plantJournal
 ToDo
 =====
 
+* Complete update (also for generationParents)
 * Refactor generic-find & constants
 * Complete setWhere()
-* Add description fields
-* Add sorting for get
+* Add sorting for find & update
 * Add resolveParents to find
-* Add update
+* Add description fields
+* Add logs
 * Add medium
 * Add environment
-* Add strain
+* Add strain?!

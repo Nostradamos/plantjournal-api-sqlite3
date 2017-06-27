@@ -15,11 +15,12 @@ describe('Generation()', function() {
       pj = new plantJournal(':memory:');
       await pj.connect();
       await pj.Family.create({'familyName': 'testFamily1'}); //familyId: 1
-      await pj.Generation.create({'generationName': 'F1', 'familyId': 1});
-      await pj.Generation.create({'generationName': 'F2', 'familyId': 1});
+      await pj.Generation.create({'generationName': 'F1', 'familyId': 1}); //generationId: 1
+      await pj.Generation.create({'generationName': 'F2', 'familyId': 1}); //generationId: 2
       await pj.Family.create({'familyName': 'testFamily2'});  //familyId: 2
-      await pj.Generation.create({'generationName': 'S1', 'familyId': 2});
-      await pj.Generation.create({'generationName': 'S2', 'familyId': 2});
+      await pj.Generation.create({'generationName': 'S1', 'familyId': 2}); //generationId: 3
+      await pj.Generation.create({'generationName': 'S2', 'familyId': 2}); //generationId: 4
+      await pj.Plant.create({'plantName': 'testPlant1', 'generationId': 1});
     });
 
     it('should throw error if no arguments got passed', async function() {
@@ -110,6 +111,10 @@ describe('Generation()', function() {
       );
 
       rowsGen[0].generationCreatedAt.should.not.eql(1);
+    });
+
+    it('should be possible to update generationParents', async function() {
+
     });
   });
 });
