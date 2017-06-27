@@ -8,7 +8,7 @@ const _ = require('lodash');
 const plantJournal = require('../../src/pj');
 const CONSTANTS = require('../../src/constants');
 
-describe('Family()', function() {
+describe('Generation()', function() {
   describe('#update()', function() {
     let pj;
 

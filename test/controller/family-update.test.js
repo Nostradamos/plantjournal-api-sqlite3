@@ -6,8 +6,10 @@ const _ = require('lodash');
 
 const helpers = require('../helper-functions');
 
-const plantJournal = require('../../src/pj');
 const CONSTANTS = require('../../src/constants');
+const plantJournal = require('../../src/pj');
+const Utils = require('../../src/utils');
+
 
 describe('Family()', function() {
   describe('#update()', function() {
@@ -51,6 +53,15 @@ describe('Family()', function() {
           {'familyId': 2, 'familyName': 'testFamily2'}
         ]
       );
+    });
+
+    it('should update modifiedAt Field in database', async function() {
+      let currentTimestamp = Utils.getUnixTimestampUTC();
+      let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'where': {'familyId': 2}});
+
+      let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+      (rowsFam[0].familyModifiedAt >= currentTimestamp).should.be.true();
+
     });
 
     it('should ignore unknown update keys and not throw an error', async function() {

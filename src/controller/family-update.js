@@ -19,6 +19,8 @@ FamilyUpdate.TABLE = CONSTANTS.TABLE_FAMILIES;
 
 FamilyUpdate.ID_FIELD = CONSTANTS.ID_ALIAS_FAMILY;
 
+FamilyUpdate.MODIFIED_AT_FIELD = CONSTANTS.MODIFIED_AT_ALIAS_FAMILY;
+
 // We can search through all fields related to family
 FamilyUpdate.FINDABLE_ALIASES = CONSTANTS.ALIASES_ALL_FAMILY;
 

@@ -2,9 +2,10 @@
 
 const _ = require('lodash');
 
-const logger = require('../logger');
 const CONSTANTS = require('../constants');
+const logger = require('../logger');
 const Utils = require('../utils');
+
 const GenericFind = require('./generic-find');
 
 class PlantFind extends GenericFind {
@@ -15,7 +16,10 @@ class PlantFind extends GenericFind {
   }
 
   static setQueryWhereDefaultFields(context, criteria) {
-    context.queryWhere.fields(['plants.plantId', 'genotypes.genotypeId', 'generations.generationId', 'families.familyId']);
+    context.queryWhere.fields(
+      ['plants.plantId', 'genotypes.genotypeId', 'generations.generationId',
+       'families.familyId']
+     );
   }
 
   static setQueryCountFields(context, criteria) {
@@ -37,13 +41,22 @@ class PlantFind extends GenericFind {
       Utils.addGenerationFromRowToReturnObject(row, returnObject, criteria);
       Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria);
     });
-    Utils.deleteEmptyProperties(returnObject, ['families', 'generations', 'genotypes']);
+
+    Utils.deleteEmptyProperties(
+      returnObject, ['families', 'generations', 'genotypes']
+    );
   }
 }
 
 PlantFind.TABLE = CONSTANTS.TABLE_PLANTS;
 PlantFind.ID_ALIAS = CONSTANTS.ID_ALIAS_PLANT;
 PlantFind.SEARCHABLE_ALIASES = CONSTANTS.ALIASES_ALL_PLANT;
-PlantFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge({}, CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_FAMILY, CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENERATION, CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENOTYPE, CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_PLANT);
+PlantFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge(
+  {},
+  CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_FAMILY,
+  CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENERATION,
+  CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENOTYPE,
+  CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_PLANT
+);
 
 module.exports = PlantFind;

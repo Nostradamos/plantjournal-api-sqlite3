@@ -50,6 +50,7 @@ class GenericUpdate {
 
     this.initQueryUpdate(context, update, criteria);
     this.setQueryUpdateFieldValues(context, update, criteria);
+    this.setQueryUpdateModifiedAt(context, update, criteria);
     this.setQueryUpdateWhere(context, update, criteria);
     this.stringifyQueryUpdate(context, update, criteria);
 
@@ -181,6 +182,21 @@ class GenericUpdate {
   }
 
   /**
+   * Sets modifedAt Field with current timestamp.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
+  static setQueryUpdateModifiedAt(context, update, criteria) {
+    context.modifiedAt = Utils.getUnixTimestampUTC();
+    logger.debug(this.name, '#update() MODIFIED_AT_FIELD:', this.MODIFIED_AT_FIELD);  
+    context.queryUpdate.set(
+      this.MODIFIED_AT_FIELD,
+      context.modifiedAt
+    );
+  }
+
+  /**
    * Sets where part for which ids to update.
    * Uses context.idsToUpdate.
    * @param  {object} context   - Internal context object
@@ -221,6 +237,7 @@ class GenericUpdate {
 
 GenericUpdate.TABLE; // Table name
 GenericUpdate.ID_FIELD; // name of id field
+GenericUpdate.MODIFIED_AT_FIELD // name of modifiedAt Field
 GenericUpdate.FINDABLE_ALIASES; // array of aliases which we can search through
 GenericUpdate.UPDATABLE_ALIASES; // array of aliases which we can update, everything else will be ignored
 
