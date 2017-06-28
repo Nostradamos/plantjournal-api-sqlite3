@@ -147,5 +147,50 @@ describe('Plant()', function() {
 
       rowsPlant[0].plantCreatedAt.should.not.eql(1);
     });
+
+    it('should be possible to update genotypeId', async function() {
+      let updatedPlant = await pj.Plant.update(
+        {'genotypeId': 3},
+        {'where': {'plantId': 1}}
+      );
+
+      updatedPlant.should.eql([1]);
+
+      let rowsPlant = await sqlite.all(
+        'SELECT plantId, genotypeId FROM ' + CONSTANTS.TABLE_PLANTS  + ' WHERE plantId = 1'
+      );
+
+      rowsPlant[0].genotypeId.should.eql(3);
+    });
+
+    it('should throw error if genotypeId to update does not reference existing genotype', async function() {
+      await pj.Plant.update(
+        {'genotypeId': 43},
+        {'where': {'plantId': 1}}
+      ).should.be.rejectedWith('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
+
+    });
+
+    it('should be possible to update plantClonedFrom', async function() {
+      let updatedPlant = await pj.Plant.update(
+        {'plantClonedFrom': 4},
+        {'where': {'plantId': 2}}
+      );
+
+      updatedPlant.should.eql([2]);
+
+      let rowsPlant = await sqlite.all(
+        'SELECT plantId, plantClonedFrom FROM ' + CONSTANTS.TABLE_PLANTS  + ' WHERE plantId = 2'
+      );
+
+      rowsPlant[0].plantClonedFrom.should.eql(4);
+    });
+
+    it('should throw error if plantClonedFrom does not reference existing plant', async function() {
+      await pj.Plant.update(
+        {'plantClonedFrom': 1337},
+        {'where': {'plantId': 2}}
+      ).should.be.rejectedWith('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
+    });
   });
 });

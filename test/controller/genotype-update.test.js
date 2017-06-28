@@ -134,5 +134,27 @@ describe('Genotype()', function() {
 
       rowsGeno[0].genotypeCreatedAt.should.not.eql(1);
     });
+
+    it('should be possible to update generationId', async function() {
+      let updatedGeno = await pj.Genotype.update(
+        {'generationId': 2},
+        {'where': {'genotypeId': 5}}
+      );
+
+      updatedGeno.should.eql([5]);
+
+      let rowsGeno = await sqlite.all(
+        'SELECT genotypeId, generationId FROM ' + CONSTANTS.TABLE_GENOTYPES  + ' WHERE genotypeId = 5'
+      );
+
+      rowsGeno[0].generationId.should.eql(2);
+    });
+
+    it('should throw error if generationId does not reference existing generation', async function() {
+      await pj.Genotype.update(
+        {'generationId': 42},
+        {'where': {'genotypeId': 5}}
+      ).should.be.rejectedWith('update.generationId does not reference an existing Generation');
+    });
   });
 });

@@ -28,6 +28,8 @@ Generation.delete = async function(criteria) {
  * With update you can overwrite all fields except generationId,
  * generationCreatedAt, generationModifiedAt, parentId. generationModifiedAt
  * will be set to the current UTC timestamp for all updated generations.
+ * If you want to know how generation update works internally,
+ * see src/controller/generation-update and src/controller/generic-update.
  * @async
  * @param  {Object}    update                     - Fields to update
  * @param  {String}    [update.generationName]    - Update generationName

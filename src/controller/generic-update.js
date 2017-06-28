@@ -259,9 +259,13 @@ class GenericUpdate {
 }
 
 GenericUpdate.TABLE; // Table name
+
 GenericUpdate.ID_FIELD; // name of id field
+
 GenericUpdate.MODIFIED_AT_FIELD // name of modifiedAt Field
+
 GenericUpdate.FINDABLE_ALIASES; // array of aliases which we can search through
+
 GenericUpdate.UPDATABLE_ALIASES; // array of aliases which we can update, everything else will be ignored
 
 module.exports = GenericUpdate;

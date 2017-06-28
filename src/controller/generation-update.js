@@ -15,9 +15,10 @@ const GenericUpdate = require('./generic-update');
  * GenerationUpdate Class. Basically does the update() stuff for
  * Generations. See GenericUpdate for more detailed information
  * on how Update internally works. If you want to know how
- * to use this, see models/generation #update().
+ * to use this, see src/models/generation #update().
  */
 class GenerationUpdate extends GenericUpdate {
+
   /**
    * We need to join some tables to make all FINDABLE_ALIASES of generation
    * work.
@@ -131,6 +132,7 @@ GenerationUpdate.MODIFIED_AT_FIELD = CONSTANTS.MODIFIED_AT_ALIAS_GENERATION;
 
 GenerationUpdate.FINDABLE_ALIASES = CONSTANTS.ALIASES_ALL_GENERATION;
 
+// Remove some fields we don't want to be updatable
 GenerationUpdate.UPDATABLE_ALIASES = _.without(
   CONSTANTS.ALIASES_ONLY_GENERATION,
   CONSTANTS.ID_ALIAS_GENERATION,
@@ -138,6 +140,7 @@ GenerationUpdate.UPDATABLE_ALIASES = _.without(
   CONSTANTS.CREATED_AT_ALIAS_GENERATION
 );
 
+// Add some fields we want to be updatable
 GenerationUpdate.UPDATABLE_ALIASES = _.concat(
   GenerationUpdate.UPDATABLE_ALIASES,
   CONSTANTS.ID_ALIAS_FAMILY
