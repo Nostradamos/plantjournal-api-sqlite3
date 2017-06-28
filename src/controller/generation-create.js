@@ -7,77 +7,46 @@ const sqlite = require('sqlite');
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
-const GenericCreate = require('./generic-create');
+
+const GenericCreate = require('./generic-create2');
 
 
 class GenerationCreate extends GenericCreate {
+
   static validate(context, options) {
     Utils.hasToBeSet(options, 'generationName');
     Utils.hasToBeString(options, 'generationName');
     Utils.hasToBeIntArray(options, 'generationParents');
     Utils.hasToBeSet(options, 'familyId');
     Utils.hasToBeInt(options, 'familyId');
-
-    // Only if options.generationParents is set and has more than one element,
-    // we want to add those plant ids into generation_parents.
-    context.addParents = options.generationParents && options.generationParents.length > 0;
   }
 
-  static initQuery(context, options) {
-    context.queryGeneration = squel.insert().into(this.TABLE);
-  }
-
-  static buildQuery(context, options) {
-    context.queryGeneration
+  static setQueryFields(context, options) {
+    context.query
       .set('generationId', null)
       .set('generationName', options.generationName)
       .set('familyId', options.familyId);
   }
 
-  /**
-   * We changed query names and we have two instead of one query because
-   * of the generationParents subquery. Therefore we have to add createdAt
-   * and modifiedAt differently.
-   * @param  {[type]} context [description]
-   * @param  {[type]} options [description]
-   * @return {[type]}         [description]
-   */
-  static buildQueryAddCreatedAndModifiedAt(context, options) {
-    context.createdAt = context.modifiedAt = Utils.getUnixTimestampUTC();
-    logger.debug(
-      this.name,
-      '#create()',
-      this.ALIAS_CREATED_AT + ':',
-      context.createdAt,
-      this.ALIAS_MODIFIED_AT + ':',
-      context.modifiedAt
-    );
-    context.queryGeneration
-      .set(this.ALIAS_CREATED_AT, context.createdAt)
-      .set(this.ALIAS_MODIFIED_AT, context.modifiedAt);
-  }
+  static buildQueryInsertParentsIfNeeded(context, options) {
+    // No parents, nothing to do
+    if(_.isEmpty(options.generationParents)) return;
 
-
-  static stringifyQuery(context, options) {
-    context.queryGeneration = context.queryGeneration.toString();
-    logger.debug(this.name, '#create() queryGeneration:', context.queryGeneration);
-  }
-
-  static buildQueryParents(context, options) {
     let fieldsRows = [];
     _.each(options.generationParents, function(parentPlantId) {
       fieldsRows.push({parentId: null, generationId: context.insertId, plantId: parentPlantId});
     });
-    console.log(context.queryGenerationParents);
-    context.queryGenerationParents = squel.insert().into(this.TABLEParents)
+
+    context.queryInsertParents = squel.insert().into(this.TABLE_PARENTS)
       .setFieldsRows(fieldsRows)
       .toString();
-    logger.debug(this.name, '#create() queryGenerationParents:', context.queryGenerationParents);
+
+    logger.debug(this.name, '#create() queryInsertParents:', context.queryInsertParents);
   }
 
-  static async executeQuery(context, options) {
+  static async executeQueryInsertGeneration(context, options) {
     try {
-      context.resultGeneration = await sqlite.run(context.queryGeneration);
+      await super.executeQuery(context, options);
     } catch(err) {
       // We only have one foreign key so we can safely assume, if a foreign key constraint
       // fails, it's the familyId constraint.
@@ -86,14 +55,34 @@ class GenerationCreate extends GenericCreate {
       }
       throw err;
     }
-    context.insertId = context.resultGeneration.stmt.lastID;
-    logger.debug(this.name, '#create() resultGeneration:', context.resultGeneration);
+  }
 
-    if(context.addParents === true) {
-      this.buildQueryParents(context, options);
-      context.resultParents = await sqlite.run(context.queryGenerationParents);
-      logger.debug(this.name, '#create() resultParents:', context.resultParents);
+  static async executeQueryInsertParentsIfNeeded(context, options) {
+    // If we don't have a query, do nothing
+    if(_.isUndefined(context.queryInsertParents)) return;
+    try {
+      await sqlite.get(context.queryInsertParents);
+    } catch(err) {
+      if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+        await sqlite.get('ROLLBACK');
+        throw new Error('options.generationParents contains at least one plantId which does not reference an existing plant');
+      }
+      throw err;
     }
+
+  }
+
+  static async executeQuery(context, options) {
+
+    // Execute insertion in a transaction block so we can rollback if inserting
+    // parants fails
+    await sqlite.get('BEGIN');
+    await this.executeQueryInsertGeneration(context, options);
+
+    // Sadly not possible to do this before, because we need insertId
+    this.buildQueryInsertParentsIfNeeded(context, options);
+    await this.executeQueryInsertParentsIfNeeded(context, options);
+    await sqlite.get('COMMIT');
   }
 
   static buildReturnObject(returnObject, context, options) {
@@ -111,8 +100,8 @@ class GenerationCreate extends GenericCreate {
 }
 
 GenerationCreate.TABLE = CONSTANTS.TABLE_GENERATIONS;
-GenerationCreate.TABLEParents = CONSTANTS.TABLE_GENERATION_PARENTS;
-GenerationCreate.ALIAS_CREATED_AT = 'generationCreatedAt';
-GenerationCreate.ALIAS_MODIFIED_AT = 'generationModifiedAt';
+GenerationCreate.TABLE_PARENTS = CONSTANTS.TABLE_GENERATION_PARENTS;
+GenerationCreate.ALIAS_CREATED_AT = CONSTANTS.CREATED_AT_ALIAS_GENERATION;
+GenerationCreate.ALIAS_MODIFIED_AT = CONSTANTS.MODIFIED_AT_ALIAS_GENERATION;
 
 module.exports = GenerationCreate;

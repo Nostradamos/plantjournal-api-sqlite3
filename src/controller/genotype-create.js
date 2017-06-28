@@ -5,7 +5,8 @@ const squel = require('squel');
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
-const GenericCreate = require('./generic-create');
+
+const GenericCreate = require('./generic-create2');
 
 
 class GenotypeCreate extends GenericCreate {
@@ -15,24 +16,11 @@ class GenotypeCreate extends GenericCreate {
     Utils.hasToBeInt(options, 'generationId');
   }
 
-  static buildQuery(context, options) {
-    // Set fields
+  static setQueryFields(context, options) {
     context.query
-    .set('genotypeId', null)
-    .set('genotypeName', options.genotypeName)
-    .set('generationId', options.generationId);
-  }
-
-  static buildReturnObject(returnObject, context, options) {
-    console.log(options);
-    returnObject.genotypes = {};
-    returnObject.genotypes[context.insertId] = {
-      'genotypeId': context.insertId,
-      'genotypeName': options.genotypeName || null,
-      'genotypeCreatedAt': context.createdAt,
-      'genotypeModifiedAt': context.modifiedAt,
-      'generationId': options.generationId,
-    }
+      .set('genotypeId', null)
+      .set('genotypeName', options.genotypeName)
+      .set('generationId', options.generationId);
   }
 
   static async executeQuery(context, options) {
@@ -47,10 +35,25 @@ class GenotypeCreate extends GenericCreate {
       throw err;
     }
   }
+
+  static buildReturnObject(returnObject, context, options) {
+    console.log(options);
+    returnObject.genotypes = {};
+    returnObject.genotypes[context.insertId] = {
+      'genotypeId': context.insertId,
+      'genotypeName': options.genotypeName || null,
+      'genotypeCreatedAt': context.createdAt,
+      'genotypeModifiedAt': context.modifiedAt,
+      'generationId': options.generationId,
+    }
+  }
+
 }
 
 GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPES;
-GenotypeCreate.ALIAS_CREATED_AT = "genotypeCreatedAt";
-GenotypeCreate.ALIAS_MODIFIED_AT = "genotypeModifiedAt";
+
+GenotypeCreate.ALIAS_CREATED_AT = CONSTANTS.CREATED_AT_ALIAS_GENOTYPE;
+
+GenotypeCreate.ALIAS_MODIFIED_AT = CONSTANTS.MODIFIED_AT_ALIAS_GENOTYPE;
 
 module.exports = GenotypeCreate;

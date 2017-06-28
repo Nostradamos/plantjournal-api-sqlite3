@@ -1,11 +1,12 @@
 'use strict';
 
-const CONSTANTS = require('../constants');
-const GenericCreate = require('./generic-create');
-const logger = require('../logger');
 const squel = require('squel');
+
+const CONSTANTS = require('../constants');
+const logger = require('../logger');
 const Utils = require('../utils');
 
+const GenericCreate = require('./generic-create2');
 
 class FamilyCreate extends GenericCreate {
   static validate(context, options) {
@@ -13,15 +14,14 @@ class FamilyCreate extends GenericCreate {
     Utils.hasToBeString(options, 'familyName');
   }
 
-  static buildQuery(context, options) {
+  static setQueryFields(context, options) {
     // Set fields
     context.query
-    .set('familyId', null)
-    .set('familyName', options.familyName);
+      .set('familyId', null)
+      .set('familyName', options.familyName);
   }
 
   static buildReturnObject(returnObject, context, options) {
-    console.log(options);
     returnObject.families = {};
     returnObject.families[context.insertId] = {
       'familyId': context.insertId,
@@ -33,7 +33,9 @@ class FamilyCreate extends GenericCreate {
 }
 
 FamilyCreate.TABLE = CONSTANTS.TABLE_FAMILIES;
-FamilyCreate.ALIAS_CREATED_AT = 'familyCreatedAt';
-FamilyCreate.ALIAS_MODIFIED_AT = 'familyModifiedAt';
+
+FamilyCreate.ALIAS_CREATED_AT = CONSTANTS.CREATED_AT_ALIAS_FAMILY;
+
+FamilyCreate.ALIAS_MODIFIED_AT = CONSTANTS.MODIFIED_AT_ALIAS_FAMILY;
 
 module.exports = FamilyCreate;

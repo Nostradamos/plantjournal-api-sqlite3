@@ -93,7 +93,7 @@ describe('Generation()', function() {
     });
   });
 
-  describe('#create() (with options.parents)', function() {
+  describe('#create() (with options.generationParents)', function() {
     let pj;
 
     before(async function() {
@@ -105,8 +105,18 @@ describe('Generation()', function() {
       await pj.Plant.create({generationId: 1, plantName: 'testPlant2'});
     });
 
-    it('should also add parents if options.parents is specified', async function() {
-      let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testWithParents', 'generationParents': [1,2]});
+    after(async function() {
+      await pj.disconnect();
+    });
+
+    it('should also add parents if options.generationParents is specified', async function() {
+      let generation = await pj.Generation.create(
+        {
+          'familyId': 1,
+          'generationName': 'testWithParents',
+          'generationParents': [1,2]
+        }
+      );
       let [createdAt, modifiedAt] = [generation.generations[2].generationCreatedAt, generation.generations[2].generationModifiedAt];
       generation.should.deepEqual({
         'generations': {
@@ -127,6 +137,21 @@ describe('Generation()', function() {
           {'parentId': 2, 'generationId': 2, 'plantId': 2}
         ]
       );
+    });
+
+    it('should throw error if options.generationParents does not reference existing plants and not add generation', async function() {
+      await pj.Generation.create(
+        {
+          'familyId': 1,
+          'generationName': 'testWithParents2',
+          'generationParents': [1, 42]
+        }
+      ).should.be.rejectedWith(
+        'options.generationParents contains at least one plantId which does not reference an existing plant'
+      );
+
+      let rowsGen = await sqlite.all('SELECT generationId, generationName FROM generations WHERE generationName = "testWithParents2"');
+      rowsGen.should.deepEqual([]);
     });
   });
 });
