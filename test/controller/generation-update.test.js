@@ -19,8 +19,10 @@ describe('Generation()', function() {
       await pj.Generation.create({'generationName': 'F2', 'familyId': 1}); //generationId: 2
       await pj.Family.create({'familyName': 'testFamily2'});  //familyId: 2
       await pj.Generation.create({'generationName': 'S1', 'familyId': 2}); //generationId: 3
-      await pj.Generation.create({'generationName': 'S2', 'familyId': 2}); //generationId: 4
-      await pj.Plant.create({'plantName': 'testPlant1', 'generationId': 1});
+      await pj.Plant.create({'plantName': 'testPlant1', 'generationId': 1}); //plantId: 1
+      await pj.Plant.create({'plantName': 'testPlant2', 'generationId': 2}); //plantId: 2
+      await pj.Generation.create({'generationName': 'S2', 'familyId': 2, 'generationParents': [1,2]}); //generationId: 4
+
     });
 
     it('should throw error if no arguments got passed', async function() {
@@ -137,7 +139,41 @@ describe('Generation()', function() {
     });
 
     it('should be possible to update generationParents', async function() {
+      let updatedGenerations = await pj.Generation.update(
+        {'generationParents': [1, 2]},
+        {'where': {'generationId': 2}}
+      );
 
+      updatedGenerations.should.eql([2]);
+
+      let rowsParents = await sqlite.all(
+        'SELECT generationId, plantId FROM ' + CONSTANTS.TABLE_GENERATION_PARENTS + ' WHERE generationId = 2'
+      );
+
+      rowsParents.should.eql(
+        [
+          {'generationId': 2, 'plantId': 1},
+          {'generationId': 2, 'plantId': 2}
+        ]
+      );
+    });
+
+    it('should throw error and rollback if generationParents are invalid', async function() {
+      let updatedGenerations = await pj.Generation.update(
+        {'generationParents': [5,6]},
+        {'where': {'generationId': 4}}
+      ).should.be.rejectedWith('update.generationParents does not reference to existing Plants. At least one reference is invalid.');
+
+      let rowsParents = await sqlite.all(
+        'SELECT generationId, plantId FROM ' + CONSTANTS.TABLE_GENERATION_PARENTS + ' WHERE generationId = 4'
+      );
+
+      rowsParents.should.eql(
+        [
+          {'generationId': 4, 'plantId': 1},
+          {'generationId': 4, 'plantId': 2}
+        ]
+      );
     });
   });
 });

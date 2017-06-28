@@ -1,7 +1,10 @@
 'use strict';
 
 const _ = require('lodash');
+const squel = require('squel');
+const sqlite = require('sqlite');
 
+const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
 
@@ -24,7 +27,53 @@ class GenerationUpdate extends GenericUpdate {
     QueryUtils.joinRelatedGenerations(context.queryFind);
   }
 
+  static setQueryUpdateFieldValues(context, update, criteria) {
+    // generationParents has to be in a different table, so leave it out
+    // for the main update query
+    context.queryUpdate.setFields(
+      _.omit(context.fieldsToUpdate, 'generationParents')
+    );
+  }
+
+  static initQueryUpdateParents(context, update, criteria) {
+    // We have to delete the old parents, build query for this
+    context.queryDeleteOldParents = squel.remove().from(this.TABLE_PARENTS)
+      .where('generationId IN ?', context.idsToUpdate).toString();
+    logger.debug(this.name, '#update() queryDeleteOldParents:', context.queryDeleteOldParents);
+
+    // Wa have to insert new parents, build query for this
+    let fieldsRows = [];
+    _.each(update.generationParents, function(parentPlantId) {
+      _.each(context.idsToUpdate, function(generationId) {
+        fieldsRows.push({parentId: null, generationId: generationId, plantId: parentPlantId});
+      });
+    });
+    context.queryInsertNewParents = squel.insert().into(this.TABLE_PARENTS)
+      .setFieldsRows(fieldsRows)
+      .toString();
+  }
+
+  static async executeQueryUpdateParents(context, update, criteria) {
+    try {
+      await sqlite.get('BEGIN');
+      await sqlite.get(context.queryDeleteOldParents);
+      await sqlite.get(context.queryInsertNewParents);
+      await sqlite.get('COMMIT');
+    } catch(err) {
+      if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+        await sqlite.get('ROLLBACK'); // Undo delete
+        throw new Error('update.generationParents does not reference to existing Plants. At least one reference is invalid.');
+      }
+      throw err;
+    }
+  }
+
   static async executeQueryUpdate(context, update, criteria) {
+    if(_.has(context.fieldsToUpdate, 'generationParents')) {
+      this.initQueryUpdateParents(context, update, criteria);
+      await this.executeQueryUpdateParents(context, update, criteria);
+    }
+
     try {
       await super.executeQueryUpdate(context, update, criteria);
     } catch(err) {
@@ -37,6 +86,8 @@ class GenerationUpdate extends GenericUpdate {
 }
 
 GenerationUpdate.TABLE = CONSTANTS.TABLE_GENERATIONS;
+
+GenerationUpdate.TABLE_PARENTS = CONSTANTS.TABLE_GENERATION_PARENTS;
 
 GenerationUpdate.ID_FIELD = CONSTANTS.ID_ALIAS_GENERATION;
 
