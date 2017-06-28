@@ -8,6 +8,7 @@ plantJournal
 ToDo
 =====
 
+* Refactor generic-create (plant-create is only one missing)
 * Refactor generic-find & constants
 * Complete setWhere()
 * Add sorting for find & update
