@@ -8,7 +8,6 @@ plantJournal
 ToDo
 =====
 
-* Complete update (also for generationParents)
 * Refactor generic-find & constants
 * Complete setWhere()
 * Add sorting for find & update
