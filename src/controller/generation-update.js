@@ -13,7 +13,9 @@ const GenericUpdate = require('./generic-update');
 
 /**
  * GenerationUpdate Class. Basically does the update() stuff for
- * Generations. See GenericUpdate for more detailed information.
+ * Generations. See GenericUpdate for more detailed information
+ * on how Update internally works. If you want to know how
+ * to use this, see models/generation #update().
  */
 class GenerationUpdate extends GenericUpdate {
   /**
@@ -27,6 +29,14 @@ class GenerationUpdate extends GenericUpdate {
     QueryUtils.joinRelatedGenerations(context.queryFind);
   }
 
+  /**
+   * We need to remove generationParents from queryUpdate.setFields.
+   * generationParents has to get applied to TABLE_PARENTS and not normal
+   * generation TABLE.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryUpdateFieldValues(context, update, criteria) {
     // generationParents has to be in a different table, so leave it out
     // for the main update query
@@ -35,6 +45,14 @@ class GenerationUpdate extends GenericUpdate {
     );
   }
 
+  /**
+   * Inits two new queries. queryDeleteOldParents
+   * and queryInsertNewParents. First one is to delete
+   * all old parents, second to insert new parent plant ids.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static initQueryUpdateParents(context, update, criteria) {
     // We have to delete the old parents, build query for this
     context.queryDeleteOldParents = squel.remove().from(this.TABLE_PARENTS)
@@ -53,6 +71,15 @@ class GenerationUpdate extends GenericUpdate {
       .toString();
   }
 
+  /**
+   * Executes context.queryDeleteOldParents and context.queryInsertNewParents
+   * in a transaction. If query fails because of foreign key, transaction
+   * will get rolled back (deletes will be undone) and an Error will be thrown.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   * @return {Promise}          [description]
+   */
   static async executeQueryUpdateParents(context, update, criteria) {
     try {
       await sqlite.get('BEGIN');
@@ -68,6 +95,15 @@ class GenerationUpdate extends GenericUpdate {
     }
   }
 
+  /**
+   * We have to modify the behaviour of execution because we have to also
+   * query TABLE_PARENTS if generationParents is in fieldsToUpdate. Besides
+   * that we catch foreign key errors and throw our own error.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   * @return {Promise}          [description]
+   */
   static async executeQueryUpdate(context, update, criteria) {
     if(_.has(context.fieldsToUpdate, 'generationParents')) {
       this.initQueryUpdateParents(context, update, criteria);
