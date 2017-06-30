@@ -9,7 +9,7 @@ const Utils = require('../utils');
 
 /**
  * Generic create class which is the skeleton for all *-create classes.
- * It defines some general static methods which will find called in a specific
+ * It defines some general static methods which will called in a specific
  * order (see create()). Besides that this class also does some simple stuff
  * which most *-create classes would have to do too (eg. basic logging,
  * initing query object... )
@@ -18,7 +18,7 @@ class GenericCreate {
 
   /**
    * This function executes the complete create process.
-   * In the best case, don't try to overwrite this method if you extends
+   * In the best case, don't try to overwrite this method if you extend
    * GenericCreate. Prefer to overwrite any of the called child methods
    * (validateBefore, validate, ...buildReturnObject)
    * @param {object} options
@@ -27,25 +27,15 @@ class GenericCreate {
   static async create(options) {
     logger.debug(this.name, '#create() options:', options);
     let context = {};
-    this.validateBefore(context, options);
+    this.validateOptionsIsAssoc(context, options);
     this.validate(context, options);
-    this.validateAfter(context, options);
 
     this.initQuery(context, options);
-    this.buildQuery(context, options);
-    this.buildQueryAddCreatedAndModifiedAt(context, options);
-    logger.debug(
-      this.name,
-      '#create() createdAt, modifiedAt:',
-      context.createdAt,
-      context.modifiedAt
-    );
-
+    this.setQueryFields(context, options);
+    this.setQueryCreatedAtAndModifiedAt(context, options);
     this.stringifyQuery(context, options);
 
-    await this.executeQueryBefore(context, options);
     await this.executeQuery(context, options);
-    await this.executeQueryAfter(context, options);
 
     let returnObject = {};
 
@@ -61,7 +51,7 @@ class GenericCreate {
    * @param  {object} context - internal context object in #create()
    * @param  {object} options - options object passed to #create()
    */
-  static validateBefore(context, options) {
+  static validateOptionsIsAssoc(context, options) {
     Utils.hasToBeAssocArray(options);
   }
 
@@ -73,16 +63,6 @@ class GenericCreate {
    * @param  {object} options - options object passed to #create()
    */
   static validate(context, options) {
-  }
-
-  /**
-   * Currently not used, but maybe we have to validate something after
-   * validate. Maybe this will find removed.
-   * ToDo: Delete?!
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
-   */
-  static validateAfter(context, options) {
   }
 
   /**
@@ -99,11 +79,11 @@ class GenericCreate {
   }
 
   /**
-   * Overwrite this method to apply all fields and stuff to your queries.
+   * Overwrite this method to apply all fields your query.
    * @param  {object} context - internal context object in #create()
    * @param  {object} options - options object passed to #create()
    */
-  static buildQuery(context, options) {
+  static setQueryFields(context, options) {
   }
 
   /**
@@ -113,16 +93,11 @@ class GenericCreate {
    * @param  {object} context - internal context object in #create()
    * @param  {object} options - options object passed to #create()
    */
-  static buildQueryAddCreatedAndModifiedAt(context, options) {
+  static setQueryCreatedAtAndModifiedAt(context, options) {
     context.createdAt = context.modifiedAt = Utils.getUnixTimestampUTC();
-    logger.debug(
-      this.name,
-      '#find()',
-      this.ALIAS_CREATED_AT + ':',
-      context.createdAt,
-      this.ALIAS_MODIFIED_AT + ':',
-      context.modifiedAt
-    );
+    logger.debug(this.name, '#find() createdAt:', context.createdAt,
+                 'modifiedAt:', context.modifiedAt);
+
     context.query
       .set(this.ALIAS_CREATED_AT, context.createdAt)
       .set(this.ALIAS_MODIFIED_AT, context.modifiedAt);
@@ -141,17 +116,6 @@ class GenericCreate {
   }
 
   /**
-   * In case you have to execute a query before the main query, Overwrite
-   * this method to do so.
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
-   * @return {Promise}         [description]
-   */
-  static async executeQueryBefore(context, options) {
-
-  }
-
-  /**
    * In case your query is named differently or you have to do more advanced
    * stuff, Overwrite this method.
    * @param  {object} context - internal context object in #create()
@@ -162,17 +126,6 @@ class GenericCreate {
     context.result = await sqlite.run(context.query);
     context.insertId = context.result.stmt.lastID;
     logger.debug(this.name, '#create() result:', context.result);
-  }
-
-  /**
-   * Currently not used, maybe will find removed.
-   * ToDo: Remove?
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
-   * @return {Promise}         [description]
-   */
-  static async executeQueryAfter(context, options) {
-
   }
 
   /**
@@ -188,7 +141,9 @@ class GenericCreate {
 
 // set this field for the default table name used in #initQuery()
 GenericCreate.TABLE = null;
+
 GenericCreate.ALIAS_CREATED_AT;
+
 GenericCreate.ALIAS_MODIFIED_AT;
 
 module.exports = GenericCreate;

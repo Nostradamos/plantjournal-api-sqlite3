@@ -6,7 +6,7 @@ const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
 
-const GenericCreate = require('./generic-create2');
+const GenericCreate = require('./generic-create');
 
 class FamilyCreate extends GenericCreate {
   static validate(context, options) {
