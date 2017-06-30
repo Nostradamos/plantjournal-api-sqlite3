@@ -8,12 +8,13 @@ plantJournal
 ToDo
 =====
 
-* Refactor generic-create (plant-create is only one missing)
 * Refactor generic-find & constants
 * Complete setWhere()
 * Add sorting for find & update
 * Add resolveParents to find
 * Add description fields
+* Refactor comments. Add them where they are missing.
+* Introduce eslint
 * Add logs
 * Add medium
 * Add environment
