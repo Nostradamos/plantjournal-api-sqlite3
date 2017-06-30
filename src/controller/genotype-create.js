@@ -8,14 +8,38 @@ const Utils = require('../utils');
 
 const GenericCreate = require('./generic-create');
 
-
+/**
+ * GentopyeCreate Class which creates a new Genotype.
+ * Gets internally called from Genotype.create(). If you want
+ * to know how Create works internally, see
+ * src/controller/generic-create.
+ * If you want to know how to use the Genotype.create()
+ * API from outside, see src/models/Genotype #create().
+ */
 class GenotypeCreate extends GenericCreate {
+
+  /**
+   * We need to validate input and throw errors if we're
+   * unhappy with it.
+   * @param  {object} returnObject
+   *         object which will find returned from #create().
+   * @param  {object} context
+   *         internal context object in #create().
+   * @throws {Error}
+   */
   static validate(context, options) {
     Utils.hasToBeString(options, 'genotypeName');
     Utils.hasToBeSet(options, 'generationId');
     Utils.hasToBeInt(options, 'generationId');
   }
 
+  /**
+   * We need to set some fields for query.
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
+   */
   static setQueryFields(context, options) {
     context.query
       .set('genotypeId', null)
@@ -23,6 +47,18 @@ class GenotypeCreate extends GenericCreate {
       .set('generationId', options.generationId);
   }
 
+  /**
+   * We want to catch foreign key error to custom throw error that genotype
+   * reference failed.
+   * @async
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
+   * @throws {Error}
+   *         If generationId reference fails we will throw custom error,
+   *         everything else should be a sqlite error.
+   */
   static async executeQuery(context, options) {
     try {
       await super.executeQuery(context, options);
@@ -36,6 +72,16 @@ class GenotypeCreate extends GenericCreate {
     }
   }
 
+  /**
+   * Build the Generation object which should get returned. just
+   * insert all info we have, this is enough.
+   * @param  {object} returnObject
+   *         object which will find returned from #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
+   */
   static buildReturnObject(returnObject, context, options) {
     console.log(options);
     returnObject.genotypes = {};

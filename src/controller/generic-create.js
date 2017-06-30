@@ -22,7 +22,11 @@ class GenericCreate {
    * In the best case, don't try to overwrite this method if you extend
    * GenericCreate. Prefer to overwrite any of the called child methods
    * (validateBefore, validate, ...buildReturnObject)
-   * @param {object} options   *
+   * @async
+   * @param {object} options
+   *        Object which should hold enough information to create
+   *        a new entry with.
+   * @throws {Error}
    * @return {object}
    */
   static async create(options) {
