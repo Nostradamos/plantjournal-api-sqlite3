@@ -7,6 +7,45 @@ const PlantUpdate = require('../controller/plant-update');
 
 let Plant = exports;
 
+/**
+ * @typedef {Object} Plant
+ * @property {integer} plantId
+ *           Unique Identifier for this plant.
+ * @property {String} plantName
+ *           Name of this plant.
+ * @property {integer} [plantClonedFrom=null]
+ *           If plant got cloned from another plant, this will be the id of
+ *           the mother plant.
+ * @property {plantSex} plantSex
+ *           Sex of this plant.
+ * @property {integer} genotypeId
+ * @property {integer} plantCreatedAt
+ *           UTC Timestamp when this plant got created.
+ * @property {integer} plantModifiedAt
+ *           UTC Timestamp when this plant got modified the last time.
+ */
+
+
+ /**
+  * Creates a new plant entry and returns the created plant object.
+  * @async
+  * @param {Object} options
+  *         Options how the new plant should be.
+  * @param {String} plantName
+  *        Name of this plant.
+  * @param {integer} [plantClonedFrom=null]
+  *        If plant got cloned from another plant, this will be the id of
+  *        the mother plant.
+  * @param {plantSex} plantSex
+  *        Sex of this plant.
+  * @param {integer} genotypeId
+  *        ID of genotype this plant has.
+  * @throws {Error}
+  *         Will throw error if genotypeId is invalid or if an unexpected
+  *         sqlite error happens.
+  * @return {Plant}
+  *         The newly created Genotype object
+  */
 Plant.create = async function(options) {
   return await PlantCreate.create(options);
 }
@@ -49,13 +88,13 @@ Plant.delete = async function(criteria) {
  *         Skip the first x plant.
  * @param  {object}    [criteria.where]
  *         Where object to define more exactly which plants to update. For more
- *          information see Utils.setWhere.
- *          Allowed fields:
- *          familyId, familyName, familyCreatedAt, familyModifiedAt,
- *          generationId, generatioName, generationParents, generationCreatedAt,
- *          generationModifiedAt, genotypeId, genotypeName, genotypeCreatedAt,
- *          genotypeModifiedAt, plantId, plantName, plantClonedFrom,
- *          plantModifiedAt, plantClonedFrom
+ *         information see Utils.setWhere.
+ *         Allowed fields:
+ *         familyId, familyName, familyCreatedAt, familyModifiedAt,
+ *         generationId, generatioName, generationParents, generationCreatedAt,
+ *         generationModifiedAt, genotypeId, genotypeName, genotypeCreatedAt,
+ *         genotypeModifiedAt, plantId, plantName, plantClonedFrom,
+ *         plantModifiedAt, plantClonedFrom
  * @returns {integer[]}
  *          Array of updated plantIds. Empty if no plants got updated.
  */
