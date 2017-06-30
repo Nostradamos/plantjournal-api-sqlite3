@@ -31,45 +31,33 @@ Plant.delete = async function(criteria) {
  * If you want to know how Plant.update() works internally,
  * see src/controller/plant-update and src/controller/generic-update.
  * @async
- * @param  {Object}    update                 - Fields to update
- * @param  {String}    [update.plantName]     - Update plantName
- * @param  {integer}   [update.plantClonedFrom] - Update plantClonedFrom
- * @param  {integer}   [update.genotypeId]    - Update genotypeId. Has to reference
- *                                              existing genotype.
- * @param  {Object}    criteria               - With Criteria you can control
- *                                              which plants should get
- *                                              updated. Behaves similiar
- *                                              to Plant.find()
- * @param  {integer}   [criteria.limit=10]    - Limit how many plants should
- *                                              get updated
- * @param  {integer}   [criteria.offset=10]   - Skip the first x plant
- * @param  {object}    [criteria.where]       - Where object to define
- *                                              more exactly which plants
- *                                              to update. For more
- *                                              information see
- *                                              Utils.setWhere.
- *                                              Allowed fields:
- *                                              - familyId
- *                                              - familyName,
- *                                              - familyCreatedAt
- *                                              - familyModifiedAt
- *                                              - generationId
- *                                              - generatioName
- *                                              - generationParents
- *                                              - generationCreatedAt
- *                                              - generationModifiedAt
- *                                              - genotypeId
- *                                              - genotypeName
- *                                              - genotypeCreatedAt
- *                                              - genotypeModifiedAt
- *                                              - plantId
- *                                              - plantName
- *                                              - plantClonedFrom
- *                                              - plantModifiedAt
- *                                              - plantClonedFrom
- * @returns {integer[]} - Array of updated plantIds. Empty if no generations
- *                        got updated.
- * @throws {Error}
+ * @param  {Object}    update
+ *         Fields to update.
+ * @param  {String}    [update.plantName]
+ *         Update plantName.
+ * @param  {integer}   [update.plantClonedFrom]
+ *         Update plantClonedFrom. Has to reference an existing plant, otherwise
+ *         will throw error.
+ * @param  {integer}   [update.genotypeId]
+ *         Update genotypeId. Has to reference existing genotype.
+ * @param  {Object}    criteria
+ *         With Criteria you can control which plants should get updated.
+ *         Behaves similiar to Plant.find().
+ * @param  {integer}   [criteria.limit=10]
+ *         Limit how many plants should get updated.
+ * @param  {integer}   [criteria.offset=10]
+ *         Skip the first x plant.
+ * @param  {object}    [criteria.where]
+ *         Where object to define more exactly which plants to update. For more
+ *          information see Utils.setWhere.
+ *          Allowed fields:
+ *          familyId, familyName, familyCreatedAt, familyModifiedAt,
+ *          generationId, generatioName, generationParents, generationCreatedAt,
+ *          generationModifiedAt, genotypeId, genotypeName, genotypeCreatedAt,
+ *          genotypeModifiedAt, plantId, plantName, plantClonedFrom,
+ *          plantModifiedAt, plantClonedFrom
+ * @returns {integer[]}
+ *          Array of updated plantIds. Empty if no plants got updated.
  */
 Plant.update = async function(update, criteria) {
   return await PlantUpdate.update(update, criteria);

@@ -9,10 +9,14 @@ let Family = exports;
 
 /**
  * @typedef {Object} Family
- * @property {number} familyId The X Coordinate
- * @property {String} familyName The Y Coordinate
- * @property {number} familyCreatedAt
- * @property {number} familyModifiedAt
+ * @property {integer} familyId
+ *           Unique Identifier for this family.
+ * @property {String} familyName
+ *           Name of this family.
+ * @property {integer} familyCreatedAt
+ *           UTC Timestamp when this family got created.
+ * @property {integer} familyModifiedAt
+ *           UTC Timestamp when this family got modified the last time.
  */
 
 /**

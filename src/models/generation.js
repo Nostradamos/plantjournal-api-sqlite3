@@ -86,8 +86,8 @@ Generation.delete = async function(criteria) {
  *         Allowed fields: familyId, familyName, familyCreatedAt,
  *         familyModifiedAt, generationId, generatioName, generationParents,
  *         generationCreatedAt, generationModifiedAt.
- * @returns {integer[]} - Array of updated generationIds. Empty if no generations
- *                        got updated.
+ * @returns {integer[]}
+ *          Array of updated generationIds. Empty if no generations got updated.
  * @throws {Error}
  *         Should only throw error if unexpected sqlite error happend.
  */
