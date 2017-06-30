@@ -8,9 +8,24 @@ const FamilyUpdate = require('../controller/family-update');
 let Family = exports;
 
 /**
- * Creates a new Family entry and returns the family object.
- * @param  {[type]} options [description]
- * @return {[type]}         [description]
+ * @typedef {Object} Family
+ * @property {number} familyId The X Coordinate
+ * @property {String} familyName The Y Coordinate
+ * @property {number} familyCreatedAt
+ * @property {number} familyModifiedAt
+ */
+
+/**
+ * Creates a new Family entry and returns the created family object.
+ * @async
+ * @param  {Object} options
+ *         Options how the new family should be.
+ * @param  {String} options.familyName
+ *         Name for the new family
+ * @throws {Error}
+ *         Should only throw error if an unexpected sqlite error happens.
+ * @return {Family}
+ *         The newly created Family object
  */
 Family.create = async function(options) {
   return await FamilyCreate.create(options);
@@ -24,6 +39,31 @@ Family.delete = async function(criteria) {
   return await FamilyDelete.delete(criteria);
 }
 
+/**
+ * Finds families and updates fields based on the passed update object.
+ * Sets familyUpdatedAt to current UTC Timestamp of all changed families.
+ * @async
+ * @param  {Object} update
+ *         With update object you can define which properties should get
+ *         updated.
+ * @param  {String} [update.familyName]
+ *         Update familyName to this value.
+ * @param  {Object} criteria
+ *         With criteria you can specify which families should get updated.
+ *         We basically find families similiar to Family.find().
+ * @param  {Object} [criteria.where]
+ *         See Utils.setWhere(). Fields to search throug:
+ *         familyId, familyName, familyCreatedAt, familyModifiedAt
+ * @param  {integer}   [criteria.limit=10]
+ *         Limit how many familiess should get updated.
+ * @param  {integer}   [criteria.offset=10]
+ *         Skip the first x families.
+ * @throws {Error}
+ *         Should only throw error if something suspicous and unexpected
+ *         happend to our sqlite connection.
+ * @return {integer[]}
+ *         Returns a array of updated familyIds. Empty if none got updated.
+ */
 Family.update = async function(update, criteria) {
   return await FamilyUpdate.update(update, criteria);
 }

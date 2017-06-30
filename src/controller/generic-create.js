@@ -7,6 +7,7 @@ const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
 
+
 /**
  * Generic create class which is the skeleton for all *-create classes.
  * It defines some general static methods which will called in a specific
@@ -21,8 +22,8 @@ class GenericCreate {
    * In the best case, don't try to overwrite this method if you extend
    * GenericCreate. Prefer to overwrite any of the called child methods
    * (validateBefore, validate, ...buildReturnObject)
-   * @param {object} options
-   * @return {object} returnObject
+   * @param {object} options   *
+   * @return {object}
    */
   static async create(options) {
     logger.debug(this.name, '#create() options:', options);
@@ -48,8 +49,10 @@ class GenericCreate {
   /**
    * Use this method for validating the options parameter itself. Normally
    * You should only make sure that it's an assoc array.
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    */
   static validateOptionsIsAssoc(context, options) {
     Utils.hasToBeAssocArray(options);
@@ -59,8 +62,10 @@ class GenericCreate {
    * Overwrite this method to validate all properties in options.
    * Eg: making sure a property has a specific type or is set...
    * If something isn't valid, throw an error.
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    */
   static validate(context, options) {
   }
@@ -71,8 +76,10 @@ class GenericCreate {
    * be this.TABLE.
    * Overwrite this if you want to init more than one query or you're
    * not happy with the default behaviour.
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    */
   static initQuery(context, options) {
     context.query = squel.insert().into(this.TABLE);
@@ -80,8 +87,10 @@ class GenericCreate {
 
   /**
    * Overwrite this method to apply all fields your query.
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    */
   static setQueryFields(context, options) {
   }
@@ -90,8 +99,10 @@ class GenericCreate {
    * Set createdAt and modifedAt fields to query.
    * Overwrite this if you have different query names or multiple queries.
    * For timestamp generation use ONCE Utils.getUnixTimestampUTC()
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    */
   static setQueryCreatedAtAndModifiedAt(context, options) {
     context.createdAt = context.modifiedAt = Utils.getUnixTimestampUTC();
@@ -107,8 +118,10 @@ class GenericCreate {
    * This method stringifies context.query and logs the value of it.
    * Overwrite this method if you have to stringify more than one query
    * or if you named the query differently.
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    */
   static stringifyQuery(context, options) {
     context.query = context.query.toString();
@@ -118,9 +131,13 @@ class GenericCreate {
   /**
    * In case your query is named differently or you have to do more advanced
    * stuff, Overwrite this method.
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
-   * @return {Promise}         [description]
+   * @async
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
+   * @throws {Error}
+   *         Throws all sql errors
    */
   static async executeQuery(context, options) {
     context.result = await sqlite.run(context.query);
@@ -131,9 +148,12 @@ class GenericCreate {
   /**
    * Overwrite this function to set the properties for the returnObject
    * (object which will find returned from #create())
-   * @param  {object} returnObject - object which will find returned from #create()
-   * @param  {object} context - internal context object in #create()
-   * @param  {object} options - options object passed to #create()
+   * @param  {object} returnObject
+   *         object which will find returned from #create()
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    */
   static buildReturnObject(returnObject, context, options) {
   }

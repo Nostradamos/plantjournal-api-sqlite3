@@ -10,9 +10,25 @@ const Utils = require('../utils');
 
 const GenericCreate = require('./generic-create');
 
-
+/**
+ * GenerationCreate Class whic creates a new Generation.
+ * Gets internally called from Generation.create(). If you want
+ * to know how Create works internally, see
+ * src/controller/generic-create.
+ * If you want to know how to use the Generation.create()
+ * API from outside, see src/models/Generation #create().
+ */
 class GenerationCreate extends GenericCreate {
 
+  /**
+   * We need to validate input and throw errors if we're
+   * unhappy with it.
+   * @param  {object} returnObject
+   *         object which will find returned from #create().
+   * @param  {object} context
+   *         internal context object in #create().
+   * @throws {Error}
+   */
   static validate(context, options) {
     Utils.hasToBeSet(options, 'generationName');
     Utils.hasToBeString(options, 'generationName');
