@@ -17,20 +17,26 @@ const Utils = require('../utils');
  * holds in in series. To change the behaviour of your find, extend this class
  * and overwrite the best matching method. See method comments for further and
  * more detailed information.
- * @type {Object}
  */
 class GenericFind {
   /**
    * This method takes care of the execution of the whole find process.
    * Your api calls this function.
-   * @param  {object}  [criteria={}] - Criterias for find
-   * @param  {string[]} [criteria.fields] - Specify the fields to query and
-   *                                        return. Eg:
-   *                                        [familyName, generationName]
-   * @param  {object} [criteria.where] - Object which contains
-   * @param  {integer} [criteria.offset] - Skip the first x results
-   * @param  {integer} [criteria.limit]  - limit to x results
-   * @return {Promise}          [description]
+   * @async
+   * @param  {object}  [criteria={}]
+   *         Criterias for find
+   * @param  {string[]} [criteria.fields]
+   *         Specify the fields to query and return.
+   *         Eg: [familyName, generationName]
+   * @param  {object} [criteria.where]
+   *         Object which contains
+   * @param  {integer} [criteria.offset]
+   *         Skip the first x results
+   * @param  {integer} [criteria.limit]
+   *         limit to x results
+   * @throws {Error}
+   *         Only throws errors if something unexpected happens with sqlite.
+   * @return {Object}
    */
   static async find(criteria) {
     if(_.isNil(criteria)) criteria = {};
@@ -64,8 +70,10 @@ class GenericFind {
    * Init queries. Basically defines two properties in context
    * for queryWhere and queryCount. Besides that it sets
    * queryWhere to a select() and table to this.TABLE.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static initQuery(context, criteria) {
     // Init queries, we need two query objects, because we need a subquery which
@@ -80,8 +88,10 @@ class GenericFind {
   /**
    * In case you have to join some tables, overwrite this function and
    * apply joins to context.queryWhere.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static setQueryJoin(context, criteria) {
 
@@ -91,8 +101,10 @@ class GenericFind {
    * This method just applies Utils.setWhere to the context.queryWhere query.
    * Normally you shouldn't overwrite this, you can use this.SEARCHABLE_ALIASES to
    * adjust the behaviour.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static setQueryWhere(context, criteria) {
     Utils.setWhere(context.queryWhere, this.SEARCHABLE_ALIASES, criteria);
@@ -102,8 +114,10 @@ class GenericFind {
    * Clones queryWhere into queryCount. So everything applied to
    * context.queryWhere before this gets called will also be in
    * context.queryCount.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static cloneQueryWhereIntoQueryCount(context, criteria) {
     context.queryCount = context.queryWhere.clone();
@@ -112,8 +126,10 @@ class GenericFind {
   /**
    * Only sets the this.ID_ALIAS to queryWhere. Overwrite this if you want
    * more selected fields in the queryWhere query. Does not mutate queryCount.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static setQueryWhereDefaultFields(context, criteria) {
     // For queryWhere we always have to set familyId, because it's needed
@@ -124,8 +140,10 @@ class GenericFind {
   /**
    * Applies Utils.setFields() to context.queryWhere with this.ALIASES_TO_FIELD_WITHOUT_ID.
    * Normally you shouldn't overwrite this function.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set fields specified if options.fields, otherwise all.
@@ -136,8 +154,10 @@ class GenericFind {
    * Sets the count field for queryCount. In case you need something else,
    * overwrite this function.
    * ToDo: add this.count to make it redundant to overwrite this function.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static setQueryCountFields(context, criteria) {
     context.queryCount.field('count(' + this.ID_ALIAS + ')', 'count');
@@ -145,8 +165,10 @@ class GenericFind {
 
   /**
    * Sets limit and offset for queryWhere.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static setQueryLimitAndOffset(context, criteria) {
     // Set LIMIT and OFFSET for queryWhere (and only for queryWhere)
@@ -155,8 +177,10 @@ class GenericFind {
 
   /**
    * You need to group your queries? Overwrite this function.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static setQueryGroup(context, criteria) {
 
@@ -165,8 +189,10 @@ class GenericFind {
   /**
    * Stringfies both queries queryWhere and queryCount.
    * If you named them differently, overwrite this method.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static stringifyQuery(context, criteria) {
     // Stringify queries
@@ -181,9 +207,13 @@ class GenericFind {
    * in context.rowsWhere and context.rowCount (mind the missing s on rowCount).
    * You shouldn't need to overwrite this method if you don't rename the
    * queries.
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
-   * @return {Promise}          [description]
+   * @async
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   * @throws {Error}
+   *         Only throws errors if something unexpected happens with sqlite.
    */
   static async executeQuery(context, criteria) {
     // Now we will execute both queries and catch the results
@@ -226,22 +256,13 @@ class GenericFind {
   }
 }
 
-/**
- * Table name. Eg: families
- * @type {String}
- */
+// Table name. Eg: families
 GenericFind.TABLE;
 
-/**
- * Array of all queryable aliases. Eg. ['familyId', 'familyName'...]
- * @type {String[]}
- */
+// Array of all queryable aliases. Eg. ['familyId', 'familyName'...]
 GenericFind.SEARCHABLE_ALIASES;
 
-/**
- * Alias for id field. Eg. familyId
- * @type {String}
- */
+// Alias for id field. Eg. familyId
 GenericFind.ID_ALIAS;
 
 GenericFind.ALIASES_TO_FIELD_WITHOUT_ID;
