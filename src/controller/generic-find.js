@@ -4,8 +4,8 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const logger = require('../logger');
 const CONSTANTS = require('../constants');
+const logger = require('../logger');
 const Utils = require('../utils');
 
 /**
@@ -37,6 +37,36 @@ class GenericFind {
    * @throws {Error}
    *         Only throws errors if something unexpected happens with sqlite.
    * @return {Object}
+   *         returnObject which by default only contains how many entries where
+   *         found (count) and how many are left (remaining). You can modify the
+   *         content by overwriting #buildReturnObjectWhere() method.
+   *         A returnObject should look like this:
+   *         {
+   *           count: 42,
+   *           remaining: 13,
+   *           families: {
+   *             1: {
+   *               familyId: 1,
+   *               familyName: 'TestFamily'
+   *             },
+   *             2: {
+   *               familyId: 2,
+   *               familyName: 'TestFamily2'
+   *             }
+   *           },
+   *           generations: {
+   *             1: {
+   *               generationId: 1,
+   *               generationName: 'F1',
+   *               familyId: 1
+   *             },
+   *             2: {
+   *               generationId: 2,,
+   *               generationName: 'S1',
+   *               familyId: 2
+   *             }
+   *           }
+   *         }
    */
   static async find(criteria) {
     if(_.isNil(criteria)) criteria = {};
@@ -177,6 +207,7 @@ class GenericFind {
 
   /**
    * You need to group your queries? Overwrite this function.
+   * ToDo: Is this needed for any find*?
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
@@ -196,7 +227,7 @@ class GenericFind {
    */
   static stringifyQuery(context, criteria) {
     // Stringify queries
-    context.queryWhere = context.queryWhere.toString(); // make queryWhereuery a string
+    context.queryWhere = context.queryWhere.toString();
     logger.debug(this.name, '#find() queryWhere:', context.queryWhere);
     context.queryCount = context.queryCount.toString();
     logger.debug(this.name, '#find() queryCount:', context.queryCount);
@@ -226,10 +257,12 @@ class GenericFind {
 
   /**
    * Apply all info from context.rowsWhere to returnObject here.
-   * @param  {object} returnObject  - object which will get returned later
-   *                                  from #find().
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static buildReturnObjectWhere(returnObject, context, criteria) {
 
@@ -239,10 +272,12 @@ class GenericFind {
    * Applies all info from context.rowCount. So basically adds found
    * and remaining properties to returnObject. Normally no need to
    * overwrite this method.
-   * @param  {object} returnObject  - object which will get returned later
-   *                                  from #find().
-   * @param  {object} context   - Internal context object
-   * @param  {object} criteria  - Criteria object passed to find()
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
    */
   static buildReturnObjectCount(returnObject, context, criteria) {
     logger.debug(this.name, '#find() length RowsWhere:', context.rowsWhere.length);
