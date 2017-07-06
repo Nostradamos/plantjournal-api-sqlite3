@@ -8,14 +8,18 @@ plantJournal
 ToDo
 =====
 
-* Refactor generic-find & constants
-* Complete setWhere()
-* Add sorting for find & update
-* Add resolveParents to find
-* Add description fields
 * Refactor comments. Add them where they are missing.
+* Refactor generic-find?!
+* Refactor constants/variable names
+* Add like/contains... to setWhere
+* Add .on events
+* Add sorting for find, update, delete
+* Add resolveParents to find?!
+* Add description fields
 * Introduce eslint
-* Add logs
-* Add medium
-* Add environment
+* Add plantJournal
+* Add medium/environment
+* Add mediumLog
+* Add environmentData
+* Implement files/pictures/media
 * Add strain?!

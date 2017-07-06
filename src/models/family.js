@@ -20,17 +20,6 @@ let Family = exports;
  */
 
 /**
- * @typedef {Object} FamilyFind
- * @type {integer} count
- *       Counter for how many families where found for this request in total.
- * @type {integer} remaining
- *       Counter for how many families are available after this request.
- *       By increasing criteria.offset or criteria.limit you could get them.
- * @type {Object} families
- *       Key is always familyId, value is Family object.
- */
-
-/**
  * Creates a new Family entry and returns the created family object.
  * @async
  * @param  {Object} options
@@ -66,8 +55,27 @@ Family.create = async function(options) {
  *         Skip the first x families. Needed for paging.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
- * @return {FamilyFind}
- *
+ * 
+ * @return {Object} foundFamilies
+ *         Object containing all information about found families.
+ * @return {integer} foundFamilies.count
+ *         How many families where found in total. If you don't search for
+ *         specific families, this will be the amount of all families we know.
+ *         Otherwise how many families where found matching that search. Not all
+ *         of them have to be returned by now, but with offset/limit you could
+ *         get all of them. Useful for paging.
+ * @return {integer} foundFamilies.remaining
+ *         Indicates how many families are remaining for this search. This is
+ *         useful for paging. Imagine you have 10 families, and with limit=2
+ *         you get only the first to. There would be still 8 remaining.
+ *         With offset=2 you would get the next 2 (family 2-4) and 6 would
+ *         be remaining.
+ * @return {Object.<integer, Family>} foundFamilies.families
+ *         The actual families. Key is always the familyId to make it easier
+ *         to get a family with a specific key out of the object. Value will
+ *         be also an object, but filled with information/family attributes
+ *         about one single family. See jsdoc Family object description for more
+ *         information.
  */
 Family.find = async function(criteria) {
   return await FamilyFind.find(criteria);
