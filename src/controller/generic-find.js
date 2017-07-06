@@ -17,6 +17,7 @@ const Utils = require('../utils');
  * holds in in series. To change the behaviour of your find, extend this class
  * and overwrite the best matching method. See method comments for further and
  * more detailed information.
+ * @private
  */
 class GenericFind {
   /**

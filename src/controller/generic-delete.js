@@ -19,6 +19,7 @@ const Utils = require('../utils');
  * new one) simply extend this class and overwrite the different
  * static class methods like #initQueryRelated(), #extractIdsToDelete()
  * etc. See method comments for further and more detailed information.
+ * @private
  */
 class GenericDelete {
   /**

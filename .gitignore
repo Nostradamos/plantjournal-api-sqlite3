@@ -62,3 +62,6 @@ test.js
 
 # vim sessions
 *.vim
+
+# jsdoc output
+docs

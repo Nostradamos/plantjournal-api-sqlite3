@@ -17,16 +17,19 @@ const GenericCreate = require('./generic-create');
  * src/controller/generic-create.
  * If you want to know how to use the Generation.create()
  * API from outside, see src/models/Generation #create().
+ * @private
+ * @extends GenericCreate
  */
 class GenerationCreate extends GenericCreate {
 
   /**
    * We need to validate input and throw errors if we're unhappy with it.
-   * @param  {object} returnObject
-   *         object which will find returned from #create().
    * @param  {object} context
    *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    * @throws {Error}
+   *         Throws error if we are unhappy with the options object.
    */
   static validate(context, options) {
     Utils.hasToBeSet(options, 'generationName');
@@ -147,6 +150,8 @@ class GenerationCreate extends GenericCreate {
    * @param  {object} options
    *         options object which got passed to GenericCreate.create().
    * @throws {Error}
+   *         Throws unexpected sqlite errors or errors thrown from
+   *         executeQueryInsertParentsIfNeeded().
    */
   static async executeQuery(context, options) {
 

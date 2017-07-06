@@ -5,35 +5,51 @@ const PlantFind = require('../controller/plant-find');
 const PlantDelete = require('../controller/plant-delete');
 const PlantUpdate = require('../controller/plant-update');
 
+/**
+ * Namespace containing all CRUD methods of Plant.
+ * @namespace plantJournal.Plant
+ * @memberof plantJournal
+ */
 let Plant = exports;
 
 /**
+ * @typedef {number} PlantId
+ *          Unique identifier for plants.
+ */
+
+/**
+ * @typedef {String} PlantSex
+ *          Has to be either male, female or hermaphrodite.
+ */
+
+/**
  * @typedef {Object} Plant
- * @property {integer} plantId
+ * @property {PlantId} plantId
  *           Unique Identifier for this plant.
  * @property {String} plantName
  *           Name of this plant.
- * @property {integer} [plantClonedFrom=null]
+ * @property {PlantId} [plantClonedFrom=null]
  *           If plant got cloned from another plant, this will be the id of
  *           the mother plant.
- * @property {plantSex} plantSex
+ * @property {PlantSex} plantSex
  *           Sex of this plant.
- * @property {integer} genotypeId
- * @property {integer} plantCreatedAt
+ * @property {GenotypeId} genotypeId
+ * @property {UnixTimestampUTC} plantCreatedAt
  *           UTC Timestamp when this plant got created.
- * @property {integer} plantModifiedAt
+ * @property {UnixTimestampUTC} plantModifiedAt
  *           UTC Timestamp when this plant got modified the last time.
  */
 
 
  /**
   * Creates a new plant entry and returns the created plant object.
+  * @memberof plantJournal.Plant
   * @async
   * @param {Object} options
   *         Options how the new plant should be.
   * @param {String} plantName
   *        Name of this plant.
-  * @param {integer} [plantClonedFrom=null]
+  * @param {PlantId} [plantClonedFrom=null]
   *        If plant got cloned from another plant, this will be the id of
   *        the mother plant.
   * @param {plantSex} plantSex
@@ -69,15 +85,16 @@ Plant.delete = async function(criteria) {
  * will be set to the current UTC timestamp for all updated plants.
  * If you want to know how Plant.update() works internally,
  * see src/controller/plant-update and src/controller/generic-update.
+ * @memberof plantJournal.Plant
  * @async
  * @param  {Object}    update
  *         Fields to update.
  * @param  {String}    [update.plantName]
  *         Update plantName.
- * @param  {integer}   [update.plantClonedFrom]
+ * @param  {PlantId}   [update.plantClonedFrom]
  *         Update plantClonedFrom. Has to reference an existing plant, otherwise
  *         will throw error.
- * @param  {integer}   [update.genotypeId]
+ * @param  {GenotypeId}   [update.genotypeId]
  *         Update genotypeId. Has to reference existing genotype.
  * @param  {Object}    criteria
  *         With Criteria you can control which plants should get updated.
@@ -95,7 +112,7 @@ Plant.delete = async function(criteria) {
  *         generationModifiedAt, genotypeId, genotypeName, genotypeCreatedAt,
  *         genotypeModifiedAt, plantId, plantName, plantClonedFrom,
  *         plantModifiedAt, plantClonedFrom
- * @returns {integer[]}
+ * @return {PlantId[]}
  *          Array of updated plantIds. Empty if no plants got updated.
  */
 Plant.update = async function(update, criteria) {

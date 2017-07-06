@@ -15,13 +15,18 @@ const GenericFind = require('./generic-find');
  * src/controller/generic-find (we extend that class).
  * If you want to know how to use the Family.find() API, See
  * src/models/family #find().
+ * <strong>Note:</strong> Do not use directly.
+ * @private
+ * @extends GenericFind
  */
 class FamilyFind extends GenericFind {
+
   /**
    * We need to overwrite this method to, yeah,
    * build the returnObject. We basically iterate over
    * each row we get from database and add all family related
    * fields to returnObject.families.
+   * @override
    * @param  {object} returnObject
    *         object which will get returned later from #find().
    * @param  {object} context

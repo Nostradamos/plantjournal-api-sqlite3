@@ -15,7 +15,9 @@ const GenericDelete = require('./generic-delete');
  * If you want to know how delete works internally,
  * see src/controller/generic-delete. If you want to know how to use the
  * Family.delete() API, see src/models/family #delete.
- * If you want to execute FamilyDelete maually, just call FamilyDelete.delete().
+ * If you want to execute FamilyDelete manually, just call FamilyDelete.delete().
+ * @private
+ * @extends GenericDelete
  */
 class FamilyDelete extends GenericDelete {
 

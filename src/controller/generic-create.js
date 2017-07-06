@@ -14,6 +14,7 @@ const Utils = require('../utils');
  * order (see create()). Besides that this class also does some simple stuff
  * which most *-create classes would have to do too (eg. basic logging,
  * initing query object... )
+ * @private
  */
 class GenericCreate {
 

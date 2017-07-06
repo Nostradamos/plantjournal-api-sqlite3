@@ -15,6 +15,8 @@ const GenericFind = require('./generic-find');
 * src/controller/generic-find (we extend that class).
 * If you want to know how to use the Genotype.find() API, See
 * src/models/genotype #find().
+* @private
+* @extends GenericFind
  */
 class GenotypeFind extends GenericFind {
 

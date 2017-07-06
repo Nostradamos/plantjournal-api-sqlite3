@@ -11,6 +11,8 @@ const GenericUpdate = require('./generic-update');
  * FamilyUpdate Skeleton. See GenericUpdate for more information.
  * Defaul Behaviour with modified TABLE, ID FIELDS... is enough for
  * our use.
+ * @private
+ * @extends GenericUpdate
  */
 class FamilyUpdate extends GenericUpdate {
 }

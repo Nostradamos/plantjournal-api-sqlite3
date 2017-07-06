@@ -15,6 +15,8 @@ const GenericCreate = require('./generic-create');
  * src/controller/generic-create.
  * If you want to know how to use the Genotype.create()
  * API from outside, see src/models/Genotype #create().
+ * @private
+ * @extends GenericCreate
  */
 class GenotypeCreate extends GenericCreate {
 

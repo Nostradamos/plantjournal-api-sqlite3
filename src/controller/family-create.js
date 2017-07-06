@@ -15,6 +15,8 @@ const GenericCreate = require('./generic-create');
  * src/controller/generic-create.
  * If you want to know how to use the Family.create()
  * API from outside, see src/models/Family #create().
+ * @private
+ * @extends GenericCreate
  */
 class FamilyCreate extends GenericCreate {
 

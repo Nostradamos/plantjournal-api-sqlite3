@@ -4,11 +4,31 @@ const squel = require('squel');
 const sqlite = require('sqlite');
 const logger = require('./logger');
 
+/**
+ * The main plantJournal class.
+ * You have to init this class to open up a connection to sqlite and be able
+ * to access the models.
+ * @class
+ */
 class plantJournal {
+  /**
+   * Init a new plantJournal instance.
+   * @param  {object} options
+   *         All options. Currently this will get directly passed to sqlite,
+   *         so all valid sqlite options you can also use here.
+   */
   constructor(options) {
     this.options = options;
   }
 
+  /**
+   * Connects to sqlite
+   * @async
+   * @throws {Error}
+   *         Throws error if sqlite lib doesn't support JSON or foreign_keys,
+   *         or if anything else happens and we fail to connect to the sqlite
+   *         database.
+   */
   async connect() {
     await sqlite.open(this.options);
     //if(this.options === ':memory:') {
@@ -41,9 +61,13 @@ class plantJournal {
   }
 }
 
+
 plantJournal.prototype.Family = require('./models/family');
+
 plantJournal.prototype.Generation = require('./models/generation');
+
 plantJournal.prototype.Genotype = require('./models/genotype');
+
 plantJournal.prototype.Plant = require('./models/plant');
 
 module.exports = plantJournal;

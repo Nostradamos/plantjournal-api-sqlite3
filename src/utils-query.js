@@ -7,6 +7,10 @@ const CONSTANTS = require('./constants');
 const logger = require('./logger');
 const Utils = require('./utils');
 
+/**
+ * Set of utils mainly used for query building.
+ * @namespace QueryUtils
+ */
 let QueryUtils = exports;
 
 

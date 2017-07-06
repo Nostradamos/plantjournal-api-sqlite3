@@ -5,22 +5,16 @@ const GenotypeFind = require('../controller/genotype-find');
 const GenotypeDelete = require('../controller/genotype-delete');
 const GenotypeUpdate = require('../controller/genotype-update');
 
+/**
+ * Namespace containing all CRUD methods for Genotype.
+ * @namespace plantJournal.Genotype
+ * @memberof plantJournal
+ */
 let Genotype = exports;
 
-/**
- * @typedef {Object} Family
- * @property {integer} familyId
- *           Unique Identifier for this family.
- * @property {String} familyName
- *           Name of this family.
- * @property {integer} familyCreatedAt
- *           UTC Timestamp when this family got created.
- * @property {integer} familyModifiedAt
- *           UTC Timestamp when this family got modified the last time.
- */
-
  /**
-  * Creates a new Genoty entry and returns the created genotype object.
+  * Creates a new Genotype entry and returns the created genotype object.
+  * @memberof plantJournal.Genotype
   * @async
   * @param  {Object} options
   *         Options how the new family should be.
@@ -57,13 +51,15 @@ Genotype.delete = async function(criteria) {
   * will be set to the current UTC timestamp for all updated genotypes.
   * If you want to know how Genotype update works internally,
   * see src/controller/genotype-update and src/controller/generic-update.
+  * @memberof plantJournal.Genotype
   * @async
   * @param  {Object}    update
   *         Fields to update.
   * @param  {String}    [update.genotypeName]
   *         Update generationParents.
-  * @param  {integer}   [update.generationId]
-  *         Update generationId.
+  * @param  {GenerationId}   [update.generationId]
+  *         Update generationId. This has to be an existing GenerationId,
+  *         otherwise we will throw an errror.
   * @param  {Object}    criteria
   *         With Criteria you can control which genotypes should get updated.
   *         Behaves similiar to Genotype.find()
@@ -78,7 +74,7 @@ Genotype.delete = async function(criteria) {
   *         familyId, familyName, familyCreatedAt, familyModifiedAt,
   *         generationId, generatioName, generationParents, generationCreatedAt,
   *         generationModifiedAt, genotypeId, genotypeName
-  * @returns {integer[]}
+  * @returns {GenotypeId[]}
   *          Array of updated genotypeIds. Empty if no genotypes got updated.
   */
 Genotype.update = async function(update, criteria) {

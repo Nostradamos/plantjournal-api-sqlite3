@@ -11,6 +11,7 @@ const Utils = require('../utils');
  * Generic update class which is the skeleton for all *-update classes.
  * It defines some general update behaviour and lets space to modifiy
  * this behaviour for the different update classes.
+ * @private
  */
 class GenericUpdate {
 

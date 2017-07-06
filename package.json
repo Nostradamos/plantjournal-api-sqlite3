@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/*",
-    "coverage": "nyc --reporter=html --reporter=text mocha ./test/*"
+    "coverage": "nyc --reporter=html --reporter=text mocha ./test/*",
+    "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jsdoc": "^3.4.3",
+    "jsdoc": "https://github.com/jsdoc3/jsdoc.git",
     "mocha": "^3.2.0",
     "nyc": "^11.0.2",
     "should": "^11.2.1"

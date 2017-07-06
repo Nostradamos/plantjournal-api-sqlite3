@@ -18,6 +18,8 @@ const GenericCreate = require('./generic-create');
  * src/controller/generic-create.
  * If you want to know how to use the Plant.create()
  * API from outside, see src/models/Plant #create().
+ * @private
+ * @extends GenericCreate
  */
 class PlantCreate extends GenericCreate {
 

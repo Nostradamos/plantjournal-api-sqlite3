@@ -13,6 +13,8 @@ const GenericUpdate = require('./generic-update');
  * Plants. See src/controller/generic-update for more detailed information
  * on how update works internally. If you want to know how to
  * use API, see src/models/plant #update().
+ * @private
+ * @extends GenericUpdate
  */
 class PlantUpdate extends GenericUpdate {
 

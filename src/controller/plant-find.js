@@ -9,12 +9,14 @@ const Utils = require('../utils');
 const GenericFind = require('./generic-find');
 
 /**
-* PlantFind does all the functionality of Plant.find
-* To manually execute a "PlantFind-find", call PlantFind.find().
-* To understand how finds work generally internally, See
-* src/controller/generic-find (we extend that class).
-* If you want to know how to use the Plant.find() API, See
-* src/models/plant #find().
+ * PlantFind does all the functionality of Plant.find
+ * To manually execute a "PlantFind-find", call PlantFind.find().
+ * To understand how finds work generally internally, See
+ * src/controller/generic-find (we extend that class).
+ * If you want to know how to use the Plant.find() API, See
+ * src/models/plant #find().
+ * @private
+ * @extends GenericFind
  */
 class PlantFind extends GenericFind {
 

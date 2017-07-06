@@ -1,6 +1,10 @@
 'use strict';
 const _ = require('lodash');
 
+/**
+ * @namespace CONSTANTS
+ * @private
+ */
 const CONSTANTS = exports;
 
 /**

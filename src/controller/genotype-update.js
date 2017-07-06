@@ -13,6 +13,8 @@ const GenericUpdate = require('./generic-update');
  * Genotypes. See GenericUpdate for more detailed information
  * on internal update process. For API usage see
  * src/model/Genotype #update().
+ * @private
+ * @extends GenericUpdate
  */
 class GenotypeUpdate extends GenericUpdate {
 

@@ -5,6 +5,10 @@ const logger = require('./logger');
 const squel = require('squel');
 const CONSTANTS = require('./constants');
 
+/**
+ * Utils.
+ * @namespace
+ */
 let Utils = exports;
 
 /**
@@ -399,7 +403,7 @@ Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
 
 /**
  * Return a unix timestamp (seconds)
- * @return {int} Unix Timestamp
+ * @return {UnixTimestampUTC} Unix Timestamp
  */
 Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
   return Math.floor(new Date() / 1000);

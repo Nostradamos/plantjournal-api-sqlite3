@@ -15,6 +15,8 @@ const GenericFind = require('./generic-find');
 * src/controller/generic-find (we extend that class).
 * If you want to know how to use the Generation.find() API, See
 * src/models/generation #find().
+* @private
+* @extends GenericFind
  */
 class GenerationFind extends GenericFind {
   /**

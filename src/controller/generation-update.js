@@ -16,6 +16,8 @@ const GenericUpdate = require('./generic-update');
  * Generations. See GenericUpdate for more detailed information
  * on how Update internally works. If you want to know how
  * to use this, see src/models/generation #update().
+ * @private
+ * @extends GenericUpdate
  */
 class GenerationUpdate extends GenericUpdate {
 
