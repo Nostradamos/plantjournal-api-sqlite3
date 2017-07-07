@@ -167,7 +167,7 @@ class GenericFind {
     // For queryWhere we always have to set familyId, because it's needed
     // for the object key.
     if(_.isEmpty(this.DEFAULT_FIELDS)) {
-      context.queryWhere.field(this.ATTR_ID);
+      context.queryWhere.field(this.TABLE + '.' + this.ATTR_ID);
     } else {
       context.queryWhere.fields(this.DEFAULT_FIELDS);
     }
@@ -183,7 +183,15 @@ class GenericFind {
    */
   static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set fields specified if options.fields, otherwise all.
-    QueryUtils.setFields(context.queryWhere, this.ALIASES_TO_FIELD_WITHOUT_ID, context.fields);
+    // We only have to set fields specified if options.fields, otherwise all.
+    let fieldsToSelect;
+    if(_.isEmpty(criteria.fields)) {
+      fieldsToSelect = this.ATTRIBUTES_SEARCHABLE;
+    } else {
+      fieldsToSelect = _.intersection(context.fields, this.ATTRIBUTES_SEARCHABLE);
+    }
+
+    context.queryWhere.fields(fieldsToSelect);
   }
 
   /**
@@ -197,7 +205,7 @@ class GenericFind {
    */
   static setQueryCountFields(context, criteria) {
     context.queryCount.field(
-      'count(' + (_.isEmpty(this.COUNT) ? this.ATTR_ID : this.COUNT) + ')',
+      'count(' + (_.isEmpty(this.COUNT) ? this.TABLE + '.' + this.ATTR_ID : this.COUNT) + ')',
       'count'
     );
   }

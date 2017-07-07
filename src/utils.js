@@ -1,8 +1,9 @@
 'use strict';
 
 const _ = require('lodash');
-const logger = require('./logger');
 const squel = require('squel');
+
+const logger = require('./logger');
 const CONSTANTS = require('./constants');
 
 /**
@@ -44,9 +45,11 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
     'generationId': row.generationId,
     'familyId': row.familyId
   };
-  _.each(CONSTANTS.ALIASES_ONLY_PLANT, function(field) {
-    if(_.has(row, field)) plant[field] = row[field];
+
+  _.each(CONSTANTS.ALL_ATTRIBUTES_PLANT, function(attr) {
+    if(_.has(row, attr)) plant[attr] = row[attr];
   });
+
   if(forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
 }
 
@@ -65,8 +68,8 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
       'generationId': row.generationId,
       'familyId': row.familyId
   };
-  _.each(CONSTANTS.ALIASES_ONLY_GENOTYPE, function(field) {
-    if(_.has(row, field)) genotype[field] = row[field];
+  _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
+    if(_.has(row, attr)) genotype[attr] = row[attr];
   });
   if(forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
 
@@ -82,21 +85,21 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
  * @param {object} options          - options which got passed to the find function. For advanced use.
  * @param {bool}   [forceAdd=false] - adds to returnObject even if row.generatioName is not set.
  */
-Utils.addGenerationFromRowToReturnObject = function addGenerationFromRowToReturnObject(row, returnObject, options, forceAdd) {
+Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options, forceAdd) {
   let generationId = row.generationId;
   let generation = {
     'familyId': row.familyId
   }
 
-  _.each(CONSTANTS.ALIASES_ONLY_GENERATION, function(field) {
-    if(_.has(row, field)) {
-      let rowField = row[field];
+  _.each(CONSTANTS.ALL_ATTRIBUTES_GENERATION, function(attr) {
+    if(_.has(row, attr)) {
+      let rowattr = row[attr];
       // if we have row.generationParents and it's null, set an empty array [], else split it into an array
       // and cast every element to an integer
-      if(field === 'generationParents') {
-        rowField = rowField === null ? [] : _(rowField).split(',').map(_.toInteger).value();
+      if(attr === 'generationParents') {
+        rowattr = rowattr === null ? [] : _(rowattr).split(',').map(_.toInteger).value();
       }
-      generation[field] = rowField;
+      generation[attr] = rowattr;
     }
   });
   // Make sure that we only add it returnObject if we not only have generationId and familyId set.
@@ -114,11 +117,11 @@ Utils.addGenerationFromRowToReturnObject = function addGenerationFromRowToReturn
 Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(row, returnObject, options, forceAdd) {
   let familyId = row.familyId;
   let family = {};
-  _.each(CONSTANTS.ALIASES_ONLY_FAMILY, function(field) {
-    if(_.has(row, field)) family[field] = row[field];
+  _.each(CONSTANTS.ALL_ATTRIBUTES_FAMILY, function(attr) {
+    if(_.has(row, attr)) family[attr] = row[attr];
   });
 
-  // Make sure we have at least two fields, or forceAdd = true
+  // Make sure we have at least two attrs, or forceAdd = true
   if(forceAdd === true || _.size(family) > 1) {
     returnObject.families[familyId] = family;
   }

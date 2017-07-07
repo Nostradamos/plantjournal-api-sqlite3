@@ -174,7 +174,7 @@ QueryUtils.setFields = function (query, allowedFields, criteriaFields) {
 /**
  * Helper function of QueryUtils.setFields(), returns an array of fields.
  * If criteriaFields is empty, we will return all values of allowedFields.
- * Otherwise we will iterate over criteriaFields and select all 
+ * Otherwise we will iterate over criteriaFields and select all
  * @param {Object.<String, String>} allowedFields
  *        Plain object where key is field name, and value is alias.
  * @param {String[]} criteriaFields
