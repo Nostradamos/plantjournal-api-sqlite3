@@ -6,6 +6,7 @@ const sqlite = require('sqlite');
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 
 /**

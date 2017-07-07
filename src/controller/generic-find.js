@@ -7,6 +7,7 @@ const sqlite = require('sqlite');
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 /**
  * Generic find class which is the skeleton for all *find methods
@@ -75,18 +76,18 @@ class GenericFind {
     let context = {};
     context.fields = criteria.fields || false;
 
-    this.initQuery(context, criteria);
-    this.setQueryJoin(context, criteria);
+    this.initQueries(context, criteria);
+    this.setQueryWhereJoin(context, criteria);
     this.setQueryWhere(context, criteria);
     this.cloneQueryWhereIntoQueryCount(context, criteria);
     this.setQueryWhereDefaultFields(context, criteria);
     this.setQueryWhereAdditionalFields(context, criteria);
     this.setQueryCountFields(context, criteria);
-    this.setQueryLimitAndOffset(context, criteria);
-    this.setQueryGroup(context, criteria);
-    this.stringifyQuery(context, criteria);
+    this.setQueryWhereLimitAndOffset(context, criteria);
+    this.setQueryWhereGroup(context, criteria);
 
-    await this.executeQuery(context, criteria);
+    this.stringifyQueries(context, criteria);
+    await this.executeQueries(context, criteria);
 
     let returnObject = {};
     this.buildReturnObjectWhere(returnObject, context, criteria);
@@ -106,7 +107,7 @@ class GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static initQuery(context, criteria) {
+  static initQueries(context, criteria) {
     // Init queries, we need two query objects, because we need a subquery which
     // counts the total rows we could find for this query. Basically the counting
     // query ignores the limit part and uses the COUNT() function in sqlite.
@@ -124,12 +125,12 @@ class GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static setQueryJoin(context, criteria) {
+  static setQueryWhereJoin(context, criteria) {
 
   }
 
   /**
-   * This method just applies Utils.setWhere to the context.queryWhere query.
+   * This method just applies {@link QueryUtils.setWhere} to the context.queryWhere query.
    * Normally you shouldn't overwrite this, you can use this.SEARCHABLE_ALIASES to
    * adjust the behaviour.
    * @param  {object} context
@@ -138,7 +139,7 @@ class GenericFind {
    *         Criteria object passed to find()
    */
   static setQueryWhere(context, criteria) {
-    Utils.setWhere(context.queryWhere, this.SEARCHABLE_ALIASES, criteria);
+    QueryUtils.setWhere(context.queryWhere, this.SEARCHABLE_ALIASES, criteria);
   }
 
   /**
@@ -155,8 +156,8 @@ class GenericFind {
   }
 
   /**
-   * Only sets the this.ID_ALIAS to queryWhere. Overwrite this if you want
-   * more selected fields in the queryWhere query. Does not mutate queryCount.
+   * Sets fields to select for queryWhere to this.ID_ALIAS if this.DEFAULT_FIELDS
+   * is not set. Otherwise all fields of this.DEFAULT_FIELDS will get selected.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
@@ -165,11 +166,15 @@ class GenericFind {
   static setQueryWhereDefaultFields(context, criteria) {
     // For queryWhere we always have to set familyId, because it's needed
     // for the object key.
-    context.queryWhere.field(this.ID_ALIAS);
+    if(_.isEmpty(this.DEFAULT_FIELDS)) {
+      context.queryWhere.field(this.ID_ALIAS);
+    } else {
+      context.queryWhere.fields(this.DEFAULT_FIELDS);
+    }
   }
 
   /**
-   * Applies Utils.setFields() to context.queryWhere with this.ALIASES_TO_FIELD_WITHOUT_ID.
+   * Applies {@link QueryUtils.setFields} to context.queryWhere with this.ALIASES_TO_FIELD_WITHOUT_ID.
    * Normally you shouldn't overwrite this function.
    * @param  {object} context
    *         Internal context object
@@ -178,20 +183,23 @@ class GenericFind {
    */
   static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set fields specified if options.fields, otherwise all.
-    Utils.setFields(context.queryWhere, this.ALIASES_TO_FIELD_WITHOUT_ID, context.fields);
+    QueryUtils.setFields(context.queryWhere, this.ALIASES_TO_FIELD_WITHOUT_ID, context.fields);
   }
 
   /**
-   * Sets the count field for queryCount. In case you need something else,
-   * overwrite this function.
-   * ToDo: add this.count to make it redundant to overwrite this function.
+   * Sets the count field for queryCount. If this.COUNT is not set, we will
+   * use this.ID_ALIAS. If you need to distinct the ids, just set:
+   * this.COUNT = 'distinct(sometable.someIdField)'
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
   static setQueryCountFields(context, criteria) {
-    context.queryCount.field('count(' + this.ID_ALIAS + ')', 'count');
+    context.queryCount.field(
+      'count(' + (_.isEmpty(this.COUNT) ? this.ID_ALIAS : this.COUNT) + ')',
+      'count'
+    );
   }
 
   /**
@@ -201,21 +209,21 @@ class GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static setQueryLimitAndOffset(context, criteria) {
+  static setQueryWhereLimitAndOffset(context, criteria) {
     // Set LIMIT and OFFSET for queryWhere (and only for queryWhere)
-    Utils.setLimitAndOffset(context.queryWhere, criteria);
+    QueryUtils.setLimitAndOffset(context.queryWhere, criteria);
   }
 
   /**
-   * You need to group your queries? Overwrite this function.
+   * You need to group your queries? Just set this.GROUP_BY.
    * ToDo: Is this needed for any find*?
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static setQueryGroup(context, criteria) {
-
+  static setQueryWhereGroup(context, criteria) {
+    if(!_.isEmpty(this.GROUP_BY)) context.queryWhere.group(this.GROUP_BY);
   }
 
   /**
@@ -226,7 +234,7 @@ class GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static stringifyQuery(context, criteria) {
+  static stringifyQueries(context, criteria) {
     // Stringify queries
     context.queryWhere = context.queryWhere.toString();
     logger.debug(this.name, '#find() queryWhere:', context.queryWhere);
@@ -247,7 +255,7 @@ class GenericFind {
    * @throws {Error}
    *         Only throws errors if something unexpected happens with sqlite.
    */
-  static async executeQuery(context, criteria) {
+  static async executeQueries(context, criteria) {
     // Now we will execute both queries and catch the results
     [context.rowsWhere, context.rowCount] = await Promise
       .all([sqlite.all(context.queryWhere), sqlite.get(context.queryCount)]);
@@ -300,6 +308,15 @@ GenericFind.SEARCHABLE_ALIASES;
 
 // Alias for id field. Eg. familyId
 GenericFind.ID_ALIAS;
+
+//Overwrite inner value of count. If this is not set, we will just use ID_ALIAS
+GenericFind.COUNT;
+
+// You want to select more default fields than just ID_ALIAS? Set them here.
+GenericFind.DEFAULT_FIELDS;
+
+// You want to apply an GROUP BY to queryWhere? Overwrite this.
+GenericFind.GROUP;
 
 GenericFind.ALIASES_TO_FIELD_WITHOUT_ID;
 

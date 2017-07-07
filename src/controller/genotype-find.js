@@ -1,10 +1,12 @@
 'use strict';
 
 const _ = require('lodash');
+const util = require('util');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 const GenericFind = require('./generic-find');
 
@@ -29,47 +31,9 @@ class GenotypeFind extends GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static setQueryJoin(context, criteria) {
-    Utils.leftJoinGenerations(context.queryWhere);
-    Utils.leftJoinFamilies(context.queryWhere);
-  }
-
-  /**
-   * We want to have to genotypeId, generationId and familyId always selected
-   * (even if you dont have if in your fields array in criteria).
-   * This may change in future.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryWhereDefaultFields(context, criteria) {
-    context.queryWhere.fields(
-      ['genotypes.genotypeId', 'generations.generationId', 'families.familyId']
-    );
-  }
-
-  /**
-   * We only want to count unique genotypeIds. It's possible that we get
-   * multiple rows with the same genotypeId (eg: because of generation_parents).
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryCountFields(context, criteria) {
-    context.queryCount.field('count(DISTINCT genotypes.genotypeId)', 'count');
-  }
-
-  /**
-   * Group by genotypeId.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryGroup(context, criteria) {
-    context.queryWhere.group('genotypes.genotypeId');
+  static setQueryWhereJoin(context, criteria) {
+    QueryUtils.leftJoinGenerations(context.queryWhere);
+    QueryUtils.leftJoinFamilies(context.queryWhere);
   }
 
   /**
@@ -107,5 +71,11 @@ GenotypeFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge(
   CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENERATION,
   CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENOTYPE
 );
+
+GenotypeFind.DEFAULT_FIELDS = ['genotypes.genotypeId', 'generations.generationId', 'families.familyId'];
+
+GenotypeFind.COUNT = 'DISTINCT ' + CONSTANTS.TABLE_GENERATIONS + '.' + CONSTANTS.ID_ALIAS_GENERATION;
+
+GenotypeFind.GROUP_BY = CONSTANTS.TABLE_GENERATIONS + '.' + CONSTANTS.ID_ALIAS_GENERATION;
 
 module.exports = GenotypeFind;

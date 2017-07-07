@@ -5,6 +5,7 @@ const _ = require('lodash');
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 const GenericFind = require('./generic-find');
 
@@ -30,10 +31,10 @@ class PlantFind extends GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static setQueryJoin(context, criteria) {
-    Utils.leftJoinGenotypes(context.queryWhere);
-    Utils.leftJoinGenerations(context.queryWhere);
-    Utils.leftJoinFamilies(context.queryWhere);
+  static setQueryWhereJoin(context, criteria) {
+    QueryUtils.leftJoinGenotypes(context.queryWhere);
+    QueryUtils.leftJoinGenerations(context.queryWhere);
+    QueryUtils.leftJoinFamilies(context.queryWhere);
   }
 
   /**
@@ -71,7 +72,7 @@ class PlantFind extends GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static setQueryGroup(context, criteria) {
+  static setQueryWhereGroup(context, criteria) {
     context.queryWhere.group('plants.plantId');
   }
 

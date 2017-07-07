@@ -7,6 +7,7 @@ const sqlite = require('sqlite');
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 const GenericDelete = require('./generic-delete');
 
@@ -31,8 +32,8 @@ class GenerationDelete extends GenericDelete {
    *         Criteria object passed to delete()
    */
   static setQueryRelatedJoin(context, criteria) {
-    Utils.leftJoinGenotypesDownwards(context.queryRelated);
-    Utils.leftJoinPlantsDownwards(context.queryRelated);
+    QueryUtils.leftJoinGenotypesDownwards(context.queryRelated);
+    QueryUtils.leftJoinPlantsDownwards(context.queryRelated);
   }
 
   /**

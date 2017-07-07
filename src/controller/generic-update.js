@@ -6,6 +6,7 @@ const sqlite = require('sqlite');
 
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 /**
  * Generic update class which is the skeleton for all *-update classes.
@@ -123,7 +124,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindWhere(context, update, criteria) {
-    Utils.setWhere(context.queryFind, this.FINDABLE_ALIASES, criteria);
+    QueryUtils.setWhere(context.queryFind, this.FINDABLE_ALIASES, criteria);
   }
 
   /**
@@ -133,7 +134,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindLimitAndOffset(context, update, criteria) {
-    Utils.setLimitAndOffset(context.queryFind, criteria);
+    QueryUtils.setLimitAndOffset(context.queryFind, criteria);
   }
 
   static setQueryFindGroup(context, update, criteria) {

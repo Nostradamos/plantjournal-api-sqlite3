@@ -5,6 +5,7 @@ const _ = require('lodash');
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 const GenericFind = require('./generic-find');
 
@@ -27,7 +28,7 @@ class GenerationFind extends GenericFind {
    * @param  {object} criteria
    *         Criteria object passed to find()
    */
-  static setQueryJoin(context, criteria) {
+  static setQueryWhereJoin(context, criteria) {
     // We can't use Utils.leftJoinGenerations because we only want to join
     // generation_parents
     context.queryWhere.left_join(
@@ -35,42 +36,7 @@ class GenerationFind extends GenericFind {
       'generation_parents',
       'generations.generationId = generation_parents.generationId'
     );
-    Utils.leftJoinFamilies(context.queryWhere);
-  }
-
-  /**
-   * We want to have to generationId and familyId always selected (even if you
-   * dont have if in your fields array in criteria). This may change in future.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryWhereDefaultFields(context, criteria) {
-    context.queryWhere.fields(['generations.generationId', 'families.familyId']);
-  }
-
-  /**
-   * We only want to count unique generationIds. It's possible that we get
-   * multiple rows with the same genotypeId (eg: because of generation_parents).
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryCountFields(context, criteria) {
-    context.queryCount.field('count(DISTINCT generations.generationId)', 'count');
-  }
-
-  /**
-   * Group by generationId.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryGroup(context, criteria) {
-    context.queryWhere.group('generations.generationId');
+    QueryUtils.leftJoinFamilies(context.queryWhere);
   }
 
   /**
@@ -101,6 +67,12 @@ GenerationFind.TABLE = CONSTANTS.TABLE_GENERATIONS
 GenerationFind.ID_ALIAS = CONSTANTS.ID_ALIAS_GENERATION;
 
 GenerationFind.SEARCHABLE_ALIASES = CONSTANTS.ALIASES_ALL_GENERATION;
+
+GenerationFind.COUNT = 'DISTINCT ' + CONSTANTS.TABLE_GENERATIONS + '.' + CONSTANTS.ID_ALIAS_GENERATION;
+
+GenerationFind.DEFAULT_FIELDS = ['generations.generationId', 'families.familyId'];
+
+GenerationFind.GROUP_BY = CONSTANTS.TABLE_GENERATIONS + '.' + CONSTANTS.ID_ALIAS_GENERATION;
 
 GenerationFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge(
   {},

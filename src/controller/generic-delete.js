@@ -6,6 +6,7 @@ const sqlite = require('sqlite');
 
 const logger = require('../logger');
 const Utils = require('../utils');
+const QueryUtils = require('../utils-query');
 
 /**
  * Generic Delete class which tries to build a skeleton for all
@@ -115,7 +116,7 @@ class GenericDelete {
   }
 
   /**
-   * Applies Utils.setWhere to context.queryRelated. Normally
+   * Applies {@link QueryUtils.setWhere} to context.queryRelated. Normally
    * you shouldn't have to overwrite this, to change the queryable
    * fields simply set GenericDelete.SEARCHABLE_ALIASES.
    * @param  {object} context
@@ -124,7 +125,7 @@ class GenericDelete {
    *         Criteria object passed to delete()
    */
   static setQueryRelatedWhere(context, criteria) {
-    Utils.setWhere(context.queryRelated, this.SEARCHABLE_ALIASES, criteria);
+    QueryUtils.setWhere(context.queryRelated, this.SEARCHABLE_ALIASES, criteria);
   }
 
   /**
@@ -136,7 +137,7 @@ class GenericDelete {
    *         Criteria object passed to delete()
    */
   static setQueryRelatedLimitAndOffset(context, criteria) {
-    Utils.setLimitAndOffset(context.queryRelated, criteria);
+    QueryUtils.setLimitAndOffset(context.queryRelated, criteria);
   }
 
   /**
