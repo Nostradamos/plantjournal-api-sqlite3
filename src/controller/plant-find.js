@@ -32,48 +32,7 @@ class PlantFind extends GenericFind {
    *         Criteria object passed to find()
    */
   static setQueryWhereJoin(context, criteria) {
-    QueryUtils.leftJoinGenotypes(context.queryWhere);
-    QueryUtils.leftJoinGenerations(context.queryWhere);
-    QueryUtils.leftJoinFamilies(context.queryWhere);
-  }
-
-  /**
-   * We want to have to plantId, genotypeId, generationId and familyId always
-   * selected (even if you dont have if in your fields array in criteria).
-   * This may change in future.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryWhereDefaultFields(context, criteria) {
-    context.queryWhere.fields(
-      ['plants.plantId', 'genotypes.genotypeId', 'generations.generationId',
-       'families.familyId']
-     );
-  }
-
-  /**
-   * We only want to count unique plantIds. It's possible that we get
-   * multiple rows with the same plantId (eg: because of generation_parents).
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryCountFields(context, criteria) {
-    context.queryCount.field('count(DISTINCT plants.plantId)', 'count');
-  }
-
-  /**
-   * Group by genotypeId.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to find()
-   */
-  static setQueryWhereGroup(context, criteria) {
-    context.queryWhere.group('plants.plantId');
+    QueryUtils.joinRelatedPlants(context.queryWhere);
   }
 
   /**
@@ -118,5 +77,12 @@ PlantFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge(
   CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENOTYPE,
   CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_PLANT
 );
+
+PlantFind.DEFAULT_FIELDS = ['plants.plantId', 'genotypes.genotypeId', 'generations.generationId',
+ 'families.familyId'];
+
+PlantFind.COUNT = 'DISTINCT plants.plantId';
+
+PlantFind.GROUP_BY = 'plants.plantId';
 
 module.exports = PlantFind;

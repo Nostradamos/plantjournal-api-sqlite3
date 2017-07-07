@@ -34,9 +34,9 @@ class FamilyDelete extends GenericDelete {
    *         Criteria object passed to delete()
    */
   static setQueryRelatedJoin(context, criteria) {
-    QueryUtils.leftJoinGenerationsDownwards(context.queryRelated);
-    QueryUtils.leftJoinGenotypesDownwards(context.queryRelated);
-    QueryUtils.leftJoinPlantsDownwards(context.queryRelated);
+    QueryUtils.joinGenerationsDownwards(context.queryRelated);
+    QueryUtils.joinGenotypesDownwards(context.queryRelated);
+    QueryUtils.joinPlantsDownwards(context.queryRelated);
   }
 
   /**

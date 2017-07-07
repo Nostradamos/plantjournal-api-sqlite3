@@ -29,14 +29,8 @@ class GenerationFind extends GenericFind {
    *         Criteria object passed to find()
    */
   static setQueryWhereJoin(context, criteria) {
-    // We can't use Utils.leftJoinGenerations because we only want to join
-    // generation_parents
-    context.queryWhere.left_join(
-      CONSTANTS.TABLE_GENERATION_PARENTS,
-      'generation_parents',
-      'generations.generationId = generation_parents.generationId'
-    );
-    QueryUtils.leftJoinFamilies(context.queryWhere);
+    // Joins families, and because of the true flag also generation_parents.
+    QueryUtils.joinRelatedGenerations(context.queryWhere, true);
   }
 
   /**

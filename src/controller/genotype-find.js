@@ -32,8 +32,7 @@ class GenotypeFind extends GenericFind {
    *         Criteria object passed to find()
    */
   static setQueryWhereJoin(context, criteria) {
-    QueryUtils.leftJoinGenerations(context.queryWhere);
-    QueryUtils.leftJoinFamilies(context.queryWhere);
+    QueryUtils.joinRelatedGenotypes(context.queryWhere);
   }
 
   /**

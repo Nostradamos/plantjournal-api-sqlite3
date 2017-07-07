@@ -121,26 +121,26 @@ describe('QueryUtils', function() {
     });
   });
 
-  describe('#leftJoinFamilies()', function() {
+  describe('#joinFamilies()', function() {
     it('should join `families` on familyId', function() {
       let q = squel.select().from(CONSTANTS.TABLE_GENERATIONS, 'generations');
-      QueryUtils.leftJoinFamilies(q);
+      QueryUtils.joinFamilies(q);
       q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_GENERATIONS +' `generations` LEFT JOIN ' + CONSTANTS.TABLE_FAMILIES + ' `families` ON (generations.familyId = families.familyId)');
     });
   });
 
-  describe('#leftJoinGenerations()', function() {
+  describe('#joinGenerations()', function() {
     it('should join `generations` and `generation_parents` on generationId', function() {
       let q = squel.select().from(CONSTANTS.TABLE_GENOTYPES, 'genotypes');
-      QueryUtils.leftJoinGenerations(q);
+      QueryUtils.joinGenerations(q);
       q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_GENOTYPES +' `genotypes` LEFT JOIN ' + CONSTANTS.TABLE_GENERATIONS + ' `generations` ON (genotypes.generationId = generations.generationId) LEFT JOIN ' + CONSTANTS.TABLE_GENERATION_PARENTS +' `generation_parents` ON (generations.generationId = generation_parents.generationId)');
     });
   });
 
-  describe('#leftJoinGenotypes()', function () {
+  describe('#joinGenotypes()', function () {
     it('should join `genotypes`', function() {
       let q = squel.select().from(CONSTANTS.TABLE_PLANTS, 'plants');
-      QueryUtils.leftJoinGenotypes(q);
+      QueryUtils.joinGenotypes(q);
       q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_PLANTS +' `plants` LEFT JOIN ' + CONSTANTS.TABLE_GENOTYPES + ' `genotypes` ON (plants.genotypeId = genotypes.genotypeId)');
 
     });
