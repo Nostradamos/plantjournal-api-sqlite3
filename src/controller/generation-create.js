@@ -32,11 +32,11 @@ class GenerationCreate extends GenericCreate {
    *         Throws error if we are unhappy with the options object.
    */
   static validate(context, options) {
-    Utils.hasToBeSet(options, 'generationName');
-    Utils.hasToBeString(options, 'generationName');
-    Utils.hasToBeIntArray(options, 'generationParents');
-    Utils.hasToBeSet(options, 'familyId');
-    Utils.hasToBeInt(options, 'familyId');
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_GENERATION);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENERATION);
+    Utils.hasToBeIntArray(options, CONSTANTS.ATTR_PARENTS_GENERATION);
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_FAMILY);
+    Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_FAMILY);
   }
 
   /**
@@ -48,9 +48,9 @@ class GenerationCreate extends GenericCreate {
    */
   static setQueryFields(context, options) {
     context.query
-      .set('generationId', null)
-      .set('generationName', options.generationName)
-      .set('familyId', options.familyId);
+      .set(CONSTANTS.ATTR_ID_GENERATION, null)
+      .set(CONSTANTS.ATTR_NAME_GENERATION, options.generationName)
+      .set(CONSTANTS.ATTR_ID_FAMILY, options.familyId);
   }
 
   /**
@@ -198,8 +198,8 @@ GenerationCreate.TABLE = CONSTANTS.TABLE_GENERATIONS;
 
 GenerationCreate.TABLE_PARENTS = CONSTANTS.TABLE_GENERATION_PARENTS;
 
-GenerationCreate.ALIAS_CREATED_AT = CONSTANTS.CREATED_AT_ALIAS_GENERATION;
+GenerationCreate.ALIAS_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENERATION;
 
-GenerationCreate.ALIAS_MODIFIED_AT = CONSTANTS.MODIFIED_AT_ALIAS_GENERATION;
+GenerationCreate.ALIAS_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
 
 module.exports = GenerationCreate;

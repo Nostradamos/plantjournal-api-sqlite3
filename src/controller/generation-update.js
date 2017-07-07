@@ -22,7 +22,7 @@ const GenericUpdate = require('./generic-update');
 class GenerationUpdate extends GenericUpdate {
 
   /**
-   * We need to join some tables to make all FINDABLE_ALIASES of generation
+   * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of generation
    * work.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
@@ -128,24 +128,12 @@ GenerationUpdate.TABLE = CONSTANTS.TABLE_GENERATIONS;
 
 GenerationUpdate.TABLE_PARENTS = CONSTANTS.TABLE_GENERATION_PARENTS;
 
-GenerationUpdate.ID_FIELD = CONSTANTS.ID_ALIAS_GENERATION;
+GenerationUpdate.ATTR_ID = CONSTANTS.ATTR_ID_GENERATION;
 
-GenerationUpdate.MODIFIED_AT_FIELD = CONSTANTS.MODIFIED_AT_ALIAS_GENERATION;
+GenerationUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
 
-GenerationUpdate.FINDABLE_ALIASES = CONSTANTS.ALIASES_ALL_GENERATION;
+GenerationUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 
-// Remove some fields we don't want to be updatable
-GenerationUpdate.UPDATABLE_ALIASES = _.without(
-  CONSTANTS.ALIASES_ONLY_GENERATION,
-  CONSTANTS.ID_ALIAS_GENERATION,
-  CONSTANTS.MODIFIED_AT_ALIAS_GENERATION,
-  CONSTANTS.CREATED_AT_ALIAS_GENERATION
-);
-
-// Add some fields we want to be updatable
-GenerationUpdate.UPDATABLE_ALIASES = _.concat(
-  GenerationUpdate.UPDATABLE_ALIASES,
-  CONSTANTS.ID_ALIAS_FAMILY
-);
+GenerationUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_GENERATION
 
 module.exports = GenerationUpdate;

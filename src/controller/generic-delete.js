@@ -118,14 +118,14 @@ class GenericDelete {
   /**
    * Applies {@link QueryUtils.setWhere} to context.queryRelated. Normally
    * you shouldn't have to overwrite this, to change the queryable
-   * fields simply set GenericDelete.SEARCHABLE_ALIASES.
+   * fields simply set GenericDelete.ATTRIBUTES_SEARCHABLE.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
   static setQueryRelatedWhere(context, criteria) {
-    QueryUtils.setWhere(context.queryRelated, this.SEARCHABLE_ALIASES, criteria);
+    QueryUtils.setWhere(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
   }
 
   /**
@@ -259,6 +259,6 @@ class GenericDelete {
 GenericDelete.TABLE;
 
 // Array containing all allowed ALIASES which can we use in our WHERE part.
-GenericDelete.SEARCHABLE_ALIASES;
+GenericDelete.ATTRIBUTES_SEARCHABLE;
 
 module.exports = GenericDelete;

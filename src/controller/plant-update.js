@@ -19,7 +19,7 @@ const GenericUpdate = require('./generic-update');
 class PlantUpdate extends GenericUpdate {
 
   /**
-   * We need to join some tables to make all FINDABLE_ALIASES of plant
+   * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of plant
    * work.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
@@ -51,24 +51,13 @@ class PlantUpdate extends GenericUpdate {
 
 PlantUpdate.TABLE = CONSTANTS.TABLE_PLANTS;
 
-PlantUpdate.ID_FIELD = CONSTANTS.ID_ALIAS_PLANT;
+PlantUpdate.ATTR_ID = CONSTANTS.ATTR_ID_PLANT;
 
-PlantUpdate.MODIFIED_AT_FIELD = CONSTANTS.MODIFIED_AT_ALIAS_PLANT;
+PlantUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_PLANT;
 
-PlantUpdate.FINDABLE_ALIASES = CONSTANTS.ALIASES_ALL_PLANT;
+PlantUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_PLANT;
 
 // Remove some fields we don't want to be updatable
-PlantUpdate.UPDATABLE_ALIASES = _.without(
-  CONSTANTS.ALIASES_ONLY_PLANT,
-  CONSTANTS.ID_ALIAS_PLANT,
-  CONSTANTS.MODIFIED_AT_ALIAS_PLANT,
-  CONSTANTS.CREATED_AT_ALIAS_PLANT
-);
-
-// Add some fields we want to be updatable
-PlantUpdate.UPDATABLE_ALIASES = _.concat(
-  PlantUpdate.UPDATABLE_ALIASES,
-  CONSTANTS.ID_ALIAS_GENOTYPE
-)
+PlantUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_PLANT;
 
 module.exports = PlantUpdate;

@@ -72,7 +72,7 @@ class GenericUpdate {
 
   /**
    * Picks all fields to update. This means only keys in update,
-   * which are also in this.UPDATABLE_ALIASES will be copied into
+   * which are also in this.ATTRIBUTES_UPDATABLE will be copied into
    * context.fieldsToUpdate. We do this at the beginning to return
    * if nothing is to do.
    * @param  {object} context   - Internal context object
@@ -81,7 +81,7 @@ class GenericUpdate {
    */
   static pickFieldsToUpdate(context, update, criteria) {
     // only take fields which are updatable and drop everything else
-    context.fieldsToUpdate = _.pick(update, this.UPDATABLE_ALIASES);
+    context.fieldsToUpdate = _.pick(update, this.ATTRIBUTES_UPDATABLE);
 
     logger.debug(this.name, '#update() fieldsToUpdate:', context.fieldsToUpdate);
 
@@ -104,7 +104,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindIdField(context, update, criteria) {
-    context.queryFind.field(this.TABLE + '.' + this.ID_FIELD, this.ID_FIELD);
+    context.queryFind.field(this.TABLE + '.' + this.ATTR_ID, this.ATTR_ID);
   }
 
   /**
@@ -124,7 +124,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindWhere(context, update, criteria) {
-    QueryUtils.setWhere(context.queryFind, this.FINDABLE_ALIASES, criteria);
+    QueryUtils.setWhere(context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria);
   }
 
   /**
@@ -138,7 +138,7 @@ class GenericUpdate {
   }
 
   static setQueryFindGroup(context, update, criteria) {
-    context.queryFind.group(this.TABLE + '.' + this.ID_FIELD)
+    context.queryFind.group(this.TABLE + '.' + this.ATTR_ID)
   }
   /**
    * Stringifies queryFind and logs the query
@@ -167,7 +167,7 @@ class GenericUpdate {
   }
 
   /**
-   * Extracts ids based on this.ID_FIELD from context.rowsFind
+   * Extracts ids based on this.ATTR_ID from context.rowsFind
    * and puts them into context.idsToUpdate.
    * Logs idsToUpdate
    * @param  {object} context   - Internal context object
@@ -177,7 +177,7 @@ class GenericUpdate {
   static extractIdsRowsFind(context, update, criteria) {
     context.idsToUpdate = [];
     _.each(context.rowsFind, function(row) {
-      context.idsToUpdate.push(row[this.ID_FIELD]);
+      context.idsToUpdate.push(row[this.ATTR_ID]);
     }.bind(this));
 
     logger.debug(this.name, '#update() context.idsToUpdate:', context.idsToUpdate);
@@ -195,7 +195,7 @@ class GenericUpdate {
 
   /**
    * Sets fields for context.queryUpdate from update argument passed to
-   * #update(). Ignores any key which is not in this.UPDATABLE_ALIASES.
+   * #update(). Ignores any key which is not in this.ATTRIBUTES_UPDATABLE.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
@@ -214,9 +214,9 @@ class GenericUpdate {
    */
   static setQueryUpdateModifiedAt(context, update, criteria) {
     context.modifiedAt = Utils.getUnixTimestampUTC();
-    logger.debug(this.name, '#update() MODIFIED_AT_FIELD:', this.MODIFIED_AT_FIELD);
+    logger.debug(this.name, '#update() ATTR_MODIFIED_AT:', this.ATTR_MODIFIED_AT);
     context.queryUpdate.set(
-      this.MODIFIED_AT_FIELD,
+      this.ATTR_MODIFIED_AT,
       context.modifiedAt
     );
   }
@@ -230,7 +230,7 @@ class GenericUpdate {
    */
   static setQueryUpdateWhere(context, update, criteria) {
     context.queryUpdate
-      .where(this.TABLE + '.' + this.ID_FIELD + ' IN ?', context.idsToUpdate);
+      .where(this.TABLE + '.' + this.ATTR_ID + ' IN ?', context.idsToUpdate);
   }
 
   /**
@@ -262,12 +262,12 @@ class GenericUpdate {
 
 GenericUpdate.TABLE; // Table name
 
-GenericUpdate.ID_FIELD; // name of id field
+GenericUpdate.ATTR_ID; // name of id field
 
-GenericUpdate.MODIFIED_AT_FIELD // name of modifiedAt Field
+GenericUpdate.ATTR_MODIFIED_AT // name of modifiedAt Field
 
-GenericUpdate.FINDABLE_ALIASES; // array of aliases which we can search through
+GenericUpdate.ATTRIBUTES_SEARCHABLE; // array of aliases which we can search through
 
-GenericUpdate.UPDATABLE_ALIASES; // array of aliases which we can update, everything else will be ignored
+GenericUpdate.ATTRIBUTES_UPDATABLE; // array of aliases which we can update, everything else will be ignored
 
 module.exports = GenericUpdate;

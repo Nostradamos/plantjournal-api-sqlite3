@@ -109,6 +109,6 @@ class GenotypeDelete extends GenericDelete {
 
 GenotypeDelete.TABLE = CONSTANTS.TABLE_GENOTYPES;
 
-GenotypeDelete.SEARCHABLE_ALIASES = CONSTANTS.ALIASES_ALL_GENOTYPE;
+GenotypeDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENOTYPE;
 
 module.exports = GenotypeDelete;

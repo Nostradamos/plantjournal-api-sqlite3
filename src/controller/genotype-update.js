@@ -19,7 +19,7 @@ const GenericUpdate = require('./generic-update');
 class GenotypeUpdate extends GenericUpdate {
 
   /**
-   * We need to join some tables to make all FINDABLE_ALIASES of genotype
+   * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of genotype
    * work.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
@@ -50,24 +50,12 @@ class GenotypeUpdate extends GenericUpdate {
 
 GenotypeUpdate.TABLE = CONSTANTS.TABLE_GENOTYPES;
 
-GenotypeUpdate.ID_FIELD = CONSTANTS.ID_ALIAS_GENOTYPE;
+GenotypeUpdate.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 
-GenotypeUpdate.MODIFIED_AT_FIELD = CONSTANTS.MODIFIED_AT_ALIAS_GENOTYPE;
+GenotypeUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENOTYPE;
 
-GenotypeUpdate.FINDABLE_ALIASES = CONSTANTS.ALIASES_ALL_GENOTYPE;
+GenotypeUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENOTYPE;
 
-// Remove some fields we don't want to be updatable
-GenotypeUpdate.UPDATABLE_ALIASES = _.without(
-  CONSTANTS.ALIASES_ONLY_GENOTYPE,
-  CONSTANTS.ID_ALIAS_GENOTYPE,
-  CONSTANTS.MODIFIED_AT_ALIAS_GENOTYPE,
-  CONSTANTS.CREATED_AT_ALIAS_GENOTYPE
-);
-
-// Add some fields we want to be updatable
-GenotypeUpdate.UPDATABLE_ALIASES = _.concat(
-  GenotypeUpdate.UPDATABLE_ALIASES,
-  CONSTANTS.ID_ALIAS_GENERATION
-)
+GenotypeUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_GENOTYPE;
 
 module.exports = GenotypeUpdate;

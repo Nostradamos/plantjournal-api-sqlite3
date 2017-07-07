@@ -131,7 +131,7 @@ class GenericFind {
 
   /**
    * This method just applies {@link QueryUtils.setWhere} to the context.queryWhere query.
-   * Normally you shouldn't overwrite this, you can use this.SEARCHABLE_ALIASES to
+   * Normally you shouldn't overwrite this, you can use this.ATTRIBUTES_SEARCHABLE to
    * adjust the behaviour.
    * @param  {object} context
    *         Internal context object
@@ -139,7 +139,7 @@ class GenericFind {
    *         Criteria object passed to find()
    */
   static setQueryWhere(context, criteria) {
-    QueryUtils.setWhere(context.queryWhere, this.SEARCHABLE_ALIASES, criteria);
+    QueryUtils.setWhere(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
   }
 
   /**
@@ -156,7 +156,7 @@ class GenericFind {
   }
 
   /**
-   * Sets fields to select for queryWhere to this.ID_ALIAS if this.DEFAULT_FIELDS
+   * Sets fields to select for queryWhere to this.ATTR_ID if this.DEFAULT_FIELDS
    * is not set. Otherwise all fields of this.DEFAULT_FIELDS will get selected.
    * @param  {object} context
    *         Internal context object
@@ -167,7 +167,7 @@ class GenericFind {
     // For queryWhere we always have to set familyId, because it's needed
     // for the object key.
     if(_.isEmpty(this.DEFAULT_FIELDS)) {
-      context.queryWhere.field(this.ID_ALIAS);
+      context.queryWhere.field(this.ATTR_ID);
     } else {
       context.queryWhere.fields(this.DEFAULT_FIELDS);
     }
@@ -188,7 +188,7 @@ class GenericFind {
 
   /**
    * Sets the count field for queryCount. If this.COUNT is not set, we will
-   * use this.ID_ALIAS. If you need to distinct the ids, just set:
+   * use this.ATTR_ID. If you need to distinct the ids, just set:
    * this.COUNT = 'distinct(sometable.someIdField)'
    * @param  {object} context
    *         Internal context object
@@ -197,7 +197,7 @@ class GenericFind {
    */
   static setQueryCountFields(context, criteria) {
     context.queryCount.field(
-      'count(' + (_.isEmpty(this.COUNT) ? this.ID_ALIAS : this.COUNT) + ')',
+      'count(' + (_.isEmpty(this.COUNT) ? this.ATTR_ID : this.COUNT) + ')',
       'count'
     );
   }
@@ -304,15 +304,15 @@ class GenericFind {
 GenericFind.TABLE;
 
 // Array of all queryable aliases. Eg. ['familyId', 'familyName'...]
-GenericFind.SEARCHABLE_ALIASES;
+GenericFind.ATTRIBUTES_SEARCHABLE;
 
 // Alias for id field. Eg. familyId
-GenericFind.ID_ALIAS;
+GenericFind.ATTR_ID;
 
-//Overwrite inner value of count. If this is not set, we will just use ID_ALIAS
+//Overwrite inner value of count. If this is not set, we will just use ATTR_ID
 GenericFind.COUNT;
 
-// You want to select more default fields than just ID_ALIAS? Set them here.
+// You want to select more default fields than just ATTR_ID? Set them here.
 GenericFind.DEFAULT_FIELDS;
 
 // You want to apply an GROUP BY to queryWhere? Overwrite this.

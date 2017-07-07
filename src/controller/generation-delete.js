@@ -118,6 +118,6 @@ class GenerationDelete extends GenericDelete {
 
 GenerationDelete.TABLE = CONSTANTS.TABLE_GENERATIONS;
 
-GenerationDelete.SEARCHABLE_ALIASES = CONSTANTS.ALIASES_ALL_GENERATION;
+GenerationDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 
 module.exports = GenerationDelete;
