@@ -5,22 +5,26 @@ const CONSTANTS = require('../src/constants');
 const QueryUtils = require('../src/utils-query');
 
 describe('QueryUtils', function() {
-  describe('#_setFields()', function() {
-    it('should return an array of field aliases where the non field alias is specified in fieldsToSelect and ignore unknown/wrong fields', function() {
-      QueryUtils._setFields({'genotypeName': 'genotypes.genotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, ['familyName', 'test'])
-        .should.eql(['families.familyName']);
-    });
-    it('should return all field aliases if fieldsToSelect is empty', function() {
-      QueryUtils._setFields({'genotypeName': 'genotypes.genotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, [])
-        .should.eql(['genotypes.genotypeName', 'generations.generationName', 'families.familyName']);
-    });
-  });
-
   describe('#setFields()', function() {
-    it('should set query.fields() with the return value of _setFields()', function() {
+    it('should select all explicit column names of allowedAttributes if criteriaAttributes is empty', function() {
       let q = squel.select().from('test');
-      QueryUtils.setFields(q, {'genotypeName': 'genotypes.genotypeName', 'generationName': 'generations.generationName', 'familyName': 'families.familyName'}, ['familyName', 'test']);
-      q.toString().should.equal('SELECT families.familyName FROM test');
+      QueryUtils.setFields(q, ['familyId', 'familyName'], []);
+      q.toString().should.equal('SELECT families.familyId, families.familyName FROM test');
+    });
+
+    it('should not select criteriaAttributes which are not in allowedAttributes', function() {
+      let q = squel.select().from('test');
+      QueryUtils.setFields(q, ['familyId', 'familyName'], ['familyId', 'notAllowed']);
+      q.toString().should.equal('SELECT families.familyId FROM test');
+    });
+
+    it('should do group_concat... for generationParents', function() {
+      let q = squel.select().from('test');
+      QueryUtils.setFields(q, ['generationId', 'generationParents'], ['generationParents', 'generationId']);
+      q.toString().should.equal(
+        'SELECT generations.generationId, group_concat(' + CONSTANTS.TABLE_GENERATION_PARENTS +'.plantId) as generationParents FROM test'
+      );
+
     })
   });
 

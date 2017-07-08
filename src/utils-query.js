@@ -154,43 +154,45 @@ QueryUtils.joinPlantsDownwards = function (query) {
 }
 
 /**
- * Takes an squel query object and sets all field alisaes of fieldsToSelect which are
- * in allowedFields as a key property. Mutates query object.
- * See QueryUtils._setFields() for more information.
+ * Sets fields to select for squel query object.
+ * For this we take a criteriaAttributes array which holds all attributes in a
+ * use wants to have. We check them againt allowedAttributes and only select
+ * attributes which are allowed. If criteriaAttributes is empty, we simply use
+ * all allowedAttributes. Mutates query object.
  * @param {squel} fieldsToSelect
  *        Squel obejct. Has to be in select() state or similiar to take a
- *        fields() call.
- * @param {Object.<String, String>} allowedFields
- *        Plain object where key is field name, and value is alias.
- * @param {String[]} criteriaFields
- *        Array of strings/field names. Typically criteria.fields.
+ *        field() call.
+ * @param {String[]} allowedAttributes
+ *        Array of attributes which are allowed to select.
+ * @param {String[]} criteriaAttributes
+ *        Array of attributes a user wants to have.
  */
-QueryUtils.setFields = function (query, allowedFields, criteriaFields) {
-  let fieldsToSelect = QueryUtils._setFields(allowedFields, criteriaFields);
+QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
 
-  query.fields(fieldsToSelect); // apply them to query
-}
+  let attributesToSelect;
+  if(_.isEmpty(criteriaAttributes)) {
+    // if criteriaAttributes is empty, just select all allowedAttributes
+    attributesToSelect = allowedAttributes;
+  } else {
+    // otherwise we only want attributes which are in both, criteriaAttributes
+    // and allowedAttributes.
+    attributesToSelect = _.intersection(allowedAttributes, criteriaAttributes);
+  }
 
-/**
- * Helper function of QueryUtils.setFields(), returns an array of fields.
- * If criteriaFields is empty, we will return all values of allowedFields.
- * Otherwise we will iterate over criteriaFields and select all
- * @param {Object.<String, String>} allowedFields
- *        Plain object where key is field name, and value is alias.
- * @param {String[]} criteriaFields
- *        Array of strings/field names. Typically criteria.fields
- * @return {String[]}
- *        translated and verfied alias fields
- */
-QueryUtils._setFields = function (allowedFields, criteriaFields) {
-  // If fieldsToSelect is empty, we want to select all allowedFields.
-  if(_.isEmpty(criteriaFields)) return _.values(allowedFields);
-  // Otherwise we iterate over criteriaFields and only select fields which
-  // are in allowedFields.
-  return _(criteriaFields)
-    .map(f => allowedFields[f])
-    .remove(v => {return !_.isUndefined(v)})
-    .value();
+  _.each(attributesToSelect, function(attr) {
+    if(attr == 'generationParents') {
+      // special case, generationParents is no real column, but a concat
+      // of all plantIds
+      query.field(
+        'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENTS +'.plantId) as generationParents'
+      );
+    }else {
+      // translate attribute to explicit column name (tablename.attr)
+      query.field(
+        QueryUtils.getTableOfField(attr) + '.' + attr
+      );
+    }
+  });
 }
 
 /**

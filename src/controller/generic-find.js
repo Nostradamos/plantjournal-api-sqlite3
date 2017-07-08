@@ -183,15 +183,7 @@ class GenericFind {
    */
   static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set fields specified if options.fields, otherwise all.
-    // We only have to set fields specified if options.fields, otherwise all.
-    let fieldsToSelect;
-    if(_.isEmpty(criteria.fields)) {
-      fieldsToSelect = this.ATTRIBUTES_SEARCHABLE;
-    } else {
-      fieldsToSelect = _.intersection(context.fields, this.ATTRIBUTES_SEARCHABLE);
-    }
-
-    context.queryWhere.fields(fieldsToSelect);
+    QueryUtils.setFields(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria.fields);
   }
 
   /**
@@ -325,7 +317,5 @@ GenericFind.DEFAULT_FIELDS;
 
 // You want to apply an GROUP BY to queryWhere? Overwrite this.
 GenericFind.GROUP;
-
-GenericFind.ALIASES_TO_FIELD_WITHOUT_ID;
 
 module.exports = GenericFind;
