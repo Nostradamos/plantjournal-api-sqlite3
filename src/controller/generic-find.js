@@ -71,6 +71,7 @@ class GenericFind {
    *         }
    */
   static async find(criteria) {
+    Utils.throwErrorIfNotConnected();
     if(_.isNil(criteria)) criteria = {};
     logger.debug(this.name, ' #find() criteria:', criteria);
     let context = {};

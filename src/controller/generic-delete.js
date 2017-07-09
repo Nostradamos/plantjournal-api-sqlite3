@@ -45,6 +45,7 @@ class GenericDelete {
    *         Array of ids from deleted entries.
    */
   static async delete(criteria) {
+    Utils.throwErrorIfNotConnected();
     if(_.isNil(criteria)) throw Error('No criteria object passed');
     logger.debug(this.name, ' #delete() criteria:', criteria);
     let context = {};

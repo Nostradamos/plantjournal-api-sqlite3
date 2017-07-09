@@ -32,6 +32,7 @@ class GenericCreate {
    * @return {object}
    */
   static async create(options) {
+    Utils.throwErrorIfNotConnected();
     logger.debug(this.name, '#create() options:', options);
     let context = {};
     this.validateOptionsIsAssoc(context, options);

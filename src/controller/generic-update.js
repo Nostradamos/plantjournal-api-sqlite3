@@ -28,6 +28,7 @@ class GenericUpdate {
    * @return {Promise}          - Returns array of updated ids
    */
   static async update(update, criteria){
+    Utils.throwErrorIfNotConnected();
     logger.debug(this.name, '#update() update:', JSON.stringify(update), 'criteria:', JSON.stringify(criteria) || undefined);
 
     // Validate update and criteria arguments

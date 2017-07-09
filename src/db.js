@@ -9,3 +9,7 @@ db.connect = async function connect(options) {
 db.close = async function close() {
     await db.sqlite.close();
 }
+
+db.throwErrorIfNotConnected = function() {
+  
+}

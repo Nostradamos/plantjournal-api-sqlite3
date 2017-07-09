@@ -35,7 +35,7 @@ describe('Genotype()', function() {
       rows.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'genotypeCreatedAt': createdAt, 'genotypeModifiedAt': modifiedAt}]);
     });
 
-    it('should be possible to create a new genotype with options.genotypeName = null or options.genotypeName = undefined (or not even set)', async function() {
+    it('should be possible to create a new genotype with genotypeName not set', async function() {
       let genotype = await pj.Genotype.create({generationId: 1});
       let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt]
       genotype.should.deepEqual({

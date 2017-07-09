@@ -1,6 +1,8 @@
 const should = require('should');
-const Utils = require('../src/utils');
 const squel = require('squel');
+const sqlite = require('sqlite');
+
+const Utils = require('../src/utils');
 const CONSTANTS = require('../src/constants');
 
 describe('Utils', function() {
@@ -255,6 +257,20 @@ describe('Utils', function() {
       let count = {'count': 42};
       Utils.addFoundAndRemainingFromCountToReturnObject(count, 30, returnObject, options);
       returnObject.should.deepEqual({'found': 42, 'remaining': 12});
+    });
+  });
+
+  describe('#throwErrorIfNotConnected()', function() {
+    it('should throw error if sqlite is not connected', async function() {
+      await sqlite.close();
+      (function() {
+        Utils.throwErrorIfNotConnected();
+      }).should.throw('plantJournal is not connected to database.');
+    });
+
+    it('should not throw error if sqlite is connected', async function() {
+      await sqlite.open(':memory:');
+      Utils.throwErrorIfNotConnected();
     });
   });
 });

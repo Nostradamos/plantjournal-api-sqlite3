@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const squel = require('squel');
+const sqlite = require('sqlite');
 
 const logger = require('./logger');
 const CONSTANTS = require('./constants');
@@ -228,4 +229,15 @@ Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
 Utils.filterSetNotNull = function filterSetNotNull(set) {
   set.delete(null);
   return Array.from(set);
+}
+
+/**
+ * Checks if we are connected to sqlite database. If not, throws error.
+ * @throws {Error}
+ */
+Utils.throwErrorIfNotConnected = function() {
+  if(sqlite.driver != null && sqlite.driver.open == true) {
+    return;
+  }
+  throw Error('plantJournal is not connected to database.');
 }
