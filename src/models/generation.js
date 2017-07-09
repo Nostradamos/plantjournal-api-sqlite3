@@ -24,13 +24,19 @@ let Generation = exports;
  *           The unique identifier of this generations.
  * @property {String} generationName
  *           Name of this generation.
- * @property {number} generationIdId
- *           The generationIdId this generation refers to.
- * @property {number} generationCreatedAt
+ * @property {FamilyId} familyId
+ *           The familyId this family is member of.
+ * @property {UnixTimestampUTC} generationCreatedAt
  *           UTC Timestamp when this generation got created.
- * @property {number} generationModifiedAt
+ * @property {UnixTimestampUTC} generationModifiedAt
  *           UTC Timestamp when this generation got modified the last time.
  */
+
+ /**
+  * @typedef {Object} ReturnCreateFamily
+  * @todo This will may be change
+  */
+
 
 /**
  * Creates a new Generation and returns the newly created Generation object.
@@ -49,7 +55,10 @@ let Generation = exports;
  * @throws {Error}
  *         Should throw error if famiylId is invalid or unexpected sqlite
  *         error happens (eg: database connection is broken)
- * @return {Generation}
+ * @return {Object} generationCreate
+ * @return {Object.<GenerationId, GenerationObject>} generationCreate.generations
+ *         Object holding information about created generation. There should
+ *         only be one key, which is the id of the newly created generation.
  */
 Generation.create = async function(options) {
   return await GenerationCreate.create(options);
@@ -63,52 +72,42 @@ Generation.create = async function(options) {
  *
  * @memberof plantJournal.Generation
  * @async
- * @param  {Object} [criteria]
- *         Criteria object. With this you can control which generations you want
- *         to return.
- * @param  {String[]} [criteria.fields]
- *         Define which fields you want to return. By default all available.
- * @param  {Object} [criteria.where]
- *         See Utils.setWhere how to use this. Small example:
- *         where: {generationIdId: [1,2,3]} => where generationIdId is either
- *         1,2 or 3.
- *         where: {generationIdName: 'TestFamily2'} => where generationIdName is
- *         TestFamily2.
- * @param  {integer} [criteria.limit=10]
- *         Limit how many generations should get find (and returned).
- * @param  {integer} [criteria.offset=0]
- *         Skip the first x generations. Needed for paging.
+ * @param {criteria} criteria
+ *        Control which generations you want to search for.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
- *
- * @return {Object} foundGenerations
- *         Object containing all information about found generations.
- * @return {integer} foundGenerations.count
- *         How many generations where found in total. If you don't search for
- *         specific generations, this will be the amount of all generations we know.
- *         Otherwise how many generations where found matching that search. Not all
- *         of them have to be returned by now, but with offset/limit you could
- *         get all of them. Useful for paging.
- * @return {integer} foundGenerations.remaining
- *         Indicates how many generations are remaining for this search. This is
- *         useful for paging. Imagine you have 10 generations, and with limit=2
- *         you get only the first to. There would be still 8 remaining.
- *         With offset=2 you would get the next 2 (generationId 2-4) and 6 would
- *         be remaining.
- * @return {Object.<FamilyId, Family>} foundGenerations.families
- *         All families related to generations. You can select which attributes
- *         you want with criteria.fields.
- * @return {Object.<GenerationId, Generation>} foundGenerations.generations
- *         The actual generations. Key is always the generationIdId to make it
- *         easier to get a generationId with a specific key out of the object.
- *         Value will be also an object, but filled with information/
- *         generationId attributes
- *         about one single generationId. See jsdoc Family object description.
+ * @return {ReturnFind}
+ *         Object containing information about found generations and related
+ *         families. Only .generations and maybe .families will be set.
  */
 Generation.find = async function(criteria) {
   return await GenerationFind.find(criteria);
 }
 
+/**
+ * Deletes generations and related genotypes and plants based on criteria.
+ * Returns which model record ids got deleted.
+ * @memberof plantJournal.Generation
+ * @async
+ * @param  {Criteria} [criteria]
+ *         Criteria Object. With this you can control which generations you want
+ *         to delete. Queryable Attributes: familyId, familyName,
+ *         familyCreatedAt, familyModifiedAt, generationId, generationName,
+ *         generationModifiedAt, generationCreatedAt.
+ * @throws {Error}
+ *         Should only throw error if an unexpected sqlite error happens.
+ * @return {Object} returnGenerationDelete
+ *         Object containing info about all deleted records from the different
+ *         models.
+ *         Not all child arrays have to be set if no related model records where
+ *         found.
+ * @return {GenerationId[]} returnGenerationDelete.generations
+ *         Array containing all deleted generation ids.
+ * @return {GenotypeId[]} returnGenerationDelete.genotypes
+ *         Array containing all deleted genotye ids.
+ * @return {PlantId[]} returnGenerationDelete.plants
+ *         Array containing all deleted plant ids.
+ */
 Generation.delete = async function(criteria) {
   return await GenerationDelete.delete(criteria);
 }
@@ -129,25 +128,15 @@ Generation.delete = async function(criteria) {
  *         Fields to update
  * @param  {String}    [update.generationName]
  *         Set generationName of all generations to update to this value.
- * @param  {integer[]} [update.generationParents]
+ * @param  {PlantId[]} [update.generationParents]
  *         Update the parents of all generations to update to the plantIds
  *         in this array. Will throw error if any of the integers does not
  *         represent an existing Plant.
- * @param  {integer}   [update.generationIdId]
- *         Update the generationIdId. Will throw error if this is invalid.
- * @param  {Object}    criteria
+ * @param  {FamilyId}   [update.familyId]
+ *         Update the familyId. Will throw error if this is invalid.
+ * @param  {Criteria}    criteria
  *         With Criteria you can control which generations should get updated.
  *         Behaves similiar to Generation.find().
- * @param  {integer}   [criteria.limit=10]
- *         Limit how many generations should get updated.
- * @param  {integer}   [criteria.offset=10]
- *         Skip the first x generations.
- * @param  {object}    [criteria.where]
- *         Where object to define more exactly which generations to update.
- *         For more information see Utils.setWhere().
- *         Allowed fields: generationIdId, generationIdName, generationIdCreatedAt,
- *         generationIdModifiedAt, generationId, generatioName, generationParents,
- *         generationCreatedAt, generationModifiedAt.
  * @returns {GenotypeId[]}
  *          Array of updated generationIds. Empty if no generations got updated.
  * @throws {Error}

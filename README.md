@@ -10,11 +10,8 @@ This repo contains a plantJournal API using sqlite3 as the database engine.
 ToDo
 =====
 
-* Refactor comments. Add them where they are missing.
-* Refactor generic-find?!
-* Refactor constants/variable names
 * Add etag field, basically hash over all attributes with md5. Easy for create,
-  bit harder for update. Needs overhaul of those two functions.
+  bit harder for update. Needs overhaul of those two functions. Do or don't?!
 * Add like/contains... to setWhere
 * Add .on events
 * Add sorting for find, update, delete

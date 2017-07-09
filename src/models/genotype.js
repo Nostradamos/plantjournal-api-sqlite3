@@ -12,6 +12,27 @@ const GenotypeUpdate = require('../controller/genotype-update');
  */
 let Genotype = exports;
 
+/**
+ * @typedef {number} GenotypeId
+ *          Unique Identifier for a genotype record.
+ */
+
+/**
+ * @typedef {Object} GenotypeObject
+ * @property {GenotypeId} genotypeId
+ *           The unique identifier of this genotype record.
+ * @property {String} genotypeName
+ *           Name of this genotype.
+ * @property {genotypeId} genotypeId
+ *           The genotypeId this genotype is in.
+ * @property {UnixTimestampUTC} genotypeCreatedAt
+ *           UTC Timestamp when this genotype got created.
+ * @property {UnixTimestampUTC} genotypeModifiedAt
+ *           UTC Timestamp when this genotype got modified the last time.
+ */
+
+
+
  /**
   * Creates a new Genotype entry and returns the created genotype object.
   * @memberof plantJournal.Genotype
@@ -20,22 +41,65 @@ let Genotype = exports;
   *         Options how the new family should be.
   * @param  {String} options.genotypeName
   *         Name for the new genotype.
-  * @param  {integer} options.generationId
-  *         If of generation this genotype is in.
+  * @param  {integer} options.genotypeId
+  *         If of genotype this genotype is in.
   * @throws {Error}
-  *         Will throw error if generationId is invalid or if an unexpected
+  *         Will throw error if genotypeId is invalid or if an unexpected
   *         sqlite error happens.
-  * @return {Genotype}
-  *         The newly created Genotype object
+  * @return {Object} genotypeCreate
+  * @return {Object.<genotypeId, genotypeObject>} genotypeCreate.genotypes
+  *         Object holding information about created genotype. There should
+  *         only be one key, which is the id of the newly created genotype.
   */
 Genotype.create = async function(options) {
   return await GenotypeCreate.create(options);
 }
 
+/**
+ * Find genotypes based on criteria and returns them. You can select the genotypes
+ * to return based on various so called criterias.
+ * @memberof plantJournal.Genotype
+ * @async
+ * @param {criteria} criteria
+ *        Control which genotypes you want to search for.
+ *        Queryable Fields: familyId, familyName, familyCreatedAt,
+ *        familyModifiedAt, generationId, generationIdName,
+ *        generationCreatedAt, generationModifiedAt, genotypeId, genotypeName,
+ *        genotypeCreatedAt, genotypeModifiedAt
+ * @throws {Error}
+ *         Should only throw error if an unexpected sqlite error happens.
+ * @return {ReturnFind}
+ *         Object containing information about found genotypes and related
+ *         families. Only .genotypes and maybe .generations and genotypes will
+ *         be set.
+ */
 Genotype.find = async function(criteria) {
   return await GenotypeFind.find(criteria);
 }
 
+/**
+ * Deletes genotypes and related plants based on criteria.
+ * Returns which model record ids got deleted.
+ * @memberof plantJournal.Genotype
+ * @async
+ * @param  {Criteria} [criteria]
+ *         Criteria Object. With this you can control which genotypes you want
+ *         to delete. Queryable Fields: familyId, familyName, familyCreatedAt,
+ *         familyModifiedAt, generationId, generationIdName,
+ *         generationCreatedAt, generationModifiedAt, genotypeId, genotypeName,
+ *         genotypeCreatedAt, genotypeModifiedAt
+ * @throws {Error}
+ *         Should only throw error if an unexpected sqlite error happens.
+ * @return {Object} returnGenotypeDelete
+ *         Object containing info about all deleted records from the different
+ *         models.
+ *         Not all child arrays have to be set if no related model records where
+ *         found.
+ * @return {GenotypeId[]} returnGenotypeDelete.genotypes
+ *         Array containing all deleted genotye ids.
+ * @return {PlantId[]} returnGenotypeDelete.plants
+ *         Array containing all deleted plant ids.
+ */
 Genotype.delete = async function(criteria) {
   return await GenotypeDelete.delete(criteria);
 }
@@ -56,24 +120,12 @@ Genotype.delete = async function(criteria) {
   * @param  {Object}    update
   *         Fields to update.
   * @param  {String}    [update.genotypeName]
-  *         Update generationParents.
+  *         Update genotypeParents.
   * @param  {GenerationId}   [update.generationId]
-  *         Update generationId. This has to be an existing GenerationId,
+  *         Update generationId. This has to be an existing generationId,
   *         otherwise we will throw an errror.
-  * @param  {Object}    criteria
+  * @param  {Criteria}    criteria
   *         With Criteria you can control which genotypes should get updated.
-  *         Behaves similiar to Genotype.find()
-  * @param  {integer}   [criteria.limit=10]
-  *         Limit how many genotypes should get updated.
-  * @param  {integer}   [criteria.offset=10]
-  *         Skip the first x genotypes
-  * @param  {object}    [criteria.where]
-  *         Where object to define more exactly which genotypes to update. For
-  *         more information see Utils.setWhere().
-  *         Allowed fields:
-  *         familyId, familyName, familyCreatedAt, familyModifiedAt,
-  *         generationId, generatioName, generationParents, generationCreatedAt,
-  *         generationModifiedAt, genotypeId, genotypeName
   * @returns {GenotypeId[]}
   *          Array of updated genotypeIds. Empty if no genotypes got updated.
   */
