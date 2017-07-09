@@ -32,6 +32,7 @@ class FamilyCreate extends GenericCreate {
   static validate(context, options) {
     Utils.hasToBeSet(options, 'familyName');
     Utils.hasToBeString(options, 'familyName');
+    Utils.hasToBeString(options, 'familyDescription');
   }
 
   /**
@@ -45,7 +46,8 @@ class FamilyCreate extends GenericCreate {
     // Set fields
     context.query
       .set('familyId', null)
-      .set('familyName', options.familyName);
+      .set('familyName', options.familyName)
+      .set('familyDescription', options.familyDescription);
   }
 
   /**
@@ -64,6 +66,7 @@ class FamilyCreate extends GenericCreate {
     returnObject.families[context.insertId] = {
       'familyId': context.insertId,
       'familyName': options.familyName,
+      'familyDescription': options.familyDescription || '',
       'familyCreatedAt': context.createdAt,
       'familyModifiedAt': context.modifiedAt,
     }

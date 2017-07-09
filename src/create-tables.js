@@ -7,7 +7,8 @@ module.exports =  async function createTables() {
   await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_FAMILIES + ` (
       familyId INTEGER,
-      familyName text NOT NULL,
+      familyName TEXT NOT NULL,
+      familyDescription TEXT NOT NULL DEFAULT '',
       familyCreatedAt DATETIME NOT NULL,
       familyModifiedAt DATETIME NOT NULL,
       PRIMARY KEY (familyId)
@@ -16,7 +17,7 @@ module.exports =  async function createTables() {
   await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENERATIONS + ` (
       generationId INTEGER,
-      generationName text NOT NULL,
+      generationName TEXT NOT NULL,
       generationCreatedAt DATETIME NOT NULL,
       generationModifiedAt DATETIME NOT NULL,
       familyId INTEGER NOT NULL,
@@ -27,7 +28,7 @@ module.exports =  async function createTables() {
   await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENOTYPES + ` (
       genotypeId INTEGER,
-      genotypeName text,
+      genotypeName TEXT NOT NULL DEFAULT '',
       genotypeCreatedAt DATETIME NOT NULL,
       genotypeModifiedAt DATETIME NOT NULL,
       generationId INTEGER NOT NULL,
@@ -38,9 +39,9 @@ module.exports =  async function createTables() {
   await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_PLANTS + ` (
       plantId INTEGER,
-      plantName text NOT NULL,
+      plantName TEXT NOT NULL,
       plantClonedFrom INTEGER DEFAULT NULL,
-      plantSex text DEFAULT NULL,
+      plantSex TEXT DEFAULT NULL,
       plantCreatedAt DATETIME NOT NULL,
       plantModifiedAt DATETIME NOT NULL,
       genotypeId INTEGER NOT NULL,

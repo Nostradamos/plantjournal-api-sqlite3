@@ -14,6 +14,26 @@ describe('Family()', function() {
         await pj.connect();
       });
 
+      it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async function() {
+        let tested = 0;
+        for(value in [[1,2], null, 'string', 1, true, undefined]) {
+          await pj.Family.create(value)
+          .should.be.rejectedWith('First argument has to be an associative array');
+          tested++;
+        }
+        tested.should.eql(6);
+      });
+
+      it('should throw `options.familyName has to be set` error if no options.familyName is provided', async function() {
+        await pj.Family.create({})
+        .should.be.rejectedWith('options.familyName has to be set');
+      });
+
+      it('should throw error if options.familyName is not a string', async function() {
+        await pj.Family.create({'familyName': 1})
+        .should.be.rejectedWith('options.familyName has to be a string');
+      });
+
       it('should create a new Family and return family object', async function() {
         let family = await pj.Family.create({familyName: 'testName'});
         let [familyCreatedAt, familyModifiedAt] = [family.families[1].familyCreatedAt, family.families[1].familyModifiedAt];
@@ -24,34 +44,60 @@ describe('Family()', function() {
               1: {
                 familyId: 1,
                 familyName: 'testName',
+                familyDescription: '',
                 familyCreatedAt: familyCreatedAt,
                 familyModifiedAt: familyModifiedAt,
               }
             }
           }
         );
-        let rows = await sqlite.all('SELECT familyId, familyName, familyCreatedAt, familyModifiedAt FROM families');
-        rows.should.deepEqual([{'familyId': 1, 'familyName': 'testName', 'familyModifiedAt': familyModifiedAt, 'familyCreatedAt': familyCreatedAt}]);
+        let rows = await sqlite.all('SELECT familyId, familyName, familyCreatedAt, familyModifiedAt, familyDescription FROM families');
+        rows.should.deepEqual(
+          [
+            {
+              'familyId': 1,
+              'familyName': 'testName',
+              'familyDescription': '',
+              'familyModifiedAt': familyModifiedAt,
+              'familyCreatedAt': familyCreatedAt
+            }
+          ]
+        );
       });
 
-      it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async function() {
-        let tested = 0;
-        for(value in [[1,2], null, 'string', 1, true, undefined]) {
-          await pj.Family.create(value)
-            .should.be.rejectedWith('First argument has to be an associative array');
-          tested++;
-        }
-        tested.should.eql(6);
-      });
+      it('should set familyDescription on create', async function() {
+        let family = await pj.Family.create(
+          {
+            familyName: 'testName',
+            familyDescription: 'This is a test family'
+          }
+        );
 
-      it('should throw `options.familyName has to be set` error if no options.familyName is provided', async function() {
-        await pj.Family.create({})
-          .should.be.rejectedWith('options.familyName has to be set');
-      });
+        let [familyCreatedAt, familyModifiedAt] = [family.families[1].familyCreatedAt, family.families[1].familyModifiedAt];
+        familyCreatedAt.should.eql(familyModifiedAt);
+        family.should.deepEqual(
+          {
+            families: {
+              1: {
+                familyId: 1,
+                familyName: 'testName',
+                familyDescription: 'This is a test family',
+                familyCreatedAt: familyCreatedAt,
+                familyModifiedAt: familyModifiedAt,
+              }
+            }
+          }
+        );
+        let rows = await sqlite.all('SELECT familyId, familyDescription FROM families');
 
-      it('should throw error if options.familyName is not a string', async function() {
-        await pj.Family.create({'familyName': 1})
-          .should.be.rejectedWith('options.familyName has to be a string');
+        rows.should.deepEqual(
+          [
+            {
+              'familyId': 1,
+              'familyDescription': 'This is a test family'
+            }
+          ]
+        );
       });
 
       afterEach(async function() {

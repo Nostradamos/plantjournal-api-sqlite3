@@ -32,11 +32,12 @@ class GenerationCreate extends GenericCreate {
    *         Throws error if we are unhappy with the options object.
    */
   static validate(context, options) {
-    Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_GENERATION);
-    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENERATION);
-    Utils.hasToBeIntArray(options, CONSTANTS.ATTR_PARENTS_GENERATION);
-    Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_FAMILY);
-    Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_FAMILY);
+    Utils.hasToBeSet(options, 'generationName');
+    Utils.hasToBeString(options, 'generationName');
+    Utils.hasToBeIntArray(options, 'generationParents');
+    Utils.hasToBeString(options, 'generationDescription');
+    Utils.hasToBeSet(options, 'familyId');
+    Utils.hasToBeInt(options, 'familyId');
   }
 
   /**
@@ -48,9 +49,9 @@ class GenerationCreate extends GenericCreate {
    */
   static setQueryFields(context, options) {
     context.query
-      .set(CONSTANTS.ATTR_ID_GENERATION, null)
-      .set(CONSTANTS.ATTR_NAME_GENERATION, options.generationName)
-      .set(CONSTANTS.ATTR_ID_FAMILY, options.familyId);
+      .set('generationId', null)
+      .set('generationName', options.generationName)
+      .set('familyId', options.familyId);
   }
 
   /**
