@@ -68,7 +68,13 @@ describe('Plant()', function() {
     });
 
     it('should only create a new plant entry if options.genotypeId is set and return plant object with plant fields + genotypeId', async function() {
-      let plant = await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'});
+      let plant = await pj.Plant.create(
+        {
+          genotypeId: 1,
+          plantName: 'testPlant1',
+          plantDescription: 'we found this plant in the backyard of our grandma'
+        }
+      );
       let [createdAt, modifiedAt] = [plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt];
       plant.should.deepEqual({
         'plants': {
@@ -77,7 +83,7 @@ describe('Plant()', function() {
             'plantName': 'testPlant1',
             'plantClonedFrom': null,
             'plantSex': null,
-            'plantDescription': '',
+            'plantDescription': 'we found this plant in the backyard of our grandma',
             'plantCreatedAt': createdAt,
             'plantModifiedAt': modifiedAt,
             'genotypeId': 1,
@@ -96,7 +102,7 @@ describe('Plant()', function() {
             'plantId': 1,
             'plantName': 'testPlant1',
             'plantClonedFrom': null,
-            'plantDescription': '',
+            'plantDescription': 'we found this plant in the backyard of our grandma',
             'genotypeId': 1,
             'plantCreatedAt': createdAt,
             'plantModifiedAt': modifiedAt

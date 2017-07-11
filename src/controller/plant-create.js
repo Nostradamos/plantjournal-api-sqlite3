@@ -105,7 +105,8 @@ class PlantCreate extends GenericCreate {
       let queryRetrieveGenotypeId = 'SELECT plants.genotypeId FROM ' +
                                     CONSTANTS.TABLE_PLANTS +
                                     ' plants WHERE plants.plantId = $plantClonedFrom';
-      logger.debug(this.name, "#create() queryRetrieveGenotypeId:", queryRetrieveGenotypeId, '? = :', options.plantClonedFrom);
+      logger.debug(this.name, "#create() queryRetrieveGenotypeId:",
+                   queryRetrieveGenotypeId, '? = :', options.plantClonedFrom);
 
       let motherPlantRow = await sqlite.get(
         queryRetrieveGenotypeId,
@@ -198,7 +199,7 @@ class PlantCreate extends GenericCreate {
    */
   static buildReturnObject(returnObject, context, options) {
     super.buildReturnObject(returnObject, context, options);
-    
+
     // if we created a new genotype we also want to have it in the returned
     // plant object.
     if(context.createdGenotype !== false) {
@@ -221,6 +222,6 @@ PlantCreate.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_PLANT]: ''
 }
 
-PlantCreate.PLURAL = 'plants';
+PlantCreate.PLURAL = CONSTANTS.PLURAL_PLANT;
 
 module.exports = PlantCreate;

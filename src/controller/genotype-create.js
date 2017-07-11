@@ -30,9 +30,9 @@ class GenotypeCreate extends GenericCreate {
    * @throws {Error}
    */
   static validateOptions(context, options) {
-    Utils.hasToBeString(options, 'genotypeName');
-    Utils.hasToBeSet(options, 'generationId');
-    Utils.hasToBeInt(options, 'generationId');
+    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_GENERATION);
+    Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
   }
 
   /**
@@ -76,6 +76,6 @@ GenotypeCreate.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_NAME_GENOTYPE]: ''
 }
 
-GenotypeCreate.PLURAL = 'genotypes';
+GenotypeCreate.PLURAL = CONSTANTS.PLURAL_GENOTYPE;
 
 module.exports = GenotypeCreate;

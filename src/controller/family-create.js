@@ -31,9 +31,9 @@ class FamilyCreate extends GenericCreate {
    * @throws {Error}
    */
   static validateOptions(context, options) {
-    Utils.hasToBeSet(options, 'familyName');
-    Utils.hasToBeString(options, 'familyName');
-    Utils.hasToBeString(options, 'familyDescription');
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_FAMILY);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_FAMILY);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);
   }
 }
 
@@ -48,9 +48,9 @@ FamilyCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_FAMILY;
 FamilyCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_FAMILY;
 
 FamilyCreate.DEFAULT_VALUES_ATTRIBUTES = {
-  'familyDescription': ''
+  [CONSTANTS.ATTR_DESCRIPTION_FAMILY]: ''
 }
 
-FamilyCreate.PLURAL = 'families';
+FamilyCreate.PLURAL = CONSTANTS.PLURAL_FAMILY;
 
 module.exports = FamilyCreate;

@@ -172,12 +172,12 @@ class GenericCreate {
   }
 
   /**
-   * Overwrite this function to set the properties for the returnObject
-   * (object which will find returned from #create())
-   * @param  {object} returnObject
-   *         object which will find returned from #create()
-   * @param  {object} context
-   *         internal context object in #create().
+   * This method builds the returnObject by iterating over all ATTRIBUTES
+   * and trying to retrieve the information either from context, options or
+   * DEFAULT_VALUES_ATTRIBUTES. We also add internal attributes.
+   * The so called `recordObject` will be in
+   * returnObject[plural][insertId]. returnObject is the object returned
+   * from #create().
    * @param  {object} options
    *         options object which got passed to GenericCreate.create().
    */
@@ -200,9 +200,9 @@ class GenericCreate {
     recordObject[this.ATTR_CREATED_AT] = context.createdAt;
     recordObject[this.ATTR_MODIFIED_AT] = context.modifiedAt;
 
-    returnObject[this.PLURAL] = {};
-    returnObject[this.PLURAL][context.insertId] = recordObject;
-    console.log(returnObject);
+    returnObject[this.PLURAL] = {
+      [context.insertId]: recordObject
+    };
   }
 }
 
