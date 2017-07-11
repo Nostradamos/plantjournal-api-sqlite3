@@ -16,7 +16,6 @@ ToDo
 * Add .on events
 * Add sorting for find, update, delete
 * Add resolveParents to find?!
-* Add description fields
 * Introduce eslint
 * Add plantJournal
 * Add medium/environment
@@ -29,3 +28,5 @@ Development Notes/Coding Style
 ==============================
 
 * Always use explicit column names (explicit => including table name) in your queries. Why? Because for all foreign keys we use the same column name in source and destination table. SQLite can't know which table you mean, so we just use explicit column names for everything. Eg: `generations.familyId` references `families.familyId`.
+
+* Try to use CONSTANTS wherever you can
