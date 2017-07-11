@@ -29,24 +29,10 @@ class GenotypeCreate extends GenericCreate {
    *         internal context object in #create().
    * @throws {Error}
    */
-  static validate(context, options) {
+  static validateOptions(context, options) {
     Utils.hasToBeString(options, 'genotypeName');
     Utils.hasToBeSet(options, 'generationId');
     Utils.hasToBeInt(options, 'generationId');
-  }
-
-  /**
-   * We need to set some fields for query.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
-  static setQueryFields(context, options) {
-    context.query
-      .set('genotypeId', null)
-      .set('genotypeName', options.genotypeName)
-      .set('generationId', options.generationId);
   }
 
   /**
@@ -73,35 +59,23 @@ class GenotypeCreate extends GenericCreate {
       throw err;
     }
   }
-
-  /**
-   * Build the Generation object which should get returned. just
-   * insert all info we have, this is enough.
-   * @param  {object} returnObject
-   *         object which will find returned from #create()
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
-  static buildReturnObject(returnObject, context, options) {
-    console.log(options);
-    returnObject.genotypes = {};
-    returnObject.genotypes[context.insertId] = {
-      'genotypeId': context.insertId,
-      'genotypeName': options.genotypeName || null,
-      'genotypeCreatedAt': context.createdAt,
-      'genotypeModifiedAt': context.modifiedAt,
-      'generationId': options.generationId,
-    }
-  }
-
 }
 
 GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPES;
 
-GenotypeCreate.ALIAS_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENOTYPE;
+GenotypeCreate.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 
-GenotypeCreate.ALIAS_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENOTYPE;
+GenotypeCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENOTYPE;
+
+GenotypeCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENOTYPE;
+
+GenotypeCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENOTYPE;
+
+GenotypeCreate.DEFAULT_VALUES_ATTRIBUTES = {
+  [CONSTANTS.ATTR_DESCRIPTION_GENOTYPE]: '',
+  [CONSTANTS.ATTR_NAME_GENOTYPE]: ''
+}
+
+GenotypeCreate.PLURAL = 'genotypes';
 
 module.exports = GenotypeCreate;

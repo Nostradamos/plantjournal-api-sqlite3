@@ -16,41 +16,6 @@ describe('Genotype()', function() {
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
     });
 
-    it('should create a new genotypes entry and return Genotypes Object', async function() {
-      let genotype = await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
-      let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt]
-      genotype.should.deepEqual({
-        'genotypes': {
-          '1': {
-            'genotypeId': 1,
-            'genotypeName': 'testGenotype1',
-            'generationId': 1,
-            'genotypeCreatedAt': createdAt,
-            'genotypeModifiedAt': modifiedAt
-          }
-        }
-      });
-
-      let rows = await sqlite.all('SELECT genotypeId, genotypeName, generationId, genotypeCreatedAt, genotypeModifiedAt FROM genotypes');
-      rows.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1, 'genotypeCreatedAt': createdAt, 'genotypeModifiedAt': modifiedAt}]);
-    });
-
-    it('should be possible to create a new genotype with genotypeName not set', async function() {
-      let genotype = await pj.Genotype.create({generationId: 1});
-      let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt]
-      genotype.should.deepEqual({
-        'genotypes': {
-          '1': {
-            'genotypeId': 1,
-            'genotypeName': null,
-            'genotypeCreatedAt': createdAt,
-            'genotypeModifiedAt': modifiedAt,
-            'generationId': 1,
-          }
-        }
-      });
-    });
-
     it('should throw error if options is not set or not an associative array', async function() {
       let tested = 0;
       for(value in [[1,2], null, 'string', 1, true, undefined]) {
@@ -79,6 +44,64 @@ describe('Genotype()', function() {
     it('should throw error if options.genotypeName is not a string', async function() {
       await pj.Genotype.create({generationId: 1, genotypeName: 1})
         .should.be.rejectedWith('options.genotypeName has to be a string');
+    });
+
+    it('should create a new genotypes entry and return Genotypes Object', async function() {
+      let genotype = await pj.Genotype.create(
+        {
+          generationId: 1,
+          genotypeName: 'testGenotype1',
+          genotypeDescription: 'this is a very special genotype'
+        }
+      );
+      let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt]
+      genotype.should.deepEqual({
+        'genotypes': {
+          '1': {
+            'genotypeId': 1,
+            'genotypeName': 'testGenotype1',
+            'genotypeDescription': 'this is a very special genotype',
+            'generationId': 1,
+            'genotypeCreatedAt': createdAt,
+            'genotypeModifiedAt': modifiedAt
+          }
+        }
+      });
+
+      let rows = await sqlite.all(
+        `SELECT genotypeId, genotypeName, genotypeDescription, generationId,
+        genotypeCreatedAt, genotypeModifiedAt FROM genotypes`
+      );
+
+      rows.should.deepEqual(
+        [
+          {
+            'genotypeId': 1,
+            'genotypeName': 'testGenotype1',
+            'genotypeDescription': 'this is a very special genotype',
+            'generationId': 1,
+            'genotypeCreatedAt': createdAt,
+            'genotypeModifiedAt': modifiedAt
+          }
+        ]
+      );
+    });
+
+    it('should be possible to create a new genotype with genotypeName not set', async function() {
+      let genotype = await pj.Genotype.create({generationId: 1});
+      let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt]
+      genotype.should.deepEqual({
+        'genotypes': {
+          '1': {
+            'genotypeId': 1,
+            'genotypeName': '',
+            'genotypeDescription': '',
+            'genotypeCreatedAt': createdAt,
+            'genotypeModifiedAt': modifiedAt,
+            'generationId': 1,
+          }
+        }
+      });
     });
 
     afterEach(async function() {

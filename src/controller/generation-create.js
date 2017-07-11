@@ -1,4 +1,3 @@
-'use strict';
 
 const _ = require('lodash');
 const squel = require('squel');
@@ -31,7 +30,7 @@ class GenerationCreate extends GenericCreate {
    * @throws {Error}
    *         Throws error if we are unhappy with the options object.
    */
-  static validate(context, options) {
+  static validateOptions(context, options) {
     Utils.hasToBeSet(options, 'generationName');
     Utils.hasToBeString(options, 'generationName');
     Utils.hasToBeIntArray(options, 'generationParents');
@@ -101,6 +100,7 @@ class GenerationCreate extends GenericCreate {
     try {
       await super.executeQuery(context, options);
     } catch(err) {
+      await sqlite.get('ROLLBACK');
       // We only have one foreign key so we can safely assume, if a foreign key constraint
       // fails, it's the familyId constraint.
       if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
@@ -171,36 +171,25 @@ class GenerationCreate extends GenericCreate {
     // end transaction
     await sqlite.get('COMMIT');
   }
-
-  /**
-   * Build the Generation object which should get returned. just
-   * insert all info we have, this is enough.
-   * @param  {object} returnObject
-   *         object which will find returned from #create()
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
-  static buildReturnObject(returnObject, context, options) {
-    returnObject.generations = {};
-    returnObject.generations[context.insertId] = {
-      'generationId': context.insertId,
-      'generationName': options.generationName,
-      'generationParents': options.generationParents || [],
-      'generationCreatedAt': context.createdAt,
-      'generationModifiedAt': context.modifiedAt,
-      'familyId': options.familyId,
-    }
-  }
 }
 
 GenerationCreate.TABLE = CONSTANTS.TABLE_GENERATIONS;
 
 GenerationCreate.TABLE_PARENTS = CONSTANTS.TABLE_GENERATION_PARENTS;
 
-GenerationCreate.ALIAS_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENERATION;
+GenerationCreate.ATTR_ID = CONSTANTS.ATTR_ID_GENERATION;
 
-GenerationCreate.ALIAS_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
+GenerationCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENERATION;
+
+GenerationCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
+
+GenerationCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENERATION;
+
+GenerationCreate.PLURAL = 'generations';
+
+GenerationCreate.DEFAULT_VALUES_ATTRIBUTES = {
+  'generationParents': [],
+  'generationDescription': ''
+}
 
 module.exports = GenerationCreate;

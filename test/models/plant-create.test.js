@@ -77,27 +77,62 @@ describe('Plant()', function() {
             'plantName': 'testPlant1',
             'plantClonedFrom': null,
             'plantSex': null,
+            'plantDescription': '',
             'plantCreatedAt': createdAt,
             'plantModifiedAt': modifiedAt,
             'genotypeId': 1,
           }
         }
       });
-      let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, genotypeId, plantCreatedAt, plantModifiedAt FROM plants');
-      rowsPlants.should.deepEqual([{'plantId': 1, 'plantName': 'testPlant1', 'plantClonedFrom': null, 'genotypeId': 1, 'plantCreatedAt': createdAt, 'plantModifiedAt': modifiedAt}]);
-      let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
-      rowsGenotypes.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
+
+      let rowsPlants = await sqlite.all(
+        `SELECT plantId, plantName, plantClonedFrom, plantDescription,
+         plantCreatedAt, plantModifiedAt, genotypeId FROM plants`
+      );
+
+      rowsPlants.should.deepEqual(
+        [
+          {
+            'plantId': 1,
+            'plantName': 'testPlant1',
+            'plantClonedFrom': null,
+            'plantDescription': '',
+            'genotypeId': 1,
+            'plantCreatedAt': createdAt,
+            'plantModifiedAt': modifiedAt
+          }
+        ]
+      );
+
+      let rowsGenotypes = await sqlite.all(
+        'SELECT genotypeId, genotypeName, generationId FROM genotypes'
+      );
+
+      rowsGenotypes.should.deepEqual(
+        [
+          {
+            'genotypeId': 1,
+            'genotypeName': 'testGenotype1',
+            'generationId': 1
+          }
+        ]
+      );
     });
 
     it('should create a new plant and genotype entry if options.genotypeId is not set and return plant object + genotype object', async function() {
       let plant = await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
-      let [createdAtPlant, modifiedAtPlant] = [plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt];
+
+      let [createdAtPlant, modifiedAtPlant] = [
+        plant.plants[1].plantCreatedAt,
+        plant.plants[1].plantModifiedAt
+      ];
       let [createdAtGenotype, modifiedAtGenotype] = [plant.genotypes[2].genotypeCreatedAt, plant.genotypes[2].genotypeModifiedAt];
       plant.should.deepEqual({
         'genotypes': {
           '2': {
             'genotypeId': 2,
-            'genotypeName': null,
+            'genotypeName': '',
+            'genotypeDescription': '',
             'generationId': 1,
             'genotypeCreatedAt': createdAtGenotype,
             'genotypeModifiedAt': modifiedAtGenotype
@@ -109,6 +144,7 @@ describe('Plant()', function() {
             'plantName': 'testPlant1',
             'plantClonedFrom': null,
             'plantSex': null,
+            'plantDescription': '',
             'genotypeId': 2,
             'plantCreatedAt': createdAtPlant,
             'plantModifiedAt': modifiedAtPlant
@@ -129,6 +165,7 @@ describe('Plant()', function() {
             'plantName': 'clonePlant2',
             'plantClonedFrom': 1,
             'plantSex': null,
+            'plantDescription': '',
             'genotypeId': 1,
             'plantCreatedAt': createdAtClone,
             'plantModifiedAt': modifiedAtClone

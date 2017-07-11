@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
@@ -36,7 +37,7 @@ class GenericCreate {
     logger.debug(this.name, '#create() options:', options);
     let context = {};
     this.validateOptionsIsAssoc(context, options);
-    this.validate(context, options);
+    this.validateOptions(context, options);
 
     this.initQuery(context, options);
     this.setQueryFields(context, options);
@@ -74,7 +75,7 @@ class GenericCreate {
    * @param  {object} options
    *         options object which got passed to GenericCreate.create().
    */
-  static validate(context, options) {
+  static validateOptions(context, options) {
   }
 
   /**
@@ -93,13 +94,31 @@ class GenericCreate {
   }
 
   /**
-   * Overwrite this method to apply all fields your query.
+   * We iterate over all this.ATTRIBUTES and look if we can get the information
+   * from somewhere. We first look if attribute is set in context, next if in
+   * options, next in DEFAULT_VALUES_ATTRIBUTES and if we still didn't find it,
+   * set it to null.
+   * We also set the id field here.
    * @param  {object} context
    *         internal context object in #create().
    * @param  {object} options
    *         options object which got passed to GenericCreate.create().
    */
   static setQueryFields(context, options) {
+    _.each(this.ATTRIBUTES, function(attr) {
+      if(!_.isUndefined(context[attr])) {
+        context.query.set(attr, context[attr]);
+      }else if(!_.isUndefined(options[attr])) {
+        context.query.set(attr, options[attr]);
+      }else if(!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
+        context.query.set(attr, this.DEFAULT_VALUES_ATTRIBUTES[attr]);
+      } else {
+        context.query.set(attr, null);
+      }
+    }.bind(this));
+
+    // set id field
+    context.query.set(this.ATTR_ID, null);
   }
 
   /**
@@ -117,8 +136,8 @@ class GenericCreate {
                  'modifiedAt:', context.modifiedAt);
 
     context.query
-      .set(this.ALIAS_CREATED_AT, context.createdAt)
-      .set(this.ALIAS_MODIFIED_AT, context.modifiedAt);
+      .set(this.ATTR_CREATED_AT, context.createdAt)
+      .set(this.ATTR_MODIFIED_AT, context.modifiedAt);
   }
 
   /**
@@ -163,14 +182,43 @@ class GenericCreate {
    *         options object which got passed to GenericCreate.create().
    */
   static buildReturnObject(returnObject, context, options) {
+    let recordObject = {};
+
+    _.each(this.ATTRIBUTES, function(attr) {
+      if(!_.isUndefined(context[attr])) {
+        recordObject[attr] = context[attr];
+      } else if(!_.isUndefined(options[attr])) {
+        recordObject[attr] = options[attr];
+      } else if(!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
+        recordObject[attr] = this.DEFAULT_VALUES_ATTRIBUTES[attr];
+      } else {
+        recordObject[attr] = null
+      }
+    }.bind(this));
+
+    recordObject[this.ATTR_ID] = context.insertId;
+    recordObject[this.ATTR_CREATED_AT] = context.createdAt;
+    recordObject[this.ATTR_MODIFIED_AT] = context.modifiedAt;
+
+    returnObject[this.PLURAL] = {};
+    returnObject[this.PLURAL][context.insertId] = recordObject;
+    console.log(returnObject);
   }
 }
 
 // set this field for the default table name used in #initQuery()
 GenericCreate.TABLE = null;
 
-GenericCreate.ALIAS_CREATED_AT;
+GenericCreate.ATTR_ID;
 
-GenericCreate.ALIAS_MODIFIED_AT;
+GenericCreate.ATTR_CREATED_AT;
+
+GenericCreate.ATTR_MODIFIED_AT;
+
+GenericCreate.ATTRIBUTES = [];
+
+GenericCreate.DEFAULT_VALUES_ATTRIBUTES = [];
+
+GenericCreate.PLURAL;
 
 module.exports = GenericCreate;

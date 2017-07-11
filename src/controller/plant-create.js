@@ -31,7 +31,7 @@ class PlantCreate extends GenericCreate {
    *         internal context object in #create().
    * @throws {Error}
    */
-  static validate(context, options) {
+  static validateOptions(context, options) {
     Utils.hasToBeSet(options, 'plantName');
     Utils.hasToBeString(options, 'plantName');
     Utils.hasToBeInt(options, 'plantClonedFrom');
@@ -67,11 +67,8 @@ class PlantCreate extends GenericCreate {
    *         options object which got passed to GenericCreate.create().
    */
   static setQueryFields(context, options) {
+    super.setQueryFields(context, options);
     context.query
-      .set('plantId', null)
-      .set('plantName', options.plantName)
-      .set('plantClonedFrom', options.plantClonedFrom || null)
-      .set('plantSex', options.plantSex || null)
       .set('genotypeId', '$genotypeId', {'dontQuote': true});
   }
 
@@ -200,18 +197,8 @@ class PlantCreate extends GenericCreate {
    *         options object which got passed to GenericCreate.create().
    */
   static buildReturnObject(returnObject, context, options) {
-    returnObject['plants'] = {};
-
-    returnObject.plants[context.insertId] = {
-      'plantId': context.insertId,
-      'plantName': options.plantName,
-      'plantClonedFrom': options.plantClonedFrom || null,
-      'plantSex': options.plantSex || null,
-      'plantCreatedAt': context.createdAt,
-      'plantModifiedAt': context.modifiedAt,
-      'genotypeId': context.genotypeId,
-    }
-
+    super.buildReturnObject(returnObject, context, options);
+    
     // if we created a new genotype we also want to have it in the returned
     // plant object.
     if(context.createdGenotype !== false) {
@@ -222,8 +209,18 @@ class PlantCreate extends GenericCreate {
 
 PlantCreate.TABLE = CONSTANTS.TABLE_PLANTS;
 
-PlantCreate.ALIAS_CREATED_AT = 'plantCreatedAt';
+PlantCreate.ATTR_ID = CONSTANTS.ATTR_ID_PLANT;
 
-PlantCreate.ALIAS_MODIFIED_AT = 'plantModifiedAt';
+PlantCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_PLANT;
+
+PlantCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_PLANT;
+
+PlantCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_PLANT;
+
+PlantCreate.DEFAULT_VALUES_ATTRIBUTES = {
+  [CONSTANTS.ATTR_DESCRIPTION_PLANT]: ''
+}
+
+PlantCreate.PLURAL = 'plants';
 
 module.exports = PlantCreate;

@@ -15,52 +15,6 @@ describe('Generation()', function() {
       await pj.Family.create({familyName: 'testName'});
     });
 
-    it('should create a new generations entry and return generation object', async function() {
-      let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testGeneration'});
-      let [createdAt, modifiedAt] = [generation.generations[1].generationCreatedAt, generation.generations[1].generationModifiedAt];
-      createdAt.should.eql(modifiedAt);
-      generation.should.deepEqual({
-        generations: {
-          '1': {
-            'generationId': 1,
-            'generationName': 'testGeneration',
-            'generationParents': [],
-            'familyId': 1,
-            'generationCreatedAt': createdAt,
-            'generationModifiedAt': modifiedAt
-          }
-        }
-      });
-
-      let result = await sqlite.all('SELECT familyId, generationId, generationName, generationCreatedAt, generationModifiedAt FROM generations');
-      result.should.deepEqual(
-        [
-          {
-            'familyId': 1,
-            'generationId': 1,
-            'generationName': 'testGeneration',
-            'generationCreatedAt': createdAt,
-            'generationModifiedAt': modifiedAt
-          }
-        ]
-      );
-    });
-
-    it('should throw error if options is not set or not an associative array', async function() {
-      let tested = 0;
-      for(value in [[1,2], null, 'string', 1, true, undefined]) {
-        await pj.Generation.create(value)
-          .should.be.rejectedWith('First argument has to be an associative array');
-        tested++;
-      }
-      tested.should.eql(6);
-    });
-
-    it('should throw Error if options.familyId is not set', async function() {
-      await pj.Generation.create({'generationName': 'testGeneration2'})
-        .should.be.rejectedWith('options.familyId has to be set');
-    });
-
     it('should throw error if options.familyId is not an integer', async function() {
       await pj.Generation.create({'generationName': 'testGeneration2', 'familyId': '1'})
         .should.be.rejectedWith('options.familyId has to be an integer');
@@ -86,6 +40,56 @@ describe('Generation()', function() {
         .should.be.rejectedWith('options.familyId does not reference an existing Family');
       let result = await sqlite.all('SELECT familyId, generationId, generationName FROM generations WHERE generationName = "testGeneration3"');
       result.should.deepEqual([]);
+    });
+
+    it('should create a new generations entry and return generation object', async function() {
+      let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testGeneration'});
+      let [createdAt, modifiedAt] = [generation.generations[1].generationCreatedAt, generation.generations[1].generationModifiedAt];
+      createdAt.should.eql(modifiedAt);
+      generation.should.deepEqual({
+        generations: {
+          '1': {
+            'generationId': 1,
+            'generationDescription': '',
+            'generationName': 'testGeneration',
+            'generationParents': [],
+            'familyId': 1,
+            'generationCreatedAt': createdAt,
+            'generationModifiedAt': modifiedAt
+          }
+        }
+      });
+
+      let result = await sqlite.all(
+        `SELECT familyId, generationId, generationDescription, generationName,
+         generationCreatedAt, generationModifiedAt FROM generations`);
+      result.should.deepEqual(
+        [
+          {
+            'familyId': 1,
+            'generationId': 1,
+            'generationDescription': '',
+            'generationName': 'testGeneration',
+            'generationCreatedAt': createdAt,
+            'generationModifiedAt': modifiedAt
+          }
+        ]
+      );
+    });
+
+    it('should throw error if options is not set or not an associative array', async function() {
+      let tested = 0;
+      for(value in [[1,2], null, 'string', 1, true, undefined]) {
+        await pj.Generation.create(value)
+          .should.be.rejectedWith('First argument has to be an associative array');
+        tested++;
+      }
+      tested.should.eql(6);
+    });
+
+    it('should throw Error if options.familyId is not set', async function() {
+      await pj.Generation.create({'generationName': 'testGeneration2'})
+        .should.be.rejectedWith('options.familyId has to be set');
     });
 
     after(async function() {
@@ -122,6 +126,7 @@ describe('Generation()', function() {
         'generations': {
           '2': {
             'generationId': 2,
+            'generationDescription': '',
             'generationName': 'testWithParents',
             'generationParents': [1,2],
             'generationCreatedAt': createdAt,

@@ -77,9 +77,9 @@ describe('Plant()', function() {
       let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
       rowsGeno.should.deepEqual(
         [
-          {'genotypeId': 1, 'genotypeName': "undefined"},
-          {'genotypeId': 2, 'genotypeName': "undefined"},
-          {'genotypeId': 3, 'genotypeName': "undefined"},
+          {'genotypeId': 1, 'genotypeName': ""},
+          {'genotypeId': 2, 'genotypeName': ""},
+          {'genotypeId': 3, 'genotypeName': ""},
           {'genotypeId': 4, 'genotypeName': 'testGeno1'},
           {'genotypeId': 5, 'genotypeName': 'testGeno2'}
         ]

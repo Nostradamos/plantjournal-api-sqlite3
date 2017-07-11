@@ -18,6 +18,7 @@ module.exports =  async function createTables() {
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENERATIONS + ` (
       generationId INTEGER,
       generationName TEXT NOT NULL,
+      generationDescription TEXT NOT NULL DEFAULT '',
       generationCreatedAt DATETIME NOT NULL,
       generationModifiedAt DATETIME NOT NULL,
       familyId INTEGER NOT NULL,
@@ -29,6 +30,7 @@ module.exports =  async function createTables() {
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENOTYPES + ` (
       genotypeId INTEGER,
       genotypeName TEXT NOT NULL DEFAULT '',
+      genotypeDescription TEXT NOT NULL DEFAULT '',
       genotypeCreatedAt DATETIME NOT NULL,
       genotypeModifiedAt DATETIME NOT NULL,
       generationId INTEGER NOT NULL,
@@ -42,6 +44,7 @@ module.exports =  async function createTables() {
       plantName TEXT NOT NULL,
       plantClonedFrom INTEGER DEFAULT NULL,
       plantSex TEXT DEFAULT NULL,
+      plantDescription TEXT NOT NULL DEFAULT '',
       plantCreatedAt DATETIME NOT NULL,
       plantModifiedAt DATETIME NOT NULL,
       genotypeId INTEGER NOT NULL,

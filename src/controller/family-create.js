@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const squel = require('squel');
 
 const CONSTANTS = require('../constants');
@@ -29,54 +30,27 @@ class FamilyCreate extends GenericCreate {
    *         options object which got passed to GenericCreate.create().
    * @throws {Error}
    */
-  static validate(context, options) {
+  static validateOptions(context, options) {
     Utils.hasToBeSet(options, 'familyName');
     Utils.hasToBeString(options, 'familyName');
     Utils.hasToBeString(options, 'familyDescription');
-  }
-
-  /**
-   * This method will set all INSERT fields for context.query.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
-  static setQueryFields(context, options) {
-    // Set fields
-    context.query
-      .set('familyId', null)
-      .set('familyName', options.familyName)
-      .set('familyDescription', options.familyDescription);
-  }
-
-  /**
-   * Finally build returnObject, just set all the info
-   * about the created Family into one object which
-   * will get returned.
-   * @param  {object} returnObject
-   *         object which will find returned from #create()
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
-  static buildReturnObject(returnObject, context, options) {
-    returnObject.families = {};
-    returnObject.families[context.insertId] = {
-      'familyId': context.insertId,
-      'familyName': options.familyName,
-      'familyDescription': options.familyDescription || '',
-      'familyCreatedAt': context.createdAt,
-      'familyModifiedAt': context.modifiedAt,
-    }
   }
 }
 
 FamilyCreate.TABLE = CONSTANTS.TABLE_FAMILIES;
 
-FamilyCreate.ALIAS_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_FAMILY;
+FamilyCreate.ATTR_ID = CONSTANTS.ATTR_ID_FAMILY;
 
-FamilyCreate.ALIAS_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_FAMILY;
+FamilyCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_FAMILY;
+
+FamilyCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_FAMILY;
+
+FamilyCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_FAMILY;
+
+FamilyCreate.DEFAULT_VALUES_ATTRIBUTES = {
+  'familyDescription': ''
+}
+
+FamilyCreate.PLURAL = 'families';
 
 module.exports = FamilyCreate;
