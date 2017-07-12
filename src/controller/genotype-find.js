@@ -1,10 +1,8 @@
 'use strict';
 
 const _ = require('lodash');
-const util = require('util');
 
 const CONSTANTS = require('../constants');
-const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
 
@@ -58,7 +56,7 @@ class GenotypeFind extends GenericFind {
   }
 }
 
-GenotypeFind.TABLE = CONSTANTS.TABLE_GENOTYPES
+GenotypeFind.TABLE = CONSTANTS.TABLE_GENOTYPES;
 
 GenotypeFind.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 

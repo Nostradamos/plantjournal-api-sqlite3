@@ -1,6 +1,5 @@
 'use strict';
 
-const squel = require('squel');
 const sqlite = require('sqlite');
 const logger = require('./logger');
 
@@ -31,10 +30,8 @@ class plantJournal {
    */
   async connect() {
     await sqlite.open(this.options);
-    //if(this.options === ':memory:') {
-      logger.info('Creating default tables');
-      await require('./create-tables')();
-    //}
+    logger.info('Creating default tables');
+    await require('./create-tables')();
 
     // Enable foreign keys
     try {

@@ -1,9 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
-const Utils = require('../utils');
-
 const CONSTANTS = require('../constants');
 const GenericUpdate = require('./generic-update');
 

@@ -32,10 +32,10 @@ let Generation = exports;
  *           UTC Timestamp when this generation got modified the last time.
  */
 
- /**
-  * @typedef {Object} ReturnCreateFamily
-  * @todo This will may be change
-  */
+/**
+ * @typedef {Object} ReturnCreateFamily
+ * @todo This will may be change
+ */
 
 
 /**
@@ -62,7 +62,7 @@ let Generation = exports;
  */
 Generation.create = async function(options) {
   return await GenerationCreate.create(options);
-}
+};
 
 /**
  * Find generations based on criteria and returns them. You can select the generations
@@ -82,7 +82,7 @@ Generation.create = async function(options) {
  */
 Generation.find = async function(criteria) {
   return await GenerationFind.find(criteria);
-}
+};
 
 /**
  * Deletes generations and related genotypes and plants based on criteria.
@@ -110,7 +110,7 @@ Generation.find = async function(criteria) {
  */
 Generation.delete = async function(criteria) {
   return await GenerationDelete.delete(criteria);
-}
+};
 
 /**
  * Update Generations based on update and criteria.
@@ -144,4 +144,4 @@ Generation.delete = async function(criteria) {
  */
 Generation.update = async function(update, criteria) {
   return await GenerationUpdate.update(update, criteria);
-}
+};

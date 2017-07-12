@@ -27,6 +27,6 @@ ToDo
 Development Notes/Coding Style
 ==============================
 
-* Always use explicit column names (explicit => including table name) in your queries. Why? Because for all foreign keys we use the same column name in source and destination table. SQLite can't know which table you mean, so we just use explicit column names for everything. Eg: `generations.familyId` references `families.familyId`.
+* Always use explicit column names (explicit => including table name) in your queries as soon as you query to different tables. Why? Because for all foreign keys we use the same column name in source and destination table. SQLite can't know which table you mean, so we just use explicit column names for everything. Eg: `generations.familyId` references `families.familyId`.
 
 * Try to use CONSTANTS wherever you can

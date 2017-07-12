@@ -3,7 +3,6 @@
 const _ = require('lodash');
 
 const CONSTANTS = require('../constants');
-const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
 
@@ -56,7 +55,7 @@ class GenerationFind extends GenericFind {
   }
 }
 
-GenerationFind.TABLE = CONSTANTS.TABLE_GENERATIONS
+GenerationFind.TABLE = CONSTANTS.TABLE_GENERATIONS;
 
 GenerationFind.ATTR_ID = CONSTANTS.ATTR_ID_GENERATION;
 

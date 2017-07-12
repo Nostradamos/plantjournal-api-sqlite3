@@ -1,10 +1,6 @@
 'use strict';
 
-const _ = require('lodash');
-const squel = require('squel');
-
 const CONSTANTS = require('../constants');
-const logger = require('../logger');
 const Utils = require('../utils');
 
 const GenericCreate = require('./generic-create');
@@ -49,7 +45,7 @@ FamilyCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_FAMILY;
 
 FamilyCreate.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_FAMILY]: ''
-}
+};
 
 FamilyCreate.PLURAL = CONSTANTS.PLURAL_FAMILY;
 

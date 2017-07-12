@@ -108,7 +108,7 @@ var Family = {};
  */
 Family.create = async function(options) {
   return await FamilyCreate.create(options);
-}
+};
 
 /**
  * Find families based on criteria and returns them. You can select the families
@@ -126,7 +126,7 @@ Family.create = async function(options) {
  */
 Family.find = async function(criteria) {
   return await FamilyFind.find(criteria);
-}
+};
 
 /**
  * Deletes families and related generations, genotypes and plants based on
@@ -154,7 +154,7 @@ Family.find = async function(criteria) {
  */
 Family.delete = async function(criteria) {
   return await FamilyDelete.delete(criteria);
-}
+};
 
 /**
  * Finds families and updates fields based on the passed update Object.
@@ -177,6 +177,6 @@ Family.delete = async function(criteria) {
  */
 Family.update = async function(update, criteria) {
   return await FamilyUpdate.update(update, criteria);
-}
+};
 
 module.exports = Family;

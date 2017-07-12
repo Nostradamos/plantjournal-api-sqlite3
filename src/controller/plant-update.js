@@ -1,8 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
-const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
 
 const CONSTANTS = require('../constants');

@@ -65,4 +65,4 @@ module.exports =  async function createTables() {
       FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
-}
+};

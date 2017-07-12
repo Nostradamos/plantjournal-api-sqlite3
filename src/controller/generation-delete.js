@@ -1,8 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const squel = require('squel');
-const sqlite = require('sqlite');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');

@@ -1,8 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const squel = require('squel');
-const sqlite = require('sqlite');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
@@ -36,7 +34,7 @@ class GenotypeDelete extends GenericDelete {
     QueryUtils.joinPlantsDownwards(context.queryRelated);
   }
 
- /**
+  /**
   * We need to select both genotypeId and plantId to delete genotypes and
   * to know which plant we will delete.
   * @param  {object} context

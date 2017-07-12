@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const sqlite = require('sqlite');
-const squel = require('squel');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
@@ -42,17 +41,17 @@ class PlantCreate extends GenericCreate {
     if(!_.has(options, 'generationId') &&
        !_.has(options, 'genotypeId') &&
        !_.has(options, 'plantClonedFrom')) {
-         throw new Error(
-           'Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set'
-         );
+      throw new Error(
+        'Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set'
+      );
     }
 
     // plantSex has to be either male, female or hermaphrodite
     if(_.has(options, 'plantSex') &&
        _.indexOf(CONSTANTS.PLANT_SEXES, options.plantSex) === -1) {
-         throw new Error(
-           'options.plantSex has to be null, male, female or hermaphrodite'
-         );
+      throw new Error(
+        'options.plantSex has to be null, male, female or hermaphrodite'
+      );
     }
 
     context.genotypeId = options.genotypeId;
@@ -92,12 +91,12 @@ class PlantCreate extends GenericCreate {
     if(_.isUndefined(context.genotypeId) && _.isUndefined(options.plantClonedFrom)) {
       // If neither genotypeId nor plantClonedFrom is set, we want to create a new genotypeId
       // for this plant.
-      logger.debug(this.name, "#create() We need to create a new genotype for this plant");
+      logger.debug(this.name, '#create() We need to create a new genotype for this plant');
 
       context.createdGenotype = await Genotype.create(options);
       context.genotypeId = _.parseInt(_.keys(context.createdGenotype.genotypes)[0]);
 
-      logger.debug(this.name, "#create() Created genotypeId:", context.genotypeId);
+      logger.debug(this.name, '#create() Created genotypeId:', context.genotypeId);
     }else if(!_.isUndefined(options.plantClonedFrom)) {
       // plantClonedFrom is defined, but genotypId not, so we wan't to retrieve
       // the genotypeId from the "mother plant". Mother plant => plant with the
@@ -105,8 +104,8 @@ class PlantCreate extends GenericCreate {
       let queryRetrieveGenotypeId = 'SELECT plants.genotypeId FROM ' +
                                     CONSTANTS.TABLE_PLANTS +
                                     ' plants WHERE plants.plantId = $plantClonedFrom';
-      logger.debug(this.name, "#create() queryRetrieveGenotypeId:",
-                   queryRetrieveGenotypeId, '? = :', options.plantClonedFrom);
+      logger.debug(this.name, '#create() queryRetrieveGenotypeId:',
+        queryRetrieveGenotypeId, '? = :', options.plantClonedFrom);
 
       let motherPlantRow = await sqlite.get(
         queryRetrieveGenotypeId,
@@ -143,8 +142,6 @@ class PlantCreate extends GenericCreate {
    *         we will give back all other unexpected errors.
    */
   static async executeQueryInsertPlant(context, options) {
-    console.log(context.query, context.genotypeId);
-
     try {
       context.result = await sqlite.run(context.query, {'$genotypeId': context.genotypeId});
     } catch(err) {
@@ -220,7 +217,7 @@ PlantCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_PLANT;
 
 PlantCreate.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_PLANT]: ''
-}
+};
 
 PlantCreate.PLURAL = CONSTANTS.PLURAL_PLANT;
 

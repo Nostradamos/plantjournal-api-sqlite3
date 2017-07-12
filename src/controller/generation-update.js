@@ -5,7 +5,6 @@ const squel = require('squel');
 const sqlite = require('sqlite');
 
 const logger = require('../logger');
-const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
 
 const CONSTANTS = require('../constants');
@@ -134,6 +133,6 @@ GenerationUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
 
 GenerationUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 
-GenerationUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_GENERATION
+GenerationUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_GENERATION;
 
 module.exports = GenerationUpdate;

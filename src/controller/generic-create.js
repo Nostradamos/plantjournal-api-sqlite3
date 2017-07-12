@@ -4,10 +4,8 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
-const QueryUtils = require('../utils-query');
 
 
 /**
@@ -133,7 +131,7 @@ class GenericCreate {
   static setQueryCreatedAtAndModifiedAt(context, options) {
     context.createdAt = context.modifiedAt = Utils.getUnixTimestampUTC();
     logger.debug(this.name, '#find() createdAt:', context.createdAt,
-                 'modifiedAt:', context.modifiedAt);
+      'modifiedAt:', context.modifiedAt);
 
     context.query
       .set(this.ATTR_CREATED_AT, context.createdAt)
@@ -192,7 +190,7 @@ class GenericCreate {
       } else if(!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
         recordObject[attr] = this.DEFAULT_VALUES_ATTRIBUTES[attr];
       } else {
-        recordObject[attr] = null
+        recordObject[attr] = null;
       }
     }.bind(this));
 

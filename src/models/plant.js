@@ -41,40 +41,40 @@ let Plant = exports;
  */
 
 
- /**
-  * Creates a new plant entry and returns the created plant object. If
-  * options.genotypeId is not set, this will automatically create a new
-  * genotype.
-  * @memberof plantJournal.Plant
-  * @async
-  * @param {Object} options
-  *         Options how the new plant should be.
-  * @param {String} options.plantName
-  *        Name of this plant.
-  * @param {PlantId} [options.plantClonedFrom=null]
-  *        If plant got cloned from another plant, this will be the id of
-  *        the mother plant.
-  * @param {plantSex} options.plantSex
-  *        Sex of this plant.
-  * @param {GenotypeId} [options.genotypeId]
-  *        ID of genotype this plant has. If not set, a new genotype will
-  *        get created.
-  * @throws {Error}
-  *         Will throw error if genotypeId is invalid or if an unexpected
-  *         sqlite error happens.
-  * @return {Object} plantCreate
-  * @return {Object.<PlantId, PlantObject>} plantCreate.plants
-  *         Object holding information about created plant. This will only
-  *         happen if no options.genotypId was set. There should
-  *         only be one key, which is the id of the newly created plant.
-  * @return {Object.<GenotypeId, GenotypeObject>} plantCreate.genotypes
-  *         Object holding information about created genotype. This will only
-  *         happen if no options.genotypId was set. There should
-  *         only be one key, which is the id of the newly created genotype.
-  */
+/**
+ * Creates a new plant entry and returns the created plant object. If
+ * options.genotypeId is not set, this will automatically create a new
+ * genotype.
+ * @memberof plantJournal.Plant
+ * @async
+ * @param {Object} options
+ *         Options how the new plant should be.
+ * @param {String} options.plantName
+ *        Name of this plant.
+ * @param {PlantId} [options.plantClonedFrom=null]
+ *        If plant got cloned from another plant, this will be the id of
+ *        the mother plant.
+ * @param {plantSex} options.plantSex
+ *        Sex of this plant.
+ * @param {GenotypeId} [options.genotypeId]
+ *        ID of genotype this plant has. If not set, a new genotype will
+ *        get created.
+ * @throws {Error}
+ *         Will throw error if genotypeId is invalid or if an unexpected
+ *         sqlite error happens.
+ * @return {Object} plantCreate
+ * @return {Object.<PlantId, PlantObject>} plantCreate.plants
+ *         Object holding information about created plant. This will only
+ *         happen if no options.genotypId was set. There should
+ *         only be one key, which is the id of the newly created plant.
+ * @return {Object.<GenotypeId, GenotypeObject>} plantCreate.genotypes
+ *         Object holding information about created genotype. This will only
+ *         happen if no options.genotypId was set. There should
+ *         only be one key, which is the id of the newly created genotype.
+ */
 Plant.create = async function(options) {
   return await PlantCreate.create(options);
-}
+};
 
 /**
  * Find plants based on criteria and returns them. You can select the plants
@@ -97,7 +97,7 @@ Plant.create = async function(options) {
  */
 Plant.find = async function(criteria) {
   return await PlantFind.find(criteria);
-}
+};
 
 /**
  * Deletes plants based on criteria.
@@ -123,7 +123,7 @@ Plant.find = async function(criteria) {
  */
 Plant.delete = async function(criteria) {
   return await PlantDelete.delete(criteria);
-}
+};
 
 /**
  * Update plants based on update and criteria.
@@ -161,4 +161,4 @@ Plant.delete = async function(criteria) {
  */
 Plant.update = async function(update, criteria) {
   return await PlantUpdate.update(update, criteria);
-}
+};

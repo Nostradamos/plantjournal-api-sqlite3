@@ -6,11 +6,13 @@
   "scripts": {
     "test": "mocha ./test/*",
     "coverage": "nyc --reporter=html --reporter=text mocha ./test/*",
-    "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs"
+    "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs",
+    "lint": "eslint src/**/*"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^4.2.0",
     "jsdoc": "https://github.com/jsdoc3/jsdoc.git",
     "mocha": "^3.2.0",
     "nyc": "^11.0.2",

@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 
-const logger = require('../logger');
 const CONSTANTS = require('../constants');
 const Utils = require('../utils');
 
@@ -35,11 +34,11 @@ class FamilyFind extends GenericFind {
    *         Criteria object passed to find()
    */
   static buildReturnObjectWhere(returnObject, context, criteria) {
-      // build families object
-      returnObject.families =  {}
-      _.each(context.rowsWhere, function(row) {
-        Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria, true);
-      });
+    // build families object
+    returnObject.families =  {};
+    _.each(context.rowsWhere, function(row) {
+      Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria, true);
+    });
   }
 }
 

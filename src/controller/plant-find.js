@@ -3,7 +3,6 @@
 const _ = require('lodash');
 
 const CONSTANTS = require('../constants');
-const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
 
@@ -79,7 +78,7 @@ PlantFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge(
 );
 
 PlantFind.DEFAULT_FIELDS = ['plants.plantId', 'genotypes.genotypeId', 'generations.generationId',
- 'families.familyId'];
+  'families.familyId'];
 
 PlantFind.COUNT = 'DISTINCT plants.plantId';
 

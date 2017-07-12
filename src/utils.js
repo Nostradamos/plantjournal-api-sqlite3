@@ -1,10 +1,8 @@
 'use strict';
 
 const _ = require('lodash');
-const squel = require('squel');
 const sqlite = require('sqlite');
 
-const logger = require('./logger');
 const CONSTANTS = require('./constants');
 
 /**
@@ -27,7 +25,7 @@ Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
   if(_.isEmpty(limitTo)) limitTo = _.keys(obj);
   _(limitTo).filter(o => _.isEmpty(obj[o])).each(u => {_.unset(obj, u);});
   return obj;
-}
+};
 
 /**
  * Adds to returnObject.plants[row.plantId] the plant object if row.plantName
@@ -52,7 +50,7 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
   });
 
   if(forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
-}
+};
 
 /**
  * Adds to returnObject.genotypes[row.genotypeId] the genotype object if row.genotypeName
@@ -66,15 +64,15 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
 Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObject(row, returnObject, options, forceAdd) {
   let genotypeId = row.genotypeId;
   let genotype = {
-      'generationId': row.generationId,
-      'familyId': row.familyId
+    'generationId': row.generationId,
+    'familyId': row.familyId
   };
   _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
     if(_.has(row, attr)) genotype[attr] = row[attr];
   });
   if(forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
 
-}
+};
 
 /**
  * Adds to returnObject.generations[row.generationId] the generation object if at least one of
@@ -90,7 +88,7 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
   let generationId = row.generationId;
   let generation = {
     'familyId': row.familyId
-  }
+  };
 
   _.each(CONSTANTS.ALL_ATTRIBUTES_GENERATION, function(attr) {
     if(_.has(row, attr)) {
@@ -105,7 +103,7 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
   });
   // Make sure that we only add it returnObject if we not only have generationId and familyId set.
   if(forceAdd === true || _.size(generation) > 2) returnObject.generations[generationId] = generation;
-}
+};
 
 /**
  * Adds to returnObject.families[row.familyId] the family object if row.familyName
@@ -126,7 +124,7 @@ Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(r
   if(forceAdd === true || _.size(family) > 1) {
     returnObject.families[familyId] = family;
   }
-}
+};
 
 /**
  * Adds to returnObject found and remaining count. Mutates returnObject.
@@ -143,7 +141,7 @@ Utils.addFoundAndRemainingFromCountToReturnObject = function addFoundAndRemainin
   let c = count['count'];
   returnObject['found'] = c;
   returnObject['remaining'] = c - lenRows - (options.offset || 0);
-}
+};
 
 /**
  * Make sure obj is an assoc array/object with key/value pairs.
@@ -155,7 +153,7 @@ Utils.hasToBeAssocArray = function hasToBeAssocArray(obj, prefix = 'First argume
   if(!_.isObjectLike(obj) || _.isArray(obj)) {
     throw new Error(prefix + ' has to be an associative array');
   }
-}
+};
 
 /**
  * Make sure obj.property is a string. If not, throws an error.
@@ -169,7 +167,7 @@ Utils.hasToBeString = function optionsHasString(obj, property, name = 'options')
   if(_.has(obj, property) && !_.isString(obj[property])) {
     throw new Error(name + '.' + property + ' has to be a string');
   }
-}
+};
 
 /**
  * Make sure obj.property is an integer. If not, throws an error.
@@ -183,7 +181,7 @@ Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
   if(_.has(obj, property) && !_.isInteger(obj[property])) {
     throw new Error(name + '.' + property + ' has to be an integer');
   }
-}
+};
 
 /**
  * Make sure obj.property is an array only consisting of integers.
@@ -198,7 +196,7 @@ Utils.hasToBeIntArray = function hasToBeIntArray(obj, property, name = 'options'
   if(_.has(obj, property) && (!_.isArray(obj[property]) || !_.every(obj[property], _.isInteger))) {
     throw new Error(name + '.' + property + ' has to be an array of integers');
   }
-}
+};
 
 /**
  * Make sure obj.property is set, and if not, throw an error.
@@ -211,7 +209,7 @@ Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
   if(!_.has(obj, property)) {
     throw new Error(name + '.' + property + ' has to be set');
   }
-}
+};
 
 /**
  * Return a unix timestamp (seconds)
@@ -219,7 +217,7 @@ Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
  */
 Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
   return Math.floor(new Date() / 1000);
-}
+};
 
 /**
  * Converts Set to array and filters out null. Mutates set.
@@ -229,7 +227,7 @@ Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
 Utils.filterSetNotNull = function filterSetNotNull(set) {
   set.delete(null);
   return Array.from(set);
-}
+};
 
 /**
  * Checks if we are connected to sqlite database. If not, throws error.
@@ -240,4 +238,4 @@ Utils.throwErrorIfNotConnected = function() {
     return;
   }
   throw Error('plantJournal is not connected to database.');
-}
+};

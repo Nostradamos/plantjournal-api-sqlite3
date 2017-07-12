@@ -125,7 +125,6 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindWhere(context, update, criteria) {
-    console.log(this.ATTRIBUTES_SEARCHABLE);
     QueryUtils.setWhere(context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria);
   }
 
@@ -140,7 +139,7 @@ class GenericUpdate {
   }
 
   static setQueryFindGroup(context, update, criteria) {
-    context.queryFind.group(this.TABLE + '.' + this.ATTR_ID)
+    context.queryFind.group(this.TABLE + '.' + this.ATTR_ID);
   }
   /**
    * Stringifies queryFind and logs the query
@@ -266,7 +265,7 @@ GenericUpdate.TABLE; // Table name
 
 GenericUpdate.ATTR_ID; // name of id field
 
-GenericUpdate.ATTR_MODIFIED_AT // name of modifiedAt Field
+GenericUpdate.ATTR_MODIFIED_AT; // name of modifiedAt Field
 
 GenericUpdate.ATTRIBUTES_SEARCHABLE; // array of aliases which we can search through
 

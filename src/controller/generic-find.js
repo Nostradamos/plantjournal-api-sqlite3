@@ -4,7 +4,6 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');

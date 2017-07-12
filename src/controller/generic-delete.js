@@ -88,7 +88,7 @@ class GenericDelete {
   static initQueryRelated(context, criteria) {
     context.queryRelated = squel
       .select()
-      .from(this.TABLE, this.TABLE)
+      .from(this.TABLE, this.TABLE);
   }
 
   /**

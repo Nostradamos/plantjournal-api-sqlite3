@@ -5,7 +5,6 @@ const squel = require('squel');
 
 const CONSTANTS = require('./constants');
 const logger = require('./logger');
-const Utils = require('./utils');
 
 /**
  * Set of utils mainly used for query building.
@@ -30,7 +29,7 @@ QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = t
     QueryUtils.joinGenerationParentsOnly(queryObj);
   }
   QueryUtils.joinFamilies(queryObj);
-}
+};
 
 
 /**
@@ -49,7 +48,7 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
   // generation_parents and generations, we don't have to join
   // generation_parents again, therefore set false
   QueryUtils.joinRelatedGenerations(queryObj, false);
-}
+};
 
 
 /**
@@ -64,7 +63,7 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
 QueryUtils.joinRelatedPlants = function(queryObj) {
   QueryUtils.joinGenotypes(queryObj);
   QueryUtils.joinRelatedGenotypes(queryObj);
-}
+};
 
 /**
  * Left joins families by referencing to generations.familyId. Mutates query
@@ -73,9 +72,9 @@ QueryUtils.joinRelatedPlants = function(queryObj) {
  */
 QueryUtils.joinFamilies = function (query) {
   query.left_join(CONSTANTS.TABLE_FAMILIES,
-                  'families',
-                  'generations.familyId = families.familyId');
-}
+    'families',
+    'generations.familyId = families.familyId');
+};
 
 /**
  * Left joins generations and generation_parents by referencing to
@@ -85,12 +84,12 @@ QueryUtils.joinFamilies = function (query) {
  */
 QueryUtils.joinGenerations = function (query) {
   query.left_join(CONSTANTS.TABLE_GENERATIONS,
-                  'generations',
-                  'genotypes.generationId = generations.generationId'
+    'generations',
+    'genotypes.generationId = generations.generationId'
   );
   // We also have to join generation_parents
   QueryUtils.joinGenerationParentsOnly(query);
-}
+};
 
 /**
  * Only join generation parents. Mutates query.
@@ -99,10 +98,10 @@ QueryUtils.joinGenerations = function (query) {
  */
 QueryUtils.joinGenerationParentsOnly = function (query) {
   query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
-                  'generation_parents',
-                  'generations.generationId = generation_parents.generationId'
+    'generation_parents',
+    'generations.generationId = generation_parents.generationId'
   );
-}
+};
 
 /**
  * Left joins genotypes by referencing to plants.genotypeId. Mutates query
@@ -111,10 +110,10 @@ QueryUtils.joinGenerationParentsOnly = function (query) {
  */
 QueryUtils.joinGenotypes = function (query) {
   query.left_join(CONSTANTS.TABLE_GENOTYPES,
-                  'genotypes',
-                  'plants.genotypeId = genotypes.genotypeId'
+    'genotypes',
+    'plants.genotypeId = genotypes.genotypeId'
   );
-}
+};
 
 /**
  * Left joins generations by referencing to families.familyId.
@@ -122,14 +121,14 @@ QueryUtils.joinGenotypes = function (query) {
  */
 QueryUtils.joinGenerationsDownwards = function (query) {
   query.left_join(CONSTANTS.TABLE_GENERATIONS,
-                  'generations',
-                  'families.familyId = generations.familyId'
+    'generations',
+    'families.familyId = generations.familyId'
   );
   query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
-                  'generation_parents',
-                  'generations.generationId = generation_parents.generationId'
+    'generation_parents',
+    'generations.generationId = generation_parents.generationId'
   );
-}
+};
 
 /**
  * Left joins Genotypes by referencing to generations.generationId
@@ -137,10 +136,10 @@ QueryUtils.joinGenerationsDownwards = function (query) {
  */
 QueryUtils.joinGenotypesDownwards = function (query) {
   query.left_join(CONSTANTS.TABLE_GENOTYPES,
-                  'genotypes',
-                  'generations.generationId = genotypes.generationId'
+    'genotypes',
+    'generations.generationId = genotypes.generationId'
   );
-}
+};
 
 /**
  * Left joins Plants by referencing to genotypes.genotypeId
@@ -148,10 +147,10 @@ QueryUtils.joinGenotypesDownwards = function (query) {
  */
 QueryUtils.joinPlantsDownwards = function (query) {
   query.left_join(CONSTANTS.TABLE_PLANTS,
-                  'plants',
-                  'genotypes.genotypeId = plants.genotypeId'
+    'plants',
+    'genotypes.genotypeId = plants.genotypeId'
   );
-}
+};
 
 /**
  * Sets fields to select for squel query object.
@@ -168,7 +167,6 @@ QueryUtils.joinPlantsDownwards = function (query) {
  *        Array of attributes a user wants to have.
  */
 QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
-
   let attributesToSelect;
   if(_.isEmpty(criteriaAttributes)) {
     // if criteriaAttributes is empty, just select all allowedAttributes
@@ -193,7 +191,7 @@ QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
       );
     }
   });
-}
+};
 
 /**
  * Takes an squel query object and sets limit() and offset() depending on the
@@ -213,7 +211,7 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
   let limit = criteria.limit || 10;
   let offset = criteria.offset || 0;
   query.limit(limit).offset(offset);
-}
+};
 
 /**
  * This function sets the where parts for our queries and handles
@@ -246,8 +244,8 @@ QueryUtils.setWhere = function(query, allowedFields, criteria) {
   let table;
   _.each(criteria.where, function(fieldValue, field) {
     if(_.indexOf(allowedFields, field) === -1) return;
-    logger.silly('criteria.where field/fieldValue:', field, fieldValue);
 
+    logger.silly('criteria.where field/fieldValue:', field, fieldValue);
     table = QueryUtils.getTableOfField(field);
 
     // 42 == 42 or 'somestring' == 'somestring'
@@ -264,9 +262,8 @@ QueryUtils.setWhere = function(query, allowedFields, criteria) {
       // eg: where : { generationParents: [1,2]}
       // make sure generation has all those parents and no more. [1,2] == [1,2]
       if(_.isArray(fieldValue)) {
-        let where = "";
+        let where = '';
         _(fieldValue).map(_.toInteger).each(function(plantId, i) {
-          console.log(plantId);
           where = where + 'generation_parents.plantId = ?' + (i < fieldValue.length-1 ? ' OR ' : '');
         });
         logger.silly('Utils #setWhere() generationParents where:', where.toString());
@@ -280,10 +277,10 @@ QueryUtils.setWhere = function(query, allowedFields, criteria) {
       logger.debug('Utils #setWhere() subQuery for generation_parents:', subQuery.toString());
 
       // Only add subQuery if our fieldValue is somehow valid
-      if(isValid !== false) query.where(`'generations'.'generationId' IN (?)`, subQuery);
+      if(isValid !== false) query.where('\'generations\'.\'generationId\' IN (?)', subQuery);
     }
   });
-}
+};
 
 /**
  * Determines in which table this column is. This works because all column names
@@ -312,4 +309,4 @@ QueryUtils.getTableOfField = function (field) {
     throw new Error('cannot associate field with a table');
   }
   return table;
-}
+};

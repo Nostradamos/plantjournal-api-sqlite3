@@ -190,6 +190,6 @@ GenerationCreate.PLURAL = 'generations';
 GenerationCreate.DEFAULT_VALUES_ATTRIBUTES = {
   'generationParents': [],
   'generationDescription': ''
-}
+};
 
 module.exports = GenerationCreate;

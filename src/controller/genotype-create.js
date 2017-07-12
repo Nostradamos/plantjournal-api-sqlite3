@@ -1,9 +1,6 @@
 'use strict';
 
-const squel = require('squel');
-
 const CONSTANTS = require('../constants');
-const logger = require('../logger');
 const Utils = require('../utils');
 
 const GenericCreate = require('./generic-create');
@@ -74,7 +71,7 @@ GenotypeCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENOTYPE;
 GenotypeCreate.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_GENOTYPE]: '',
   [CONSTANTS.ATTR_NAME_GENOTYPE]: ''
-}
+};
 
 GenotypeCreate.PLURAL = CONSTANTS.PLURAL_GENOTYPE;
 
