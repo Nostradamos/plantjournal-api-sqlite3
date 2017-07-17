@@ -38,10 +38,10 @@ describe('Genotype()', function() {
         .should.be.rejectedWith('No criteria object passed');
     });
 
-    it('should delete genotype specified in criteria.where.generationId referenced plants', async function() {
+    it('should delete genotype specified in criteria.filter.generationId referenced plants', async function() {
       let deletedGeno = await pj.Genotype.delete(
         {
-          'where': {
+          'filter': {
             'genotypeId': 1
           }
         }

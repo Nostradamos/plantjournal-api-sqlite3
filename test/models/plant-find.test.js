@@ -213,8 +213,8 @@ describe('Plant()', function() {
       })
     });
 
-    it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant fields)', async function() {
-      let plants = await pj.Plant.find({'where': {'plantName': 'testPlant3'}, 'fields': ['plantId']});
+    it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant fields)', async function() {
+      let plants = await pj.Plant.find({'filter': {'plantName': 'testPlant3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
         'found': 1,
         'remaining': 0,
@@ -225,8 +225,8 @@ describe('Plant()', function() {
       })
     });
 
-    it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
-      let plants = await pj.Plant.find({'where': {'genotypeName': 'testGenotype3'}, 'fields': ['plantId']});
+    it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
+      let plants = await pj.Plant.find({'filter': {'genotypeName': 'testGenotype3'}, 'fields': ['plantId']});
       plants.should.deepEqual({
         'found': 2,
         'remaining': 0,
@@ -237,8 +237,8 @@ describe('Plant()', function() {
       });
     });
 
-    it('should only return plants where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
-      let plants = await pj.Plant.find({'where': {'generationParents': [1,2]}, 'fields': ['plantId', 'plantName', 'generationParents', 'generationName']});
+    it('should only return plants filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
+      let plants = await pj.Plant.find({'filter': {'generationParents': [1,2]}, 'fields': ['plantId', 'plantName', 'generationParents', 'generationName']});
       plants.should.deepEqual({
         'found': 2,
         'remaining': 0,

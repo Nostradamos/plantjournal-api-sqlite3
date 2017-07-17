@@ -38,10 +38,10 @@ describe('Plant()', function() {
         .should.be.rejectedWith('No criteria object passed');
     });
 
-    it('should delete plants specified in criteria.where.plantId', async function() {
+    it('should delete plants specified in criteria.filter.plantId', async function() {
       let deletedPlants = await pj.Plant.delete(
         {
-          'where': {
+          'filter': {
             'plantId': 1
           }
         }

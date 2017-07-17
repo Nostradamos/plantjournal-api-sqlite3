@@ -45,44 +45,44 @@ describe('QueryUtils', function() {
       q.toString().should.eql('SELECT * FROM test LIMIT 42');
     });
   });
-  describe('#setWhere()', function() {
+  describe('#applyFilter()', function() {
     let q;
     beforeEach(function() {
       q = squel.select().from('test');
     });
 
-    it('should not do anything if options.where is not an plainObject', function() {
-      QueryUtils.setWhere(q, [], {});
+    it('should not do anything if options.filter is not an plainObject', function() {
+      QueryUtils.applyFilter(q, [], {});
       q.toString().should.eql('SELECT * FROM test');
     });
 
-    it('should set WHERE (translated)field = fieldValue if options.where[field] = fieldValue is an integer and correctly translate field to database.databasefield', function() {
-      QueryUtils.setWhere(q, ['familyId'], {where: {'familyId': 42}});
+    it('should set WHERE (translated)field = fieldValue if options.filter[field] = fieldValue is an integer and correctly translate field to database.databasefield', function() {
+      QueryUtils.applyFilter(q, ['familyId'], {filter: {'familyId': 42}});
       q.toString().should.eql(`SELECT * FROM test WHERE ('families'.'familyId' = 42)`);
     });
 
-    it('should set WHERE (translated)field = "fieldValue" if options.where[field] = fieldValue is a string', function() {
-      QueryUtils.setWhere(q, ['generationName'], {where: {'generationName': 'testGenerationName'}});
+    it('should set WHERE (translated)field = "fieldValue" if options.filter[field] = fieldValue is a string', function() {
+      QueryUtils.applyFilter(q, ['generationName'], {filter: {'generationName': 'testGenerationName'}});
       q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationName' = 'testGenerationName')`);
     });
 
     it('should not set WHERE if field is not in allowedFields', function() {
-      QueryUtils.setWhere(q, [], {where: {'generationName': 'testGenerationName', 'generationParents': [1,2]}});
+      QueryUtils.applyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}});
       q.toString().should.eql('SELECT * FROM test');
     });
 
-    it('should set WHERE generationId IN (SELECT generations.generationId...WHERE plantId=parentIdA OR plantId=parentIdB...HAVING count(plantId)=2) if options.where.generationParents = [parentIdA, parentIdB] is an array', function() {
-      QueryUtils.setWhere(q, ['generationParents'], {where: {'generationParents': [42,43]}});
+    it('should set WHERE generationId IN (SELECT generations.generationId...WHERE plantId=parentIdA OR plantId=parentIdB...HAVING count(plantId)=2) if options.filter.generationParents = [parentIdA, parentIdB] is an array', function() {
+      QueryUtils.applyFilter(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
       q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN ((SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE (generation_parents.plantId = 42 OR generation_parents.plantId = 43) GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) = 2))))`);
     });
 
-    it('should do nothing if options.where key is valid but value is something we don\'t know how to handle (for field !== generationParents)', function() {
-      QueryUtils.setWhere(q, ['generationName'], {where: {'generationName': function(){}}});
+    it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field !== generationParents)', function() {
+      QueryUtils.applyFilter(q, ['generationName'], {filter: {'generationName': function(){}}});
       q.toString().should.eql(`SELECT * FROM test`);
     });
 
-    it('should do nothing if options.where key is valid but value is something we don\'t know how to handle (for field === generationParents)', function() {
-      QueryUtils.setWhere(q, ['generationParents'], {where: {'generationParents': function(){}}});
+    it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field === generationParents)', function() {
+      QueryUtils.applyFilter(q, ['generationParents'], {filter: {'generationParents': function(){}}});
       q.toString().should.eql(`SELECT * FROM test`);
     });
   });

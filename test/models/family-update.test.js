@@ -43,7 +43,7 @@ describe('Family()', function() {
     });
 
     it('should change familyName for testFmily2 in database and return the familyId', async function() {
-      let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'where': {'familyId': 2}});
+      let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'filter': {'familyId': 2}});
       updatedFamilies.should.deepEqual([2]);
 
       let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
@@ -57,7 +57,7 @@ describe('Family()', function() {
 
     it('should update modifiedAt Field in database', async function() {
       let currentTimestamp = Utils.getUnixTimestampUTC();
-      let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'where': {'familyId': 2}});
+      let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'filter': {'familyId': 2}});
 
       let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
       (rowsFam[0].familyModifiedAt >= currentTimestamp).should.be.true();
@@ -67,7 +67,7 @@ describe('Family()', function() {
     it('should not be possible to manually change familyModifiedAt', async function() {
       let updatedFamilies = await pj.Family.update(
         {'familyModifiedAt': 1},
-        {'where': {'familyId': 2}}
+        {'filter': {'familyId': 2}}
       );
 
       updatedFamilies.length.should.eql(0);
@@ -79,7 +79,7 @@ describe('Family()', function() {
     it('should not be possible to manually change familyCreatedAt', async function() {
       let updatedFamilies = await pj.Family.update(
         {'familyCreatedAt': 1},
-        {'where': {'familyId': 2}}
+        {'filter': {'familyId': 2}}
       );
 
       updatedFamilies.length.should.eql(0);
@@ -90,7 +90,7 @@ describe('Family()', function() {
 
 
     it('should ignore unknown update keys and not throw an error', async function() {
-      await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'where': {'familyId': 2}});
+      await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'filter': {'familyId': 2}});
     });
   });
 });

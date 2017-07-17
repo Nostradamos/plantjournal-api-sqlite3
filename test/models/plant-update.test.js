@@ -53,7 +53,7 @@ describe('Plant()', function() {
 
     it('should update plant in database and return an array containing the updated generationId', async function() {
       let updatedGen = await pj.Plant
-        .update({'plantName': 'F1Geno1Plant1Updated'}, {'where': {'plantId': 1}});
+        .update({'plantName': 'F1Geno1Plant1Updated'}, {'filter': {'plantId': 1}});
 
       updatedGen.should.eql([1]);
 
@@ -100,21 +100,21 @@ describe('Plant()', function() {
 
     it('should also be possible to find multiple plant to update based on family fields', async function() {
       let updatedPlant = await pj.Plant
-        .update({'plantName': 'NoGoodPlantName'}, {'where': {'familyId': 1}});
+        .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}});
 
       updatedPlant.should.eql([1,2,3,4]);
     });
 
     it('should also be possible to find multiple plants to update based on generation fields', async function() {
       let updatedPlant = await pj.Plant
-        .update({'plantName': 'NoGoodPlantName'}, {'where': {'generationId': 1}});
+        .update({'plantName': 'NoGoodPlantName'}, {'filter': {'generationId': 1}});
 
       updatedPlant.should.eql([1,2,3]);
     });
 
     it('should also be possible to limit/offset plant to update when found multiple', async function() {
       let updatedPlant = await pj.Plant
-        .update({'plantName': 'NoGoodPlantName'}, {'where': {'familyId': 1}, 'offset': 2, 'limit': 2});
+        .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}, 'offset': 2, 'limit': 2});
 
       updatedPlant.should.eql([3,4]);
     });
@@ -122,7 +122,7 @@ describe('Plant()', function() {
     it('should not be possible to manually change plantModifiedAt', async function() {
       let updatedPlant = await pj.Plant.update(
         {'plantModifiedAt': 1},
-        {'where': {'plantId': 1}}
+        {'filter': {'plantId': 1}}
       );
 
       updatedPlant.length.should.eql(0);
@@ -136,7 +136,7 @@ describe('Plant()', function() {
     it('should not be possible to manually change plantCreatedAt', async function() {
       let updatedPlant = await pj.Plant.update(
         {'plantCreatedAt': 1},
-        {'where': {'plantId': 1}}
+        {'filter': {'plantId': 1}}
       );
 
       updatedPlant.length.should.eql(0);
@@ -151,7 +151,7 @@ describe('Plant()', function() {
     it('should be possible to update genotypeId', async function() {
       let updatedPlant = await pj.Plant.update(
         {'genotypeId': 3},
-        {'where': {'plantId': 1}}
+        {'filter': {'plantId': 1}}
       );
 
       updatedPlant.should.eql([1]);
@@ -166,7 +166,7 @@ describe('Plant()', function() {
     it('should throw error if genotypeId to update does not reference existing genotype', async function() {
       await pj.Plant.update(
         {'genotypeId': 43},
-        {'where': {'plantId': 1}}
+        {'filter': {'plantId': 1}}
       ).should.be.rejectedWith('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
 
     });
@@ -174,7 +174,7 @@ describe('Plant()', function() {
     it('should be possible to update plantClonedFrom', async function() {
       let updatedPlant = await pj.Plant.update(
         {'plantClonedFrom': 4},
-        {'where': {'plantId': 2}}
+        {'filter': {'plantId': 2}}
       );
 
       updatedPlant.should.eql([2]);
@@ -189,7 +189,7 @@ describe('Plant()', function() {
     it('should throw error if plantClonedFrom does not reference existing plant', async function() {
       await pj.Plant.update(
         {'plantClonedFrom': 1337},
-        {'where': {'plantId': 2}}
+        {'filter': {'plantId': 2}}
       ).should.be.rejectedWith('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
     });
   });

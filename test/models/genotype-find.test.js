@@ -174,11 +174,11 @@ describe('Genotype()', function() {
       });
     });
 
-    it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype fields)', async function() {
+    it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype fields)', async function() {
       let genotypes = await pj.Genotype.find(
         {
           'fields': ['genotypeName'],
-          'where': {
+          'filter': {
             'genotypeId': 2
           }
         }
@@ -197,10 +197,10 @@ describe('Genotype()', function() {
       });
     });
 
-    it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
+    it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
       let genotypes = await pj.Genotype.find({
         'fields': ['genotypeName'],
-        'where': {
+        'filter': {
           'genotypeName': 'testGenotype3'
         }
       });
@@ -218,10 +218,10 @@ describe('Genotype()', function() {
       });
     });
 
-    it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family fields)', async function() {
+    it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family fields)', async function() {
       let genotypes = await pj.Genotype.find({
         'fields': ['genotypeName'],
-        'where': {
+        'filter': {
           'familyName': 'testFamily1'
         }
       });
@@ -245,11 +245,11 @@ describe('Genotype()', function() {
       });
     });
 
-    it('should only return genotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async function() {
+    it('should only return genotypes filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
       let genotypes = await pj.Genotype.find(
         {
           'fields': ['generationParents', 'generationName', 'genotypeName'],
-          'where': {'generationParents': [1,2]}
+          'filter': {'generationParents': [1,2]}
         }
       );
       genotypes.should.deepEqual(

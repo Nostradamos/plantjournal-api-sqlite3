@@ -37,10 +37,10 @@ describe('Generation()', function() {
         .should.be.rejectedWith('No criteria object passed');
     });
 
-    it('should delete generation specified in criteria.where.generationId and downwards referenced genotypes/plants', async function() {
+    it('should delete generation specified in criteria.filter.generationId and downwards referenced genotypes/plants', async function() {
       let deletedGen = await pj.Generation.delete(
         {
-          'where': {
+          'filter': {
             'generationId': 1
           }
         }

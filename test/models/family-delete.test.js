@@ -37,10 +37,10 @@ describe('Family()', function() {
         .should.be.rejectedWith('No criteria object passed');
     });
 
-    it('should delete specified family in criteria.where.familyId and return the id', async function() {
+    it('should delete specified family in criteria.filter.familyId and return the id', async function() {
       let deletedFam = await pj.Family.delete(
         {
-          'where': {
+          'filter': {
             'familyId': 1
           }
         }

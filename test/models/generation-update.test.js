@@ -47,7 +47,7 @@ describe('Generation()', function() {
 
     it('should update generation in database and return an array containing the updated generationId', async function() {
       let updatedGen = await pj.Generation
-        .update({'generationName': 'F1Updated'}, {'where': {'generationId': 1}});
+        .update({'generationName': 'F1Updated'}, {'filter': {'generationId': 1}});
 
       updatedGen.should.eql([1]);
 
@@ -74,14 +74,14 @@ describe('Generation()', function() {
 
     it('should also be possible to find multiple generations to update based on family fields', async function() {
       let updatedGen = await pj.Generation
-        .update({'generationName': 'NoGoodGenName'}, {'where': {'familyId': 2}});
+        .update({'generationName': 'NoGoodGenName'}, {'filter': {'familyId': 2}});
 
       updatedGen.should.eql([3,4]);
     });
 
     it('should also be possible to limit/offset generations to update when found multiple', async function() {
       let updatedGen = await pj.Generation
-        .update({'generationName': 'NoGoodGenName'}, {'where': {'familyId': 1}, 'offset': 1});
+        .update({'generationName': 'NoGoodGenName'}, {'filter': {'familyId': 1}, 'offset': 1});
 
       updatedGen.should.eql([2]);
     });
@@ -89,7 +89,7 @@ describe('Generation()', function() {
     it('should not be possible to manually change generationModifiedAt', async function() {
       let updatedGenerations = await pj.Generation.update(
         {'generationModifiedAt': 1},
-        {'where': {'generationId': 1}}
+        {'filter': {'generationId': 1}}
       );
 
       updatedGenerations.length.should.eql(0);
@@ -103,7 +103,7 @@ describe('Generation()', function() {
     it('should not be possible to manually change generationCreatedAt', async function() {
       let updatedGenerations = await pj.Generation.update(
         {'generationCreatedAt': 1},
-        {'where': {'generationId': 1}}
+        {'filter': {'generationId': 1}}
       );
 
       updatedGenerations.length.should.eql(0);
@@ -118,14 +118,14 @@ describe('Generation()', function() {
     it('should throw error if familyId to update is invalid', async function() {
       await pj.Generation.update(
         {'familyId': 42},
-        {'where': {'generationId': 1}}
+        {'filter': {'generationId': 1}}
       ).should.be.rejectedWith('update.familyId does not reference an existing Family');
     });
 
     it('should update familyId if not invalid', async function() {
       let updatedGenerations = await pj.Generation.update(
         {'familyId': 2},
-        {'where': {'generationId': 1}}
+        {'filter': {'generationId': 1}}
       );
 
       updatedGenerations.should.eql([1]);
@@ -141,7 +141,7 @@ describe('Generation()', function() {
     it('should be possible to update generationParents', async function() {
       let updatedGenerations = await pj.Generation.update(
         {'generationParents': [1, 2]},
-        {'where': {'generationId': 2}}
+        {'filter': {'generationId': 2}}
       );
 
       updatedGenerations.should.eql([2]);
@@ -161,7 +161,7 @@ describe('Generation()', function() {
     it('should throw error and rollback if generationParents are invalid', async function() {
       let updatedGenerations = await pj.Generation.update(
         {'generationParents': [5,6]},
-        {'where': {'generationId': 4}}
+        {'filter': {'generationId': 4}}
       ).should.be.rejectedWith('update.generationParents does not reference to existing Plants. At least one reference is invalid.');
 
       let rowsParents = await sqlite.all(
