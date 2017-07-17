@@ -99,7 +99,7 @@ Generation.find = async function(criteria) {
  * @return {Object} returnGenerationDelete
  *         Object containing info about all deleted records from the different
  *         models.
- *         Not all child arrays have to be set if no related model records where
+ *         Not all child arrays have to be set if no related model records were
  *         found.
  * @return {GenerationId[]} returnGenerationDelete.generations
  *         Array containing all deleted generation ids.

@@ -8,14 +8,14 @@ const FamilyUpdate = require('../controller/family-update');
 /**
  * @typedef {Object} ReturnFind
  *          Object containing all information about this find request.
- *          This Object contains information about how many families where
- *          found in total, how many are left and which families where found.
+ *          This Object contains information about how many families were
+ *          found in total, how many are left and which families were found.
  *          It also holds information about the various families like
  *          the familyName, familyCreatedAt...
  * @property {number} ReturnFind.count
- *         How many families where found in total. If you don't search for
+ *         How many families were found in total. If you don't search for
  *         specific families, this will be the amount of all families we know.
- *         Otherwise how many families where found matching that search. Not all
+ *         Otherwise how many families were found matching that search. Not all
  *         of them have to be returned by now, but with offset/limit you could
  *         get all of them. Useful for paging.
  * @property {number} ReturnFind.remaining
@@ -51,10 +51,10 @@ const FamilyUpdate = require('../controller/family-update');
  * @typedef {Object} Criteria
  * @property  {String[]} [criteria.fields]
  *         Define which fields you want to return. By default all available.
- * @property  {Object} [criteria.where]
- *         See Utils.setWhere how to use this. Small example:
- *         where: {familyId: [1,2,3]} => where familyId is either 1,2 or 3
- *         where: {familyName: 'TestFamily2'} => where familyName is TestFamily2
+ * @property  {Object} [criteria.filter]
+ *         See Utils.applyFilter how to use this. Small example:
+ *         filter: {familyId: [1,2,3]} => filter familyId is either 1,2 or 3
+ *         filter: {familyName: 'TestFamily2'} => filter familyName is TestFamily2
  *         Queryable Fields: familyId, familyName
  * @property  {integer} [criteria.limit=10]
  *         Limit how many record should we search for (and return).

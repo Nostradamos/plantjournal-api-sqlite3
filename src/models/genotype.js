@@ -93,7 +93,7 @@ Genotype.find = async function(criteria) {
  * @return {Object} returnGenotypeDelete
  *         Object containing info about all deleted records from the different
  *         models.
- *         Not all child arrays have to be set if no related model records where
+ *         Not all child arrays have to be set if no related model records were
  *         found.
  * @return {GenotypeId[]} returnGenotypeDelete.genotypes
  *         Array containing all deleted genotye ids.
