@@ -160,5 +160,5 @@ Plant.delete = async function(criteria) {
  *          Array of updated plantIds. Empty if no plants got updated.
  */
 Plant.update = async function(update, criteria) {
-  return await PlantUpdate.update(update, criteria);
+	return await PlantUpdate.update(update, criteria);
 };

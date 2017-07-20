@@ -33,7 +33,7 @@ class GenericDelete {
    * @param  {string[]} [criteria.fields]
    *         Specify the fields to query and return. Eg: [familyName,
    *         generationName]
-   * @param  {object} [criteria.where]
+   * @param  {object} [criteria.filter]
    *         Object which contains
    * @param  {integer} [criteria.offset]
    *         Skip the first x results
@@ -117,7 +117,7 @@ class GenericDelete {
   }
 
   /**
-   * Applies {@link QueryUtils.setWhere} to context.queryRelated. Normally
+   * Applies {@link QueryUtils.applyFilter} to context.queryRelated. Normally
    * you shouldn't have to overwrite this, to change the queryable
    * fields simply set GenericDelete.ATTRIBUTES_SEARCHABLE.
    * @param  {object} context
@@ -126,7 +126,7 @@ class GenericDelete {
    *         Criteria object passed to delete()
    */
   static setQueryRelatedWhere(context, criteria) {
-    QueryUtils.setWhere(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
+    QueryUtils.applyFilter(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
   }
 
   /**
@@ -200,14 +200,14 @@ class GenericDelete {
   }
 
   /**
-   * Set where for queryDelete. Normally which entry ids
+   * Set filter for queryDelete. Normally which entry ids
    * should get deleted.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryDeleteWhere(context, criteria) {
+  static setQueryDeleteFilter(context, criteria) {
   }
 
   /**

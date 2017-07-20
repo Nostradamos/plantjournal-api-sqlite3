@@ -214,7 +214,7 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
 };
 
 /**
- * This function sets the where parts for our queries and handles
+ * This function sets the filter parts for our queries and handles
  * many special cases. Mutates query.
  * @todo Add arrays of integers/strings to all fields not only parents.
  *       Add $contains, add $like, add $gt, $lt, $gte, $lte, $startswith, $endswith
@@ -225,27 +225,27 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
  *         An array of allowed field names
  * @param  {Object} criteria
  *         criteria object which gets passed to update/delete/find functions.
- *         We only use the criteria.where part, we ignore everything else.
- * @param  {Object.<String, Object>} [criteria.where]
+ *         We only use the criteria.filter part, we ignore everything else.
+ * @param  {Object.<String, Object>} [criteria.filter]
  *         This object holds all the control info for this function, not needed,
  *         but if you want this function to do a thing, this is needed.
  *         The key element has to be inside allowedFields, Otherwise it will
  *         get skipped. The Value can be a String, an integer or an array of
  *         strings/integers if you want that the value matches exactly.
- *         Eg: {where: {'generationId': 1}} => generationId has to be 1
- *             {where: {'generationParents': [1,2]}} => generationParents have
+ *         Eg: {filter: {'generationId': 1}} => generationId has to be 1
+ *             {filter: {'generationParents': [1,2]}} => generationParents have
  *                                                      to be 1 and 2.
- *             {where: {'plantSex': 'male'}} => only male plants
+ *             {filter: {'plantSex': 'male'}} => only male plants
  */
-QueryUtils.setWhere = function(query, allowedFields, criteria) {
-  // if criteria.where is not set/an plain object, we can stop here
-  if(!_.isPlainObject(criteria.where)) return;
+QueryUtils.applyFilter = function(query, allowedFields, criteria) {
+  // if criteria.filter is not set/an plain object, we can stop here
+  if(!_.isPlainObject(criteria.filter)) return;
 
   let table;
-  _.each(criteria.where, function(fieldValue, field) {
+  _.each(criteria.filter, function(fieldValue, field) {
     if(_.indexOf(allowedFields, field) === -1) return;
 
-    logger.silly('criteria.where field/fieldValue:', field, fieldValue);
+    logger.silly('criteria.filter field/fieldValue:', field, fieldValue);
     table = QueryUtils.getTableOfField(field);
 
     // 42 == 42 or 'somestring' == 'somestring'
@@ -259,22 +259,22 @@ QueryUtils.setWhere = function(query, allowedFields, criteria) {
         .field('generation_parents.generationId')
         .group('generation_parents.generationId');
       let isValid = true;
-      // eg: where : { generationParents: [1,2]}
+      // eg: filter : { generationParents: [1,2]}
       // make sure generation has all those parents and no more. [1,2] == [1,2]
       if(_.isArray(fieldValue)) {
-        let where = '';
+        let filter = '';
         _(fieldValue).map(_.toInteger).each(function(plantId, i) {
-          where = where + 'generation_parents.plantId = ?' + (i < fieldValue.length-1 ? ' OR ' : '');
+          filter = filter + 'generation_parents.plantId = ?' + (i < fieldValue.length-1 ? ' OR ' : '');
         });
-        logger.silly('Utils #setWhere() generationParents where:', where.toString());
-        subQuery.where.apply(this, _.concat([where], fieldValue));
+        logger.silly('Utils #setFilter() generationParents filter:', filter.toString());
+        subQuery.where.apply(this, _.concat([filter], fieldValue));
         subQuery.having('count(generation_parents.plantId) = ?', fieldValue.length);
 
       }else {
         isValid = false;
       }
 
-      logger.debug('Utils #setWhere() subQuery for generation_parents:', subQuery.toString());
+      logger.debug('Utils #setFilter() subQuery for generation_parents:', subQuery.toString());
 
       // Only add subQuery if our fieldValue is somehow valid
       if(isValid !== false) query.where('\'generations\'.\'generationId\' IN (?)', subQuery);

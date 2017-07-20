@@ -29,7 +29,7 @@ class GenericFind {
    * @param  {string[]} [criteria.fields]
    *         Specify the fields to query and return.
    *         Eg: [familyName, generationName]
-   * @param  {object} [criteria.where]
+   * @param  {object} [criteria.filter]
    *         Object which contains
    * @param  {integer} [criteria.offset]
    *         Skip the first x results
@@ -130,7 +130,7 @@ class GenericFind {
   }
 
   /**
-   * This method just applies {@link QueryUtils.setWhere} to the context.queryWhere query.
+   * This method just applies {@link QueryUtils.applyFilter} to the context.queryWhere query.
    * Normally you shouldn't overwrite this, you can use this.ATTRIBUTES_SEARCHABLE to
    * adjust the behaviour.
    * @param  {object} context
@@ -139,7 +139,7 @@ class GenericFind {
    *         Criteria object passed to find()
    */
   static setQueryWhere(context, criteria) {
-    QueryUtils.setWhere(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
+    QueryUtils.applyFilter(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
   }
 
   /**

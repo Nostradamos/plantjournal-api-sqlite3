@@ -125,7 +125,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryFindWhere(context, update, criteria) {
-    QueryUtils.setWhere(context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria);
+    QueryUtils.applyFilter(context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria);
   }
 
   /**
