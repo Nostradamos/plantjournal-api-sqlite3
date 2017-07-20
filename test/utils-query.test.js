@@ -42,7 +42,7 @@ describe('QueryUtils', function() {
     it('should set offset(0) if options.offset is not set', function() {
       let q = squel.select().from('test');
       QueryUtils.setLimitAndOffset(q, {'limit': 42});
-      q.toString().should.eql('SELECT * FROM test LIMIT 42');
+      q.toString().should.eql('SELECT * FROM test LIMIT 42 OFFSET 0');
     });
   });
   describe('#applyFilter()', function() {
