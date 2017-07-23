@@ -23,7 +23,7 @@ const QueryUtils = require('../utils-query');
  * @private
  */
 class GenericDelete {
-  /**
+    /**
    * This method executes the whole delete process. You can define
    * which entries should get deleted with the criteria object.
    * This method should get called from you api.
@@ -44,38 +44,38 @@ class GenericDelete {
    * @return {Object}
    *         Array of ids from deleted entries.
    */
-  static async delete(criteria) {
-    Utils.throwErrorIfNotConnected();
-    if(_.isNil(criteria)) throw Error('No criteria object passed');
-    logger.debug(this.name, ' #delete() criteria:', criteria);
-    let context = {};
+    static async delete(criteria) {
+        Utils.throwErrorIfNotConnected();
+        if(_.isNil(criteria)) throw Error('No criteria object passed');
+        logger.debug(this.name, ' #delete() criteria:', criteria);
+        let context = {};
 
-    this.initQueryRelated(context, criteria);
-    this.setQueryRelatedJoin(context, criteria);
-    this.setQueryRelatedFields(context, criteria);
-    this.setQueryRelatedWhere(context, criteria);
-    this.setQueryRelatedLimitAndOffset(context, criteria);
-    this.stringifyQueryRelated(context, criteria);
+        this.initQueryRelated(context, criteria);
+        this.setQueryRelatedJoin(context, criteria);
+        this.setQueryRelatedFields(context, criteria);
+        this.setQueryRelatedWhere(context, criteria);
+        this.setQueryRelatedLimitAndOffset(context, criteria);
+        this.stringifyQueryRelated(context, criteria);
 
-    await this.executeQueryRelated(context, criteria);
+        await this.executeQueryRelated(context, criteria);
 
-    this.extractIdsToDelete(context, criteria);
+        this.extractIdsToDelete(context, criteria);
 
-    this.initQueryDelete(context, criteria);
-    this.setQueryDeleteWhere(context, criteria);
-    this.stringifyQueryDelete(context, criteria);
+        this.initQueryDelete(context, criteria);
+        this.setQueryDeleteWhere(context, criteria);
+        this.stringifyQueryDelete(context, criteria);
 
-    await this.executeQueryDelete(context, criteria);
+        await this.executeQueryDelete(context, criteria);
 
-    let returnObject = {};
-    this.buildReturnObject(returnObject, context, criteria);
-    logger.log(this.name, '#delete() returnObject:', returnObject);
+        let returnObject = {};
+        this.buildReturnObject(returnObject, context, criteria);
+        logger.log(this.name, '#delete() returnObject:', returnObject);
 
-    return returnObject;
+        return returnObject;
 
-  }
+    }
 
-  /**
+    /**
    * Inits the queryRelated query by creating a new squel query builder
    * object. To change the table from which should get selected, simply
    * overwrite/set GenericDelete.TABLE.
@@ -85,24 +85,24 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static initQueryRelated(context, criteria) {
-    context.queryRelated = squel
-      .select()
-      .from(this.TABLE, this.TABLE);
-  }
+    static initQueryRelated(context, criteria) {
+        context.queryRelated = squel
+            .select()
+            .from(this.TABLE, this.TABLE);
+    }
 
-  /**
+    /**
    * In case you want to join related tables, overwrite this function.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryRelatedJoin(context, criteria) {
+    static setQueryRelatedJoin(context, criteria) {
 
-  }
+    }
 
-  /**
+    /**
    * Overwrite this method to set all fields you want to select for
    * the queryRelated query. Normally this should be all id fields which
    * reference other entries, which should get deleted too, or get deleted
@@ -112,11 +112,11 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryRelatedFields(context, criteria) {
+    static setQueryRelatedFields(context, criteria) {
 
-  }
+    }
 
-  /**
+    /**
    * Applies {@link QueryUtils.applyFilter} to context.queryRelated. Normally
    * you shouldn't have to overwrite this, to change the queryable
    * fields simply set GenericDelete.ATTRIBUTES_SEARCHABLE.
@@ -125,11 +125,11 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryRelatedWhere(context, criteria) {
-    QueryUtils.applyFilter(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
-  }
+    static setQueryRelatedWhere(context, criteria) {
+        QueryUtils.applyFilter(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
+    }
 
-  /**
+    /**
    * Sets limit and offset for context.queryRelated. No need to overwrite
    * normally.
    * @param  {object} context
@@ -137,11 +137,11 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryRelatedLimitAndOffset(context, criteria) {
-    QueryUtils.setLimitAndOffset(context.queryRelated, criteria);
-  }
+    static setQueryRelatedLimitAndOffset(context, criteria) {
+        QueryUtils.setLimitAndOffset(context.queryRelated, criteria);
+    }
 
-  /**
+    /**
    * Builds the query string from the query builder and logs the
    * query. No need to overwrite.
    * @param  {object} context
@@ -149,12 +149,12 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static stringifyQueryRelated(context, criteria) {
-    context.queryRelated = context.queryRelated.toString();
-    logger.debug(this.name, '#delete() queryRelated:', context.queryRelated);
-  }
+    static stringifyQueryRelated(context, criteria) {
+        context.queryRelated = context.queryRelated.toString();
+        logger.debug(this.name, '#delete() queryRelated:', context.queryRelated);
+    }
 
-  /**
+    /**
    * Executes queryRelated asynchronously. No need to overwrite.
    * All selected rows will be in context.rowsRelated
    * @async
@@ -166,12 +166,12 @@ class GenericDelete {
    *         All sqlite errors, we don't catch anything. Overwrite method
    *         and execute super method in try/catch block to catch errors.
    */
-  static async executeQueryRelated(context, criteria) {
-    context.rowsRelated = await sqlite.all(context.queryRelated);
-    logger.debug(this.name, '#delete() rowsRelated:', context.rowsRelated);
-  }
+    static async executeQueryRelated(context, criteria) {
+        context.rowsRelated = await sqlite.all(context.queryRelated);
+        logger.debug(this.name, '#delete() rowsRelated:', context.rowsRelated);
+    }
 
-  /**
+    /**
    * To extract all the ids which get deleted (or should get deleted)
    * overwrite this function. Simply overwrite this method and iterate
    * over context.rowsRelated and extract needed information.
@@ -181,10 +181,10 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static extractIdsToDelete(context, criteria) {
-  }
+    static extractIdsToDelete(context, criteria) {
+    }
 
-  /**
+    /**
    * Init context.queryDelete squel query for the actual delete
    * query. No need to overwrite, simply change GenericDelete.TABLE
    * to the table name
@@ -193,13 +193,13 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static initQueryDelete(context, criteria) {
-    context.queryDelete = squel
-      .delete()
-      .from(this.TABLE);
-  }
+    static initQueryDelete(context, criteria) {
+        context.queryDelete = squel
+            .delete()
+            .from(this.TABLE);
+    }
 
-  /**
+    /**
    * Set filter for queryDelete. Normally which entry ids
    * should get deleted.
    * @param  {object} context
@@ -207,10 +207,10 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryDeleteFilter(context, criteria) {
-  }
+    static setQueryDeleteFilter(context, criteria) {
+    }
 
-  /**
+    /**
    * Stringifies queryDelete and logs the query string.
    * No need to overwrite.
    * @param  {object} context
@@ -218,12 +218,12 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static stringifyQueryDelete(context, criteria) {
-    context.queryDelete = context.queryDelete.toString();
-    logger.debug(this.name, '#delete() queryDelete:', context.queryDelete);
-  }
+    static stringifyQueryDelete(context, criteria) {
+        context.queryDelete = context.queryDelete.toString();
+        logger.debug(this.name, '#delete() queryDelete:', context.queryDelete);
+    }
 
-  /**
+    /**
    * Executes queryDelete and puts result into context.resultDelete.
    * Logs results too. No need to overwrite.
    * @param  {object} context
@@ -231,12 +231,12 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static async executeQueryDelete(context, criteria) {
-    context.resultDelete = await sqlite.get(context.queryDelete);
-    logger.debug(this.name, '#delete() resultDelete', context.resultDelete);
-  }
+    static async executeQueryDelete(context, criteria) {
+        context.resultDelete = await sqlite.get(context.queryDelete);
+        logger.debug(this.name, '#delete() resultDelete', context.resultDelete);
+    }
 
-  /**
+    /**
    * Add all properties you want to have in your returnObject here.
    * This should contain all ids for the different models which got
    * deleted.
@@ -248,9 +248,9 @@ class GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static async buildReturnObject(returnObject, context, criteria) {
+    static async buildReturnObject(returnObject, context, criteria) {
 
-  }
+    }
 
 
 }

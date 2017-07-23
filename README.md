@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/Nostradamos/plantjournal-api-sqlite.svg?branch=master)](https://travis-ci.org/Nostradamos/plantjournal-api-sqlite)
 [![dependencies Status](https://david-dm.org/Nostradamos/plantjournal/status.svg)](https://david-dm.org/Nostradamos/plantjournal) [![devDependencies Status](https://david-dm.org/Nostradamos/plantjournal-api-sqlite/dev-status.svg)](https://david-dm.org/Nostradamos/plantjournal?type=dev)
 
 plantjournal-api-sqlite
@@ -11,7 +10,6 @@ ToDo
 =====
 
 * Update api
-  - where => filter
   - fields => select or attributes
 * Add etag field, basically hash over all attributes with md5. Easy for create,
   bit harder for update. Needs overhaul of those two functions. Do or don't?!

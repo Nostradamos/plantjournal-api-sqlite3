@@ -164,7 +164,7 @@ QueryUtils.joinPlantsDownwards = function (query) {
  * @param {String[]} allowedAttributes
  *        Array of attributes which are allowed to select.
  * @param {String[]} criteriaAttributes
- *        Array of attributes a user wants to have.
+ *        Array of attributes a user wants to select.
  */
 QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
   let attributesToSelect;

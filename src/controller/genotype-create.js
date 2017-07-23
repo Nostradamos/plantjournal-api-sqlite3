@@ -17,7 +17,7 @@ const GenericCreate = require('./generic-create');
  */
 class GenotypeCreate extends GenericCreate {
 
-  /**
+    /**
    * We need to validate input and throw errors if we're
    * unhappy with it.
    * @param  {object} returnObject
@@ -26,13 +26,13 @@ class GenotypeCreate extends GenericCreate {
    *         internal context object in #create().
    * @throws {Error}
    */
-  static validateOptions(context, options) {
-    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
-    Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_GENERATION);
-    Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
-  }
+    static validateOptions(context, options) {
+        Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
+        Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_GENERATION);
+        Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
+    }
 
-  /**
+    /**
    * We want to catch foreign key error to custom throw error that genotype
    * reference failed.
    * @async
@@ -44,18 +44,18 @@ class GenotypeCreate extends GenericCreate {
    *         If generationId reference fails we will throw custom error,
    *         everything else should be a sqlite error.
    */
-  static async executeQuery(context, options) {
-    try {
-      await super.executeQuery(context, options);
-    }catch(err) {
-      // We only have one foreign key so we can safely assume, if a foreign key constraint
-      // fails, it's the generationId constraint.
-      if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
-        throw new Error('options.generationId does not reference an existing Generation');
-      }
-      throw err;
+    static async executeQuery(context, options) {
+        try {
+            await super.executeQuery(context, options);
+        }catch(err) {
+            // We only have one foreign key so we can safely assume, if a foreign key constraint
+            // fails, it's the generationId constraint.
+            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+                throw new Error('options.generationId does not reference an existing Generation');
+            }
+            throw err;
+        }
     }
-  }
 }
 
 GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPES;
@@ -69,8 +69,8 @@ GenotypeCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENOTYPE;
 GenotypeCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENOTYPE;
 
 GenotypeCreate.DEFAULT_VALUES_ATTRIBUTES = {
-  [CONSTANTS.ATTR_DESCRIPTION_GENOTYPE]: '',
-  [CONSTANTS.ATTR_NAME_GENOTYPE]: ''
+    [CONSTANTS.ATTR_DESCRIPTION_GENOTYPE]: '',
+    [CONSTANTS.ATTR_NAME_GENOTYPE]: ''
 };
 
 GenotypeCreate.PLURAL = CONSTANTS.PLURAL_GENOTYPE;

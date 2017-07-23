@@ -52,7 +52,7 @@ let Genotype = exports;
  *         only be one key, which is the id of the newly created genotype.
  */
 Genotype.create = async function(options) {
-  return await GenotypeCreate.create(options);
+    return await GenotypeCreate.create(options);
 };
 
 /**
@@ -74,7 +74,7 @@ Genotype.create = async function(options) {
  *         be set.
  */
 Genotype.find = async function(criteria) {
-  return await GenotypeFind.find(criteria);
+    return await GenotypeFind.find(criteria);
 };
 
 /**
@@ -101,7 +101,7 @@ Genotype.find = async function(criteria) {
  *         Array containing all deleted plant ids.
  */
 Genotype.delete = async function(criteria) {
-  return await GenotypeDelete.delete(criteria);
+    return await GenotypeDelete.delete(criteria);
 };
 
 /**
@@ -130,5 +130,5 @@ Genotype.delete = async function(criteria) {
  *          Array of updated genotypeIds. Empty if no genotypes got updated.
  */
 Genotype.update = async function(update, criteria) {
-  return await GenotypeUpdate.update(update, criteria);
+    return await GenotypeUpdate.update(update, criteria);
 };

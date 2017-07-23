@@ -7,15 +7,15 @@
     "test": "mocha ./test/*",
     "coverage": "nyc --reporter=html --reporter=text mocha ./test/*",
     "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs",
-    "lint": "eslint src/**/*"
+    "lint": "eslint src/**/* test/**/*"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^4.2.0",
-    "jsdoc": "https://github.com/jsdoc3/jsdoc.git",
+    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
     "mocha": "^3.2.0",
-    "nyc": "^11.0.2",
+    "nyc": "^11.1.0",
     "should": "^11.2.1"
   },
   "dependencies": {

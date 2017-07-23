@@ -15,34 +15,34 @@ const GenericUpdate = require('./generic-update');
  */
 class PlantUpdate extends GenericUpdate {
 
-  /**
+    /**
    * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of plant
    * work.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
    */
-  static setQueryFindJoin(context, update, criteria) {
-    QueryUtils.joinRelatedPlants(context.queryFind);
-  }
+    static setQueryFindJoin(context, update, criteria) {
+        QueryUtils.joinRelatedPlants(context.queryFind);
+    }
 
-  /**
+    /**
    * We need to catch sqlite constraint error and throw our
    * own error for this.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
    */
-  static async executeQueryUpdate(context, update, criteria) {
-    try {
-      await super.executeQueryUpdate(context, update, criteria);
-    } catch(err) {
-      if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
-        throw new Error('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
-      }
-      throw err;
+    static async executeQueryUpdate(context, update, criteria) {
+        try {
+            await super.executeQueryUpdate(context, update, criteria);
+        } catch(err) {
+            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+                throw new Error('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
+            }
+            throw err;
+        }
     }
-  }
 
 }
 

@@ -22,19 +22,19 @@ const GenericDelete = require('./generic-delete');
  */
 class GenerationDelete extends GenericDelete {
 
-  /**
+    /**
    * We need to join some tables, to know which ids we will delete.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryRelatedJoin(context, criteria) {
-    QueryUtils.joinGenotypesDownwards(context.queryRelated);
-    QueryUtils.joinPlantsDownwards(context.queryRelated);
-  }
+    static setQueryRelatedJoin(context, criteria) {
+        QueryUtils.joinGenotypesDownwards(context.queryRelated);
+        QueryUtils.joinPlantsDownwards(context.queryRelated);
+    }
 
-  /**
+    /**
    * We need to select all id fields because we want to know which ids
    * we will delete.
    * @param  {object} context
@@ -42,47 +42,47 @@ class GenerationDelete extends GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryRelatedFields(context, criteria) {
-    context.queryRelated
-      .field('generations.generationId')
-      .field('genotypes.genotypeId')
-      .field('plants.plantId');
-  }
+    static setQueryRelatedFields(context, criteria) {
+        context.queryRelated
+            .field('generations.generationId')
+            .field('genotypes.genotypeId')
+            .field('plants.plantId');
+    }
 
-  /**
+    /**
    * Extract the id fields from the rows and save them.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static extractIdsToDelete(context, criteria) {
+    static extractIdsToDelete(context, criteria) {
     // It's very possible that we have the same model id's multiple
     // times in our rows, therefore we use Set() which makes sure each
     // id is only once present in our datastructure.
-    context.generationIdsToDelete = new Set();
-    context.genotypeIdsToDelete = new Set();
-    context.plantIdsToDelete = new Set();
+        context.generationIdsToDelete = new Set();
+        context.genotypeIdsToDelete = new Set();
+        context.plantIdsToDelete = new Set();
 
-    _.each(context.rowsRelated, function(row) {
-      //   now we iterate over each row and add all ids to the matching
-      // context.xyzIdsToDelete. It's possible that we also add a null
-      // field, but we will take care of that later
-      context.generationIdsToDelete.add(row.generationId);
-      context.genotypeIdsToDelete.add(row.genotypeId);
-      context.plantIdsToDelete.add(row.plantId);
-    });
+        _.each(context.rowsRelated, function(row) {
+            //   now we iterate over each row and add all ids to the matching
+            // context.xyzIdsToDelete. It's possible that we also add a null
+            // field, but we will take care of that later
+            context.generationIdsToDelete.add(row.generationId);
+            context.genotypeIdsToDelete.add(row.genotypeId);
+            context.plantIdsToDelete.add(row.plantId);
+        });
 
-    context.generationIdsToDelete = Utils.filterSetNotNull(context.generationIdsToDelete);
-    context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);
-    context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
+        context.generationIdsToDelete = Utils.filterSetNotNull(context.generationIdsToDelete);
+        context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);
+        context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
 
-    logger.debug(this.name, '#delete() generationIdsToDelete:', context.generationIdsToDelete);
-    logger.debug(this.name, '#delete() genotypeIdsToDelete:', context.genotypeIdsToDelete);
-    logger.debug(this.name, '#delete() plantIdsToDelete:', context.plantIdsToDelete);
-  }
+        logger.debug(this.name, '#delete() generationIdsToDelete:', context.generationIdsToDelete);
+        logger.debug(this.name, '#delete() genotypeIdsToDelete:', context.genotypeIdsToDelete);
+        logger.debug(this.name, '#delete() plantIdsToDelete:', context.plantIdsToDelete);
+    }
 
-  /**
+    /**
    * For delete query, set which generationIds to delete. Genotypes & plants
    * will also get deleted, because of foreign keys and on delete cascade.
    * See {@link create-tables|src/create-tables}.
@@ -91,12 +91,12 @@ class GenerationDelete extends GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static setQueryDeleteWhere(context, criteria) {
-    context.queryDelete
-      .where('generations.generationId IN ?', context.generationIdsToDelete);
-  }
+    static setQueryDeleteWhere(context, criteria) {
+        context.queryDelete
+            .where('generations.generationId IN ?', context.generationIdsToDelete);
+    }
 
-  /**
+    /**
    * Build the return Object, just assign the array of ids as value and lower
    * cased model name as key to returnObject.
    * @param  {object} returnObject
@@ -107,11 +107,11 @@ class GenerationDelete extends GenericDelete {
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-  static buildReturnObject(returnObject, context, criteria) {
-    returnObject['generations'] = context.generationIdsToDelete;
-    returnObject['genotypes'] = context.genotypeIdsToDelete;
-    returnObject['plants'] = context.plantIdsToDelete;
-  }
+    static buildReturnObject(returnObject, context, criteria) {
+        returnObject['generations'] = context.generationIdsToDelete;
+        returnObject['genotypes'] = context.genotypeIdsToDelete;
+        returnObject['plants'] = context.plantIdsToDelete;
+    }
 }
 
 GenerationDelete.TABLE = CONSTANTS.TABLE_GENERATIONS;
