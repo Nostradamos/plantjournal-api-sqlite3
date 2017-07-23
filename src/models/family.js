@@ -49,8 +49,8 @@ const FamilyUpdate = require('../controller/family-update');
 
 /**
  * @typedef {Object} Criteria
- * @property  {String[]} [criteria.fields]
- *         Define which fields you want to return. By default all available.
+ * @property  {String[]} [criteria.attributes]
+ *         Define which attributes you want to return. By default all available.
  * @property  {Object} [criteria.filter]
  *         See Utils.applyFilter how to use this. Small example:
  *         filter: {familyId: [1,2,3]} => filter familyId is either 1,2 or 3
@@ -157,7 +157,7 @@ Family.delete = async function(criteria) {
 };
 
 /**
- * Finds families and updates fields based on the passed update Object.
+ * Finds families and updates attributes based on the passed update Object.
  * Sets familyUpdatedAt to current UTC Timestamp of all changed families.
  * @memberof plantJournal.Family
  * @async

@@ -35,7 +35,7 @@ class GenerationDelete extends GenericDelete {
     }
 
     /**
-   * We need to select all id fields because we want to know which ids
+   * We need to select all id attributes because we want to know which ids
    * we will delete.
    * @param  {object} context
    *         Internal context object
@@ -50,7 +50,7 @@ class GenerationDelete extends GenericDelete {
     }
 
     /**
-   * Extract the id fields from the rows and save them.
+   * Extract the id attributes from the rows and save them.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria

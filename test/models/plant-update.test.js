@@ -98,14 +98,14 @@ describe('Plant()', function() {
             );
         });
 
-        it('should also be possible to find multiple plant to update based on family fields', async function() {
+        it('should also be possible to find multiple plant to update based on family attributes', async function() {
             let updatedPlant = await pj.Plant
                 .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}});
 
             updatedPlant.should.eql([1,2,3,4]);
         });
 
-        it('should also be possible to find multiple plants to update based on generation fields', async function() {
+        it('should also be possible to find multiple plants to update based on generation attributes', async function() {
             let updatedPlant = await pj.Plant
                 .update({'plantName': 'NoGoodPlantName'}, {'filter': {'generationId': 1}});
 

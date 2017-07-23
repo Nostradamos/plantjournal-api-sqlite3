@@ -43,7 +43,7 @@ class GenerationUpdate extends GenericUpdate {
     // generationParents has to be in a different table, so leave it out
     // for the main update query
         context.queryUpdate.setFields(
-            _.omit(context.fieldsToUpdate, 'generationParents')
+            _.omit(context.attributesToUpdate, 'generationParents')
         );
     }
 
@@ -62,14 +62,14 @@ class GenerationUpdate extends GenericUpdate {
         logger.debug(this.name, '#update() queryDeleteOldParents:', context.queryDeleteOldParents);
 
         // Wa have to insert new parents, build query for this
-        let fieldsRows = [];
+        let attributesRows = [];
         _.each(update.generationParents, function(parentPlantId) {
             _.each(context.idsToUpdate, function(generationId) {
-                fieldsRows.push({parentId: null, generationId: generationId, plantId: parentPlantId});
+                attributesRows.push({parentId: null, generationId: generationId, plantId: parentPlantId});
             });
         });
         context.queryInsertNewParents = squel.insert().into(this.TABLE_PARENTS)
-            .setFieldsRows(fieldsRows)
+            .setFieldsRows(attributesRows)
             .toString();
     }
 
@@ -99,7 +99,7 @@ class GenerationUpdate extends GenericUpdate {
 
     /**
    * We have to modify the behaviour of execution because we have to also
-   * query TABLE_PARENTS if generationParents is in fieldsToUpdate. Besides
+   * query TABLE_PARENTS if generationParents is in attributesToUpdate. Besides
    * that we catch foreign key errors and throw our own error.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
@@ -107,7 +107,7 @@ class GenerationUpdate extends GenericUpdate {
    * @return {Promise}          [description]
    */
     static async executeQueryUpdate(context, update, criteria) {
-        if(_.has(context.fieldsToUpdate, 'generationParents')) {
+        if(_.has(context.attributesToUpdate, 'generationParents')) {
             this.initQueryUpdateParents(context, update, criteria);
             await this.executeQueryUpdateParents(context, update, criteria);
         }

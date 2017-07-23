@@ -72,7 +72,7 @@ describe('Generation()', function() {
             );
         });
 
-        it('should also be possible to find multiple generations to update based on family fields', async function() {
+        it('should also be possible to find multiple generations to update based on family attributes', async function() {
             let updatedGen = await pj.Generation
                 .update({'generationName': 'NoGoodGenName'}, {'filter': {'familyId': 2}});
 

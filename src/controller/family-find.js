@@ -24,7 +24,7 @@ class FamilyFind extends GenericFind {
    * We need to overwrite this method to, yeah,
    * build the returnObject. We basically iterate over
    * each row we get from database and add all family related
-   * fields to returnObject.families.
+   * attributes to returnObject.families.
    * @override
    * @param  {object} returnObject
    *         object which will get returned later from #find().

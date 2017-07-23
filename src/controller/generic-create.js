@@ -120,7 +120,7 @@ class GenericCreate {
     }
 
     /**
-   * Set createdAt and modifedAt fields to query.
+   * Set createdAt and modifedAt attributes to query.
    * Overwrite this if you have different query names or multiple queries.
    * For timestamp generation use ONCE Utils.getUnixTimestampUTC()
    * @param  {object} context

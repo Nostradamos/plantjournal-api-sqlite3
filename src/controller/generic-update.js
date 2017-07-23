@@ -39,11 +39,11 @@ class GenericUpdate {
 
         let context = {};
 
-        // First we pick fields to update. If nothing is to update,
+        // First we pick attributes to update. If nothing is to update,
         // we will return right away.
         this.pickFieldsToUpdate(context, update, criteria);
-        if(_.isEmpty(context.fieldsToUpdate)) {
-            logger.debug(this.name, '#update() fieldsToUpdate is empty, returning');
+        if(_.isEmpty(context.attributesToUpdate)) {
+            logger.debug(this.name, '#update() attributesToUpdate is empty, returning');
             return [];
         }
 
@@ -72,19 +72,19 @@ class GenericUpdate {
     }
 
     /**
-   * Picks all fields to update. This means only keys in update,
+   * Picks all attributes to update. This means only keys in update,
    * which are also in this.ATTRIBUTES_UPDATABLE will be copied into
-   * context.fieldsToUpdate. We do this at the beginning to return
+   * context.attributesToUpdate. We do this at the beginning to return
    * if nothing is to do.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
    */
     static pickFieldsToUpdate(context, update, criteria) {
-    // only take fields which are updatable and drop everything else
-        context.fieldsToUpdate = _.pick(update, this.ATTRIBUTES_UPDATABLE);
+    // only take attributes which are updatable and drop everything else
+        context.attributesToUpdate = _.pick(update, this.ATTRIBUTES_UPDATABLE);
 
-        logger.debug(this.name, '#update() fieldsToUpdate:', context.fieldsToUpdate);
+        logger.debug(this.name, '#update() attributesToUpdate:', context.attributesToUpdate);
 
     }
 
@@ -195,7 +195,7 @@ class GenericUpdate {
     }
 
     /**
-   * Sets fields for context.queryUpdate from update argument passed to
+   * Sets attributes for context.queryUpdate from update argument passed to
    * #update(). Ignores any key which is not in this.ATTRIBUTES_UPDATABLE.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
@@ -203,7 +203,7 @@ class GenericUpdate {
    */
     static setQueryUpdateFieldValues(context, update, criteria) {
         context.queryUpdate.setFields(
-            context.fieldsToUpdate
+            context.attributesToUpdate
         );
     }
 

@@ -30,8 +30,8 @@ class GenericDelete {
    * @async
    * @param  {object}  [criteria={}]
    *         Criterias for find
-   * @param  {string[]} [criteria.fields]
-   *         Specify the fields to query and return. Eg: [familyName,
+   * @param  {string[]} [criteria.attributes]
+   *         Specify the attributes to query and return. Eg: [familyName,
    *         generationName]
    * @param  {object} [criteria.filter]
    *         Object which contains
@@ -103,8 +103,8 @@ class GenericDelete {
     }
 
     /**
-   * Overwrite this method to set all fields you want to select for
-   * the queryRelated query. Normally this should be all id fields which
+   * Overwrite this method to set all attributes you want to select for
+   * the queryRelated query. Normally this should be all id attributes which
    * reference other entries, which should get deleted too, or get deleted
    * because the table cascade (ON DELETE CASCADE).
    * @param  {object} context
@@ -119,7 +119,7 @@ class GenericDelete {
     /**
    * Applies {@link QueryUtils.applyFilter} to context.queryRelated. Normally
    * you shouldn't have to overwrite this, to change the queryable
-   * fields simply set GenericDelete.ATTRIBUTES_SEARCHABLE.
+   * attributes simply set GenericDelete.ATTRIBUTES_SEARCHABLE.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria

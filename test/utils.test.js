@@ -213,7 +213,7 @@ describe('Utils', function() {
       );
     });
 
-    it('should not add plant object to returnObject.plants[plantId] if only id fields (plantId, generationId...) are defined (and forceAdd=false)', function() {
+    it('should not add plant object to returnObject.plants[plantId] if only id attributes (plantId, generationId...) are defined (and forceAdd=false)', function() {
       let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12};
       let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
       Utils.addPlantFromRowToReturnObject(row, returnObject, {});

@@ -118,7 +118,7 @@ Generation.delete = async function(criteria) {
  * With the criteria object you can search through all generations
  * and pick the ones you want to update. It behaves similiar (but not
  * equal) to Generation.find().
- * With update you can overwrite all fields except generationId,
+ * With update you can overwrite all attributes except generationId,
  * generationCreatedAt, generationModifiedAt, parentId. generationModifiedAt
  * will be set to the current UTC timestamp for all updated generations.
  * If you want to know how generation update works internally,

@@ -16,7 +16,7 @@ module.exports.allFamiliesShouldHaveCreatedAtAndModifiedAtFields = function(retu
 
 
 module.exports.allGenerationsShouldHaveCreatedAtAndModifiedAtFields = function(returnObject) {
-  // Make sure every generation has generationCreatedAt and generationModifiedAt fields.
+  // Make sure every generation has generationCreatedAt and generationModifiedAt attributes.
   returnObject.should.have.property('generations');
   _.each(_.keys(returnObject.generations), function(key) {
     returnObject.generations[key].should.have.property('generationCreatedAt');

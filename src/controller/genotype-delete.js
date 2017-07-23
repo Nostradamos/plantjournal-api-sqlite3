@@ -49,7 +49,7 @@ class GenotypeDelete extends GenericDelete {
     }
 
     /**
-   * Extract the id fields from the rows and save them.
+   * Extract the id attributes from the rows and save them.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria

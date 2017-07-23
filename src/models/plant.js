@@ -131,7 +131,7 @@ Plant.delete = async function(criteria) {
  * With the criteria object you can search through all plants
  * and pick the ones you want to update. It behaves similiar (but not
  * equal) to Plant.find().
- * With update you can overwrite all fields except plantId,
+ * With update you can overwrite all attributes except plantId,
  * plantCreatedAt, plantModifiedAt. plantModifiedAt
  * will be set to the current UTC timestamp for all updated plants.
  * If you want to know how Plant.update() works internally,

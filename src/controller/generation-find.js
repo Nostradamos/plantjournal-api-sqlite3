@@ -33,9 +33,9 @@ class GenerationFind extends GenericFind {
     }
 
     /**
-   * Build the returnObject. We want to have all family fields
+   * Build the returnObject. We want to have all family attributes
    * (like familyName, familyId) inreturnObject.families and all
-   * generation fields in returnObject.generations.
+   * generation attributes in returnObject.generations.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria

@@ -40,7 +40,7 @@ class GenerationCreate extends GenericCreate {
     }
 
     /**
-   * We need to set some fields for query.
+   * We need to set some attributes for query.
    * @param  {object} context
    *         internal context object in #create().
    * @param  {object} options
@@ -69,14 +69,14 @@ class GenerationCreate extends GenericCreate {
         if(_.isEmpty(options.generationParents)) return;
 
         // for every plant we have to insert a own row.
-        let fieldsRows = [];
+        let attributesRows = [];
         _.each(options.generationParents, function(parentPlantId) {
-            fieldsRows.push({parentId: null, generationId: context.insertId, plantId: parentPlantId});
+            attributesRows.push({parentId: null, generationId: context.insertId, plantId: parentPlantId});
         });
 
         // build and stringify query
         context.queryInsertParents = squel.insert().into(this.TABLE_PARENTS)
-            .setFieldsRows(fieldsRows)
+            .setFieldsRows(attributesRows)
             .toString();
 
         logger.debug(this.name, '#create() queryInsertParents:', context.queryInsertParents);

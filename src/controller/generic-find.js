@@ -26,8 +26,8 @@ class GenericFind {
    * @async
    * @param  {object}  [criteria={}]
    *         Criterias for find
-   * @param  {string[]} [criteria.fields]
-   *         Specify the fields to query and return.
+   * @param  {string[]} [criteria.attributes]
+   *         Specify the attributes to query and return.
    *         Eg: [familyName, generationName]
    * @param  {object} [criteria.filter]
    *         Object which contains
@@ -74,7 +74,7 @@ class GenericFind {
         if(_.isNil(criteria)) criteria = {};
         logger.debug(this.name, ' #find() criteria:', criteria);
         let context = {};
-        context.fields = criteria.fields || false;
+        context.attributes = criteria.attributes || false;
 
         this.initQueries(context, criteria);
         this.setQueryWhereJoin(context, criteria);
@@ -156,8 +156,8 @@ class GenericFind {
     }
 
     /**
-   * Sets fields to select for queryWhere to this.ATTR_ID if this.DEFAULT_FIELDS
-   * is not set. Otherwise all fields of this.DEFAULT_FIELDS will get selected.
+   * Sets attributes to select for queryWhere to this.ATTR_ID if this.DEFAULT_FIELDS
+   * is not set. Otherwise all attributes of this.DEFAULT_FIELDS will get selected.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
@@ -182,8 +182,8 @@ class GenericFind {
    *         Criteria object passed to find()
    */
     static setQueryWhereAdditionalFields(context, criteria) {
-    // We only have to set fields specified if options.fields, otherwise all.
-        QueryUtils.setFields(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria.fields);
+    // We only have to set attributes specified if options.attributes, otherwise all.
+        QueryUtils.setFields(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria.attributes);
     }
 
     /**
@@ -312,7 +312,7 @@ GenericFind.ATTR_ID;
 //Overwrite inner value of count. If this is not set, we will just use ATTR_ID
 GenericFind.COUNT;
 
-// You want to select more default fields than just ATTR_ID? Set them here.
+// You want to select more default attributes than just ATTR_ID? Set them here.
 GenericFind.DEFAULT_FIELDS;
 
 // You want to apply an GROUP BY to queryWhere? Overwrite this.

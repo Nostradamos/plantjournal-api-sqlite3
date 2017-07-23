@@ -106,10 +106,10 @@ describe('Genotype()', function() {
                 .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
         });
 
-        it('should not have an empty families property object if familyName is NOT in options.fields', async function() {
+        it('should not have an empty families property object if familyName is NOT in options.attributes', async function() {
             let genotypes = await pj.Genotype.find(
                 {
-                    'fields': ['familyId', 'generationName']
+                    'attributes': ['familyId', 'generationName']
                 }
             );
             genotypes.should.deepEqual({
@@ -130,10 +130,10 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should not have an empty generations property object if not generationName is in options.fields', async function() {
+        it('should not have an empty generations property object if not generationName is in options.attributes', async function() {
             let genotypes = await pj.Genotype.find(
                 {
-                    'fields': ['familyId']
+                    'attributes': ['familyId']
                 }
             );
             genotypes.should.deepEqual({
@@ -151,7 +151,7 @@ describe('Genotype()', function() {
         it('should skip x genotypes specified with options.offset and limit the count of results to option.limit', async function() {
             let genotypes = await pj.Genotype.find(
                 {
-                    'fields': ['genotypeName'],
+                    'attributes': ['genotypeName'],
                     'limit': 3,
                     'offset': 2
                 }
@@ -176,10 +176,10 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype fields)', async function() {
+        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype attributes)', async function() {
             let genotypes = await pj.Genotype.find(
                 {
-                    'fields': ['genotypeName'],
+                    'attributes': ['genotypeName'],
                     'filter': {
                         'genotypeId': 2
                     }
@@ -199,9 +199,9 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype fields)', async function() {
+        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async function() {
             let genotypes = await pj.Genotype.find({
-                'fields': ['genotypeName'],
+                'attributes': ['genotypeName'],
                 'filter': {
                     'genotypeName': 'testGenotype3'
                 }
@@ -220,9 +220,9 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family fields)', async function() {
+        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family attributes)', async function() {
             let genotypes = await pj.Genotype.find({
-                'fields': ['genotypeName'],
+                'attributes': ['genotypeName'],
                 'filter': {
                     'familyName': 'testFamily1'
                 }
@@ -250,7 +250,7 @@ describe('Genotype()', function() {
         it('should only return genotypes filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
             let genotypes = await pj.Genotype.find(
                 {
-                    'fields': ['generationParents', 'generationName', 'genotypeName'],
+                    'attributes': ['generationParents', 'generationName', 'genotypeName'],
                     'filter': {'generationParents': [1,2]}
                 }
             );

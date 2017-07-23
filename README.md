@@ -10,8 +10,6 @@ This repo contains a plantJournal API implementation using sqlite3 as the databa
 ToDo
 =====
 
-* Update api
-  - fields => select or attributes
 * Add etag field, basically hash over all attributes with md5. Easy for create,
   bit harder for update. Needs overhaul of those two functions. Do or don't?!
 * Add like/contains... to setWhere

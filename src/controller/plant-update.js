@@ -54,7 +54,7 @@ PlantUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_PLANT;
 
 PlantUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_PLANT;
 
-// Remove some fields we don't want to be updatable
+// Remove some attributes we don't want to be updatable
 PlantUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_PLANT;
 
 module.exports = PlantUpdate;

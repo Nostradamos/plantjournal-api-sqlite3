@@ -85,14 +85,14 @@ describe('Genotype()', function() {
             );
         });
 
-        it('should also be possible to find multiple genotypes to update based on family fields', async function() {
+        it('should also be possible to find multiple genotypes to update based on family attributes', async function() {
             let updatedGeno = await pj.Genotype
                 .update({'genotypeName': 'NoGoodGenoName'}, {'filter': {'familyId': 2}});
 
             updatedGeno.should.eql([4,5]);
         });
 
-        it('should also be possible to find multiple genotypes to update based on generation fields', async function() {
+        it('should also be possible to find multiple genotypes to update based on generation attributes', async function() {
             let updatedGeno = await pj.Genotype
                 .update({'genotypeName': 'NoGoodGenoName'}, {'filter': {'generationId': 1}});
 

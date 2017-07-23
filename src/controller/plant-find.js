@@ -35,11 +35,11 @@ class PlantFind extends GenericFind {
     }
 
     /**
-   * Build the returnObject. We want to have all plant fields (like plantName,
-   * plantSex...) in returnObject.plants, all genotype fields (like
-   * genotypeName etc) in returnObject.genotypes, all family fields
+   * Build the returnObject. We want to have all plant attributes (like plantName,
+   * plantSex...) in returnObject.plants, all genotype attributes (like
+   * genotypeName etc) in returnObject.genotypes, all family attributes
    * (like familyName, familyId) inreturnObject.families and all
-   * generation fields in returnObject.generations.
+   * generation attributes in returnObject.generations.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria

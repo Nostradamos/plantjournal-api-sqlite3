@@ -70,7 +70,7 @@ describe('Plant()', function() {
                 .should.be.rejectedWith('options.genotypeId does not reference an existing Genotype');
         });
 
-        it('should only create a new plant entry if options.genotypeId is set and return plant object with plant fields + genotypeId', async function() {
+        it('should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId', async function() {
             let plant = await pj.Plant.create(
                 {
                     genotypeId: 1,

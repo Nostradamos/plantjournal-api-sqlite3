@@ -153,12 +153,12 @@ QueryUtils.joinPlantsDownwards = function (query) {
 };
 
 /**
- * Sets fields to select for squel query object.
+ * Sets attributes to select for squel query object.
  * For this we take a criteriaAttributes array which holds all attributes in a
  * use wants to have. We check them againt allowedAttributes and only select
  * attributes which are allowed. If criteriaAttributes is empty, we simply use
  * all allowedAttributes. Mutates query object.
- * @param {squel} fieldsToSelect
+ * @param {squel} attributesToSelect
  *        Squel obejct. Has to be in select() state or similiar to take a
  *        field() call.
  * @param {String[]} allowedAttributes
@@ -216,7 +216,7 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
 /**
  * This function sets the filter parts for our queries and handles
  * many special cases. Mutates query.
- * @todo Add arrays of integers/strings to all fields not only parents.
+ * @todo Add arrays of integers/strings to all attributes not only parents.
  *       Add $contains, add $like, add $gt, $lt, $gte, $lte, $startswith, $endswith
  *       $and, $or, $not
  * @param  {squel} query

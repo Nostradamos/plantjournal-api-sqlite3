@@ -34,7 +34,7 @@ describe('Family()', function() {
         });
 
         it('should only return the first two families if options.limit=2', async function() {
-            let families = await pj.Family.find({limit: 2, fields: ['familyId', 'familyName']});
+            let families = await pj.Family.find({limit: 2, attributes: ['familyId', 'familyName']});
             families.should.deepEqual({
                 found: 4,
                 remaining: 2,
@@ -46,7 +46,7 @@ describe('Family()', function() {
         });
 
         it('should only return the the last two families if options.offset=2 and options.limit=2', async function() {
-            let families = await pj.Family.find({offset: 2, limit: 2, fields: ['familyId', 'familyName']});
+            let families = await pj.Family.find({offset: 2, limit: 2, attributes: ['familyId', 'familyName']});
             families.should.deepEqual({
                 found: 4,
                 remaining: 0,
@@ -57,9 +57,9 @@ describe('Family()', function() {
             });
         });
 
-        // ToDo: Improve fields, change this test
-        /*it('should only return fields specified in options.fields', async function() {
-        let families = await pj.Family.find({fields: ['familyName']});
+        // ToDo: Improve attributes, change this test
+        /*it('should only return attributes specified in options.attributes', async function() {
+        let families = await pj.Family.find({attributes: ['familyName']});
         families.should.deepEqual({
           families: {
             '1': { familyName: 'test1' },
@@ -76,7 +76,7 @@ describe('Family()', function() {
                     filter : {
                         'familyId': 3
                     },
-                    fields: ['familyId', 'familyName']
+                    attributes: ['familyId', 'familyName']
                 }
             );
             families.should.deepEqual({
@@ -94,7 +94,7 @@ describe('Family()', function() {
                     filter : {
                         'familyName': 'testD'
                     },
-                    fields: ['familyId', 'familyName']
+                    attributes: ['familyId', 'familyName']
                 }
             );
             families.should.deepEqual({

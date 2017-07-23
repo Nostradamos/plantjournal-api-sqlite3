@@ -59,7 +59,7 @@ class PlantCreate extends GenericCreate {
     }
 
     /**
-   * We need to set some fields for query.
+   * We need to set some attributes for query.
    * @param  {object} context
    *         internal context object in #create().
    * @param  {object} options

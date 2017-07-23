@@ -110,7 +110,7 @@ Genotype.delete = async function(criteria) {
  * With the criteria object you can search through all genotypes
  * and pick the ones you want to update. It behaves similiar (but not
  * equal) to Genotype.find().
- * With update you can overwrite all fields except genotpeId,
+ * With update you can overwrite all attributes except genotpeId,
  * genotypeCreatedAt, genotypeModifiedAt. genotypeModifiedAt
  * will be set to the current UTC timestamp for all updated genotypes.
  * If you want to know how Genotype update works internally,
