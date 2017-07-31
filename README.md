@@ -9,14 +9,12 @@ This repo contains a plantJournal API implementation using sqlite3 as the databa
 
 ToDo
 =====
-
-* Add etag field, basically hash over all attributes with md5. Easy for create,
-  bit harder for update. Needs overhaul of those two functions. Do or don't?!
-* Add like/contains... to setWhere
+* applyFilter to applyWhere, criteria to filter, like strongloop does it, criteria.filter => criteria.where
+* Add $like, $and, $or... to applyFilter
 * Add .on events
 * Add sorting for find, update, delete
 * Add resolveParents to find?!
-* Add plantJournal
+* Add plantLog
 * Add medium/environment
 * Add mediumLog
 * Add environmentData
