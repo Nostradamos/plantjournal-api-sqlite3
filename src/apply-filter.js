@@ -1,10 +1,11 @@
 'use strict';
 
-const squel = require('squel');
 const _ = require('lodash');
+const squel = require('squel');
+
+const logger = require('./logger');
 const QueryUtils = require('./utils-query');
 const CONSTANTS = require('./constants');
-const logger = require('./logger');
 
 /**
  * Iterator function for any filter object where keys are attribute names and
@@ -16,6 +17,9 @@ const logger = require('./logger');
  *         have to be $and/$or.. boolean operators or valid attributes. Eg:
  *         {'generationParents': [1,2],
  *          'or': {'familyId': 3}}
+ * @param  {String[]} allowedAttributes
+ *         String array of allowed attributes. It will throw an error if you
+ *         use an attribute which is illegal.
  * @param  {SquelExpression} squelExpr
  *         An Squel expression instance. You can init one with ```squel.exr()```.
  *         This function hopefully mutate this object (otherwise nothing
@@ -33,7 +37,7 @@ const logger = require('./logger');
  *         and  -> use and operator for attributes
  *         or   -> use or operator for attributes
  */
-function eachFilterObject(obj, squelExpr, depth, type=null) {
+function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
     let isArray = _.isArray(obj);
 
     // Check if obj is array or dict
@@ -54,7 +58,7 @@ function eachFilterObject(obj, squelExpr, depth, type=null) {
         // If we have an array, value/element has to be an object. Just use
         // this function again on it
         if(isArray === true) {
-            return eachFilterObject(value, squelExpr, depth+1, type);
+            return eachFilterObject(value, allowedAttributes, squelExpr, depth+1, type);
         }
 
         [attr, attrOptions] = [key, value];
@@ -63,20 +67,20 @@ function eachFilterObject(obj, squelExpr, depth, type=null) {
 
         // Handle boolean operators
         if(attr == '$and') {
-            return eachFilterObject(attrOptions, squelExpr, depth+1, 'and');
+            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and');
         } else if(attr == '$or') {
-            return eachFilterObject(attrOptions, squelExpr, depth+1, 'or');
+            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or');
         } else if(attr === '$and()') {
             // $and() is a bit different, we want to have child criterias in a
             // sub expression
             let subSquelExpr = squel.expr();
-            eachFilterObject(attrOptions, subSquelExpr, depth+1, 'and');
+            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'and');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'and');
         } else if(attr === '$or()') {
             // $or() is a bit different, we want to have a child criterias in
             // a subexpression
             let subSquelExpr = squel.expr();
-            eachFilterObject(attrOptions, subSquelExpr, depth+1, 'or');
+            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'or');
         } else if(_.indexOf(allowedAttributes, attr) !== -1){
             translateAndApplyAttributeOptions(attr, attrOptions, squelExpr, type);
@@ -101,9 +105,9 @@ function eachFilterObject(obj, squelExpr, depth, type=null) {
  *         it as "attribute has to be any of them" (except if attr is generationParents,
  *         this is a special case, see #handleGenerationParents()).
  *         If it's an Object it can have more detailed instructions like:
- *          - $eq     Attribute has to be equal to argument.
- *          - $neq    Attribute has to be different from argument.
- *          - $like   Argument has to be a valid sqlite like regexp and attribute
+ *          - $eq
+ *          - $neq    Records value for attribute has to be different from argument.
+ *          - $like   Records value for argument has to be a valid sqlite like regexp and attribute
  *                    need
  *          - $nlike
  *          - $gt
@@ -113,37 +117,99 @@ function eachFilterObject(obj, squelExpr, depth, type=null) {
  * @return {[type]}             [description]
  */
 function translateAndApplyAttributeOptions(attr, attrOptions, squelExpr, type) {
-    let crit, critArgs;
-
     // Get table for this attribute
     let table = QueryUtils.getTableOfField(attr);
 
     if(attr == 'generationParents') {
     // First handle special case generationParents
-        [crit, critArgs] = handleGenerationParents(attrOptions);
+        let [crit, critArgs] = handleGenerationParents(attrOptions);
+        applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     } else if(_.isInteger(attrOptions) || _.isString(attrOptions)) {
     // If attrOptions is an integer or a string, interpret it as a an $equals
     // criteria.
-        [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
+        let [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
+        applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+    } else if(_.isArray(attrOptions)) {
+        let [crit, critArgs] = createInExpression(table, attr, attrOptions);
+        applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     } else if(_.isPlainObject(attrOptions)) {
-        // Handle both cases for $equals, prefer $equals over $eq. We will always
-        // prefer the longer version over the short one.
-        // Two equals for the same attribute are bullshit.
-        if(_.has(attrOptions, '$equals')) {
-            [crit, critArgs] = createEqualsExpression(table, attr, attrOptions['$equals']);
-        } else if(_.has(attrOptions, '$eq')) {
-            [crit, critArgs] = createEqualsExpression(table, attr, attrOptions['$eq']);
+        // Translate api operators into sql operators/expressions
+        for(let operator in attrOptions) {
+            let crit = null,
+                critArgs;
+            if(operator === '$eq') {
+                [crit, critArgs] = createEqualsExpression(table, attr, attrOptions['$eq']);
+            } else if(operator === '$neq') {
+                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
+            } else if(operator === '$like') {
+                [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
+            } else if(operator === '$nlike') {
+                [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
+            } else if(operator === '$gt') {
+                [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
+            } else if(operator === '$gte') {
+                [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
+            } else if(operator === '$lt') {
+                [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
+            } else if(operator === '$lte') {
+                [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
+            } else if(operator === '$in') {
+                [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
+            } else if(operator === '$nin') {
+                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
+            } else {
+                logger.warn('Unknown operator:', operator);
+            }
+            if(crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
+      logger.warn('Unknown operator:', operator);
     }
+}
 
-    if(crit !== null)
-        applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+function handleGenerationParents(attrOptions) {
+    
 }
 
 function createEqualsExpression(table, attr, toEqual) {
-    return ['?.? = ?', [trable, attr, toEqual]];
+    return ['?.? = ?', [table, attr, toEqual]];
+}
+
+function createNotEqualsExpression(table, attr, notToEqual) {
+    return ['?.? != ?', [table, attr, notToEqual]];
+}
+
+function createLikeExpression(table, attr, notToEqual) {
+    return ['?.? LIKE ?', [table, attr, notToEqual]];
+}
+
+function createNotLikeExpression(table, attr, notToEqual) {
+    return ['?.? NOT LIKE ?', [table, attr, notToEqual]];
+}
+
+function createGreaterThanExpression(table, attr, greaterThan) {
+    return ['?.? > ?', [table, attr, greaterThan]];
+}
+
+function createGreaterThanEqualExpression(table, attr, greaterThanEqual) {
+    return ['?.? >= ?', [table, attr, greaterThanEqual]];
+}
+
+function createLowerThanExpression(table, attr, lowerThan) {
+    return ['?.? < ?', [table, attr, lowerThan]];
+}
+
+function createLowerThanEqualExpression(table, attr, lowerThanEqual) {
+    return ['?.? <= ?', [table, attr, lowerThanEqual]];
+}
+
+function createInExpression(table, attr, inArr) {
+    return ['?.? IN ?', [table, attr, inArr]]
+}
+
+function createNotInExpression(table, attr, inArr) {
+    return ['?.? NOT IN ?', [table, attr, inArr]]
 }
 
 function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
@@ -157,9 +223,8 @@ function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
 }
 
 function applyFilter(query, allowedAttributes, criteria) {
-    this.allowedAttributes = allowedAttributes;
     let squelExpr = squel.expr();
-    eachFilterObject.bind(this, criteria.filter, squelExpr, 1)();
+    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
     query.where(squelExpr);
 }
 

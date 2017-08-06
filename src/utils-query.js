@@ -5,6 +5,7 @@ const squel = require('squel');
 
 const CONSTANTS = require('./constants');
 const logger = require('./logger');
+const applyFilter = require('./apply-filter');
 
 /**
  * Set of utils mainly used for query building.
@@ -237,6 +238,10 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
  *                                                      to be 1 and 2.
  *             {filter: {'plantSex': 'male'}} => only male plants
  */
+QueryUtils.applyFilter2 = function(query, allowedFields, criteria) {
+    applyFilter(query, allowedFields, criteria);
+}
+
 QueryUtils.applyFilter = function(query, allowedFields, criteria) {
   // if criteria.filter is not set/an plain object, we can stop here
   if(!_.isPlainObject(criteria.filter)) return;
