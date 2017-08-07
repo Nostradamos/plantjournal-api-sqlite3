@@ -17,6 +17,7 @@ ToDo
 * Add medium/environment
 * Add mediumLog
 * Add environmentData
+* Improve applyWhere for generationParents
 * Implement files/pictures/media
 * Add strain?!
 
