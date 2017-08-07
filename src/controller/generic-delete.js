@@ -7,6 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
+const QueryUtilsApplyFilter = require('../utils-query-apply-filter');
 
 /**
  * Generic Delete class which tries to build a skeleton for all
@@ -117,7 +118,7 @@ class GenericDelete {
     }
 
     /**
-   * Applies {@link QueryUtils.applyFilter} to context.queryRelated. Normally
+   * Applies {@link QueryUtilsApplyFilter} to context.queryRelated. Normally
    * you shouldn't have to overwrite this, to change the queryable
    * attributes simply set GenericDelete.ATTRIBUTES_SEARCHABLE.
    * @param  {object} context
@@ -126,7 +127,7 @@ class GenericDelete {
    *         Criteria object passed to delete()
    */
     static setQueryRelatedWhere(context, criteria) {
-        QueryUtils.applyFilter(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
+        QueryUtilsApplyFilter(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
     }
 
     /**

@@ -7,6 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
+const QueryUtilsApplyFilter = require('../utils-query-apply-filter');
 
 /**
  * Generic update class which is the skeleton for all *-update classes.
@@ -125,7 +126,7 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
     static setQueryFindWhere(context, update, criteria) {
-        QueryUtils.applyFilter(context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria);
+        QueryUtilsApplyFilter(context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria);
     }
 
     /**

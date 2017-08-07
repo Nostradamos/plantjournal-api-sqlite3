@@ -8,36 +8,6 @@ const QueryUtils = require('./utils-query');
 const CONSTANTS = require('./constants');
 
 /**
- * This function sets the filter parts for our queries and handles
- * many special cases. Mutates query.
- * @todo Add arrays of integers/strings to all attributes not only parents.
- *       Add $contains, add $like, add $gt, $lt, $gte, $lte, $startswith, $endswith
- *       $and, $or, $not
- * @param  {squel} query
- *         squel query, needs to be in a state to take .where() calls
- * @param  {string[]} allowedFields
- *         An array of allowed field names
- * @param  {Object} criteria
- *         criteria object which gets passed to update/delete/find functions.
- *         We only use the criteria.filter part, we ignore everything else.
- * @param  {Object.<String, Object>} [criteria.filter]
- *         This object holds all the control info for this function, not needed,
- *         but if you want this function to do a thing, this is needed.
- *         The key element has to be inside allowedFields, Otherwise it will
- *         get skipped. The Value can be a String, an integer or an array of
- *         strings/integers if you want that the value matches exactly.
- *         Eg: {filter: {'generationId': 1}} => generationId has to be 1
- *             {filter: {'generationParents': [1,2]}} => generationParents have
- *                                                      to be 1 and 2.
- *             {filter: {'plantSex': 'male'}} => only male plants
- */
-function applyFilter(query, allowedAttributes, criteria) {
-    let squelExpr = squel.expr();
-    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
-    query.where(squelExpr);
-}
-
-/**
  * Iterator function for any filter object where keys are attribute names and
  * values attribute criteria, or keys are boolean operators ($and, $or, $and(),
  * $or()). This function can call itself recursive.
@@ -73,7 +43,7 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
 
     // Check if obj is array or dict
     if(_.isPlainObject(obj) === false && isArray === false) {
-        return logger.warn('#applyFilter() #eachFilterObject() Returning, illegal object type:', typeof obj);
+        return logger.warn('#applyFilter() #eachFilterObject() Returning, illegal object type:', obj);
     }
 
     // No type got specified, determine it based on obj type.
@@ -293,6 +263,12 @@ function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
     } else {
         throw new Error('Illegal type: '+ type);
     }
+}
+
+function applyFilter(query, allowedAttributes, criteria) {
+    let squelExpr = squel.expr();
+    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
+    query.where(squelExpr);
 }
 
 module.exports =  applyFilter;

@@ -7,6 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
+const QueryUtilsApplyFilter = require('../utils-query-apply-filter');
 
 /**
  * Generic find class which is the skeleton for all *find methods
@@ -130,7 +131,7 @@ class GenericFind {
     }
 
     /**
-   * This method just applies {@link QueryUtils.applyFilter} to the context.queryWhere query.
+   * This method just applies {@link QueryUtilsApplyFilter} to the context.queryWhere query.
    * Normally you shouldn't overwrite this, you can use this.ATTRIBUTES_SEARCHABLE to
    * adjust the behaviour.
    * @param  {object} context
@@ -139,7 +140,7 @@ class GenericFind {
    *         Criteria object passed to find()
    */
     static setQueryWhere(context, criteria) {
-        QueryUtils.applyFilter(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
+        QueryUtilsApplyFilter(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
     }
 
     /**
