@@ -88,8 +88,8 @@ class GenerationUpdate extends GenericUpdate {
             await sqlite.get(context.queryDeleteOldParents);
             await sqlite.get(context.queryInsertNewParents);
             await sqlite.get('COMMIT');
-        } catch(err) {
-            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+        } catch (err) {
+            if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
                 await sqlite.get('ROLLBACK'); // Undo delete
                 throw new Error('update.generationParents does not reference to existing Plants. At least one reference is invalid.');
             }
@@ -107,15 +107,15 @@ class GenerationUpdate extends GenericUpdate {
    * @return {Promise}          [description]
    */
     static async executeQueryUpdate(context, update, criteria) {
-        if(_.has(context.attributesToUpdate, 'generationParents')) {
+        if (_.has(context.attributesToUpdate, 'generationParents')) {
             this.initQueryUpdateParents(context, update, criteria);
             await this.executeQueryUpdateParents(context, update, criteria);
         }
 
         try {
             await super.executeQueryUpdate(context, update, criteria);
-        } catch(err) {
-            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+        } catch (err) {
+            if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
                 throw new Error('update.familyId does not reference an existing Family');
             }
             throw err;

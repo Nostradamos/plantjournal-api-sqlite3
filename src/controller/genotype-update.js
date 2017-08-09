@@ -36,8 +36,8 @@ class GenotypeUpdate extends GenericUpdate {
     static async executeQueryUpdate(context, update, criteria) {
         try {
             await super.executeQueryUpdate(context, update, criteria);
-        } catch(err) {
-            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+        } catch (err) {
+            if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
                 throw new Error('update.generationId does not reference an existing Generation');
             }
             throw err;

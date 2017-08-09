@@ -49,7 +49,7 @@ class plantJournal {
         } catch (err) {
             throw err;
         } finally {
-            if(row.test != 42) throw new Error('Your sqlite3 install doesn\'t support JSON. We can\'t continue. '+JSON.stringify(row));
+            if (row.test != 42) throw new Error('Your sqlite3 install doesn\'t support JSON. We can\'t continue. '+JSON.stringify(row));
         }
     }
 

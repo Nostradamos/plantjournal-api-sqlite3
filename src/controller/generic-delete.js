@@ -47,7 +47,7 @@ class GenericDelete {
    */
     static async delete(criteria) {
         Utils.throwErrorIfNotConnected();
-        if(_.isNil(criteria)) throw Error('No criteria object passed');
+        if (_.isNil(criteria)) throw Error('No criteria object passed');
         logger.debug(this.name, ' #delete() criteria:', criteria);
         let context = {};
 
@@ -170,7 +170,7 @@ class GenericDelete {
         logger.debug(this.name, '#delete() queryRelated:', context.queryRelated);
     }
 
-  /**
+    /**
    * Executes queryRelated asynchronously. No need to overwrite.
    * All selected rows will be in context.rowsRelated
    * @async

@@ -22,7 +22,7 @@ let Utils = exports;
  * @return {object}          - returns obj again (also mutates obj)
  */
 Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
-    if(_.isEmpty(limitTo)) limitTo = _.keys(obj);
+    if (_.isEmpty(limitTo)) limitTo = _.keys(obj);
     _(limitTo).filter(o => _.isEmpty(obj[o])).each(u => {
         _.unset(obj, u);
     });
@@ -48,10 +48,10 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
     };
 
     _.each(CONSTANTS.ALL_ATTRIBUTES_PLANT, function(attr) {
-        if(_.has(row, attr)) plant[attr] = row[attr];
+        if (_.has(row, attr)) plant[attr] = row[attr];
     });
 
-    if(forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
+    if (forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
 };
 
 /**
@@ -70,9 +70,9 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
         'familyId': row.familyId
     };
     _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
-        if(_.has(row, attr)) genotype[attr] = row[attr];
+        if (_.has(row, attr)) genotype[attr] = row[attr];
     });
-    if(forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
+    if (forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
 
 };
 
@@ -93,18 +93,18 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
     };
 
     _.each(CONSTANTS.ALL_ATTRIBUTES_GENERATION, function(attr) {
-        if(_.has(row, attr)) {
+        if (_.has(row, attr)) {
             let rowattr = row[attr];
             // if we have row.generationParents and it's null, set an empty array [], else split it into an array
             // and cast every element to an integer
-            if(attr === 'generationParents') {
+            if (attr === 'generationParents') {
                 rowattr = rowattr === null ? [] : _(rowattr).split(',').map(_.toInteger).value();
             }
             generation[attr] = rowattr;
         }
     });
     // Make sure that we only add it returnObject if we not only have generationId and familyId set.
-    if(forceAdd === true || _.size(generation) > 2) returnObject.generations[generationId] = generation;
+    if (forceAdd === true || _.size(generation) > 2) returnObject.generations[generationId] = generation;
 };
 
 /**
@@ -119,11 +119,11 @@ Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(r
     let familyId = row.familyId;
     let family = {};
     _.each(CONSTANTS.ALL_ATTRIBUTES_FAMILY, function(attr) {
-        if(_.has(row, attr)) family[attr] = row[attr];
+        if (_.has(row, attr)) family[attr] = row[attr];
     });
 
     // Make sure we have at least two attrs, or forceAdd = true
-    if(forceAdd === true || _.size(family) > 1) {
+    if (forceAdd === true || _.size(family) > 1) {
         returnObject.families[familyId] = family;
     }
 };
@@ -152,7 +152,7 @@ Utils.addFoundAndRemainingFromCountToReturnObject = function addFoundAndRemainin
  * @param  {String}  [prefix='First argument'] - Name of object for error message.
  */
 Utils.hasToBeAssocArray = function hasToBeAssocArray(obj, prefix = 'First argument') {
-    if(!_.isObjectLike(obj) || _.isArray(obj)) {
+    if (!_.isObjectLike(obj) || _.isArray(obj)) {
         throw new Error(prefix + ' has to be an associative array');
     }
 };
@@ -166,7 +166,7 @@ Utils.hasToBeAssocArray = function hasToBeAssocArray(obj, prefix = 'First argume
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeString = function optionsHasString(obj, property, name = 'options') {
-    if(_.has(obj, property) && !_.isString(obj[property])) {
+    if (_.has(obj, property) && !_.isString(obj[property])) {
         throw new Error(name + '.' + property + ' has to be a string');
     }
 };
@@ -180,7 +180,7 @@ Utils.hasToBeString = function optionsHasString(obj, property, name = 'options')
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
-    if(_.has(obj, property) && !_.isInteger(obj[property])) {
+    if (_.has(obj, property) && !_.isInteger(obj[property])) {
         throw new Error(name + '.' + property + ' has to be an integer');
     }
 };
@@ -195,7 +195,7 @@ Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeIntArray = function hasToBeIntArray(obj, property, name = 'options') {
-    if(_.has(obj, property) && (!_.isArray(obj[property]) || !_.every(obj[property], _.isInteger))) {
+    if (_.has(obj, property) && (!_.isArray(obj[property]) || !_.every(obj[property], _.isInteger))) {
         throw new Error(name + '.' + property + ' has to be an array of integers');
     }
 };
@@ -208,7 +208,7 @@ Utils.hasToBeIntArray = function hasToBeIntArray(obj, property, name = 'options'
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
-    if(!_.has(obj, property)) {
+    if (!_.has(obj, property)) {
         throw new Error(name + '.' + property + ' has to be set');
     }
 };
@@ -236,7 +236,7 @@ Utils.filterSetNotNull = function filterSetNotNull(set) {
  * @throws {Error}
  */
 Utils.throwErrorIfNotConnected = function() {
-    if(sqlite.driver != null && sqlite.driver.open == true) {
+    if (sqlite.driver != null && sqlite.driver.open == true) {
         return;
     }
     throw Error('plantJournal is not connected to database.');

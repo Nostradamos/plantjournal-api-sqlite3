@@ -23,7 +23,7 @@ let QueryUtils = exports;
  *        True if we want to join generationParents
  */
 QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = true) {
-    if(joinGenerationParents == true) {
+    if (joinGenerationParents == true) {
         QueryUtils.joinGenerationParentsOnly(queryObj);
     }
     QueryUtils.joinFamilies(queryObj);
@@ -167,7 +167,7 @@ QueryUtils.joinPlantsDownwards = function (query) {
  */
 QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
     let attributesToSelect;
-    if(_.isEmpty(criteriaAttributes)) {
+    if (_.isEmpty(criteriaAttributes)) {
     // if criteriaAttributes is empty, just select all allowedAttributes
         attributesToSelect = allowedAttributes;
     } else {
@@ -177,13 +177,13 @@ QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
     }
 
     _.each(attributesToSelect, function(attr) {
-        if(attr == 'generationParents') {
+        if (attr == 'generationParents') {
             // special case, generationParents is no real column, but a concat
             // of all plantIds
             query.field(
                 'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENTS +'.plantId) as generationParents'
             );
-        }else {
+        } else {
             // translate attribute to explicit column name (tablename.attr)
             query.field(
                 QueryUtils.getTableOfField(attr) + '.' + attr
@@ -254,14 +254,13 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
  *         is unknown (not ASC or DESC).
  */
 QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
-    if(_.isEmpty(criteria.sort)) return;
-    if(!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
+    if (_.isEmpty(criteria.sort)) return;
+    if (!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
 
-    let table;
     _.each(criteria.sort, function(sortStr) {
         // Check if this is a valid format
         let attr, sortType;
-        if(_.indexOf(sortStr, " ") === -1) {
+        if (_.indexOf(sortStr, ' ') === -1) {
         // No whitespace means, attribute is the whole string
         // and we use ASC as the default sort type.
             attr = sortStr;
@@ -272,22 +271,22 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
             sortType = _.upperCase(sortType);
         }
 
-        if(_.indexOf(allowedAttributes, attr) === -1) {
+        if (_.indexOf(allowedAttributes, attr) === -1) {
         // attr not in allowedAttributes array
             throw new Error('Illegal attribute: ' + attr);
         }
 
         let table = QueryUtils.getTableOfField(attr);
-        if(sortType === 'ASC') {
+        if (sortType === 'ASC') {
             query.order('?.?', true, table, attr);
-        } else if(sortType === 'DESC') {
+        } else if (sortType === 'DESC') {
             query.order('?.?', false, table, attr);
         } else {
             // Split it again to get un-uppercased sort type
             throw new Error('Illegal sort type: ' + _.split(sortStr, ' ')[1]);
         }
     });
-}
+};
 
 /**
  * Determines in which table this column is. This works because all column names
@@ -302,15 +301,15 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
 QueryUtils.getTableOfField = function (field) {
     // determine which table we need
     let table;
-    if(_.startsWith(field, 'plant')) {
+    if (_.startsWith(field, 'plant')) {
         table = CONSTANTS.TABLE_PLANTS;
-    } else if(_.startsWith(field, 'genotype')) {
+    } else if (_.startsWith(field, 'genotype')) {
         table = CONSTANTS.TABLE_GENOTYPES;
-    } else if(field === 'generationParents') {
+    } else if (field === 'generationParents') {
         table = CONSTANTS.TABLE_GENERATION_PARENTS;
-    } else if(_.startsWith(field, 'generation')) {
+    } else if (_.startsWith(field, 'generation')) {
         table = CONSTANTS.TABLE_GENERATIONS;
-    } else if(_.startsWith(field, 'family')) {
+    } else if (_.startsWith(field, 'family')) {
         table = CONSTANTS.TABLE_FAMILIES;
     } else {
         throw new Error('cannot associate field with a table');

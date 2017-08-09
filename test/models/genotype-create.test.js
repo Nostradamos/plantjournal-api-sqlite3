@@ -19,7 +19,7 @@ describe('Genotype()', function() {
 
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
-            for(let value in [[1,2], null, 'string', 1, true, undefined]) {
+            for (let value in [[1,2], null, 'string', 1, true, undefined]) {
                 await pj.Genotype.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
                 tested++;

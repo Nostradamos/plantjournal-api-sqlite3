@@ -72,7 +72,7 @@ class GenericFind {
    */
     static async find(criteria) {
         Utils.throwErrorIfNotConnected();
-        if(_.isNil(criteria)) criteria = {};
+        if (_.isNil(criteria)) criteria = {};
         logger.debug(this.name, ' #find() criteria:', criteria);
         let context = {};
         context.attributes = criteria.attributes || false;
@@ -168,7 +168,7 @@ class GenericFind {
     static setQueryWhereDefaultFields(context, criteria) {
     // For queryWhere we always have to set familyId, because it's needed
     // for the object key.
-        if(_.isEmpty(this.DEFAULT_FIELDS)) {
+        if (_.isEmpty(this.DEFAULT_FIELDS)) {
             context.queryWhere.field(this.TABLE + '.' + this.ATTR_ID);
         } else {
             context.queryWhere.fields(this.DEFAULT_FIELDS);
@@ -238,7 +238,7 @@ class GenericFind {
    *         Criteria object passed to find()
    */
     static setQueryWhereGroup(context, criteria) {
-        if(!_.isEmpty(this.GROUP_BY)) context.queryWhere.group(this.GROUP_BY);
+        if (!_.isEmpty(this.GROUP_BY)) context.queryWhere.group(this.GROUP_BY);
     }
 
     /**

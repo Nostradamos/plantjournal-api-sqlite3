@@ -112,7 +112,6 @@ describe('Family()', function() {
                 '4': { familyId: 4, familyName: 'testD' },
                 '3': { familyId: 3, familyName: 'test3' },
             });
-            console.log(families.families);
         });
 
         after(async function() {

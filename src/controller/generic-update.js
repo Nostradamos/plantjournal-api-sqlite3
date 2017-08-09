@@ -33,8 +33,8 @@ class GenericUpdate {
         logger.debug(this.name, '#update() update:', JSON.stringify(update), 'criteria:', JSON.stringify(criteria) || undefined);
 
         // Validate update and criteria arguments
-        if(_.isUndefined(update) && _.isUndefined(criteria)) throw new Error('No Update and Critera Object got passed');
-        if(_.isUndefined(criteria)) throw new Error('No Criteria Object got passed');
+        if (_.isUndefined(update) && _.isUndefined(criteria)) throw new Error('No Update and Critera Object got passed');
+        if (_.isUndefined(criteria)) throw new Error('No Criteria Object got passed');
         Utils.hasToBeAssocArray(update, 'Update Object');
         Utils.hasToBeAssocArray(criteria, 'Criteria Object');
 
@@ -43,7 +43,7 @@ class GenericUpdate {
         // First we pick attributes to update. If nothing is to update,
         // we will return right away.
         this.pickFieldsToUpdate(context, update, criteria);
-        if(_.isEmpty(context.attributesToUpdate)) {
+        if (_.isEmpty(context.attributesToUpdate)) {
             logger.debug(this.name, '#update() attributesToUpdate is empty, returning');
             return [];
         }
@@ -140,7 +140,7 @@ class GenericUpdate {
         QueryUtils.setLimitAndOffset(context.queryFind, criteria);
     }
 
-   /**
+    /**
    * Takes sort instructions from criteria and applies them to queryFind.
     * @param  {object} context   - Internal context object
     * @param  {object} update    - Updated object passed to update()

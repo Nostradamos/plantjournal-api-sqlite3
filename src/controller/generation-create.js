@@ -67,7 +67,7 @@ class GenerationCreate extends GenericCreate {
    */
     static buildQueryInsertParentsIfNeeded(context, options) {
     // No parents, nothing to do
-        if(_.isEmpty(options.generationParents)) return;
+        if (_.isEmpty(options.generationParents)) return;
 
         // for every plant we have to insert a own row.
         let attributesRows = [];
@@ -100,11 +100,11 @@ class GenerationCreate extends GenericCreate {
     static async executeQueryInsertGeneration(context, options) {
         try {
             await super.executeQuery(context, options);
-        } catch(err) {
+        } catch (err) {
             await sqlite.get('ROLLBACK');
             // We only have one foreign key so we can safely assume, if a foreign key constraint
             // fails, it's the familyId constraint.
-            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+            if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
                 throw new Error('options.familyId does not reference an existing Family');
             }
             throw err;
@@ -129,12 +129,12 @@ class GenerationCreate extends GenericCreate {
    */
     static async executeQueryInsertParentsIfNeeded(context, options) {
     // If we don't have a query, do nothing
-        if(_.isUndefined(context.queryInsertParents)) return;
+        if (_.isUndefined(context.queryInsertParents)) return;
         try {
             await sqlite.get(context.queryInsertParents);
-        } catch(err) {
+        } catch (err) {
             await sqlite.get('ROLLBACK'); // shit happend, roll back
-            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+            if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
                 throw new Error('options.generationParents contains at least one plantId which does not reference an existing plant');
             }
             throw err;

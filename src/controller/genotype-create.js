@@ -47,10 +47,10 @@ class GenotypeCreate extends GenericCreate {
     static async executeQuery(context, options) {
         try {
             await super.executeQuery(context, options);
-        }catch(err) {
+        } catch (err) {
             // We only have one foreign key so we can safely assume, if a foreign key constraint
             // fails, it's the generationId constraint.
-            if(err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+            if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
                 throw new Error('options.generationId does not reference an existing Generation');
             }
             throw err;

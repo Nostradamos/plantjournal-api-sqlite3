@@ -87,13 +87,13 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
     let isArray = _.isArray(obj);
 
     // Check if obj is array or dict
-    if(_.isPlainObject(obj) === false && isArray === false) {
+    if (_.isPlainObject(obj) === false && isArray === false) {
         return logger.warn('#applyFilter() #eachFilterObject() Returning, illegal object type:', obj);
     }
 
     // No type got specified, determine it based on obj type.
     // if obj is an array, it's normally an OR, otherwise AND.
-    if(type === null) type = isArray ? 'or' : 'and';
+    if (type === null) type = isArray ? 'or' : 'and';
 
     let attr, attrOptions;
 
@@ -102,30 +102,30 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
     _.each(obj, function(value, key) {
         // If we have an array, value/element has to be an object. Just use
         // this function again on it
-        if(isArray === true) {
+        if (isArray === true) {
             return eachFilterObject(value, allowedAttributes, squelExpr, depth+1, type);
         }
 
         [attr, attrOptions] = [key, value];
 
         // Handle boolean operators
-        if(attr == '$and') {
+        if (attr == '$and') {
             return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and');
-        } else if(attr == '$or') {
+        } else if (attr == '$or') {
             return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or');
-        } else if(attr === '$and()') {
+        } else if (attr === '$and()') {
             // $and() is a bit different, we want to have child criterias in a
             // sub expression
             let subSquelExpr = squel.expr();
             eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'and');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'and');
-        } else if(attr === '$or()') {
+        } else if (attr === '$or()') {
             // $or() is a bit different, we want to have a child criterias in
             // a subexpression
             let subSquelExpr = squel.expr();
             eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'or');
-        } else if(_.indexOf(allowedAttributes, attr) !== -1){
+        } else if (_.indexOf(allowedAttributes, attr) !== -1){
             translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type);
         // Handle normal attributes
         } else {
@@ -157,50 +157,50 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
     // Get table for this attribute
     let table = QueryUtils.getTableOfField(attr);
 
-    if(attr == 'generationParents') {
+    if (attr == 'generationParents') {
     // First handle special case generationParents
         return handleGenerationParents(attr, attrOptions, squelExpr, type);
-    } else if(_.isInteger(attrOptions) || _.isString(attrOptions)) {
+    } else if (_.isInteger(attrOptions) || _.isString(attrOptions)) {
     // Short hand to easily do an equals operation if attrOptions is a string or an integer.
     // @ToDo: we should also do this for null.
         let [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
         applyCriteriaToExpression(squelExpr, crit, critArgs, type);
-    } else if(_.isArray(attrOptions)) {
+    } else if (_.isArray(attrOptions)) {
     // Short hand to easily do in operation if attrOptions is an array.
         let [crit, critArgs] = createInExpression(table, attr, attrOptions);
         applyCriteriaToExpression(squelExpr, crit, critArgs, type);
-    } else if(_.isPlainObject(attrOptions)) {
+    } else if (_.isPlainObject(attrOptions)) {
         // Translate api operators into sql operators/expressions
-        for(let operator in attrOptions) {
+        for (let operator in attrOptions) {
             // Iterate over all keys of attrOptions and translate relational
             // api operators into sql expressions
             let crit = null,
                 critArgs;
-            if(operator === '$eq') {
+            if (operator === '$eq') {
                 [crit, critArgs] = createEqualsExpression(table, attr, attrOptions['$eq']);
-            } else if(operator === '$neq') {
+            } else if (operator === '$neq') {
                 [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
-            } else if(operator === '$like') {
+            } else if (operator === '$like') {
                 [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
-            } else if(operator === '$nlike') {
+            } else if (operator === '$nlike') {
                 [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
-            } else if(operator === '$gt') {
+            } else if (operator === '$gt') {
                 [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
-            } else if(operator === '$gte') {
+            } else if (operator === '$gte') {
                 [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
-            } else if(operator === '$lt') {
+            } else if (operator === '$lt') {
                 [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
-            } else if(operator === '$lte') {
+            } else if (operator === '$lte') {
                 [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
-            } else if(operator === '$in') {
+            } else if (operator === '$in') {
                 [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
-            } else if(operator === '$nin') {
+            } else if (operator === '$nin') {
                 [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
             } else {
                 logger.warn('Unknown operator:', operator);
             }
             // apply them to passed squel expression builder
-            if(crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+            if (crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
@@ -237,11 +237,11 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
 
     let subSquelExpr = squel.expr();
 
-    if(_.isInteger(attrOptions) || _.isString(attrOptions)) {
+    if (_.isInteger(attrOptions) || _.isString(attrOptions)) {
     // Short hand for in.
         let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
-    } else if(_.isArray(attrOptions)) {
+    } else if (_.isArray(attrOptions)) {
     // Short hand for equals.
     // For arrays we want to make equals, this is just an IN like always, but with
     // a having count. This means we only select those generations, where all given
@@ -251,39 +251,39 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
         havingCount = attrOptions.length;
-    } else if(_.isPlainObject(attrOptions)) {
-        for(let operator in attrOptions) {
+    } else if (_.isPlainObject(attrOptions)) {
+        for (let operator in attrOptions) {
             // Iterate over all keys of attrOptions and translate relational
             // api operators into sql expressions
             let crit = null,
                 critArgs;
-            if(operator === '$eq') {
+            if (operator === '$eq') {
                 let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
                 applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
                 havingCount = attrOptions.length;
-            } else if(operator === '$neq') {
+            } else if (operator === '$neq') {
                 //                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
-            } else if(operator === '$like') {
+            } else if (operator === '$like') {
                 //                [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
-            } else if(operator === '$nlike') {
+            } else if (operator === '$nlike') {
                 //                [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
-            } else if(operator === '$gt') {
+            } else if (operator === '$gt') {
                 //                [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
-            } else if(operator === '$gte') {
+            } else if (operator === '$gte') {
                 //                [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
-            } else if(operator === '$lt') {
+            } else if (operator === '$lt') {
                 //                [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
-            } else if(operator === '$lte') {
+            } else if (operator === '$lte') {
                 //                [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
-            } else if(operator === '$in') {
+            } else if (operator === '$in') {
                 //                [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
-            } else if(operator === '$nin') {
+            } else if (operator === '$nin') {
                 //                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
             } else {
                 logger.warn('Unknown operator:', operator);
             }
             // apply them to passed squel expression builder
-            if(crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+            if (crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
@@ -297,7 +297,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         .group('generation_parents.generationId')
         .where(subSquelExpr);
 
-    if(havingCount !== null) {
+    if (havingCount !== null) {
         subQuery.having('count(generation_parents.plantId) = ?', havingCount);
     }
 
@@ -377,7 +377,7 @@ function createNotInExpression(table, attr, inArr) {
  * @param  {String} type            - Type of logic operator. Can be `and` or `or`.
  */
 function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
-    if(type === 'and') {
+    if (type === 'and') {
         squelExpr.and(crit, ...critArgs);
     } else if (type === 'or') {
         squelExpr.or(crit, ...critArgs);

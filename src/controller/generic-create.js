@@ -104,11 +104,11 @@ class GenericCreate {
    */
     static setQueryFields(context, options) {
         _.each(this.ATTRIBUTES, function(attr) {
-            if(!_.isUndefined(context[attr])) {
+            if (!_.isUndefined(context[attr])) {
                 context.query.set(attr, context[attr]);
-            }else if(!_.isUndefined(options[attr])) {
+            } else if (!_.isUndefined(options[attr])) {
                 context.query.set(attr, options[attr]);
-            }else if(!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
+            } else if (!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
                 context.query.set(attr, this.DEFAULT_VALUES_ATTRIBUTES[attr]);
             } else {
                 context.query.set(attr, null);
@@ -183,11 +183,11 @@ class GenericCreate {
         let recordObject = {};
 
         _.each(this.ATTRIBUTES, function(attr) {
-            if(!_.isUndefined(context[attr])) {
+            if (!_.isUndefined(context[attr])) {
                 recordObject[attr] = context[attr];
-            } else if(!_.isUndefined(options[attr])) {
+            } else if (!_.isUndefined(options[attr])) {
                 recordObject[attr] = options[attr];
-            } else if(!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
+            } else if (!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
                 recordObject[attr] = this.DEFAULT_VALUES_ATTRIBUTES[attr];
             } else {
                 recordObject[attr] = null;
