@@ -8,6 +8,51 @@ const QueryUtils = require('./utils-query');
 const CONSTANTS = require('./constants');
 
 /**
+ * This function sets the filter parts for our queries and handles
+ * many special cases. Mutates query.
+ * You can use following operators (for generationParents only $and...$or() ftm):
+ * Logical Operators:
+ * $and       Logical AND operator
+ * $or        Logical OR operator
+ * $and()     Logical AND operator, but instructions will be in a sub expression
+ * $or()      Logical OR operator, but instructions will be in a sub expression
+ * Relational Operators:
+ * $eq        Equivalence
+ * $neq       Not equal
+ * $like      Like operator, use regular expression format you know from sql
+ * $nlike     Not like
+ * $gt        Greater than
+ * $gte       Greater than equal
+ * $lt        Lower than
+ * $lte       Lower than equal
+ * $in        In array of values (simplifies long OR chains)
+ * $nin       Non in array of values
+ * @param  {squel} query
+ *         squel query, needs to be in a state to take .where() calls
+ * @param  {string[]} allowedFields
+ *         An array of allowed field names
+ * @param  {Object} criteria
+ *         criteria object which gets passed to update/delete/find functions.
+ *         We only use the criteria.filter part, we ignore everything else.
+ * @param  {Object.<String, Object>} [criteria.filter]
+ *         This object holds all the control info for this function, not needed,
+ *         but if you want this function to do a thing, this is needed.
+ *         The key element has to be inside allowedFields, Otherwise it will
+ *         get skipped. The Value can be a String, an integer or an array of
+ *         strings/integers if you want that the value matches exactly.
+ *         Eg: {filter: {'generationId': 1}} => generationId has to be 1
+ *             {filter: {'generationParents': [1,2]}} => generationParents have
+ *                                                      to be 1 and 2.
+ *             {filter: {'plantSex': 'male'}} => only male plants
+ */
+function applyFilter(query, allowedAttributes, criteria) {
+    let squelExpr = squel.expr();
+    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
+    query.where(squelExpr);
+}
+
+
+/**
  * Iterator function for any filter object where keys are attribute names and
  * values attribute criteria, or keys are boolean operators ($and, $or, $and(),
  * $or()). This function can call itself recursive.
@@ -83,7 +128,7 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
             eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'or');
         } else if(_.indexOf(allowedAttributes, attr) !== -1){
-            translateAndApplyAttributeOptions(attr, attrOptions, squelExpr, type);
+            translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type);
         // Handle normal attributes
         } else {
         // No boolean operator nor attribute, something's stinky here
@@ -94,8 +139,10 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
 
 /**
  * Helper method of #eachFilterObject(). This method "parses" the criteria
- * instructions for an attribute. So we handle things like $equals, $nequals,
- * $contains..., translate them into sql statements and apply them to squelExpr.
+ * instructions for an attribute, translates the relational operators
+ * like $eq, $neq, $in.. into sql expressions and applies them to the
+ * given sqlExr. We also handle short hands. For generationParents
+ * attribute we call the #handleGenerationParents() method.
  * Mutates squelExpr.
  * @param  {String} attr
  *         Name of attribute. This has to be checked for validity.
@@ -104,19 +151,11 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
  *         understand it as an equals instruction. If it's an array, we understand
  *         it as "attribute has to be any of them" (except if attr is generationParents,
  *         this is a special case, see #handleGenerationParents()).
- *         If it's an Object it can have more detailed instructions like:
- *          - $eq
- *          - $neq    Records value for attribute has to be different from argument.
- *          - $like   Records value for argument has to be a valid sqlite like regexp and attribute
- *                    need
- *          - $nlike
- *          - $gt
- *          - $lt
- * @param  {[type]} squelExpr   [description]
- * @param  {[type]} type        [description]
- * @return {[type]}             [description]
+ * @param  {squelExpr} squelExpr - squelExpr to apply where stuff to
+ * @param  {String} type         - should be `and` or `or`, decides if we use
+ *                                 squelExpr.and() or squelExpr.or().
  */
-function translateAndApplyAttributeOptions(attr, attrOptions, squelExpr, type) {
+function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type) {
     // Get table for this attribute
     let table = QueryUtils.getTableOfField(attr);
 
@@ -124,16 +163,19 @@ function translateAndApplyAttributeOptions(attr, attrOptions, squelExpr, type) {
     // First handle special case generationParents
         return handleGenerationParents(attr, attrOptions, squelExpr, type);
     } else if(_.isInteger(attrOptions) || _.isString(attrOptions)) {
-    // If attrOptions is an integer or a string, interpret it as a an $equals
-    // criteria.
+    // Short hand to easily do an equals operation if attrOptions is a string or an integer.
+    // @ToDo: we should also do this for null.
         let [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
         applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     } else if(_.isArray(attrOptions)) {
+    // Short hand to easily do in operation if attrOptions is an array.
         let [crit, critArgs] = createInExpression(table, attr, attrOptions);
         applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     } else if(_.isPlainObject(attrOptions)) {
         // Translate api operators into sql operators/expressions
         for(let operator in attrOptions) {
+            // Iterate over all keys of attrOptions and translate relational
+            // api operators into sql expressions
             let crit = null,
                 critArgs;
             if(operator === '$eq') {
@@ -159,14 +201,32 @@ function translateAndApplyAttributeOptions(attr, attrOptions, squelExpr, type) {
             } else {
                 logger.warn('Unknown operator:', operator);
             }
+            // apply them to passed squel expression builder
             if(crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
-      logger.warn('#applyFilter() #translateAndApplyAttributeOptions() Don\'t know what to do with this attribute:', attr);
+      logger.warn('#applyFilter() #translateAndApplyRelationalOperators() Don\'t know what to do with this attribute:', attr);
     }
 }
 
+/**
+ * Helper method of #translateAndApplyRelationalOperators() for the generationParents
+ * special case attribute. Because generationParents isn't only a column in our
+ * database but an own table, we need to build sub queries which join this
+ * table and perform our where filter on that subquery. Besides that
+ * our short hands work a little bit different.
+ * @param  {String} attr
+ *         Name of attribute. This has to be checked for validity.
+ * @param  {Object|String|Integer|Array} attrOptions
+ *         Attribute Options. Can be a lot. If it's an String/Integer we will
+ *         understand it as an equals instruction. If it's an array, we understand
+ *         it as "attribute has to be any of them" (except if attr is generationParents,
+ *         this is a special case, see #handleGenerationParents()).
+ * @param  {squelExpr} squelExpr - squelExpr to apply where stuff to
+ * @param  {String} type         - should be `and` or `or`, decides if we use
+ *                                 squelExpr.and() or squelExpr.or().
+ */
 function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     // generationParents is special. We want it to act like an array, so
     // a lot which works for other "normal" attributes, works not or differently
@@ -179,7 +239,12 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
 
     let subSquelExpr = squel.expr();
 
-    if(_.isArray(attrOptions)) {
+    if(_.isInteger(attrOptions) || _.isString(attrOptions)) {
+    // Short hand for in.
+        let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
+        applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
+    } else if(_.isArray(attrOptions)) {
+    // Short hand for equals.
     // For arrays we want to make equals, this is just an IN like always, but with
     // a having count. This means we only select those generations, where all given
     // parent plantIds match exactly. No other parent plant more or less. This is
@@ -188,6 +253,40 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
         havingCount = attrOptions.length;
+    } else if(_.isPlainObject(attrOptions)) {
+        for(let operator in attrOptions) {
+            // Iterate over all keys of attrOptions and translate relational
+            // api operators into sql expressions
+            let crit = null,
+                critArgs;
+            if(operator === '$eq') {
+                let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
+                applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
+                havingCount = attrOptions.length;
+            } else if(operator === '$neq') {
+//                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
+            } else if(operator === '$like') {
+//                [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
+            } else if(operator === '$nlike') {
+//                [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
+            } else if(operator === '$gt') {
+//                [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
+            } else if(operator === '$gte') {
+//                [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
+            } else if(operator === '$lt') {
+//                [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
+            } else if(operator === '$lte') {
+//                [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
+            } else if(operator === '$in') {
+//                [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
+            } else if(operator === '$nin') {
+//                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
+            } else {
+                logger.warn('Unknown operator:', operator);
+            }
+            // apply them to passed squel expression builder
+            if(crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+        }
     } else {
     // Somethings fishy here. Throw an error?
       return logger.warn('#applyFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
@@ -214,6 +313,18 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         type
     );
 }
+
+/********************
+ * createExpression methods
+ * The always return a an array with two elements. The first element is the sql
+ * expression, the second an array of all place holder arguments for the sql expression.
+ *
+ * Even if they are one liner methods, we keep them in own methods because
+ * of two reasons. The first reason is that we need them at different places,
+ * for the special case generationParents and for "short hands" like attr:String/Integer
+ * or attr:String[]. The second reason is that they could be more complicated, even
+ * if they aren't for the moment.
+ ********************/
 
 function createEqualsExpression(table, attr, toEqual) {
     return ['?.? = ?', [table, attr, toEqual]];
@@ -255,6 +366,18 @@ function createNotInExpression(table, attr, inArr) {
     return ['?.? NOT IN ?', [table, attr, inArr]]
 }
 
+/**
+ * Helper function to apply a crit and critArgs pairs to squelExpr with
+ * the wanted type (`and` or `or`).
+ * @todo think of a better methodname
+ * @param  {squelExpr} squelExpr    - squel expression builder to apply this
+ *                                    sql expression with args too.
+ * @param  {String|squelQuery} expr - criteria, can be a string
+ * @param  {Object[]} exprArgs      - Has be an array of values which can be used
+ *                                    as arguments to the sql expression. Pass empty
+ *                                    array if you don't want to pass any args.
+ * @param  {String} type            - Type of logic operator. Can be `and` or `or`.
+ */
 function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
     if(type === 'and') {
         squelExpr.and(crit, ...critArgs);
@@ -263,12 +386,6 @@ function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
     } else {
         throw new Error('Illegal type: '+ type);
     }
-}
-
-function applyFilter(query, allowedAttributes, criteria) {
-    let squelExpr = squel.expr();
-    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
-    query.where(squelExpr);
 }
 
 module.exports =  applyFilter;
