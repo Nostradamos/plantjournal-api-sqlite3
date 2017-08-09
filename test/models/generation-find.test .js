@@ -1,7 +1,8 @@
 /* eslint-env node, mocha */
 'use strict';
 
-require('should');
+const should = require('should');
+
 const plantJournal = require('../../src/pj');
 
 const helpers = require('../helper-functions');
@@ -23,7 +24,7 @@ describe('Generation()', function() {
             await pj.Generation.create({familyId: 2, generationName: 'S2', generationParents: [1,2]});
         });
 
-        it('should find generations and referenced families', async function() {
+        it('should find and return generations and related families', async function() {
             let generations = await pj.Generation.find();
             generations.should.containDeep({
                 'found': 4,
@@ -72,50 +73,21 @@ describe('Generation()', function() {
 
         });
 
-        it('should not have an familie property if familyName is not in options.attributes', async function() {
+        it('should not have an family property if familyName is not in options.attributes', async function() {
             let generations = await pj.Generation.find(
                 {
                     'attributes': ['familyId', 'generationName', 'generationParents']
                 }
             );
+            should(generations.families).be.undefined();
 
-            generations.should.deepEqual({
-                'found': 4,
-                'remaining': 0,
-                'generations': {
-                    '1': {
-                        'generationId': 1,
-                        'generationName': 'F1',
-                        'generationParents': [],
-                        'familyId': 1
-                    },
-                    '2': {
-                        'generationId': 2,
-                        'generationName': 'F2',
-                        'generationParents': [],
-                        'familyId': 1
-                    },
-                    '3': {
-                        'generationId': 3,
-                        'generationName': 'S1',
-                        'generationParents': [],
-                        'familyId': 2
-                    },
-                    '4': {
-                        'generationId': 4,
-                        'generationName': 'S2',
-                        'generationParents': [1,2],
-                        'familyId': 2
-                    }
-                }
-            });
         });
 
         it('should skip x generations specified with options.offset and limit the count of results to option.limit', async function() {
             let generations = await pj.Generation
                 .find(
                     {
-                        'limit':2,
+                        'limit': 2,
                         'offset': 1
                     }
                 );

@@ -9,9 +9,6 @@ This repo contains a plantJournal API implementation using sqlite3 as the databa
 
 ToDo
 =====
-* add comments to applyFilter
-* applyFilter to applyWhere, criteria to filter, like strongloop does it, criteria.filter => criteria.where
-* Refactor tests to have less code
 * Add .on events
 * Add sorting for find, update, delete
 * Add resolveParents to find?!

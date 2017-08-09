@@ -1,7 +1,7 @@
 /* eslint-env node, mocha */
 'use strict';
 
-require('should');
+const should = require('should');
 
 const plantJournal = require('../../src/pj');
 
@@ -112,22 +112,7 @@ describe('Genotype()', function() {
                     'attributes': ['familyId', 'generationName']
                 }
             );
-            genotypes.should.deepEqual({
-                'found': 4,
-                'remaining': 0,
-                'genotypes': {
-                    '1': { genotypeId: 1, generationId: 1, familyId: 1 },
-                    '2': { genotypeId: 2, generationId: 2, familyId: 1 },
-                    '3': { genotypeId: 3, generationId: 3, familyId: 2 },
-                    '4': { genotypeId: 4, generationId: 4, familyId: 2 }
-                },
-                'generations': {
-                    '1': { generationId: 1, familyId: 1, generationName: 'F1' },
-                    '2': { generationId: 2, familyId: 1, generationName: 'F2' },
-                    '3': { generationId: 3, familyId: 2, generationName: 'S1' },
-                    '4': { generationId: 4, familyId: 2, generationName: 'generationWithParents' }
-                }
-            });
+            should(genotypes.families).be.undefined();
         });
 
         it('should not have an empty generations property object if not generationName is in options.attributes', async function() {
@@ -136,16 +121,7 @@ describe('Genotype()', function() {
                     'attributes': ['familyId']
                 }
             );
-            genotypes.should.deepEqual({
-                'found': 4,
-                'remaining': 0,
-                'genotypes': {
-                    '1': { genotypeId: 1, generationId: 1, familyId: 1 },
-                    '2': { genotypeId: 2, generationId: 2, familyId: 1 },
-                    '3': { genotypeId: 3, generationId: 3, familyId: 2 },
-                    '4': { genotypeId: 4, generationId: 4, familyId: 2 }
-                }
-            });
+            should(genotypes.generations).be.undefined();
         });
 
         it('should skip x genotypes specified with options.offset and limit the count of results to option.limit', async function() {
