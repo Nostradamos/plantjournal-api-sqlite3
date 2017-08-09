@@ -250,10 +250,10 @@ describe('Plant()', function() {
                 {
                     'filter':
                         {'generationParents': [1,2],
-                         '$or': {'generationParents': [1,3]}
-                     },
-                     'attributes': ['plantId', 'plantName', 'generationParents', 'generationName']
-                 }
+                            '$or': {'generationParents': [1,3]}
+                        },
+                    'attributes': ['plantId', 'plantName', 'generationParents', 'generationName']
+                }
             );
             plants.should.deepEqual({
                 'found': 3,
