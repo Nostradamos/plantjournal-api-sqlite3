@@ -165,7 +165,7 @@ QueryUtils.joinPlantsDownwards = function (query) {
  * @param {String[]} criteriaAttributes
  *        Array of attributes a user wants to select.
  */
-QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
+QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes) {
     let attributesToSelect;
     if (_.isEmpty(criteriaAttributes)) {
     // if criteriaAttributes is empty, just select all allowedAttributes
@@ -206,7 +206,7 @@ QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
  * @param {int} [criteria.offset=0]
  *        Offset to set. If empty, will set to 0.
  */
-QueryUtils.setLimitAndOffset = function (query, criteria) {
+QueryUtils.applyCriteriaLimitAndOffset = function (query, criteria) {
     let limit = criteria.limit || 10;
     let offset = criteria.offset || 0;
     query.limit(limit).offset(offset);

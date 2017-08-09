@@ -45,7 +45,7 @@ const CONSTANTS = require('./constants');
  *                                                      to be 1 and 2.
  *             {filter: {'plantSex': 'male'}} => only male plants
  */
-function applyFilter(query, allowedAttributes, criteria) {
+function applyCriteriaFilter(query, allowedAttributes, criteria) {
     let squelExpr = squel.expr();
     eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
     query.where(squelExpr);
@@ -83,12 +83,12 @@ function applyFilter(query, allowedAttributes, criteria) {
  *         or   -> use or operator for attributes
  */
 function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
-    logger.silly('#applyFilter() #eachFilterObject() obj:', obj, 'depth:', depth, 'type:', type);
+    logger.silly('#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth, 'type:', type);
     let isArray = _.isArray(obj);
 
     // Check if obj is array or dict
     if (_.isPlainObject(obj) === false && isArray === false) {
-        return logger.warn('#applyFilter() #eachFilterObject() Returning, illegal object type:', obj);
+        return logger.warn('#applyCriteriaFilter() #eachFilterObject() Returning, illegal object type:', obj);
     }
 
     // No type got specified, determine it based on obj type.
@@ -130,7 +130,7 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
         // Handle normal attributes
         } else {
         // No boolean operator nor attribute, something's stinky here
-            logger.warn('#applyFilter() #eachFilterObject() Illegal attribute: ' + attr);
+            logger.warn('#applyCriteriaFilter() #eachFilterObject() Illegal attribute: ' + attr);
         }
     });
 }
@@ -204,7 +204,7 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
         }
     } else {
     // Somethings fishy here. Throw an error?
-        logger.warn('#applyFilter() #translateAndApplyRelationalOperators() Don\'t know what to do with this attribute:', attr);
+        logger.warn('#applyCriteriaFilter() #translateAndApplyRelationalOperators() Don\'t know what to do with this attribute:', attr);
     }
 }
 
@@ -230,7 +230,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     // a lot which works for other "normal" attributes, works not or differently
     // for generationParents.
 
-    logger.silly('#applyFilter #handleGenerationParents() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
+    logger.silly('#applyCriteriaFilter #handleGenerationParents() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
 
     let table = CONSTANTS.TABLE_GENERATION_PARENTS;
     let havingCount = null;
@@ -287,7 +287,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         }
     } else {
     // Somethings fishy here. Throw an error?
-        return logger.warn('#applyFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
+        return logger.warn('#applyCriteriaFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
     }
 
 
@@ -301,7 +301,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         subQuery.having('count(generation_parents.plantId) = ?', havingCount);
     }
 
-    logger.silly('#applyFilter #handleGenerationParents() generationParents subQuery:', subQuery.toString());
+    logger.silly('#applyCriteriaFilter #handleGenerationParents() generationParents subQuery:', subQuery.toString());
 
 
     applyCriteriaToExpression(
@@ -386,4 +386,4 @@ function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
     }
 }
 
-module.exports =  applyFilter;
+module.exports =  applyCriteriaFilter;

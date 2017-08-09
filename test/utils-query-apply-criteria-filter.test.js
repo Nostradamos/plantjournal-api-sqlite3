@@ -9,7 +9,7 @@ const applyFilter = require('../src/utils-query-apply-filter');
 
 
 describe('src/utils-query-apply-filter', function() {
-    describe('#QueryUtilsApplyFilter() - boolean operators', function() {
+    describe('#QueryUtilsApplyCriteriaFilter() - boolean operators', function() {
         let q;
         beforeEach(function() {
             q = squel.select().from('test');

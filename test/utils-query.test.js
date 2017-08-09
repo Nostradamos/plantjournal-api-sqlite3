@@ -13,17 +13,17 @@ describe('QueryUtils', function() {
         beforeEach(() => q = squel.select().from('test'));
 
         it('should select all explicit column names of allowedAttributes if criteriaAttributes is empty', function() {
-            QueryUtils.setFields(q, ['familyId', 'familyName'], []);
+            QueryUtils.applyCriteriaAttributes(q, ['familyId', 'familyName'], []);
             q.toString().should.equal('SELECT families.familyId, families.familyName FROM test');
         });
 
         it('should not select criteriaAttributes which are not in allowedAttributes', function() {
-            QueryUtils.setFields(q, ['familyId', 'familyName'], ['familyId', 'notAllowed']);
+            QueryUtils.applyCriteriaAttributes(q, ['familyId', 'familyName'], ['familyId', 'notAllowed']);
             q.toString().should.equal('SELECT families.familyId FROM test');
         });
 
         it('should do group_concat... for generationParents', function() {
-            QueryUtils.setFields(q, ['generationId', 'generationParents'], ['generationParents', 'generationId']);
+            QueryUtils.applyCriteriaAttributes(q, ['generationId', 'generationParents'], ['generationParents', 'generationId']);
             q.toString().should.equal(
                 'SELECT generations.generationId, group_concat(' + CONSTANTS.TABLE_GENERATION_PARENTS +'.plantId) as generationParents FROM test'
             );
@@ -36,15 +36,15 @@ describe('QueryUtils', function() {
         beforeEach(() => q = squel.select().from('test'));
 
         it('should set limit(options.limit) and offset(options.offset)', function() {
-            QueryUtils.setLimitAndOffset(q, {'limit': 42, 'offset': 13});
+            QueryUtils.applyCriteriaLimitAndOffset(q, {'limit': 42, 'offset': 13});
             q.toString().should.eql('SELECT * FROM test LIMIT 42 OFFSET 13');
         });
         it('should set limit(10) if options.limit is not set', function() {
-            QueryUtils.setLimitAndOffset(q, {'offset': 13});
+            QueryUtils.applyCriteriaLimitAndOffset(q, {'offset': 13});
             q.toString().should.eql('SELECT * FROM test LIMIT 10 OFFSET 13');
         });
         it('should set offset(0) if options.offset is not set', function() {
-            QueryUtils.setLimitAndOffset(q, {'limit': 42});
+            QueryUtils.applyCriteriaLimitAndOffset(q, {'limit': 42});
             q.toString().should.eql('SELECT * FROM test LIMIT 42 OFFSET 0');
         });
     });

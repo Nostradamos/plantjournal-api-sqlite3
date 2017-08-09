@@ -7,7 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
-const QueryUtilsApplyFilter = require('../utils-query-apply-filter');
+const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-filter');
 
 /**
  * Generic find class which is the skeleton for all *find methods
@@ -132,7 +132,7 @@ class GenericFind {
     }
 
     /**
-   * This method just applies {@link QueryUtilsApplyFilter} to the context.queryWhere query.
+   * This method just applies {@link QueryUtilsApplyCriteriaFilter} to the context.queryWhere query.
    * Normally you shouldn't overwrite this, you can use this.ATTRIBUTES_SEARCHABLE to
    * adjust the behaviour.
    * @param  {object} context
@@ -141,7 +141,7 @@ class GenericFind {
    *         Criteria object passed to find()
    */
     static setQueryWhere(context, criteria) {
-        QueryUtilsApplyFilter(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
+        QueryUtilsApplyCriteriaFilter(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
     }
 
     /**
@@ -176,7 +176,7 @@ class GenericFind {
     }
 
     /**
-   * Applies {@link QueryUtils.setFields} to context.queryWhere with this.ALIASES_TO_FIELD_WITHOUT_ID.
+   * Applies {@link QueryUtils.applyCriteriaAttributes} to context.queryWhere with this.ALIASES_TO_FIELD_WITHOUT_ID.
    * Normally you shouldn't overwrite this function.
    * @param  {object} context
    *         Internal context object
@@ -185,7 +185,7 @@ class GenericFind {
    */
     static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set attributes specified if options.attributes, otherwise all.
-        QueryUtils.setFields(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria.attributes);
+        QueryUtils.applyCriteriaAttributes(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria.attributes);
     }
 
     /**
@@ -213,7 +213,7 @@ class GenericFind {
    */
     static setQueryWhereLimitAndOffset(context, criteria) {
     // Set LIMIT and OFFSET for queryWhere (and only for queryWhere)
-        QueryUtils.setLimitAndOffset(context.queryWhere, criteria);
+        QueryUtils.applyCriteriaLimitAndOffset(context.queryWhere, criteria);
     }
 
     /**
