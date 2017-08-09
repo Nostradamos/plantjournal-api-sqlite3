@@ -108,8 +108,6 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
 
         [attr, attrOptions] = [key, value];
 
-        console.log(attr, attrOptions);
-
         // Handle boolean operators
         if(attr == '$and') {
             return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and');
@@ -206,7 +204,7 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
         }
     } else {
     // Somethings fishy here. Throw an error?
-      logger.warn('#applyFilter() #translateAndApplyRelationalOperators() Don\'t know what to do with this attribute:', attr);
+        logger.warn('#applyFilter() #translateAndApplyRelationalOperators() Don\'t know what to do with this attribute:', attr);
     }
 }
 
@@ -264,23 +262,23 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
                 applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
                 havingCount = attrOptions.length;
             } else if(operator === '$neq') {
-//                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
+                //                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
             } else if(operator === '$like') {
-//                [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
+                //                [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
             } else if(operator === '$nlike') {
-//                [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
+                //                [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
             } else if(operator === '$gt') {
-//                [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
+                //                [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
             } else if(operator === '$gte') {
-//                [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
+                //                [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
             } else if(operator === '$lt') {
-//                [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
+                //                [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
             } else if(operator === '$lte') {
-//                [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
+                //                [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
             } else if(operator === '$in') {
-//                [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
+                //                [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
             } else if(operator === '$nin') {
-//                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
+                //                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
             } else {
                 logger.warn('Unknown operator:', operator);
             }
@@ -289,19 +287,19 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         }
     } else {
     // Somethings fishy here. Throw an error?
-      return logger.warn('#applyFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
+        return logger.warn('#applyFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
     }
 
 
     let subQuery = squel.select()
-      .from(CONSTANTS.TABLE_GENERATION_PARENTS, 'generation_parents')
-      .field('generation_parents.generationId')
-      .group('generation_parents.generationId')
-      .where(subSquelExpr);
+        .from(CONSTANTS.TABLE_GENERATION_PARENTS, 'generation_parents')
+        .field('generation_parents.generationId')
+        .group('generation_parents.generationId')
+        .where(subSquelExpr);
 
-     if(havingCount !== null) {
-         subQuery.having('count(generation_parents.plantId) = ?', havingCount);
-     }
+    if(havingCount !== null) {
+        subQuery.having('count(generation_parents.plantId) = ?', havingCount);
+    }
 
     logger.silly('#applyFilter #handleGenerationParents() generationParents subQuery:', subQuery.toString());
 
@@ -359,11 +357,11 @@ function createLowerThanEqualExpression(table, attr, lowerThanEqual) {
 }
 
 function createInExpression(table, attr, inArr) {
-    return ['?.? IN ?', [table, attr, inArr]]
+    return ['?.? IN ?', [table, attr, inArr]];
 }
 
 function createNotInExpression(table, attr, inArr) {
-    return ['?.? NOT IN ?', [table, attr, inArr]]
+    return ['?.? NOT IN ?', [table, attr, inArr]];
 }
 
 /**

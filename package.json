@@ -7,7 +7,7 @@
     "test": "mocha ./test/*",
     "coverage": "nyc --reporter=html --reporter=text mocha ./test/*",
     "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs",
-    "lint": "eslint src/**/* test/**/*"
+    "lint": "eslint \"src/**/*\" \"test/**/*\""
   },
   "author": "",
   "license": "ISC",

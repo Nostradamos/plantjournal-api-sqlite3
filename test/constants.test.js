@@ -1,4 +1,7 @@
-const should = require('should');
+/* eslint-env node, mocha */
+'use strict';
+
+require('should');
 
 const CONSTANTS = require('../src/constants');
 

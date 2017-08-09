@@ -1,4 +1,7 @@
-const should = require('should');
+/* eslint-env node, mocha */
+'use strict';
+
+require('should');
 const squel = require('squel');
 
 const CONSTANTS = require('../src/constants');
@@ -72,10 +75,9 @@ describe('QueryUtils', function() {
         });
 
         it('should throw error if can\'t resolve table', function() {
-            let table;
             let catched = false;
             try {
-                table = QueryUtils.getTableOfField('blubbField');
+                QueryUtils.getTableOfField('blubbField');
             } catch (err) {
                 catched = true;
                 err.message.should.eql('cannot associate field with a table');

@@ -4,7 +4,7 @@ const sqlite = require('sqlite');
 const CONSTANTS = require('./constants');
 
 module.exports =  async function createTables() {
-  await sqlite.run(`
+    await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_FAMILIES + ` (
       familyId INTEGER,
       familyName TEXT NOT NULL,
@@ -14,7 +14,7 @@ module.exports =  async function createTables() {
       PRIMARY KEY (familyId)
     );
   `);
-  await sqlite.run(`
+    await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENERATIONS + ` (
       generationId INTEGER,
       generationName TEXT NOT NULL,
@@ -26,7 +26,7 @@ module.exports =  async function createTables() {
       FOREIGN KEY(familyId) REFERENCES families(familyId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
-  await sqlite.run(`
+    await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENOTYPES + ` (
       genotypeId INTEGER,
       genotypeName TEXT NOT NULL DEFAULT '',
@@ -38,7 +38,7 @@ module.exports =  async function createTables() {
       FOREIGN KEY(generationId) REFERENCES generations(generationId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
-  await sqlite.run(`
+    await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_PLANTS + ` (
       plantId INTEGER,
       plantName TEXT NOT NULL,
@@ -53,9 +53,9 @@ module.exports =  async function createTables() {
       FOREIGN KEY(genotypeId) REFERENCES genotypes(genotypeId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
-  // We have to this after plant & generation creation becaus of the
-  // foreign keys.
-  await sqlite.run(`
+    // We have to this after plant & generation creation becaus of the
+    // foreign keys.
+    await sqlite.run(`
     CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENERATION_PARENTS + ` (
       parentId INTEGER,
       generationId NOT NULL,

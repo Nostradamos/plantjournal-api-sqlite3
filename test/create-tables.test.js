@@ -1,6 +1,10 @@
-const should = require('should');
-const createTables = require('../src/create-tables');
+/* eslint-env node, mocha */
+'use strict';
+
+require('should');
 const sqlite = require('sqlite');
+
+const createTables = require('../src/create-tables');
 
 describe('#createTables()', function() {
     it('should finish without any sql errors', async function() {

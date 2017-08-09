@@ -1,9 +1,10 @@
-const should = require('should');
-const squel = require('squel');
+/* eslint-env node, mocha */
+'use strict';
+
+require('should');
 const sqlite = require('sqlite');
 
 const Utils = require('../src/utils');
-const CONSTANTS = require('../src/constants');
 
 describe('Utils', function() {
     describe('#deleteEmptyProperties()', function() {

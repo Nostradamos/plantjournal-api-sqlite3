@@ -1,3 +1,5 @@
+'use strict';
+
 /* eslint-env node, mocha */
 let should = require('should');
 

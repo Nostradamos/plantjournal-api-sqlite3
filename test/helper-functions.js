@@ -1,5 +1,8 @@
+/* eslint-env node, mocha */
+'use strict';
+
+require('should');
 const _ = require('lodash');
-const should = require('should');
 
 /********************
  * HELPER FUNCTIONS

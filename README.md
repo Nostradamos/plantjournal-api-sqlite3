@@ -9,8 +9,9 @@ This repo contains a plantJournal API implementation using sqlite3 as the databa
 
 ToDo
 =====
-* Add .on events
+* Make eslint more strict
 * Add sorting for find, update, delete
+* Add .on events
 * Add resolveParents to find?!
 * Add plantLog
 * Add medium/environment

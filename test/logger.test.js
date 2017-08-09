@@ -1,6 +1,9 @@
-const should = require('should');
+/* eslint-env node, mocha */
+'use strict';
+
+require('should');
+
 const logger = require('../src/logger');
-const winston = require('winston');
 
 describe('logger()', function() {
     it('should just log.', function() {

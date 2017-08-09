@@ -1,10 +1,8 @@
 'use strict';
 
 const _ = require('lodash');
-const squel = require('squel');
 
 const CONSTANTS = require('./constants');
-const logger = require('./logger');
 
 /**
  * Set of utils mainly used for query building.
@@ -25,10 +23,10 @@ let QueryUtils = exports;
  *        True if we want to join generationParents
  */
 QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = true) {
-  if(joinGenerationParents == true) {
-    QueryUtils.joinGenerationParentsOnly(queryObj);
-  }
-  QueryUtils.joinFamilies(queryObj);
+    if(joinGenerationParents == true) {
+        QueryUtils.joinGenerationParentsOnly(queryObj);
+    }
+    QueryUtils.joinFamilies(queryObj);
 };
 
 
@@ -42,12 +40,12 @@ QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = t
  * @returns {undefined}
  */
 QueryUtils.joinRelatedGenotypes = function(queryObj) {
-  QueryUtils.joinGenerations(queryObj);
+    QueryUtils.joinGenerations(queryObj);
 
-  // Because with QueryUtils.joinGenerations we already join
-  // generation_parents and generations, we don't have to join
-  // generation_parents again, therefore set false
-  QueryUtils.joinRelatedGenerations(queryObj, false);
+    // Because with QueryUtils.joinGenerations we already join
+    // generation_parents and generations, we don't have to join
+    // generation_parents again, therefore set false
+    QueryUtils.joinRelatedGenerations(queryObj, false);
 };
 
 
@@ -61,8 +59,8 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
  * @returns {undefined}
  */
 QueryUtils.joinRelatedPlants = function(queryObj) {
-  QueryUtils.joinGenotypes(queryObj);
-  QueryUtils.joinRelatedGenotypes(queryObj);
+    QueryUtils.joinGenotypes(queryObj);
+    QueryUtils.joinRelatedGenotypes(queryObj);
 };
 
 /**
@@ -71,9 +69,9 @@ QueryUtils.joinRelatedPlants = function(queryObj) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinFamilies = function (query) {
-  query.left_join(CONSTANTS.TABLE_FAMILIES,
-    'families',
-    'generations.familyId = families.familyId');
+    query.left_join(CONSTANTS.TABLE_FAMILIES,
+        'families',
+        'generations.familyId = families.familyId');
 };
 
 /**
@@ -83,12 +81,12 @@ QueryUtils.joinFamilies = function (query) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinGenerations = function (query) {
-  query.left_join(CONSTANTS.TABLE_GENERATIONS,
-    'generations',
-    'genotypes.generationId = generations.generationId'
-  );
-  // We also have to join generation_parents
-  QueryUtils.joinGenerationParentsOnly(query);
+    query.left_join(CONSTANTS.TABLE_GENERATIONS,
+        'generations',
+        'genotypes.generationId = generations.generationId'
+    );
+    // We also have to join generation_parents
+    QueryUtils.joinGenerationParentsOnly(query);
 };
 
 /**
@@ -97,10 +95,10 @@ QueryUtils.joinGenerations = function (query) {
  *         Squel query which can take an .left_join()
  */
 QueryUtils.joinGenerationParentsOnly = function (query) {
-  query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
-    'generation_parents',
-    'generations.generationId = generation_parents.generationId'
-  );
+    query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
+        'generation_parents',
+        'generations.generationId = generation_parents.generationId'
+    );
 };
 
 /**
@@ -109,10 +107,10 @@ QueryUtils.joinGenerationParentsOnly = function (query) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinGenotypes = function (query) {
-  query.left_join(CONSTANTS.TABLE_GENOTYPES,
-    'genotypes',
-    'plants.genotypeId = genotypes.genotypeId'
-  );
+    query.left_join(CONSTANTS.TABLE_GENOTYPES,
+        'genotypes',
+        'plants.genotypeId = genotypes.genotypeId'
+    );
 };
 
 /**
@@ -120,14 +118,14 @@ QueryUtils.joinGenotypes = function (query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinGenerationsDownwards = function (query) {
-  query.left_join(CONSTANTS.TABLE_GENERATIONS,
-    'generations',
-    'families.familyId = generations.familyId'
-  );
-  query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
-    'generation_parents',
-    'generations.generationId = generation_parents.generationId'
-  );
+    query.left_join(CONSTANTS.TABLE_GENERATIONS,
+        'generations',
+        'families.familyId = generations.familyId'
+    );
+    query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
+        'generation_parents',
+        'generations.generationId = generation_parents.generationId'
+    );
 };
 
 /**
@@ -135,10 +133,10 @@ QueryUtils.joinGenerationsDownwards = function (query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinGenotypesDownwards = function (query) {
-  query.left_join(CONSTANTS.TABLE_GENOTYPES,
-    'genotypes',
-    'generations.generationId = genotypes.generationId'
-  );
+    query.left_join(CONSTANTS.TABLE_GENOTYPES,
+        'genotypes',
+        'generations.generationId = genotypes.generationId'
+    );
 };
 
 /**
@@ -146,10 +144,10 @@ QueryUtils.joinGenotypesDownwards = function (query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinPlantsDownwards = function (query) {
-  query.left_join(CONSTANTS.TABLE_PLANTS,
-    'plants',
-    'genotypes.genotypeId = plants.genotypeId'
-  );
+    query.left_join(CONSTANTS.TABLE_PLANTS,
+        'plants',
+        'genotypes.genotypeId = plants.genotypeId'
+    );
 };
 
 /**
@@ -167,30 +165,30 @@ QueryUtils.joinPlantsDownwards = function (query) {
  *        Array of attributes a user wants to select.
  */
 QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
-  let attributesToSelect;
-  if(_.isEmpty(criteriaAttributes)) {
+    let attributesToSelect;
+    if(_.isEmpty(criteriaAttributes)) {
     // if criteriaAttributes is empty, just select all allowedAttributes
-    attributesToSelect = allowedAttributes;
-  } else {
+        attributesToSelect = allowedAttributes;
+    } else {
     // otherwise we only want attributes which are in both, criteriaAttributes
     // and allowedAttributes.
-    attributesToSelect = _.intersection(allowedAttributes, criteriaAttributes);
-  }
-
-  _.each(attributesToSelect, function(attr) {
-    if(attr == 'generationParents') {
-      // special case, generationParents is no real column, but a concat
-      // of all plantIds
-      query.field(
-        'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENTS +'.plantId) as generationParents'
-      );
-    }else {
-      // translate attribute to explicit column name (tablename.attr)
-      query.field(
-        QueryUtils.getTableOfField(attr) + '.' + attr
-      );
+        attributesToSelect = _.intersection(allowedAttributes, criteriaAttributes);
     }
-  });
+
+    _.each(attributesToSelect, function(attr) {
+        if(attr == 'generationParents') {
+            // special case, generationParents is no real column, but a concat
+            // of all plantIds
+            query.field(
+                'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENTS +'.plantId) as generationParents'
+            );
+        }else {
+            // translate attribute to explicit column name (tablename.attr)
+            query.field(
+                QueryUtils.getTableOfField(attr) + '.' + attr
+            );
+        }
+    });
 };
 
 /**
@@ -208,9 +206,9 @@ QueryUtils.setFields = function (query, allowedAttributes, criteriaAttributes) {
  *        Offset to set. If empty, will set to 0.
  */
 QueryUtils.setLimitAndOffset = function (query, criteria) {
-  let limit = criteria.limit || 10;
-  let offset = criteria.offset || 0;
-  query.limit(limit).offset(offset);
+    let limit = criteria.limit || 10;
+    let offset = criteria.offset || 0;
+    query.limit(limit).offset(offset);
 };
 
 /**
@@ -224,20 +222,20 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
  *         Determined Table name
  */
 QueryUtils.getTableOfField = function (field) {
-  // determine which table we need
-  let table;
-  if(_.startsWith(field, 'plant')) {
-    table = CONSTANTS.TABLE_PLANTS;
-  } else if(_.startsWith(field, 'genotype')) {
-    table = CONSTANTS.TABLE_GENOTYPES;
-  } else if(field === 'generationParents') {
-    table = CONSTANTS.TABLE_GENERATION_PARENTS;
-  } else if(_.startsWith(field, 'generation')) {
-    table = CONSTANTS.TABLE_GENERATIONS;
-  } else if(_.startsWith(field, 'family')) {
-    table = CONSTANTS.TABLE_FAMILIES;
-  } else {
-    throw new Error('cannot associate field with a table');
-  }
-  return table;
+    // determine which table we need
+    let table;
+    if(_.startsWith(field, 'plant')) {
+        table = CONSTANTS.TABLE_PLANTS;
+    } else if(_.startsWith(field, 'genotype')) {
+        table = CONSTANTS.TABLE_GENOTYPES;
+    } else if(field === 'generationParents') {
+        table = CONSTANTS.TABLE_GENERATION_PARENTS;
+    } else if(_.startsWith(field, 'generation')) {
+        table = CONSTANTS.TABLE_GENERATIONS;
+    } else if(_.startsWith(field, 'family')) {
+        table = CONSTANTS.TABLE_FAMILIES;
+    } else {
+        throw new Error('cannot associate field with a table');
+    }
+    return table;
 };
