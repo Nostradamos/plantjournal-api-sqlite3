@@ -56,6 +56,7 @@ class GenericDelete {
         this.setQueryRelatedFields(context, criteria);
         this.setQueryRelatedWhere(context, criteria);
         this.setQueryRelatedLimitAndOffset(context, criteria);
+        this.setQueryRelatedOrder(context, criteria);
         this.stringifyQueryRelated(context, criteria);
 
         await this.executeQueryRelated(context, criteria);
@@ -143,6 +144,20 @@ class GenericDelete {
     }
 
     /**
+     * Takes sort instructions from criteria and applies them to queryRelated.
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to delete()
+     */
+    static setQueryRelatedOrder(context, criteria) {
+        QueryUtils.applyCriteriaSort(
+            context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria
+        );
+    }
+
+
+    /**
    * Builds the query string from the query builder and logs the
    * query. No need to overwrite.
    * @param  {object} context
@@ -155,7 +170,7 @@ class GenericDelete {
         logger.debug(this.name, '#delete() queryRelated:', context.queryRelated);
     }
 
-    /**
+  /**
    * Executes queryRelated asynchronously. No need to overwrite.
    * All selected rows will be in context.rowsRelated
    * @async

@@ -106,6 +106,15 @@ describe('Family()', function() {
             });
         });
 
+        it('should be possible to sort returned families', async function() {
+            let families = await pj.Family.find({sort: 'familyId DESC', limit: 2});
+            families.families.should.containDeep({
+                '4': { familyId: 4, familyName: 'testD' },
+                '3': { familyId: 3, familyName: 'test3' },
+            });
+            console.log(families.families);
+        });
+
         after(async function() {
             await pj.disconnect();
         });

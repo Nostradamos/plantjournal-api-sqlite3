@@ -18,6 +18,8 @@ describe('Family()', function() {
             await pj.connect();
             await pj.Family.create({'familyName': 'testFamily1'});
             await pj.Family.create({'familyName': 'testFmily2'});
+            await pj.Family.create({'familyName': 'testFmily3'});
+
         });
 
         it('should throw error if no arguments got passed', async function() {
@@ -48,7 +50,9 @@ describe('Family()', function() {
             rowsFam.should.deepEqual(
                 [
                     {'familyId': 1, 'familyName': 'testFamily1'},
-                    {'familyId': 2, 'familyName': 'testFamily2'}
+                    {'familyId': 2, 'familyName': 'testFamily2'},
+                    {'familyId': 3, 'familyName': 'testFmily3'},
+
                 ]
             );
         });
@@ -89,6 +93,15 @@ describe('Family()', function() {
 
         it('should ignore unknown update keys and not throw an error', async function() {
             await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'filter': {'familyId': 2}});
+        });
+
+        it('should be possible to update records with criteria.sort and criteria.limit', async function() {
+            let updatedFamilies = await pj.Family.update(
+                {'familyName': 'testFooBar'},
+                {'sort': 'familyId DESC', 'limit': 2}
+            );
+
+            updatedFamilies.should.eql([3,2]);
         });
     });
 });

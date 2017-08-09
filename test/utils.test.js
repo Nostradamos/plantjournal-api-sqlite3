@@ -1,7 +1,8 @@
 /* eslint-env node, mocha */
 'use strict';
 
-require('should');
+const should = require('should');
+
 const sqlite = require('sqlite');
 
 const Utils = require('../src/utils');
@@ -264,9 +265,8 @@ describe('Utils', function() {
     describe('#throwErrorIfNotConnected()', function() {
         it('should throw error if sqlite is not connected', async function() {
             await sqlite.close();
-            (function() {
-                Utils.throwErrorIfNotConnected();
-            }).should.throw('plantJournal is not connected to database.');
+            should(() => Utils.throwErrorIfNotConnected())
+                .throw('plantJournal is not connected to database.');
         });
 
         it('should not throw error if sqlite is connected', async function() {

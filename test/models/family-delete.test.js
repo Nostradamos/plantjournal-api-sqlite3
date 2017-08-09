@@ -90,5 +90,16 @@ describe('Family()', function() {
                 ]
             );
         });
+
+        it('should be possibe to delete families with criteria.sort and criteria.limit instruction', async function() {
+            let deletedFam = await pj.Family.delete(
+                {
+                    'limit': 2,
+                    'sort': 'familyId DESC'
+                }
+            );
+
+            deletedFam.families.should.eql([4, 3]);
+        });
     });
 });

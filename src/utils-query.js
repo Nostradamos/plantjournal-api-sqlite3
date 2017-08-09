@@ -156,7 +156,8 @@ QueryUtils.joinPlantsDownwards = function (query) {
  * use wants to have. We check them againt allowedAttributes and only select
  * attributes which are allowed. If criteriaAttributes is empty, we simply use
  * all allowedAttributes. Mutates query object.
- * @param {squel} attributesToSelect
+ * @todo use whole criteria object and not only criteria.attributes
+ * @param {squel} query
  *        Squel obejct. Has to be in select() state or similiar to take a
  *        field() call.
  * @param {String[]} allowedAttributes
@@ -210,6 +211,83 @@ QueryUtils.setLimitAndOffset = function (query, criteria) {
     let offset = criteria.offset || 0;
     query.limit(limit).offset(offset);
 };
+
+/**
+ * Translates and applies criteria.sort instructions to squel query builder.
+ * This allows you to sort by one or more attributes ascending or descending
+ * (also mixed).
+ * See this criteria examples:
+ * Sort by generationId ascending
+ * {
+ *  sort: "generationId ASC"
+ * }
+ *
+ * Sort by generationId ascending
+ * {
+ *  sort: "generationId"
+ * }
+ *
+ * Sort by generation descending
+ * {
+ *  sort: "generationId DESC"
+ * }
+ *
+ * Sort by generationId ascending AND by familyId descending.
+ * {
+ *  sort: ["generationId ASC", "familyId DESC"]
+ * }
+ * @param {squel} query
+ *        Squel obejct. Has to be in select() state or similiar to take a
+ *        sort() call.
+ * @param {String[]} allowedAttributes
+ *        Array of attributes which are allowed to sort.
+ * @param {Object} criteria
+ *        Criteria object. If this method should do anything, set
+ *        criteria.sort.
+ * @param {String|String[]} criteria.sort
+ *        criteria.sort can be a string or an array of strings.
+ *        In both cases strings have to be in the following format:
+ *        "<attributeName> <ASC|DESC" or only "<attributeName>" if you
+ *        want to sort ascending.
+ * @throws {Error}
+ *         If attribute is illegal (not in allowedAttributes) or the order type
+ *         is unknown (not ASC or DESC).
+ */
+QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
+    if(_.isEmpty(criteria.sort)) return;
+    if(!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
+
+    let table;
+    _.each(criteria.sort, function(sortStr) {
+        // Check if this is a valid format
+        let attr, sortType;
+        if(_.indexOf(sortStr, " ") === -1) {
+        // No whitespace means, attribute is the whole string
+        // and we use ASC as the default sort type.
+            attr = sortStr;
+            sortType = 'ASC';
+        } else {
+            [attr, sortType] = _.split(sortStr, ' ');
+            // upperCase sortType to be a bit more fault tollerant
+            sortType = _.upperCase(sortType);
+        }
+
+        if(_.indexOf(allowedAttributes, attr) === -1) {
+        // attr not in allowedAttributes array
+            throw new Error('Illegal attribute: ' + attr);
+        }
+
+        let table = QueryUtils.getTableOfField(attr);
+        if(sortType === 'ASC') {
+            query.order('?.?', true, table, attr);
+        } else if(sortType === 'DESC') {
+            query.order('?.?', false, table, attr);
+        } else {
+            // Split it again to get un-uppercased sort type
+            throw new Error('Illegal sort type: ' + _.split(sortStr, ' ')[1]);
+        }
+    });
+}
 
 /**
  * Determines in which table this column is. This works because all column names

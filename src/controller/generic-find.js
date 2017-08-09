@@ -85,6 +85,7 @@ class GenericFind {
         this.setQueryWhereAdditionalFields(context, criteria);
         this.setQueryCountFields(context, criteria);
         this.setQueryWhereLimitAndOffset(context, criteria);
+        this.setQueryWhereOrder(context, criteria);
         this.setQueryWhereGroup(context, criteria);
 
         this.stringifyQueries(context, criteria);
@@ -213,6 +214,19 @@ class GenericFind {
     static setQueryWhereLimitAndOffset(context, criteria) {
     // Set LIMIT and OFFSET for queryWhere (and only for queryWhere)
         QueryUtils.setLimitAndOffset(context.queryWhere, criteria);
+    }
+
+    /**
+     * Takes sort instructions from criteria and applies them to queryWhere.
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to find()
+     */
+    static setQueryWhereOrder(context, criteria) {
+        QueryUtils.applyCriteriaSort(
+            context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria
+        );
     }
 
     /**
