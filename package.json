@@ -7,11 +7,13 @@
     "test": "mocha ./test/*",
     "coverage": "nyc --reporter=html --reporter=text mocha ./test/*",
     "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs",
-    "lint": "eslint \"src/**/*\" \"test/**/*\""
+    "lint": "eslint \"src/**/*\" \"test/**/*\"",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "coveralls": "^2.13.1",
     "eslint": "^4.2.0",
     "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
     "mocha": "^3.2.0",
