@@ -134,7 +134,7 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
         // Handle normal attributes
         } else {
         // No boolean operator nor attribute, something's stinky here
-            logger.warn('#applyCriteriaFilter() #eachFilterObject() Illegal attribute: ' + attr);
+            throw new Error('Illegal attribute or unknown logical operator: ' + attr);
         }
     });
 }
@@ -205,7 +205,7 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
             } else if (operator === '$nin') {
                 [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
             } else {
-                logger.warn('Unknown operator:', operator);
+                throw new Error('Unknown relational operator: ' + operator);
             }
             // apply them to passed squel expression builder
             if (crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
@@ -257,10 +257,9 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     // parent plantIds match exactly. No other parent plant more or less. This is
     // different from the other array handling, because we don't only look if any
     // parent is given. If you want that, use generationParents: {'$in'...}
-        let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
-
+        let crit, critArgs;
+        [havingCount, crit, critArgs] = createEqualsExpressionGenerationParents(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
-        havingCount = attrOptions.length;
     } else if (_.isPlainObject(attrOptions)) {
         for (let operator in attrOptions) {
             // Iterate over all keys of attrOptions and translate relational
@@ -269,10 +268,8 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
                 critArgs;
 
             if (operator === '$eq') {
-                let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
-
+                [havingCount, crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
                 applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
-                havingCount = attrOptions.length;
             } else if (operator === '$neq') {
                 //                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
             } else if (operator === '$like') {
@@ -292,17 +289,16 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
             } else if (operator === '$nin') {
                 //                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
             } else {
-                logger.warn('Unknown operator:', operator);
+                throw new Error('Unknown relational operator: ' + operator);
             }
             // apply them to passed squel expression builder
-            if (crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+            applyCriteriaToExpression(squelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
         logger.warn('#applyCriteriaFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
         return;
     }
-
 
     let subQuery = squel.select()
         .from(CONSTANTS.TABLE_GENERATION_PARENTS, 'generation_parents')
@@ -315,7 +311,6 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     }
 
     logger.silly('#applyCriteriaFilter #handleGenerationParents() generationParents subQuery:', subQuery.toString());
-
 
     applyCriteriaToExpression(
         squelExpr,
@@ -338,6 +333,10 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
  * or attr:String[]. The second reason is that they could be more complicated, even
  * if they aren't for the moment.
  ********************/
+
+function createEqualsExpressionGenerationParents(table, attr, toEqual) {
+    return [toEqual.length, ...createInExpression(table, CONSTANTS.ATTR_ID_PLANT, toEqual)];
+}
 
 function createEqualsExpression(table, attr, toEqual) {
     return ['?.? = ?',

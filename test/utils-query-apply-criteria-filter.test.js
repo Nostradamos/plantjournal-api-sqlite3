@@ -1,7 +1,7 @@
 /* eslint-env node, mocha */
 'use strict';
 
-require('should');
+const should = require('should');
 
 const squel = require('squel');
 
@@ -9,12 +9,39 @@ const QueryUtilsApplyFilter = require('../src/utils-query-apply-criteria-filter'
 
 
 describe('src/utils-query-apply-criteria-filter', function() {
+    describe('#QueryUtilsApplyCriteriaFilter() - errors', function() {
+        let q;
+        beforeEach(() => q = squel.select().from('test'));
+
+        it('should throw error if unknown logical operator is used', function() {
+            should(
+                () => {
+                    QueryUtilsApplyFilter
+                    (
+                        q,
+                        ['generationId', 'generationName'],
+                        {'filter': {'$nand': {'generationId': 'a'}}}
+                    );
+                }
+            ).throw('Illegal attribute or unknown logical operator: $nand');
+        });
+
+        it('should throw error if attribute is not in allowedFields', function() {
+            should(
+                () => QueryUtilsApplyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}})
+            ).throw('Illegal attribute or unknown logical operator: generationName');
+        });
+
+        it('should throw error if unknown relational operator is used', function() {
+            should(
+                () => QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': {'$foo': 'bar'}}})
+            ).throw('Unknown relational operator: $foo');
+        });
+    });
+
     describe('#QueryUtilsApplyCriteriaFilter() - boolean operators', function() {
         let q;
-
-        beforeEach(function() {
-            q = squel.select().from('test');
-        });
+        beforeEach(() => q = squel.select().from('test'));
 
         it('should do AND conjunction for $and', function() {
             let criteria = {
@@ -372,11 +399,6 @@ describe('src/utils-query-apply-criteria-filter', function() {
         it('should set WHERE (translated)field = "fieldValue" if options.filter[field] = fieldValue is a string', function() {
             QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': 'testGenerationName'}});
             q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationName' = 'testGenerationName')`);
-        });
-
-        it('should not set WHERE if field is not in allowedFields', function() {
-            QueryUtilsApplyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}});
-            q.toString().should.eql('SELECT * FROM test');
         });
 
         it('should set WHERE generationId IN (SELECT generations.generationId...WHERE plantId=parentIdA OR plantId=parentIdB...HAVING count(plantId)=2) if options.filter.generationParents = [parentIdA, parentIdB] is an array', function() {
