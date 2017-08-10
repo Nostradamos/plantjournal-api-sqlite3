@@ -343,34 +343,20 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
  * if they aren't for the moment.
  ********************/
 
- function applyEqualsExpressionGenerationParents(squelExpr, squelExprHaving, table, attr, parentsToEqual, type) {
-     let [critIn, critInArgs] = createInExpression(table, attr, parentsToEqual);
-     let [critHaving, critHavingArgs] = createEqualsExpression(table, attr, parentsToEqual.length, 'count');
-     applyCriteriaToExpression(squelExpr, critIn, critInArgs, type);
-     applyCriteriaToExpression(squelExprHaving, critHaving, critHavingArgs, type);
- }
+function applyEqualsExpressionGenerationParents(squelExpr, squelExprHaving, table, attr, parentsToEqual, type) {
+    let [critIn, critInArgs] = createInExpression(table, attr, parentsToEqual);
+    let [critHaving, critHavingArgs] = createEqualsExpression(table, attr, parentsToEqual.length, 'count');
+    applyCriteriaToExpression(squelExpr, critIn, critInArgs, type);
+    applyCriteriaToExpression(squelExprHaving, critHaving, critHavingArgs, type);
+}
 
- function createEqualsExpressionGenerationParents(table, attr, parentsToEqual) {
-     return [
-         ...createInExpression(table, attr, parentsToEqual),
-         ...createEqualsExpression(table, attr, parentsToEqual.length, 'count')
-     ];
- }
-
- function createNotEqualsExpressionGenerationParents(table, attr, parentsNotToEqual) {
-     return [
-         ...createNotInExpression(table, attr, parentsNotToEqual),
-         ...createNotEqualsExpression(table, attr, parentsNotToEqual.length, 'count')
-     ];
- }
-
- function createGenericExpression(table, attr, operator, equal, func=null) {
-     return [
+function createGenericExpression(table, attr, operator, equal, func=null) {
+    return [
         (func === null ? '?.? ' : func + '(?.?) ') + operator + ' ?',
         [table, attr, equal]
-     ];
+    ];
 
- }
+}
 
 function createEqualsExpression(table, attr, toEqual, func=null) {
     return createGenericExpression(table, attr, '=', toEqual, func);
