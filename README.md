@@ -12,14 +12,16 @@ ToDo
 =====
 * Improve applyWhere for generationParents, add generationParents.length and add tests
 * Better errors, with code, computer error string, and human readable error message?!
-* Add .on events
-* Add resolveParents to find?!
 * Add plantLog
 * Add medium and mediumLog
 * Add environment and environmentLog
 * Implement files/pictures/media
+* Add .on events
+* Add resolveParents to find?!
 * Harden API against invalid user input
 * Add strain?!
+* Don't always select id attributes
+* Improve performance for sql by only joining tables if necessary
 
 Development Notes/Coding Style
 ==============================
