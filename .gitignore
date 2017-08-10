@@ -65,3 +65,6 @@ test.js
 
 # jsdoc output
 docs
+
+# coveralls settings
+.coveralls.yml

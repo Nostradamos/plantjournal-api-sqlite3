@@ -22,17 +22,23 @@
             {
                 "allowTemplateLiterals": true
             }
-	],
+	    ],
         "semi": [
             "error",
             "always"
         ],
-	"no-unsafe-finally": [
+	    "no-unsafe-finally": [
             "off"
-	],
-	"no-unused-vars": [
+	    ],
+	    "no-unused-vars": [
              "error",
-	     {"args": "none"}
-	]
+	         {"args": "none"}
+	    ],
+        "no-trailing-spaces": [
+            "error"
+        ],
+        "no-unexpected-multiline": [
+            "off"
+        ]
     }
 }
