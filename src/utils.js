@@ -169,7 +169,7 @@ Utils.hasToBeAssocArray = function hasToBeAssocArray(obj, prefix = 'First argume
  * @param  {String}  [name='options'] - In case of an error, how to name the
  *                                      Object? Defaults to options.
  */
-Utils.hasToBeString = function optionsHasString(obj, property, name = 'options') {
+Utils.hasToBeString = function hasToBeString(obj, property, name = 'options') {
     if (_.has(obj, property) && !_.isString(obj[property])) {
         throw new Error(name + '.' + property + ' has to be a string');
     }

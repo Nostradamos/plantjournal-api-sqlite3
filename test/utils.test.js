@@ -14,7 +14,9 @@ describe('Utils', function() {
                 .should.deepEqual({z:{a:1}});
         });
         it('should mutate object delete non empty properties defined in limitTo', function() {
-            Utils.deleteEmptyProperties({a:{}, b:[], c:null, d:false, e:-1, f:1, z:{a:1}}, ['a', 'b', 'c'])
+            Utils.deleteEmptyProperties({a:{}, b:[], c:null, d:false, e:-1, f:1, z:{a:1}}, ['a',
+                'b',
+                'c'])
                 .should.deepEqual({d:false, e:-1, f:1, z:{a:1}});
         });
     });

@@ -77,7 +77,9 @@ describe('Generation()', function() {
         it('should not have an family property if familyName is not in options.attributes', async function() {
             let generations = await pj.Generation.find(
                 {
-                    'attributes': ['familyId', 'generationName', 'generationParents']
+                    'attributes': ['familyId',
+                        'generationName',
+                        'generationParents']
                 }
             );
 

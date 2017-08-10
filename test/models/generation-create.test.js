@@ -83,7 +83,12 @@ describe('Generation()', function() {
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
 
-            for (let value in [[1,2], null, 'string', 1, true, undefined]) {
+            for (let value in [[1,2],
+                null,
+                'string',
+                1,
+                true,
+                undefined]) {
                 await pj.Generation.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
                 tested++;
@@ -144,8 +149,7 @@ describe('Generation()', function() {
 
             rows.should.deepEqual(
                 [
-                    {'parentId': 1, 'generationId': 2, 'plantId': 1},
-                    {'parentId': 2, 'generationId': 2, 'plantId': 2}
+                    {'parentId': 1, 'generationId': 2, 'plantId': 1}, {'parentId': 2, 'generationId': 2, 'plantId': 2}
                 ]
             );
         });

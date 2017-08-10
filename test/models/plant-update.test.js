@@ -62,8 +62,7 @@ describe('Plant()', function() {
 
             rowsFam.should.deepEqual(
                 [
-                    {'familyId': 1, 'familyName': 'testFamily1'},
-                    {'familyId': 2, 'familyName': 'testFamily2'}
+                    {'familyId': 1, 'familyName': 'testFamily1'}, {'familyId': 2, 'familyName': 'testFamily2'}
                 ]
             );
 
@@ -106,14 +105,19 @@ describe('Plant()', function() {
             let updatedPlant = await pj.Plant
                 .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}});
 
-            updatedPlant.should.eql([1,2,3,4]);
+            updatedPlant.should.eql([1,
+                2,
+                3,
+                4]);
         });
 
         it('should also be possible to find multiple plants to update based on generation attributes', async function() {
             let updatedPlant = await pj.Plant
                 .update({'plantName': 'NoGoodPlantName'}, {'filter': {'generationId': 1}});
 
-            updatedPlant.should.eql([1,2,3]);
+            updatedPlant.should.eql([1,
+                2,
+                3]);
         });
 
         it('should also be possible to limit/offset plant to update when found multiple', async function() {

@@ -46,7 +46,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'generationId': 'a', '$and': {'generationName': 'b', '$and' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' AND 'generations'.'generationName' = 'b' AND 'families'.'familyId' = 'c')`
@@ -59,7 +61,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'generationId': 'a', '$or': {'generationName': 'b', '$or' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'generations'.'generationName' = 'b' OR 'families'.'familyId' = 'c')`
@@ -72,7 +76,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'generationId': 'a', '$or': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'generations'.'generationId' = 'b' AND 'families'.'familyId' = 'c')`
@@ -85,7 +91,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'$and()': {'generationId': 'a', '$and': {'generationName': 'b'}}, '$or()': {'generationId': 'c', '$and': {'generationName': 'd'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE (('generations'.'generationId' = 'a' AND 'generations'.'generationName' = 'b') OR ('generations'.'generationId' = 'c' AND 'generations'.'generationName' = 'd'))`
@@ -99,7 +107,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'generationId': 'a', '$or()': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR ('generations'.'generationId' = 'b' AND 'families'.'familyId' = 'c'))`
@@ -112,7 +122,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'generationId': 'a', 'familyId': 'c'}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' AND 'families'.'familyId' = 'c')`
@@ -138,7 +150,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'generationName': 'b', '$and':[{'generationId': 'a'}, {'familyId': 'c'}]}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'b' AND 'generations'.'generationId' = 'a' AND 'families'.'familyId' = 'c')`
@@ -151,7 +165,9 @@ describe('src/utils-query-apply-criteria-filter', function() {
                 'filter': {'generationName': 'b', '$or': {'generationId': 'a', 'familyId': 'c'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+            QueryUtilsApplyFilter(q, ['generationId',
+                'generationName',
+                'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'b' OR 'generations'.'generationId' = 'a' OR 'families'.'familyId' = 'c')`

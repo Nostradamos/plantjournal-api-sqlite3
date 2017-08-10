@@ -71,7 +71,9 @@ GenotypeFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge(
     CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_GENOTYPE
 );
 
-GenotypeFind.DEFAULT_FIELDS = ['genotypes.genotypeId', 'generations.generationId', 'families.familyId'];
+GenotypeFind.DEFAULT_FIELDS = ['genotypes.genotypeId',
+    'generations.generationId',
+    'families.familyId'];
 
 GenotypeFind.COUNT = 'DISTINCT ' + CONSTANTS.TABLE_GENERATIONS + '.' + CONSTANTS.ATTR_ID_GENERATION;
 

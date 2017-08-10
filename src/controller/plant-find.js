@@ -60,7 +60,9 @@ class PlantFind extends GenericFind {
         });
 
         Utils.deleteEmptyProperties(
-            returnObject, ['families', 'generations', 'genotypes']
+            returnObject, ['families',
+                'generations',
+                'genotypes']
         );
     }
 }
@@ -79,7 +81,9 @@ PlantFind.ALIASES_TO_FIELD_WITHOUT_ID = _.merge(
     CONSTANTS.ALIASES_TO_FIELD_WITHOUT_ID_PLANT
 );
 
-PlantFind.DEFAULT_FIELDS = ['plants.plantId', 'genotypes.genotypeId', 'generations.generationId',
+PlantFind.DEFAULT_FIELDS = ['plants.plantId',
+    'genotypes.genotypeId',
+    'generations.generationId',
     'families.familyId'];
 
 PlantFind.COUNT = 'DISTINCT plants.plantId';

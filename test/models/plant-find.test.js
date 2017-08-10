@@ -157,7 +157,9 @@ describe('Plant()', function() {
         it('should not have an empty families property object if familyName is NOT in options.attributes', async function() {
             let plants = await pj.Plant.find(
                 {
-                    'attributes': ['familyId', 'generationName', 'genotypeName']
+                    'attributes': ['familyId',
+                        'generationName',
+                        'genotypeName']
                 }
             );
 
@@ -223,7 +225,10 @@ describe('Plant()', function() {
         });
 
         it('should only return plants filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
-            let plants = await pj.Plant.find({'filter': {'generationParents': [1,2]}, 'attributes': ['plantId', 'plantName', 'generationParents', 'generationName']});
+            let plants = await pj.Plant.find({'filter': {'generationParents': [1,2]}, 'attributes': ['plantId',
+                'plantName',
+                'generationParents',
+                'generationName']});
 
             plants.should.deepEqual({
                 'found': 2,
@@ -262,7 +267,10 @@ describe('Plant()', function() {
                         {'generationParents': [1,2],
                             '$or': {'generationParents': [1,3]}
                         },
-                    'attributes': ['plantId', 'plantName', 'generationParents', 'generationName']
+                    'attributes': ['plantId',
+                        'plantName',
+                        'generationParents',
+                        'generationName']
                 }
             );
 

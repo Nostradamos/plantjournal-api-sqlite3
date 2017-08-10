@@ -93,8 +93,7 @@ describe('Genotype()', function() {
 
             rowsPlant.should.deepEqual(
                 [
-                    {'plantId': 2, 'plantName': 'blubb2'},
-                    {'plantId': 3, 'plantName': 'blubb'}
+                    {'plantId': 2, 'plantName': 'blubb2'}, {'plantId': 3, 'plantName': 'blubb'}
                 ]
             );
         });

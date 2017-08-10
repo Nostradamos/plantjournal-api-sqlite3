@@ -56,8 +56,7 @@ describe('Generation()', function() {
 
             rowsFam.should.deepEqual(
                 [
-                    {'familyId': 1, 'familyName': 'testFamily1'},
-                    {'familyId': 2, 'familyName': 'testFamily2'}
+                    {'familyId': 1, 'familyName': 'testFamily1'}, {'familyId': 2, 'familyName': 'testFamily2'}
                 ]
             );
 
@@ -155,8 +154,7 @@ describe('Generation()', function() {
 
             rowsParents.should.eql(
                 [
-                    {'generationId': 2, 'plantId': 1},
-                    {'generationId': 2, 'plantId': 2}
+                    {'generationId': 2, 'plantId': 1}, {'generationId': 2, 'plantId': 2}
                 ]
             );
         });
@@ -173,8 +171,7 @@ describe('Generation()', function() {
 
             rowsParents.should.eql(
                 [
-                    {'generationId': 4, 'plantId': 1},
-                    {'generationId': 4, 'plantId': 2}
+                    {'generationId': 4, 'plantId': 1}, {'generationId': 4, 'plantId': 2}
                 ]
             );
         });

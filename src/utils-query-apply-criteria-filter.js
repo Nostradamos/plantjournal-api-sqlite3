@@ -320,7 +320,9 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     applyCriteriaToExpression(
         squelExpr,
         '?.? IN ?',
-        [CONSTANTS.TABLE_GENERATIONS, CONSTANTS.ATTR_ID_GENERATION, subQuery],
+        [CONSTANTS.TABLE_GENERATIONS,
+            CONSTANTS.ATTR_ID_GENERATION,
+            subQuery],
         type
     );
 }
@@ -338,43 +340,73 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
  ********************/
 
 function createEqualsExpression(table, attr, toEqual) {
-    return ['?.? = ?', [table, attr, toEqual]];
+    return ['?.? = ?',
+        [table,
+            attr,
+            toEqual]];
 }
 
 function createNotEqualsExpression(table, attr, notToEqual) {
-    return ['?.? != ?', [table, attr, notToEqual]];
+    return ['?.? != ?',
+        [table,
+            attr,
+            notToEqual]];
 }
 
 function createLikeExpression(table, attr, notToEqual) {
-    return ['?.? LIKE ?', [table, attr, notToEqual]];
+    return ['?.? LIKE ?',
+        [table,
+            attr,
+            notToEqual]];
 }
 
 function createNotLikeExpression(table, attr, notToEqual) {
-    return ['?.? NOT LIKE ?', [table, attr, notToEqual]];
+    return ['?.? NOT LIKE ?',
+        [table,
+            attr,
+            notToEqual]];
 }
 
 function createGreaterThanExpression(table, attr, greaterThan) {
-    return ['?.? > ?', [table, attr, greaterThan]];
+    return ['?.? > ?',
+        [table,
+            attr,
+            greaterThan]];
 }
 
 function createGreaterThanEqualExpression(table, attr, greaterThanEqual) {
-    return ['?.? >= ?', [table, attr, greaterThanEqual]];
+    return ['?.? >= ?',
+        [table,
+            attr,
+            greaterThanEqual]];
 }
 
 function createLowerThanExpression(table, attr, lowerThan) {
-    return ['?.? < ?', [table, attr, lowerThan]];
+    return ['?.? < ?',
+        [table,
+            attr,
+            lowerThan]];
 }
 
 function createLowerThanEqualExpression(table, attr, lowerThanEqual) {
-    return ['?.? <= ?', [table, attr, lowerThanEqual]];
+    return ['?.? <= ?',
+        [table,
+            attr,
+            lowerThanEqual]];
 }
 
 function createInExpression(table, attr, inArr) {
-    return ['?.? IN ?', [table, attr, inArr]];
+    return ['?.? IN ?',
+        [table,
+            attr,
+            inArr]];
 }
 
 function createNotInExpression(table, attr, inArr) {
-    return ['?.? NOT IN ?', [table, attr, inArr]];
+    return ['?.? NOT IN ?',
+        [table,
+            attr,
+            inArr]];
 }
 
 /**

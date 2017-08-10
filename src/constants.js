@@ -49,7 +49,10 @@ CONSTANTS.ATTR_MODIFIED_AT_PLANT = 'plantModifiedAt';
 
 // Plant sexes. You can't pass anything else as a value for this.
 // Maybe we have to extend this from time to time.
-CONSTANTS.PLANT_SEXES = ['male', 'female', 'hermaphrodite', null];
+CONSTANTS.PLANT_SEXES = ['male',
+    'female',
+    'hermaphrodite',
+    null];
 
 // *****************************+
 // * DONT EDIT BELOW THIS LINE *
@@ -61,8 +64,7 @@ CONSTANTS.PLANT_SEXES = ['male', 'female', 'hermaphrodite', null];
  * @type {String[]}
  */
 CONSTANTS.ATTRIBUTES_FAMILY = [
-    CONSTANTS.ATTR_NAME_FAMILY,
-    CONSTANTS.ATTR_DESCRIPTION_FAMILY
+    CONSTANTS.ATTR_NAME_FAMILY, CONSTANTS.ATTR_DESCRIPTION_FAMILY
 ];
 
 CONSTANTS.ATTRIBUTES_GENERATION = [

@@ -15,8 +15,7 @@ describe('CONSTANTS', function() {
         it('ATTRIBUTES_FAMILY should contain all non-internal family attributes', function() {
             CONSTANTS.ATTRIBUTES_FAMILY.should.deepEqual(
                 [
-                    'familyName',
-                    'familyDescription'
+                    'familyName', 'familyDescription'
                 ]
             );
         });

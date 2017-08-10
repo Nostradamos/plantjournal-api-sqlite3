@@ -22,7 +22,12 @@ describe('Plant()', function() {
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
 
-            for (let value in [[1,2], null, 'string', 1, true, undefined]) {
+            for (let value in [[1,2],
+                null,
+                'string',
+                1,
+                true,
+                undefined]) {
                 await pj.Family.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
                 tested++;
@@ -134,8 +139,7 @@ describe('Plant()', function() {
             let plant = await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
 
             let [createdAtPlant, modifiedAtPlant] = [
-                plant.plants[1].plantCreatedAt,
-                plant.plants[1].plantModifiedAt
+                plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt
             ];
             let [createdAtGenotype, modifiedAtGenotype] = [plant.genotypes[2].genotypeCreatedAt, plant.genotypes[2].genotypeModifiedAt];
 
@@ -189,8 +193,7 @@ describe('Plant()', function() {
 
             rowsPlants.should.deepEqual(
                 [
-                    {'plantId': 1, 'plantName': 'motherPlant1', 'plantClonedFrom': null, 'plantSex': null, 'genotypeId': 1},
-                    {'plantId': 2, 'plantName': 'clonePlant2', 'plantClonedFrom': 1, 'plantSex': null, 'genotypeId': 1}
+                    {'plantId': 1, 'plantName': 'motherPlant1', 'plantClonedFrom': null, 'plantSex': null, 'genotypeId': 1}, {'plantId': 2, 'plantName': 'clonePlant2', 'plantClonedFrom': 1, 'plantSex': null, 'genotypeId': 1}
                 ]
             );
             let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');

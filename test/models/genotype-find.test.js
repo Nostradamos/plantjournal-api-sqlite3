@@ -5,7 +5,7 @@ const should = require('should');
 
 const plantJournal = require('../../src/pj');
 
-const helper_functions = require('../helper-functions');
+const helperFunctions = require('../helper-functions');
 
 describe('Genotype()', function() {
     describe('#find()', function() {
@@ -99,11 +99,11 @@ describe('Genotype()', function() {
                     }
                 }
             );
-            helper_functions
+            helperFunctions
                 .allGenotypesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
-            helper_functions
+            helperFunctions
                 .allGenerationsShouldHaveCreatedAtAndModifiedAtFields(genotypes);
-            helper_functions
+            helperFunctions
                 .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
         });
 
@@ -233,7 +233,9 @@ describe('Genotype()', function() {
         it('should only return genotypes filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
             let genotypes = await pj.Genotype.find(
                 {
-                    'attributes': ['generationParents', 'generationName', 'genotypeName'],
+                    'attributes': ['generationParents',
+                        'generationName',
+                        'genotypeName'],
                     'filter': {'generationParents': [1,2]}
                 }
             );

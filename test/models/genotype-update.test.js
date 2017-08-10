@@ -58,8 +58,7 @@ describe('Genotype()', function() {
 
             rowsFam.should.deepEqual(
                 [
-                    {'familyId': 1, 'familyName': 'testFamily1'},
-                    {'familyId': 2, 'familyName': 'testFamily2'}
+                    {'familyId': 1, 'familyName': 'testFamily1'}, {'familyId': 2, 'familyName': 'testFamily2'}
                 ]
             );
 
