@@ -173,11 +173,9 @@ class GenericUpdate {
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
-   * @return {Promise}
    */
     static async executeQueryFind(context, update, criteria) {
         context.rowsFind = await sqlite.all(context.queryFind);
-
         logger.debug(this.name, '#update() rowsFind:', context.rowsFind);
     }
 
@@ -266,7 +264,6 @@ class GenericUpdate {
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
-   * @return {Promise}
    */
     static async executeQueryUpdate(context, update, criteria) {
         context.resultUpdate = await sqlite.get(context.queryUpdate);

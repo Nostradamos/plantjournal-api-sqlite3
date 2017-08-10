@@ -40,6 +40,8 @@ class PlantFind extends GenericFind {
    * genotypeName etc) in returnObject.genotypes, all family attributes
    * (like familyName, familyId) inreturnObject.families and all
    * generation attributes in returnObject.generations.
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria

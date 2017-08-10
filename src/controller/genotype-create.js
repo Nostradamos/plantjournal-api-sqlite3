@@ -20,10 +20,10 @@ class GenotypeCreate extends GenericCreate {
     /**
    * We need to validate input and throw errors if we're
    * unhappy with it.
-   * @param  {object} returnObject
-   *         object which will find returned from #create().
    * @param  {object} context
    *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
    * @throws {Error}
    */
     static validateOptions(context, options) {

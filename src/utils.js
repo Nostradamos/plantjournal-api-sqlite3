@@ -224,7 +224,7 @@ Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
 /**
  * Converts Set to array and filters out null. Mutates set.
  * @param  {Set} set - Set to filter and convert
- * @return {Array}
+ * @return {Array}   - Arrayfied set without null elements
  */
 Utils.filterSetNotNull = function filterSetNotNull(set) {
     set.delete(null);

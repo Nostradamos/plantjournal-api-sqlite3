@@ -292,7 +292,7 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
  * Determines in which table this column is. This works because all column names
  * use a prefix, which should be equivalent to the table name.
  * Eg: familyId => family, plantClonedFrom => plant
- * @param  {string} Field
+ * @param  {string} field
  *         column name. Eg. familyId, familyName, generationId, generationName,
  *         generationParent, genotypeId...
  * @return {string}

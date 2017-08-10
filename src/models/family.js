@@ -122,7 +122,7 @@ Family.create = async function(options) {
  *         familyCreatedAt, familyModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
- * @return {ReturnFindFamily}
+ * @return {ReturnFindFamily} - Found families
  */
 Family.find = async function(criteria) {
     return await FamilyFind.find(criteria);

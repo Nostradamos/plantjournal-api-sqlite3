@@ -80,7 +80,6 @@ class GenerationUpdate extends GenericUpdate {
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
-   * @return {Promise}          [description]
    */
     static async executeQueryUpdateParents(context, update, criteria) {
         try {
@@ -104,7 +103,6 @@ class GenerationUpdate extends GenericUpdate {
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
-   * @return {Promise}          [description]
    */
     static async executeQueryUpdate(context, update, criteria) {
         if (_.has(context.attributesToUpdate, 'generationParents')) {

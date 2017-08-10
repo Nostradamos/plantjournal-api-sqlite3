@@ -28,7 +28,8 @@ class GenericCreate {
    *        Object which should hold enough information to create
    *        a new entry with.
    * @throws {Error}
-   * @return {object}
+   * @return {object} - returnObject, should normally contain information
+   *                    about created record.
    */
     static async create(options) {
         Utils.throwErrorIfNotConnected();
@@ -176,6 +177,10 @@ class GenericCreate {
    * The so called `recordObject` will be in
    * returnObject[plural][insertId]. returnObject is the object returned
    * from #create().
+   * @param  {object} returnObject
+   *         object which will later get returned from #create().
+   * @param  {object} context
+   *         internal context object in #create().
    * @param  {object} options
    *         options object which got passed to GenericCreate.create().
    */

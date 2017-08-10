@@ -29,8 +29,8 @@ const CONSTANTS = require('./constants');
  * $nin       Non in array of values
  * @param  {squel} query
  *         squel query, needs to be in a state to take .where() calls
- * @param  {string[]} allowedFields
- *         An array of allowed field names
+ * @param  {string[]} allowedAttributes
+ *         An array of allowed attributes
  * @param  {Object} criteria
  *         criteria object which gets passed to update/delete/find functions.
  *         We only use the criteria.filter part, we ignore everything else.
@@ -88,7 +88,8 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
 
     // Check if obj is array or dict
     if (_.isPlainObject(obj) === false && isArray === false) {
-        return logger.warn('#applyCriteriaFilter() #eachFilterObject() Returning, illegal object type:', obj);
+        logger.warn('#applyCriteriaFilter() #eachFilterObject() Returning, illegal object type:', obj);
+        return;
     }
 
     // No type got specified, determine it based on obj type.
@@ -159,7 +160,8 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
 
     if (attr == 'generationParents') {
     // First handle special case generationParents
-        return handleGenerationParents(attr, attrOptions, squelExpr, type);
+        handleGenerationParents(attr, attrOptions, squelExpr, type);
+        return;
     } else if (_.isInteger(attrOptions) || _.isString(attrOptions)) {
     // Short hand to easily do an equals operation if attrOptions is a string or an integer.
     // @ToDo: we should also do this for null.
@@ -287,7 +289,8 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         }
     } else {
     // Somethings fishy here. Throw an error?
-        return logger.warn('#applyCriteriaFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
+        logger.warn('#applyCriteriaFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
+        return;
     }
 
 
@@ -370,8 +373,8 @@ function createNotInExpression(table, attr, inArr) {
  * @todo think of a better methodname
  * @param  {squelExpr} squelExpr    - squel expression builder to apply this
  *                                    sql expression with args too.
- * @param  {String|squelQuery} expr - criteria, can be a string
- * @param  {Object[]} exprArgs      - Has be an array of values which can be used
+ * @param  {String|squelQuery} crit - criteria, can be a string
+ * @param  {Object[]} critArgs      - Has be an array of values which can be used
  *                                    as arguments to the sql expression. Pass empty
  *                                    array if you don't want to pass any args.
  * @param  {String} type            - Type of logic operator. Can be `and` or `or`.
