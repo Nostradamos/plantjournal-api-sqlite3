@@ -4,10 +4,10 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const logger = require('../logger');
-const Utils = require('../utils');
-const QueryUtils = require('../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-criteria-filter');
+const logger = require('../../logger');
+const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
+const QueryUtilsApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
 
 /**
  * Generic find class which is the skeleton for all *find methods

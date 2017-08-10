@@ -4,10 +4,10 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const logger = require('../logger');
-const Utils = require('../utils');
-const QueryUtils = require('../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-criteria-filter');
+const logger = require('../../logger');
+const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
+const QueryUtilsApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
 
 /**
  * Generic Delete class which tries to build a skeleton for all

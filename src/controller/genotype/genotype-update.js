@@ -1,9 +1,9 @@
 'use strict';
 
-const QueryUtils = require('../utils-query');
+const QueryUtils = require('../../utils-query');
 
-const CONSTANTS = require('../constants');
-const GenericUpdate = require('./generic-update');
+const CONSTANTS = require('../../constants');
+const GenericUpdate = require('../generic/generic-update');
 
 /**
  * GenotypeUpdate Class. Basically does the update() stuff for

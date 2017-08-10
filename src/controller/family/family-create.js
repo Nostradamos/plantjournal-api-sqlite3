@@ -1,9 +1,9 @@
 'use strict';
 
-const CONSTANTS = require('../constants');
-const Utils = require('../utils');
+const CONSTANTS = require('../../constants');
+const Utils = require('../../utils');
 
-const GenericCreate = require('./generic-create');
+const GenericCreate = require('../generic/generic-create');
 
 /**
  * FamilyCreate Class. Creates a new Family and gets

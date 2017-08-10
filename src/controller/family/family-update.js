@@ -1,7 +1,7 @@
 'use strict';
 
-const CONSTANTS = require('../constants');
-const GenericUpdate = require('./generic-update');
+const CONSTANTS = require('../../constants');
+const GenericUpdate = require('../generic/generic-update');
 
 /**
  * FamilyUpdate Skeleton. See GenericUpdate for more information.

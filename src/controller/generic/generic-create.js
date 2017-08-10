@@ -4,8 +4,8 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const logger = require('../logger');
-const Utils = require('../utils');
+const logger = require('../../logger');
+const Utils = require('../../utils');
 
 
 /**

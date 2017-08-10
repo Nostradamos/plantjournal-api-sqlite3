@@ -1,9 +1,9 @@
 'use strict';
 
-const GenerationCreate = require('../controller/generation-create');
-const GenerationFind = require('../controller/generation-find');
-const GenerationDelete = require('../controller/generation-delete');
-const GenerationUpdate = require('../controller/generation-update');
+const GenerationCreate = require('../controller/generation/generation-create');
+const GenerationFind = require('../controller/generation/generation-find');
+const GenerationDelete = require('../controller/generation/generation-delete');
+const GenerationUpdate = require('../controller/generation/generation-update');
 
 
 /**

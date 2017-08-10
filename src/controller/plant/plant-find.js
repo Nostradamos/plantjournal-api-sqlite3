@@ -2,11 +2,11 @@
 
 const _ = require('lodash');
 
-const CONSTANTS = require('../constants');
-const Utils = require('../utils');
-const QueryUtils = require('../utils-query');
+const CONSTANTS = require('../../constants');
+const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
 
-const GenericFind = require('./generic-find');
+const GenericFind = require('../generic/generic-find');
 
 /**
  * PlantFind does all the functionality of Plant.find

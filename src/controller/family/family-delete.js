@@ -2,12 +2,12 @@
 
 const _ = require('lodash');
 
-const logger = require('../logger');
-const CONSTANTS = require('../constants');
-const Utils = require('../utils');
-const QueryUtils = require('../utils-query');
+const logger = require('../../logger');
+const CONSTANTS = require('../../constants');
+const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
 
-const GenericDelete = require('./generic-delete');
+const GenericDelete = require('../generic/generic-delete');
 
 /**
  * FamilyDelete class which gets executed from Family.delete().

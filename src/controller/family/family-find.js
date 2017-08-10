@@ -2,10 +2,10 @@
 
 const _ = require('lodash');
 
-const CONSTANTS = require('../constants');
-const Utils = require('../utils');
+const CONSTANTS = require('../../constants');
+const Utils = require('../../utils');
 
-const GenericFind = require('./generic-find');
+const GenericFind = require('../generic/generic-find');
 
 /**
  * FamilyFind does all the functionality of Family.find

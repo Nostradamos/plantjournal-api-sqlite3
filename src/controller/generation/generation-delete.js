@@ -2,12 +2,12 @@
 
 const _ = require('lodash');
 
-const CONSTANTS = require('../constants');
-const logger = require('../logger');
-const Utils = require('../utils');
-const QueryUtils = require('../utils-query');
+const CONSTANTS = require('../../constants');
+const logger = require('../../logger');
+const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
 
-const GenericDelete = require('./generic-delete');
+const GenericDelete = require('../generic/generic-delete');
 
 /**
  * This class extends {@link GenericDelete} to fit the needs for Generation

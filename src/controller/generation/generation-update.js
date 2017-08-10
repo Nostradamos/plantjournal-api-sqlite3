@@ -4,11 +4,11 @@ const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
 
-const logger = require('../logger');
-const QueryUtils = require('../utils-query');
+const logger = require('../../logger');
+const QueryUtils = require('../../utils-query');
 
-const CONSTANTS = require('../constants');
-const GenericUpdate = require('./generic-update');
+const CONSTANTS = require('../../constants');
+const GenericUpdate = require('../generic/generic-update');
 
 /**
  * GenerationUpdate Class. Basically does the update() stuff for

@@ -3,12 +3,12 @@
 const _ = require('lodash');
 const sqlite = require('sqlite');
 
-const CONSTANTS = require('../constants');
-const logger = require('../logger');
-const Utils = require('../utils');
-const Genotype = require('../models/genotype');
+const CONSTANTS = require('../../constants');
+const logger = require('../../logger');
+const Utils = require('../../utils');
+const Genotype = require('../../models/genotype');
 
-const GenericCreate = require('./generic-create');
+const GenericCreate = require('../generic/generic-create');
 
 /**
  * PlantCreate Class which creates a new Plant.
