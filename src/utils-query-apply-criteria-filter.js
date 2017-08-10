@@ -241,14 +241,14 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     logger.silly('#applyCriteriaFilter #handleGenerationParents() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
 
     let table = CONSTANTS.TABLE_GENERATION_PARENTS;
-    let havingCount = null;
 
-    let subSquelExpr = squel.expr();
+
+    let subSquelExpr = squel.expr(); // expression for WHERE
+    let subSquelExprHaving = squel.expr(); // expression for HAVING, mainly for count()
 
     if (_.isInteger(attrOptions) || _.isString(attrOptions)) {
     // Short hand for in.
         let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
-
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
     } else if (_.isArray(attrOptions)) {
     // Short hand for equals.
@@ -257,9 +257,14 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     // parent plantIds match exactly. No other parent plant more or less. This is
     // different from the other array handling, because we don't only look if any
     // parent is given. If you want that, use generationParents: {'$in'...}
-        let crit, critArgs;
-        [havingCount, crit, critArgs] = createEqualsExpressionGenerationParents(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
-        applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
+        applyEqualsExpressionGenerationParents(
+            subSquelExpr,
+            subSquelExprHaving,
+            table,
+            CONSTANTS.ATTR_ID_PLANT,
+            attrOptions,
+            type
+        );
     } else if (_.isPlainObject(attrOptions)) {
         for (let operator in attrOptions) {
             // Iterate over all keys of attrOptions and translate relational
@@ -268,31 +273,37 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
                 critArgs;
 
             if (operator === '$eq') {
-                [havingCount, crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
-                applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
+                applyEqualsExpressionGenerationParents(
+                    subSquelExpr,
+                    subSquelExprHaving,
+                    table,
+                    CONSTANTS.ATTR_ID_PLANT,
+                    attrOptions['$eq'],
+                    type
+                );
             } else if (operator === '$neq') {
-                //                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
+                [crit, critArgs] = createNotInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$neq']);
             } else if (operator === '$like') {
-                //                [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
+                [crit, critArgs] = createLikeExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$like']);
             } else if (operator === '$nlike') {
-                //                [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
+                [crit, critArgs] = createNotLikeExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$nlike']);
             } else if (operator === '$gt') {
-                //                [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
+                [crit, critArgs] = createGreaterThanExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$gt']);
             } else if (operator === '$gte') {
-                //                [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
+                [crit, critArgs] = createGreaterThanEqualExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$gte']);
             } else if (operator === '$lt') {
-                //                [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
+                [crit, critArgs] = createLowerThanExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$lt']);
             } else if (operator === '$lte') {
-                //                [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
+                [crit, critArgs] = createLowerThanEqualExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$lte']);
             } else if (operator === '$in') {
-                //                [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
+                [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$in']);
             } else if (operator === '$nin') {
-                //                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
+                [crit, critArgs] = createNotInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$nin']);
             } else {
                 throw new Error('Unknown relational operator: ' + operator);
             }
             // apply them to passed squel expression builder
-            applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+            if(crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
@@ -306,9 +317,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         .group('generation_parents.generationId')
         .where(subSquelExpr);
 
-    if (havingCount !== null) {
-        subQuery.having('count(generation_parents.plantId) = ?', havingCount);
-    }
+    subQuery.having(subSquelExprHaving);
 
     logger.silly('#applyCriteriaFilter #handleGenerationParents() generationParents subQuery:', subQuery.toString());
 
@@ -334,78 +343,73 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
  * if they aren't for the moment.
  ********************/
 
-function createEqualsExpressionGenerationParents(table, attr, toEqual) {
-    return [toEqual.length, ...createInExpression(table, CONSTANTS.ATTR_ID_PLANT, toEqual)];
+ function applyEqualsExpressionGenerationParents(squelExpr, squelExprHaving, table, attr, parentsToEqual, type) {
+     let [critIn, critInArgs] = createInExpression(table, attr, parentsToEqual);
+     let [critHaving, critHavingArgs] = createEqualsExpression(table, attr, parentsToEqual.length, 'count');
+     applyCriteriaToExpression(squelExpr, critIn, critInArgs, type);
+     applyCriteriaToExpression(squelExprHaving, critHaving, critHavingArgs, type);
+ }
+
+ function createEqualsExpressionGenerationParents(table, attr, parentsToEqual) {
+     return [
+         ...createInExpression(table, attr, parentsToEqual),
+         ...createEqualsExpression(table, attr, parentsToEqual.length, 'count')
+     ];
+ }
+
+ function createNotEqualsExpressionGenerationParents(table, attr, parentsNotToEqual) {
+     return [
+         ...createNotInExpression(table, attr, parentsNotToEqual),
+         ...createNotEqualsExpression(table, attr, parentsNotToEqual.length, 'count')
+     ];
+ }
+
+ function createGenericExpression(table, attr, operator, equal, func=null) {
+     return [
+        (func === null ? '?.? ' : func + '(?.?) ') + operator + ' ?',
+        [table, attr, equal]
+     ];
+
+ }
+
+function createEqualsExpression(table, attr, toEqual, func=null) {
+    return createGenericExpression(table, attr, '=', toEqual, func);
 }
 
-function createEqualsExpression(table, attr, toEqual) {
-    return ['?.? = ?',
-        [table,
-            attr,
-            toEqual]];
+function createNotEqualsExpression(table, attr, notToEqual, func=null) {
+    return createGenericExpression(table, attr, '!=', notToEqual, func);
 }
 
-function createNotEqualsExpression(table, attr, notToEqual) {
-    return ['?.? != ?',
-        [table,
-            attr,
-            notToEqual]];
+function createLikeExpression(table, attr, like, func=null) {
+    return createGenericExpression(table, attr, 'LIKE', like, func);
 }
 
-function createLikeExpression(table, attr, notToEqual) {
-    return ['?.? LIKE ?',
-        [table,
-            attr,
-            notToEqual]];
+function createNotLikeExpression(table, attr, notLike, func=null) {
+    return createGenericExpression(table, attr, 'NOT LIKE', notLike, func);
 }
 
-function createNotLikeExpression(table, attr, notToEqual) {
-    return ['?.? NOT LIKE ?',
-        [table,
-            attr,
-            notToEqual]];
+function createGreaterThanExpression(table, attr, greaterThan, func=null) {
+    return createGenericExpression(table, attr, '>', greaterThan, func);
 }
 
-function createGreaterThanExpression(table, attr, greaterThan) {
-    return ['?.? > ?',
-        [table,
-            attr,
-            greaterThan]];
+function createGreaterThanEqualExpression(table, attr, greaterThanEqual, func=null) {
+    return createGenericExpression(table, attr, '>=', greaterThanEqual, func);
 }
 
-function createGreaterThanEqualExpression(table, attr, greaterThanEqual) {
-    return ['?.? >= ?',
-        [table,
-            attr,
-            greaterThanEqual]];
+function createLowerThanExpression(table, attr, lowerThan, func=null) {
+    return createGenericExpression(table, attr, '<', lowerThan, func);
 }
 
-function createLowerThanExpression(table, attr, lowerThan) {
-    return ['?.? < ?',
-        [table,
-            attr,
-            lowerThan]];
+function createLowerThanEqualExpression(table, attr, lowerThanEqual, func=null) {
+    return createGenericExpression(table, attr, '<=', lowerThanEqual, func);
 }
 
-function createLowerThanEqualExpression(table, attr, lowerThanEqual) {
-    return ['?.? <= ?',
-        [table,
-            attr,
-            lowerThanEqual]];
+function createInExpression(table, attr, inArr, func=null) {
+    return createGenericExpression(table, attr, 'IN', inArr, func);
 }
 
-function createInExpression(table, attr, inArr) {
-    return ['?.? IN ?',
-        [table,
-            attr,
-            inArr]];
-}
-
-function createNotInExpression(table, attr, inArr) {
-    return ['?.? NOT IN ?',
-        [table,
-            attr,
-            inArr]];
+function createNotInExpression(table, attr, notInArr, func=null) {
+    return createGenericExpression(table, attr, 'NOT IN', notInArr, func);
 }
 
 /**

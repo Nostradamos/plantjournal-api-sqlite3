@@ -10,16 +10,15 @@ This repo contains a plantJournal API implementation using sqlite3 as the databa
 
 ToDo
 =====
-* Increase code coverage
-* Add .on events
 * Better errors, with code, computer error string, and human readable error message?!
+* Add .on events
 * Add resolveParents to find?!
 * Add plantLog
 * Add medium/environment
 * Add mediumLog
 * Add environmentData
-* Improve applyWhere for generationParents
 * Implement files/pictures/media
+* Improve applyWhere for generationParents and add tests
 * Add strain?!
 
 Development Notes/Coding Style
