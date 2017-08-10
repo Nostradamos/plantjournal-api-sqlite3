@@ -26,6 +26,7 @@ describe('Generation()', function() {
 
         it('should find and return generations and related families', async function() {
             let generations = await pj.Generation.find();
+
             generations.should.containDeep({
                 'found': 4,
                 'remaining': 0,
@@ -79,6 +80,7 @@ describe('Generation()', function() {
                     'attributes': ['familyId', 'generationName', 'generationParents']
                 }
             );
+
             should(generations.families).be.undefined();
 
         });
@@ -190,6 +192,7 @@ describe('Generation()', function() {
 
         it('should only return generations filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
             let generations = await pj.Generation.find({'attributes': ['generationParents', 'generationName'], 'filter': {'generationParents': [1,2]}});
+
             generations.should.deepEqual({
                 'found': 1,
                 'remaining': 0,

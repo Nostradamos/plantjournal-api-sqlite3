@@ -63,6 +63,7 @@ class GenerationUpdate extends GenericUpdate {
 
         // Wa have to insert new parents, build query for this
         let attributesRows = [];
+
         _.each(update.generationParents, function(parentPlantId) {
             _.each(context.idsToUpdate, function(generationId) {
                 attributesRows.push({parentId: null, generationId: generationId, plantId: parentPlantId});

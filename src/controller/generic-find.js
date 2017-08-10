@@ -7,7 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-filter');
+const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-criteria-filter');
 
 /**
  * Generic find class which is the skeleton for all *find methods
@@ -75,6 +75,7 @@ class GenericFind {
         if (_.isNil(criteria)) criteria = {};
         logger.debug(this.name, ' #find() criteria:', criteria);
         let context = {};
+
         context.attributes = criteria.attributes || false;
 
         this.initQueries(context, criteria);
@@ -92,6 +93,7 @@ class GenericFind {
         await this.executeQueries(context, criteria);
 
         let returnObject = {};
+
         this.buildReturnObjectWhere(returnObject, context, criteria);
         this.buildReturnObjectCount(returnObject, context, criteria);
 

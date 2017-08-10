@@ -47,6 +47,7 @@ const CONSTANTS = require('./constants');
  */
 function applyCriteriaFilter(query, allowedAttributes, criteria) {
     let squelExpr = squel.expr();
+
     eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
     query.where(squelExpr);
 }
@@ -110,20 +111,22 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
         [attr, attrOptions] = [key, value];
 
         // Handle boolean operators
-        if (attr == '$and') {
+        if (attr === '$and') {
             return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and');
-        } else if (attr == '$or') {
+        } else if (attr === '$or') {
             return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or');
         } else if (attr === '$and()') {
             // $and() is a bit different, we want to have child criterias in a
             // sub expression
             let subSquelExpr = squel.expr();
+
             eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'and');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'and');
         } else if (attr === '$or()') {
             // $or() is a bit different, we want to have a child criterias in
             // a subexpression
             let subSquelExpr = squel.expr();
+
             eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'or');
         } else if (_.indexOf(allowedAttributes, attr) !== -1){
@@ -158,7 +161,7 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
     // Get table for this attribute
     let table = QueryUtils.getTableOfField(attr);
 
-    if (attr == 'generationParents') {
+    if (attr === 'generationParents') {
     // First handle special case generationParents
         handleGenerationParents(attr, attrOptions, squelExpr, type);
         return;
@@ -166,10 +169,12 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
     // Short hand to easily do an equals operation if attrOptions is a string or an integer.
     // @ToDo: we should also do this for null.
         let [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
+
         applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     } else if (_.isArray(attrOptions)) {
     // Short hand to easily do in operation if attrOptions is an array.
         let [crit, critArgs] = createInExpression(table, attr, attrOptions);
+
         applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     } else if (_.isPlainObject(attrOptions)) {
         // Translate api operators into sql operators/expressions
@@ -178,6 +183,7 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
             // api operators into sql expressions
             let crit = null,
                 critArgs;
+
             if (operator === '$eq') {
                 [crit, critArgs] = createEqualsExpression(table, attr, attrOptions['$eq']);
             } else if (operator === '$neq') {
@@ -242,6 +248,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     if (_.isInteger(attrOptions) || _.isString(attrOptions)) {
     // Short hand for in.
         let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
+
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
     } else if (_.isArray(attrOptions)) {
     // Short hand for equals.
@@ -251,6 +258,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     // different from the other array handling, because we don't only look if any
     // parent is given. If you want that, use generationParents: {'$in'...}
         let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
+
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
         havingCount = attrOptions.length;
     } else if (_.isPlainObject(attrOptions)) {
@@ -259,8 +267,10 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
             // api operators into sql expressions
             let crit = null,
                 critArgs;
+
             if (operator === '$eq') {
                 let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
+
                 applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
                 havingCount = attrOptions.length;
             } else if (operator === '$neq') {

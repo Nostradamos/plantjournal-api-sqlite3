@@ -9,7 +9,6 @@ This repo contains a plantJournal API implementation using sqlite3 as the databa
 
 ToDo
 =====
-* Make eslint more strict
 * Add .on events
 * Better errors, with code, computer error string, and human readable error message?!
 * Add resolveParents to find?!

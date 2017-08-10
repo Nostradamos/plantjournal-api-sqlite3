@@ -35,6 +35,7 @@ class GenericCreate {
         Utils.throwErrorIfNotConnected();
         logger.debug(this.name, '#create() options:', options);
         let context = {};
+
         this.validateOptionsIsAssoc(context, options);
         this.validateOptions(context, options);
 

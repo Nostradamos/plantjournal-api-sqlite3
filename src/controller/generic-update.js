@@ -7,7 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-filter');
+const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-criteria-filter');
 
 /**
  * Generic update class which is the skeleton for all *-update classes.

@@ -33,6 +33,7 @@ describe('Plant()', function() {
 
         it('should find plants, referenced genotypes, generations and families', async function() {
             let plants = await pj.Plant.find();
+
             plants.should.containDeep(
                 {
                     'found': 5,
@@ -159,6 +160,7 @@ describe('Plant()', function() {
                     'attributes': ['familyId', 'generationName', 'genotypeName']
                 }
             );
+
             should(plants.families).be.undefined();
         });
 
@@ -168,6 +170,7 @@ describe('Plant()', function() {
                     'attributes': ['familyId', 'genotypeName']
                 }
             );
+
             should(plants.generations).be.undefined();
         });
 
@@ -177,11 +180,13 @@ describe('Plant()', function() {
                     'attributes': ['familyId']
                 }
             );
+
             should(plants.phenotypes).be.undefined();
         });
 
         it('should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1', async function() {
             let plants = await pj.Plant.find({'offset': 2, 'limit': 1, 'attributes': ['plantName']});
+
             plants.should.deepEqual({
                 'found': 5,
                 'remaining': 2,
@@ -193,6 +198,7 @@ describe('Plant()', function() {
 
         it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)', async function() {
             let plants = await pj.Plant.find({'filter': {'plantName': 'testPlant3'}, 'attributes': ['plantId']});
+
             plants.should.deepEqual({
                 'found': 1,
                 'remaining': 0,
@@ -205,6 +211,7 @@ describe('Plant()', function() {
 
         it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async function() {
             let plants = await pj.Plant.find({'filter': {'genotypeName': 'testGenotype3'}, 'attributes': ['plantId']});
+
             plants.should.deepEqual({
                 'found': 2,
                 'remaining': 0,
@@ -217,6 +224,7 @@ describe('Plant()', function() {
 
         it('should only return plants filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
             let plants = await pj.Plant.find({'filter': {'generationParents': [1,2]}, 'attributes': ['plantId', 'plantName', 'generationParents', 'generationName']});
+
             plants.should.deepEqual({
                 'found': 2,
                 'remaining': 0,
@@ -257,6 +265,7 @@ describe('Plant()', function() {
                     'attributes': ['plantId', 'plantName', 'generationParents', 'generationName']
                 }
             );
+
             plants.should.deepEqual({
                 'found': 3,
                 'remaining': 0,

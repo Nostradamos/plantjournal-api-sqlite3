@@ -5,12 +5,13 @@ require('should');
 
 const squel = require('squel');
 
-const applyFilter = require('../src/utils-query-apply-filter');
+const QueryUtilsApplyFilter = require('../src/utils-query-apply-criteria-filter');
 
 
-describe('src/utils-query-apply-filter', function() {
+describe('src/utils-query-apply-criteria-filter', function() {
     describe('#QueryUtilsApplyCriteriaFilter() - boolean operators', function() {
         let q;
+
         beforeEach(function() {
             q = squel.select().from('test');
         });
@@ -19,7 +20,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'$and': {'generationId': 'a', 'generationName': 'b'}}
             };
-            applyFilter(q, ['generationId', 'generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' AND 'generations'.'generationName' = 'b')`
@@ -30,7 +32,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'$or': {'generationId': 'a', 'generationName': 'b'}}
             };
-            applyFilter(q, ['generationId', 'generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'generations'.'generationName' = 'b')`
@@ -42,7 +45,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': 'a', '$and': {'generationName': 'b', '$and' : {'familyId': 'c'}}}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' AND 'generations'.'generationName' = 'b' AND 'families'.'familyId' = 'c')`
@@ -54,7 +58,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': 'a', '$or': {'generationName': 'b', '$or' : {'familyId': 'c'}}}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'generations'.'generationName' = 'b' OR 'families'.'familyId' = 'c')`
@@ -66,7 +71,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': 'a', '$or': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'generations'.'generationId' = 'b' AND 'families'.'familyId' = 'c')`
@@ -78,7 +84,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'$and()': {'generationId': 'a', '$and': {'generationName': 'b'}}, '$or()': {'generationId': 'c', '$and': {'generationName': 'd'}}}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE (('generations'.'generationId' = 'a' AND 'generations'.'generationName' = 'b') OR ('generations'.'generationId' = 'c' AND 'generations'.'generationName' = 'd'))`
@@ -91,7 +98,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': 'a', '$or()': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR ('generations'.'generationId' = 'b' AND 'families'.'familyId' = 'c'))`
@@ -103,7 +111,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': 'a', 'familyId': 'c'}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' AND 'families'.'familyId' = 'c')`
@@ -115,7 +124,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': [{'generationId': 'a'}, {'familyId': 'c'}]
             };
-            applyFilter(q, ['generationId', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'families'.'familyId' = 'c')`
@@ -127,7 +137,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': 'b', '$and':[{'generationId': 'a'}, {'familyId': 'c'}]}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'b' AND 'generations'.'generationId' = 'a' AND 'families'.'familyId' = 'c')`
@@ -139,7 +150,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': 'b', '$or': {'generationId': 'a', 'familyId': 'c'}}
             };
-            applyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId', 'generationName', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'b' OR 'generations'.'generationId' = 'a' OR 'families'.'familyId' = 'c')`
@@ -150,6 +162,7 @@ describe('src/utils-query-apply-filter', function() {
 
     describe('#apply-filter() - binary operators', function() {
         let q;
+
         beforeEach(function() {
             q = squel.select().from('test');
         });
@@ -159,7 +172,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': {'$eq': 'foo'}}
             };
-            applyFilter(q, ['generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'foo')`
             );
@@ -170,7 +184,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': 'foo'}
             };
-            applyFilter(q, ['generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'foo')`
             );
@@ -181,7 +196,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': {'$eq': 1}}
             };
-            applyFilter(q, ['generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 1)`
             );
@@ -192,7 +208,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': {'$neq': 'foo'}}
             };
-            applyFilter(q, ['generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' != 'foo')`
             );
@@ -203,7 +220,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': {'$like': 'foo_'}}
             };
-            applyFilter(q, ['generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' LIKE 'foo_')`
             );
@@ -214,7 +232,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': {'$nlike': 'foo_'}}
             };
-            applyFilter(q, ['generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' NOT LIKE 'foo_')`
             );
@@ -225,7 +244,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': {'$gt': 5}}
             };
-            applyFilter(q, ['generationId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' > 5)`
             );
@@ -236,7 +256,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': {'$gte': 5}}
             };
-            applyFilter(q, ['generationId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' >= 5)`
             );
@@ -247,7 +268,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': {'$lt': 5}}
             };
-            applyFilter(q, ['generationId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' < 5)`
             );
@@ -258,7 +280,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': {'$lte': 5}}
             };
-            applyFilter(q, ['generationId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' <= 5)`
             );
@@ -269,7 +292,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': {'$in': [5, 6]}}
             };
-            applyFilter(q, ['generationId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (5, 6))`
             );
@@ -280,7 +304,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': [5, 6]}
             };
-            applyFilter(q, ['generationId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (5, 6))`
             );
@@ -291,7 +316,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationId': {'$nin': [5, 6]}}
             };
-            applyFilter(q, ['generationId'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' NOT IN (5, 6))`
             );
@@ -302,7 +328,8 @@ describe('src/utils-query-apply-filter', function() {
             let criteria = {
                 'filter': {'generationName': {'$neq': 'foo', '$eq': 'bar'}}
             };
-            applyFilter(q, ['generationName'], criteria);
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' != 'foo' AND 'generations'.'generationName' = 'bar')`
             );
@@ -311,42 +338,43 @@ describe('src/utils-query-apply-filter', function() {
 
     describe('#apply-filter() - old tests (general)', function() {
         let q;
+
         beforeEach(function() {
             q = squel.select().from('test');
         });
 
         it('should not do anything if options.filter is not an plainObject', function() {
-            applyFilter(q, [], {});
+            QueryUtilsApplyFilter(q, [], {});
             q.toString().should.eql('SELECT * FROM test');
         });
 
         it('should set WHERE (translated)field = fieldValue if options.filter[field] = fieldValue is an integer and correctly translate field to database.databasefield', function() {
-            applyFilter(q, ['familyId'], {filter: {'familyId': 42}});
+            QueryUtilsApplyFilter(q, ['familyId'], {filter: {'familyId': 42}});
             q.toString().should.eql(`SELECT * FROM test WHERE ('families'.'familyId' = 42)`);
         });
 
         it('should set WHERE (translated)field = "fieldValue" if options.filter[field] = fieldValue is a string', function() {
-            applyFilter(q, ['generationName'], {filter: {'generationName': 'testGenerationName'}});
+            QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': 'testGenerationName'}});
             q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationName' = 'testGenerationName')`);
         });
 
         it('should not set WHERE if field is not in allowedFields', function() {
-            applyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}});
+            QueryUtilsApplyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}});
             q.toString().should.eql('SELECT * FROM test');
         });
 
         it('should set WHERE generationId IN (SELECT generations.generationId...WHERE plantId=parentIdA OR plantId=parentIdB...HAVING count(plantId)=2) if options.filter.generationParents = [parentIdA, parentIdB] is an array', function() {
-            applyFilter(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
             q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) = 2)))`);
         });
 
         it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field !== generationParents)', function() {
-            applyFilter(q, ['generationName'], {filter: {'generationName': function(){}}});
+            QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': function(){}}});
             q.toString().should.eql(`SELECT * FROM test`);
         });
 
         it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field === generationParents)', function() {
-            applyFilter(q, ['generationParents'], {filter: {'generationParents': function(){}}});
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {'generationParents': function(){}}});
             q.toString().should.eql(`SELECT * FROM test`);
         });
     });

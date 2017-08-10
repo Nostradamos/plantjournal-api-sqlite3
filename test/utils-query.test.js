@@ -10,6 +10,7 @@ const QueryUtils = require('../src/utils-query');
 describe('QueryUtils', function() {
     describe('#setFields()', function() {
         let q;
+
         beforeEach(() => q = squel.select().from('test'));
 
         it('should select all explicit column names of allowedAttributes if criteriaAttributes is empty', function() {
@@ -33,6 +34,7 @@ describe('QueryUtils', function() {
 
     describe('#setLimitAndOffset()', function() {
         let q;
+
         beforeEach(() => q = squel.select().from('test'));
 
         it('should set limit(options.limit) and offset(options.offset)', function() {
@@ -51,6 +53,7 @@ describe('QueryUtils', function() {
 
     describe('#setSort()', function() {
         let q;
+
         beforeEach(() => q = squel.select().from('test'));
 
         it('should throw error if attribute is not in allowedAttributes', function() {
@@ -130,6 +133,7 @@ describe('QueryUtils', function() {
     describe('#joinFamilies()', function() {
         it('should join `families` on familyId', function() {
             let q = squel.select().from(CONSTANTS.TABLE_GENERATIONS, 'generations');
+
             QueryUtils.joinFamilies(q);
             q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_GENERATIONS +' `generations` LEFT JOIN ' + CONSTANTS.TABLE_FAMILIES + ' `families` ON (generations.familyId = families.familyId)');
         });
@@ -138,6 +142,7 @@ describe('QueryUtils', function() {
     describe('#joinGenerations()', function() {
         it('should join `generations` and `generation_parents` on generationId', function() {
             let q = squel.select().from(CONSTANTS.TABLE_GENOTYPES, 'genotypes');
+
             QueryUtils.joinGenerations(q);
             q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_GENOTYPES +' `genotypes` LEFT JOIN ' + CONSTANTS.TABLE_GENERATIONS + ' `generations` ON (genotypes.generationId = generations.generationId) LEFT JOIN ' + CONSTANTS.TABLE_GENERATION_PARENTS +' `generation_parents` ON (generations.generationId = generation_parents.generationId)');
         });
@@ -146,6 +151,7 @@ describe('QueryUtils', function() {
     describe('#joinGenotypes()', function () {
         it('should join `genotypes`', function() {
             let q = squel.select().from(CONSTANTS.TABLE_PLANTS, 'plants');
+
             QueryUtils.joinGenotypes(q);
             q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_PLANTS +' `plants` LEFT JOIN ' + CONSTANTS.TABLE_GENOTYPES + ' `genotypes` ON (plants.genotypeId = genotypes.genotypeId)');
         });

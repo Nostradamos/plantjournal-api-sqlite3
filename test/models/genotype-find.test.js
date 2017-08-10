@@ -30,6 +30,7 @@ describe('Genotype()', function() {
 
         it('should find genotypes, referenced generations and families', async function() {
             let genotypes = await pj.Genotype.find();
+
             genotypes.should.containDeep(
                 {
                     'found': 4,
@@ -112,6 +113,7 @@ describe('Genotype()', function() {
                     'attributes': ['familyId', 'generationName']
                 }
             );
+
             should(genotypes.families).be.undefined();
         });
 
@@ -121,6 +123,7 @@ describe('Genotype()', function() {
                     'attributes': ['familyId']
                 }
             );
+
             should(genotypes.generations).be.undefined();
         });
 
@@ -132,6 +135,7 @@ describe('Genotype()', function() {
                     'offset': 2
                 }
             );
+
             genotypes.should.deepEqual({
                 'found': 4,
                 'remaining': 0,
@@ -161,6 +165,7 @@ describe('Genotype()', function() {
                     }
                 }
             );
+
             genotypes.should.deepEqual({
                 'found': 1,
                 'remaining': 0,
@@ -182,6 +187,7 @@ describe('Genotype()', function() {
                     'genotypeName': 'testGenotype3'
                 }
             });
+
             genotypes.should.deepEqual({
                 'found': 1,
                 'remaining': 0,
@@ -203,6 +209,7 @@ describe('Genotype()', function() {
                     'familyName': 'testFamily1'
                 }
             });
+
             genotypes.should.deepEqual({
                 'found': 2,
                 'remaining': 0,
@@ -230,6 +237,7 @@ describe('Genotype()', function() {
                     'filter': {'generationParents': [1,2]}
                 }
             );
+
             genotypes.should.deepEqual(
                 {
                     'found': 1,

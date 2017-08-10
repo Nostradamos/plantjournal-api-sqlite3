@@ -7,7 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../logger');
 const Utils = require('../utils');
 const QueryUtils = require('../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-filter');
+const QueryUtilsApplyCriteriaFilter = require('../utils-query-apply-criteria-filter');
 
 /**
  * Generic Delete class which tries to build a skeleton for all
@@ -70,6 +70,7 @@ class GenericDelete {
         await this.executeQueryDelete(context, criteria);
 
         let returnObject = {};
+
         this.buildReturnObject(returnObject, context, criteria);
         logger.log(this.name, '#delete() returnObject:', returnObject);
 

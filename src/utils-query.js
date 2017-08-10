@@ -23,7 +23,7 @@ let QueryUtils = exports;
  *        True if we want to join generationParents
  */
 QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = true) {
-    if (joinGenerationParents == true) {
+    if (joinGenerationParents === true) {
         QueryUtils.joinGenerationParentsOnly(queryObj);
     }
     QueryUtils.joinFamilies(queryObj);
@@ -167,6 +167,7 @@ QueryUtils.joinPlantsDownwards = function (query) {
  */
 QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes) {
     let attributesToSelect;
+
     if (_.isEmpty(criteriaAttributes)) {
     // if criteriaAttributes is empty, just select all allowedAttributes
         attributesToSelect = allowedAttributes;
@@ -177,7 +178,7 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
     }
 
     _.each(attributesToSelect, function(attr) {
-        if (attr == 'generationParents') {
+        if (attr === 'generationParents') {
             // special case, generationParents is no real column, but a concat
             // of all plantIds
             query.field(
@@ -209,6 +210,7 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
 QueryUtils.applyCriteriaLimitAndOffset = function (query, criteria) {
     let limit = criteria.limit || 10;
     let offset = criteria.offset || 0;
+
     query.limit(limit).offset(offset);
 };
 
@@ -260,6 +262,7 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
     _.each(criteria.sort, function(sortStr) {
         // Check if this is a valid format
         let attr, sortType;
+
         if (_.indexOf(sortStr, ' ') === -1) {
         // No whitespace means, attribute is the whole string
         // and we use ASC as the default sort type.
@@ -277,6 +280,7 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
         }
 
         let table = QueryUtils.getTableOfField(attr);
+
         if (sortType === 'ASC') {
             query.order('?.?', true, table, attr);
         } else if (sortType === 'DESC') {
@@ -301,6 +305,7 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
 QueryUtils.getTableOfField = function (field) {
     // determine which table we need
     let table;
+
     if (_.startsWith(field, 'plant')) {
         table = CONSTANTS.TABLE_PLANTS;
     } else if (_.startsWith(field, 'genotype')) {

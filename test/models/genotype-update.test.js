@@ -55,6 +55,7 @@ describe('Genotype()', function() {
 
             // Make sure family rows are untouched
             let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+
             rowsFam.should.deepEqual(
                 [
                     {'familyId': 1, 'familyName': 'testFamily1'},
@@ -63,6 +64,7 @@ describe('Genotype()', function() {
             );
 
             let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+
             rowsGen.should.deepEqual(
                 [
                     {'generationId': 1, 'generationName': 'F1'},
@@ -74,6 +76,7 @@ describe('Genotype()', function() {
             );
 
             let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
+
             rowsGeno.should.deepEqual(
                 [
                     {'genotypeId': 1, 'genotypeName': 'F1Geno1Updated'},
@@ -117,6 +120,7 @@ describe('Genotype()', function() {
             let rowsGeno = await sqlite.all(
                 'SELECT genotypeId, genotypeModifiedAt FROM ' + CONSTANTS.TABLE_GENOTYPES  + ' WHERE genotypeId = 1'
             );
+
             rowsGeno[0].genotypeModifiedAt.should.not.eql(1);
         });
 

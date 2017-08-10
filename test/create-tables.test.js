@@ -10,6 +10,7 @@ describe('#createTables()', function() {
     it('should finish without any sql errors', async function() {
         await sqlite.open(':memory:');
         let catched = false;
+
         try {
             await createTables();
         } catch (err) {

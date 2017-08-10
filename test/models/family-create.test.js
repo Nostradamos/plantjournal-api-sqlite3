@@ -18,6 +18,7 @@ describe('Family()', function() {
 
         it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async function() {
             let tested = 0;
+
             for (let value in [[1,2], null, 'string', 1, true, undefined]) {
                 await pj.Family.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
@@ -39,6 +40,7 @@ describe('Family()', function() {
         it('should create a new Family and return family object', async function() {
             let family = await pj.Family.create({familyName: 'testName'});
             let [familyCreatedAt, familyModifiedAt] = [family.families[1].familyCreatedAt, family.families[1].familyModifiedAt];
+
             familyCreatedAt.should.eql(familyModifiedAt);
             family.should.deepEqual(
                 {
@@ -55,6 +57,7 @@ describe('Family()', function() {
             );
 
             let rows = await sqlite.all('SELECT familyId, familyName, familyCreatedAt, familyModifiedAt, familyDescription FROM families');
+
             rows.should.deepEqual(
                 [
                     {
@@ -77,6 +80,7 @@ describe('Family()', function() {
             );
 
             let [familyCreatedAt, familyModifiedAt] = [family.families[1].familyCreatedAt, family.families[1].familyModifiedAt];
+
             familyCreatedAt.should.eql(familyModifiedAt);
             family.should.deepEqual(
                 {

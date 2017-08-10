@@ -59,6 +59,7 @@ describe('Plant()', function() {
 
             // Make sure family rows are untouched
             let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+
             rowsFam.should.deepEqual(
                 [
                     {'familyId': 1, 'familyName': 'testFamily1'},
@@ -67,6 +68,7 @@ describe('Plant()', function() {
             );
 
             let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+
             rowsGen.should.deepEqual(
                 [
                     {'generationId': 1, 'generationName': 'F1'},
@@ -77,6 +79,7 @@ describe('Plant()', function() {
             );
 
             let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
+
             rowsGeno.should.deepEqual(
                 [
                     {'genotypeId': 1, 'genotypeName': 'F1Geno1'},
@@ -88,6 +91,7 @@ describe('Plant()', function() {
             );
 
             let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANTS);
+
             rowsPlant.should.deepEqual(
                 [
                     {'plantId': 1, 'plantName': 'F1Geno1Plant1Updated'},
@@ -130,6 +134,7 @@ describe('Plant()', function() {
             let rowsPlant = await sqlite.all(
                 'SELECT plantId, plantModifiedAt FROM ' + CONSTANTS.TABLE_PLANTS  + ' WHERE plantId = 1'
             );
+
             rowsPlant[0].plantModifiedAt.should.not.eql(1);
         });
 

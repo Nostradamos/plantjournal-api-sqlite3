@@ -69,6 +69,7 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
         'generationId': row.generationId,
         'familyId': row.familyId
     };
+
     _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
         if (_.has(row, attr)) genotype[attr] = row[attr];
     });
@@ -97,6 +98,7 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
             let rowattr = row[attr];
             // if we have row.generationParents and it's null, set an empty array [], else split it into an array
             // and cast every element to an integer
+
             if (attr === 'generationParents') {
                 rowattr = rowattr === null ? [] : _(rowattr).split(',').map(_.toInteger).value();
             }
@@ -118,6 +120,7 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
 Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(row, returnObject, options, forceAdd) {
     let familyId = row.familyId;
     let family = {};
+
     _.each(CONSTANTS.ALL_ATTRIBUTES_FAMILY, function(attr) {
         if (_.has(row, attr)) family[attr] = row[attr];
     });
@@ -141,6 +144,7 @@ Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(r
 */
 Utils.addFoundAndRemainingFromCountToReturnObject = function addFoundAndRemainingFromCountToReturnObject(count, lenRows, returnObject, options) {
     let c = count['count'];
+
     returnObject['found'] = c;
     returnObject['remaining'] = c - lenRows - (options.offset || 0);
 };
@@ -236,7 +240,7 @@ Utils.filterSetNotNull = function filterSetNotNull(set) {
  * @throws {Error}
  */
 Utils.throwErrorIfNotConnected = function() {
-    if (sqlite.driver != null && sqlite.driver.open == true) {
+    if (sqlite.driver != null && sqlite.driver.open === true) {
         return;
     }
     throw Error('plantJournal is not connected to database.');

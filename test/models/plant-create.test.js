@@ -21,6 +21,7 @@ describe('Plant()', function() {
 
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
+
             for (let value in [[1,2], null, 'string', 1, true, undefined]) {
                 await pj.Family.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
@@ -79,6 +80,7 @@ describe('Plant()', function() {
                 }
             );
             let [createdAt, modifiedAt] = [plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt];
+
             plant.should.deepEqual({
                 'plants': {
                     '1': {
@@ -136,6 +138,7 @@ describe('Plant()', function() {
                 plant.plants[1].plantModifiedAt
             ];
             let [createdAtGenotype, modifiedAtGenotype] = [plant.genotypes[2].genotypeCreatedAt, plant.genotypes[2].genotypeModifiedAt];
+
             plant.should.deepEqual({
                 'genotypes': {
                     '2': {
@@ -166,6 +169,7 @@ describe('Plant()', function() {
             await pj.Plant.create({genotypeId: 1, plantName: 'motherPlant1'});
             let plantClone = await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1});
             let [createdAtClone, modifiedAtClone] = [plantClone.plants[2].plantCreatedAt, plantClone.plants[2].plantModifiedAt];
+
             createdAtClone.should.eql(modifiedAtClone);
             plantClone.should.deepEqual({
                 'plants': {
@@ -182,6 +186,7 @@ describe('Plant()', function() {
                 }
             });
             let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, plantSex, genotypeId FROM plants');
+
             rowsPlants.should.deepEqual(
                 [
                     {'plantId': 1, 'plantName': 'motherPlant1', 'plantClonedFrom': null, 'plantSex': null, 'genotypeId': 1},
@@ -189,6 +194,7 @@ describe('Plant()', function() {
                 ]
             );
             let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
+
             rowsGenotypes.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
         });
 

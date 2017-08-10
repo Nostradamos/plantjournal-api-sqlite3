@@ -19,6 +19,7 @@ describe('Genotype()', function() {
 
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
+
             for (let value in [[1,2], null, 'string', 1, true, undefined]) {
                 await pj.Genotype.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
@@ -56,6 +57,7 @@ describe('Genotype()', function() {
                 }
             );
             let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt];
+
             genotype.should.deepEqual({
                 'genotypes': {
                     '1': {
@@ -91,6 +93,7 @@ describe('Genotype()', function() {
         it('should be possible to create a new genotype with genotypeName not set', async function() {
             let genotype = await pj.Genotype.create({generationId: 1});
             let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt];
+
             genotype.should.deepEqual({
                 'genotypes': {
                     '1': {

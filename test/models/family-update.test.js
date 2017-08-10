@@ -44,9 +44,11 @@ describe('Family()', function() {
 
         it('should change familyName for testFmily2 in database and return the familyId', async function() {
             let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'filter': {'familyId': 2}});
+
             updatedFamilies.should.deepEqual([2]);
 
             let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+
             rowsFam.should.deepEqual(
                 [
                     {'familyId': 1, 'familyName': 'testFamily1'},
@@ -59,9 +61,11 @@ describe('Family()', function() {
 
         it('should update modifiedAt Field in database', async function() {
             let currentTimestamp = Utils.getUnixTimestampUTC();
+
             await pj.Family.update({'familyName': 'testFamily2'}, {'filter': {'familyId': 2}});
 
             let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+
             (rowsFam[0].familyModifiedAt >= currentTimestamp).should.be.true();
 
         });
@@ -75,6 +79,7 @@ describe('Family()', function() {
             updatedFamilies.length.should.eql(0);
 
             let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+
             rowsFam[0].familyModifiedAt.should.not.eql(1);
         });
 
@@ -87,6 +92,7 @@ describe('Family()', function() {
             updatedFamilies.length.should.eql(0);
 
             let rowsFam = await sqlite.all('SELECT familyId, familyCreatedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+
             rowsFam[0].familyCreatedAt.should.not.eql(1);
         });
 

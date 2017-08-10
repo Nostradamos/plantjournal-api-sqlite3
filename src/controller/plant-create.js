@@ -104,6 +104,7 @@ class PlantCreate extends GenericCreate {
             let queryRetrieveGenotypeId = 'SELECT plants.genotypeId FROM ' +
                                     CONSTANTS.TABLE_PLANTS +
                                     ' plants WHERE plants.plantId = $plantClonedFrom';
+
             logger.debug(this.name, '#create() queryRetrieveGenotypeId:',
                 queryRetrieveGenotypeId, '? = :', options.plantClonedFrom);
 

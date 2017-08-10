@@ -57,6 +57,7 @@ describe('Genotype()', function() {
 
             // Make sure we deleted also from database
             let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+
             rowsFam.should.deepEqual(
                 [
                     {'familyId': 1, 'familyName': 'test1'},
@@ -67,6 +68,7 @@ describe('Genotype()', function() {
             );
 
             let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+
             rowsGen.should.deepEqual(
                 [
                     {'generationId': 1, 'generationName': 'testGen1'},
@@ -77,6 +79,7 @@ describe('Genotype()', function() {
             );
 
             let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
+
             rowsGeno.should.deepEqual(
                 [
                     {'genotypeId': 2, 'genotypeName': ''},
@@ -87,6 +90,7 @@ describe('Genotype()', function() {
             );
 
             let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANTS);
+
             rowsPlant.should.deepEqual(
                 [
                     {'plantId': 2, 'plantName': 'blubb2'},

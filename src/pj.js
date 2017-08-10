@@ -44,12 +44,13 @@ class plantJournal {
         // Make sure we have json support
         // ToDo: Maybe this is obsolet and JSON is always enabled?!
         let row;
+
         try {
             row = await sqlite.get(`SELECT json_extract('{"a":13, "b":42}', '$.b') as test;`);
         } catch (err) {
             throw err;
         } finally {
-            if (row.test != 42) throw new Error('Your sqlite3 install doesn\'t support JSON. We can\'t continue. '+JSON.stringify(row));
+            if (row.test !== 42) throw new Error('Your sqlite3 install doesn\'t support JSON. We can\'t continue. '+JSON.stringify(row));
         }
     }
 

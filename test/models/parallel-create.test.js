@@ -7,6 +7,7 @@ const plantJournal = require('../../src/pj');
 
 describe('Parallel', function() {
     let pj;
+
     before(async function() {
         pj = new plantJournal(':memory:');
         await pj.connect();

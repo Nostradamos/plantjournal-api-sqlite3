@@ -53,6 +53,7 @@ describe('Generation()', function() {
 
             // Make sure family rows are untouched
             let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+
             rowsFam.should.deepEqual(
                 [
                     {'familyId': 1, 'familyName': 'testFamily1'},
@@ -61,6 +62,7 @@ describe('Generation()', function() {
             );
 
             let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+
             rowsGen.should.deepEqual(
                 [
                     {'generationId': 1, 'generationName': 'F1Updated'},
@@ -97,6 +99,7 @@ describe('Generation()', function() {
             let rowsGen = await sqlite.all(
                 'SELECT generationId, generationModifiedAt FROM ' + CONSTANTS.TABLE_GENERATIONS  + ' WHERE generationId = 1'
             );
+
             rowsGen[0].generationModifiedAt.should.not.eql(1);
         });
 

@@ -3,6 +3,7 @@
 
 const plantJournal = require('../../src/pj');
 const helpers = require('../helper-functions');
+
 require('should');
 
 describe('Family()', function() {
@@ -20,6 +21,7 @@ describe('Family()', function() {
 
         it('should return all families', async function() {
             let families = await pj.Family.find();
+
             families.should.containDeep({
                 found: 4,
                 remaining: 0,
@@ -35,6 +37,7 @@ describe('Family()', function() {
 
         it('should only return the first two families if options.limit=2', async function() {
             let families = await pj.Family.find({limit: 2, attributes: ['familyId', 'familyName']});
+
             families.should.deepEqual({
                 found: 4,
                 remaining: 2,
@@ -47,6 +50,7 @@ describe('Family()', function() {
 
         it('should only return the the last two families if options.offset=2 and options.limit=2', async function() {
             let families = await pj.Family.find({offset: 2, limit: 2, attributes: ['familyId', 'familyName']});
+
             families.should.deepEqual({
                 found: 4,
                 remaining: 0,
@@ -79,6 +83,7 @@ describe('Family()', function() {
                     attributes: ['familyId', 'familyName']
                 }
             );
+
             families.should.deepEqual({
                 found: 1,
                 remaining: 0,
@@ -97,6 +102,7 @@ describe('Family()', function() {
                     attributes: ['familyId', 'familyName']
                 }
             );
+
             families.should.deepEqual({
                 found: 1,
                 remaining: 0,
@@ -108,6 +114,7 @@ describe('Family()', function() {
 
         it('should be possible to sort returned families', async function() {
             let families = await pj.Family.find({sort: 'familyId DESC', limit: 2});
+
             families.families.should.containDeep({
                 '4': { familyId: 4, familyName: 'testD' },
                 '3': { familyId: 3, familyName: 'test3' },

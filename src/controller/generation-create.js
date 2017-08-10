@@ -71,6 +71,7 @@ class GenerationCreate extends GenericCreate {
 
         // for every plant we have to insert a own row.
         let attributesRows = [];
+
         _.each(options.generationParents, function(parentPlantId) {
             attributesRows.push({parentId: null, generationId: context.insertId, plantId: parentPlantId});
         });

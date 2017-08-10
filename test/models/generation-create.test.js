@@ -39,12 +39,14 @@ describe('Generation()', function() {
             await pj.Generation.create({'familyId': 1337, 'generationName': 'testGeneration3'})
                 .should.be.rejectedWith('options.familyId does not reference an existing Family');
             let result = await sqlite.all('SELECT familyId, generationId, generationName FROM generations WHERE generationName = "testGeneration3"');
+
             result.should.deepEqual([]);
         });
 
         it('should create a new generations entry and return generation object', async function() {
             let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testGeneration'});
             let [createdAt, modifiedAt] = [generation.generations[1].generationCreatedAt, generation.generations[1].generationModifiedAt];
+
             createdAt.should.eql(modifiedAt);
             generation.should.deepEqual({
                 generations: {
@@ -63,6 +65,7 @@ describe('Generation()', function() {
             let result = await sqlite.all(
                 `SELECT familyId, generationId, generationDescription, generationName,
          generationCreatedAt, generationModifiedAt FROM generations`);
+
             result.should.deepEqual(
                 [
                     {
@@ -79,6 +82,7 @@ describe('Generation()', function() {
 
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
+
             for (let value in [[1,2], null, 'string', 1, true, undefined]) {
                 await pj.Generation.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
@@ -122,6 +126,7 @@ describe('Generation()', function() {
                 }
             );
             let [createdAt, modifiedAt] = [generation.generations[2].generationCreatedAt, generation.generations[2].generationModifiedAt];
+
             generation.should.deepEqual({
                 'generations': {
                     '2': {
@@ -136,6 +141,7 @@ describe('Generation()', function() {
                 }
             });
             let rows = await sqlite.all('SELECT * FROM generation_parents');
+
             rows.should.deepEqual(
                 [
                     {'parentId': 1, 'generationId': 2, 'plantId': 1},
@@ -156,6 +162,7 @@ describe('Generation()', function() {
             );
 
             let rowsGen = await sqlite.all('SELECT generationId, generationName FROM generations WHERE generationName = "testWithParents2"');
+
             rowsGen.should.deepEqual([]);
         });
     });
