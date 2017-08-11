@@ -68,4 +68,6 @@ plantJournal.prototype.Genotype = require('./models/genotype');
 
 plantJournal.prototype.Plant = require('./models/plant');
 
+plantJournal.prototype.PlantLog = require('./models/plant-log');
+
 module.exports = plantJournal;

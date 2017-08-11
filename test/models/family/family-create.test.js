@@ -4,7 +4,7 @@
 require('should');
 const sqlite = require('sqlite');
 
-const plantJournal = require('../../src/pj');
+const plantJournal = require('../../../src/pj');
 
 describe('Family()', function() {
 
@@ -63,17 +63,7 @@ describe('Family()', function() {
 
             let rows = await sqlite.all('SELECT familyId, familyName, familyCreatedAt, familyModifiedAt, familyDescription FROM families');
 
-            rows.should.deepEqual(
-                [
-                    {
-                        'familyId': 1,
-                        'familyName': 'testName',
-                        'familyDescription': '',
-                        'familyModifiedAt': familyModifiedAt,
-                        'familyCreatedAt': familyCreatedAt
-                    }
-                ]
-            );
+            rows[0].should.deepEqual(family.families[1]);
         });
 
         it('should set familyDescription on create', async function() {
@@ -84,7 +74,10 @@ describe('Family()', function() {
                 }
             );
 
-            let [familyCreatedAt, familyModifiedAt] = [family.families[1].familyCreatedAt, family.families[1].familyModifiedAt];
+            let [familyCreatedAt, familyModifiedAt] = [
+                family.families[1].familyCreatedAt,
+                family.families[1].familyModifiedAt
+            ];
 
             familyCreatedAt.should.eql(familyModifiedAt);
             family.should.deepEqual(

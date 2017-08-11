@@ -4,9 +4,9 @@
 require('should');
 const sqlite = require('sqlite');
 
-const CONSTANTS = require('../../src/constants');
-const plantJournal = require('../../src/pj');
-const Utils = require('../../src/utils');
+const CONSTANTS = require('../../../src/constants');
+const plantJournal = require('../../../src/pj');
+const Utils = require('../../../src/utils');
 
 
 describe('Family()', function() {

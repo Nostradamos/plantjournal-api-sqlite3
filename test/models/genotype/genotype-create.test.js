@@ -4,7 +4,7 @@
 require('should');
 const sqlite = require('sqlite');
 
-const plantJournal = require('../../src/pj');
+const plantJournal = require('../../../src/pj');
 
 describe('Genotype()', function() {
     describe('#create()', function() {
@@ -81,18 +81,7 @@ describe('Genotype()', function() {
         genotypeCreatedAt, genotypeModifiedAt FROM genotypes`
             );
 
-            rows.should.deepEqual(
-                [
-                    {
-                        'genotypeId': 1,
-                        'genotypeName': 'testGenotype1',
-                        'genotypeDescription': 'this is a very special genotype',
-                        'generationId': 1,
-                        'genotypeCreatedAt': createdAt,
-                        'genotypeModifiedAt': modifiedAt
-                    }
-                ]
-            );
+            rows[0].should.deepEqual(genotype.genotypes[1]);
         });
 
         it('should be possible to create a new genotype with genotypeName not set', async function() {

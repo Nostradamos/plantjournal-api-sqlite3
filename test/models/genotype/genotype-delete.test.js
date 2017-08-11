@@ -4,10 +4,10 @@
 require('should');
 const sqlite = require('sqlite');
 
-const plantJournal = require('../../src/pj');
-const CONSTANTS = require('../../src/constants');
+const plantJournal = require('../../../src/pj');
+const CONSTANTS = require('../../../src/constants');
 
-describe('Plant()', function() {
+describe('Genotype()', function() {
     describe('#delete()', async function() {
         let pj;
 
@@ -35,22 +35,23 @@ describe('Plant()', function() {
         });
 
         it('should throw error if no criteria object got passed', async function() {
-            await pj.Plant.delete()
+            await pj.Genotype.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete plants specified in criteria.filter.plantId', async function() {
-            let deletedPlants = await pj.Plant.delete(
+        it('should delete genotype specified in criteria.filter.generationId referenced plants', async function() {
+            let deletedGeno = await pj.Genotype.delete(
                 {
                     'filter': {
-                        'plantId': 1
+                        'genotypeId': 1
                     }
                 }
             );
 
-            deletedPlants.should.deepEqual(
+            deletedGeno.should.deepEqual(
                 {
-                    'plants': [1]
+                    'genotypes': [1],
+                    'plants': [1, 4]
                 }
             );
 
@@ -81,7 +82,6 @@ describe('Plant()', function() {
 
             rowsGeno.should.deepEqual(
                 [
-                    {'genotypeId': 1, 'genotypeName': ''},
                     {'genotypeId': 2, 'genotypeName': ''},
                     {'genotypeId': 3, 'genotypeName': ''},
                     {'genotypeId': 4, 'genotypeName': 'testGeno1'},
@@ -93,9 +93,7 @@ describe('Plant()', function() {
 
             rowsPlant.should.deepEqual(
                 [
-                    {'plantId': 2, 'plantName': 'blubb2'},
-                    {'plantId': 3, 'plantName': 'blubb'},
-                    {'plantId': 4, 'plantName': 'blubbClone'}
+                    {'plantId': 2, 'plantName': 'blubb2'}, {'plantId': 3, 'plantName': 'blubb'}
                 ]
             );
         });

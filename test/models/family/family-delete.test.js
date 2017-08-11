@@ -1,14 +1,15 @@
 /* eslint-env node, mocha */
 'use strict';
 
-require('should');
 const sqlite = require('sqlite');
 
-const plantJournal = require('../../src/pj');
-const CONSTANTS = require('../../src/constants');
+require('should');
 
-describe('Genotype()', function() {
-    describe('#delete()', async function() {
+const plantJournal = require('../../../src/pj');
+const CONSTANTS = require('../../../src/constants');
+
+describe('Family()', function() {
+    describe('#delete()', function() {
         let pj;
 
         before(async function() {
@@ -29,38 +30,37 @@ describe('Genotype()', function() {
             await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno1'}); // genotypeId: 4
             await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno2'}); // genotypeId: 5
 
-            await pj.Family.create({familyName: 'testD'}); // id:4
 
-            await pj.Plant.create({generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
+            await pj.Family.create({familyName: 'testD'}); // id:4
         });
 
         it('should throw error if no criteria object got passed', async function() {
-            await pj.Genotype.delete()
+            await pj.Family.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete genotype specified in criteria.filter.generationId referenced plants', async function() {
-            let deletedGeno = await pj.Genotype.delete(
+        it('should delete specified family in criteria.filter.familyId and return the id', async function() {
+            let deletedFam = await pj.Family.delete(
                 {
                     'filter': {
-                        'genotypeId': 1
+                        'familyId': 1
                     }
                 }
             );
 
-            deletedGeno.should.deepEqual(
-                {
-                    'genotypes': [1],
-                    'plants': [1, 4]
-                }
-            );
+            deletedFam.should.deepEqual({
+                'families': [1],
+                'generations': [1],
+                'genotypes': [1, 2],
+                'plants': [1, 2]
+            });
 
             // Make sure we deleted also from database
+
             let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
 
             rowsFam.should.deepEqual(
                 [
-                    {'familyId': 1, 'familyName': 'test1'},
                     {'familyId': 2, 'familyName': 'testB'},
                     {'familyId': 3, 'familyName': 'test3'},
                     {'familyId': 4, 'familyName': 'testD'}
@@ -71,7 +71,6 @@ describe('Genotype()', function() {
 
             rowsGen.should.deepEqual(
                 [
-                    {'generationId': 1, 'generationName': 'testGen1'},
                     {'generationId': 2, 'generationName': 'testGen2'},
                     {'generationId': 3, 'generationName': 'testGen3'},
                     {'generationId': 4, 'generationName': 'testGen4'}
@@ -82,7 +81,6 @@ describe('Genotype()', function() {
 
             rowsGeno.should.deepEqual(
                 [
-                    {'genotypeId': 2, 'genotypeName': ''},
                     {'genotypeId': 3, 'genotypeName': ''},
                     {'genotypeId': 4, 'genotypeName': 'testGeno1'},
                     {'genotypeId': 5, 'genotypeName': 'testGeno2'}
@@ -93,9 +91,20 @@ describe('Genotype()', function() {
 
             rowsPlant.should.deepEqual(
                 [
-                    {'plantId': 2, 'plantName': 'blubb2'}, {'plantId': 3, 'plantName': 'blubb'}
+                    {'plantId': 3, 'plantName': 'blubb'}
                 ]
             );
+        });
+
+        it('should be possibe to delete families with criteria.sort and criteria.limit instruction', async function() {
+            let deletedFam = await pj.Family.delete(
+                {
+                    'limit': 2,
+                    'sort': 'familyId DESC'
+                }
+            );
+
+            deletedFam.families.should.eql([4, 3]);
         });
     });
 });

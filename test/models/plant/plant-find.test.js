@@ -3,8 +3,8 @@
 /* eslint-env node, mocha */
 let should = require('should');
 
-const plantJournal = require('../../src/pj');
-const helpers = require('../helper-functions');
+const plantJournal = require('../../../src/pj');
+const helpers = require('../../helper-functions');
 
 describe('Plant()', function() {
     describe('#find()', function() {

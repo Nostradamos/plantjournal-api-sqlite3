@@ -4,8 +4,8 @@
 require('should');
 const sqlite = require('sqlite');
 
-const plantJournal = require('../../src/pj');
-const CONSTANTS = require('../../src/constants');
+const plantJournal = require('../../../src/pj');
+const CONSTANTS = require('../../../src/constants');
 
 describe('Plant()', function() {
     describe('#update()', function() {

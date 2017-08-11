@@ -65,4 +65,18 @@ module.exports =  async function createTables() {
       FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
     );
   `);
+
+    await sqlite.run(`
+    CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_PLANT_LOGS + ` (
+      plantLogId INTEGER,
+      plantLogTimestamp DATETIME NOT NULL,
+      plantLogType TEXT NOT NULL,
+      plantLogValue BLOB NOT NULL,
+      plantLogCreatedAt DATETIME NOT NULL,
+      plantLogModifiedAt DATETIME NOT NULL,
+      plantId INTEGER NOT NULL,
+      PRIMARY KEY (plantLogId),
+      FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
+    );
+  `);
 };

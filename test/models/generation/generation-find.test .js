@@ -3,9 +3,9 @@
 
 const should = require('should');
 
-const plantJournal = require('../../src/pj');
+const plantJournal = require('../../../src/pj');
 
-const helpers = require('../helper-functions');
+const helpers = require('../../helper-functions');
 
 describe('Generation()', function() {
     describe('#find()', function() {

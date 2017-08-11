@@ -178,7 +178,7 @@ class GenericFind {
     }
 
     /**
-   * Applies {@link QueryUtils.applyCriteriaAttributes} to context.queryWhere with this.ALIASES_TO_FIELD_WITHOUT_ID.
+   * Applies {@link QueryUtils.applyCriteriaAttributes} to context.queryWhere.
    * Normally you shouldn't overwrite this function.
    * @param  {object} context
    *         Internal context object
@@ -326,7 +326,10 @@ GenericFind.ATTRIBUTES_SEARCHABLE;
 // Alias for id field. Eg. familyId
 GenericFind.ATTR_ID;
 
-//Overwrite inner value of count. If this is not set, we will just use ATTR_ID
+// Overwrite inner value of count. If this is not set, we will just use count(ATTR_ID).
+// It can make sense to set this to distinct(ATTR_ID) so that we do count(distinct...)
+// in case your find query results multiple rows with the same id and you only want
+// to count them once.
 GenericFind.COUNT;
 
 // You want to select more default attributes than just ATTR_ID? Set them here.

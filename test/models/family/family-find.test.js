@@ -1,8 +1,8 @@
 /* eslint-env node, mocha */
 'use strict';
 
-const plantJournal = require('../../src/pj');
-const helpers = require('../helper-functions');
+const plantJournal = require('../../../src/pj');
+const helpers = require('../../helper-functions');
 
 require('should');
 

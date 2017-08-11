@@ -5,7 +5,7 @@
 require('should');
 const sqlite = require('sqlite');
 
-const plantJournal = require('../../src/pj');
+const plantJournal = require('../../../src/pj');
 
 describe('Plant()', function() {
     describe('#create()', function() {
@@ -102,23 +102,11 @@ describe('Plant()', function() {
             });
 
             let rowsPlants = await sqlite.all(
-                `SELECT plantId, plantName, plantClonedFrom, plantDescription,
+                `SELECT plantId, plantName, plantSex, plantClonedFrom, plantDescription,
          plantCreatedAt, plantModifiedAt, genotypeId FROM plants`
             );
 
-            rowsPlants.should.deepEqual(
-                [
-                    {
-                        'plantId': 1,
-                        'plantName': 'testPlant1',
-                        'plantClonedFrom': null,
-                        'plantDescription': 'we found this plant in the backyard of our grandma',
-                        'genotypeId': 1,
-                        'plantCreatedAt': createdAt,
-                        'plantModifiedAt': modifiedAt
-                    }
-                ]
-            );
+            rowsPlants[0].should.deepEqual(plant.plants[1]);
 
             let rowsGenotypes = await sqlite.all(
                 'SELECT genotypeId, genotypeName, generationId FROM genotypes'
@@ -189,13 +177,11 @@ describe('Plant()', function() {
                     }
                 }
             });
-            let rowsPlants = await sqlite.all('SELECT plantId, plantName, plantClonedFrom, plantSex, genotypeId FROM plants');
-
-            rowsPlants.should.deepEqual(
-                [
-                    {'plantId': 1, 'plantName': 'motherPlant1', 'plantClonedFrom': null, 'plantSex': null, 'genotypeId': 1}, {'plantId': 2, 'plantName': 'clonePlant2', 'plantClonedFrom': 1, 'plantSex': null, 'genotypeId': 1}
-                ]
+            let rowsPlants = await sqlite.all(
+                `SELECT plantId, plantName, plantClonedFrom, plantSex, plantDescription, plantCreatedAt, plantModifiedAt, genotypeId FROM plants`
             );
+
+            rowsPlants[1].should.deepEqual(plantClone.plants[2]);
             let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
 
             rowsGenotypes.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);

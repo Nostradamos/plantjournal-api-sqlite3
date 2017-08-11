@@ -3,9 +3,9 @@
 
 const should = require('should');
 
-const plantJournal = require('../../src/pj');
+const plantJournal = require('../../../src/pj');
 
-const helperFunctions = require('../helper-functions');
+const helperFunctions = require('../../helper-functions');
 
 describe('Genotype()', function() {
     describe('#find()', function() {

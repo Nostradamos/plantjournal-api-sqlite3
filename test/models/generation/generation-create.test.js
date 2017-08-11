@@ -2,7 +2,7 @@
 'use strict';
 
 require('should');
-const plantJournal = require('../../src/pj');
+const plantJournal = require('../../../src/pj');
 const sqlite = require('sqlite');
 
 describe('Generation()', function() {
@@ -62,22 +62,11 @@ describe('Generation()', function() {
                 }
             });
 
-            let result = await sqlite.all(
+            let rows = await sqlite.all(
                 `SELECT familyId, generationId, generationDescription, generationName,
          generationCreatedAt, generationModifiedAt FROM generations`);
 
-            result.should.deepEqual(
-                [
-                    {
-                        'familyId': 1,
-                        'generationId': 1,
-                        'generationDescription': '',
-                        'generationName': 'testGeneration',
-                        'generationCreatedAt': createdAt,
-                        'generationModifiedAt': modifiedAt
-                    }
-                ]
-            );
+            generation.generations[1].should.containDeep(rows[0]);
         });
 
         it('should throw error if options is not set or not an associative array', async function() {

@@ -4,10 +4,10 @@
 require('should');
 const sqlite = require('sqlite');
 
-const plantJournal = require('../../src/pj');
-const CONSTANTS = require('../../src/constants');
+const plantJournal = require('../../../src/pj');
+const CONSTANTS = require('../../../src/constants');
 
-describe('Generation()', function() {
+describe('Plant()', function() {
     describe('#delete()', async function() {
         let pj;
 
@@ -29,34 +29,32 @@ describe('Generation()', function() {
             await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno1'}); // genotypeId: 4
             await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno2'}); // genotypeId: 5
 
-
             await pj.Family.create({familyName: 'testD'}); // id:4
+
+            await pj.Plant.create({generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
         });
 
         it('should throw error if no criteria object got passed', async function() {
-            await pj.Generation.delete()
+            await pj.Plant.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete generation specified in criteria.filter.generationId and downwards referenced genotypes/plants', async function() {
-            let deletedGen = await pj.Generation.delete(
+        it('should delete plants specified in criteria.filter.plantId', async function() {
+            let deletedPlants = await pj.Plant.delete(
                 {
                     'filter': {
-                        'generationId': 1
+                        'plantId': 1
                     }
                 }
             );
 
-            deletedGen.should.deepEqual(
+            deletedPlants.should.deepEqual(
                 {
-                    'generations': [1],
-                    'genotypes': [1,2],
-                    'plants': [1,2]
+                    'plants': [1]
                 }
             );
 
             // Make sure we deleted also from database
-
             let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
 
             rowsFam.should.deepEqual(
@@ -72,6 +70,7 @@ describe('Generation()', function() {
 
             rowsGen.should.deepEqual(
                 [
+                    {'generationId': 1, 'generationName': 'testGen1'},
                     {'generationId': 2, 'generationName': 'testGen2'},
                     {'generationId': 3, 'generationName': 'testGen3'},
                     {'generationId': 4, 'generationName': 'testGen4'}
@@ -82,6 +81,8 @@ describe('Generation()', function() {
 
             rowsGeno.should.deepEqual(
                 [
+                    {'genotypeId': 1, 'genotypeName': ''},
+                    {'genotypeId': 2, 'genotypeName': ''},
                     {'genotypeId': 3, 'genotypeName': ''},
                     {'genotypeId': 4, 'genotypeName': 'testGeno1'},
                     {'genotypeId': 5, 'genotypeName': 'testGeno2'}
@@ -92,7 +93,9 @@ describe('Generation()', function() {
 
             rowsPlant.should.deepEqual(
                 [
-                    {'plantId': 3, 'plantName': 'blubb'}
+                    {'plantId': 2, 'plantName': 'blubb2'},
+                    {'plantId': 3, 'plantName': 'blubb'},
+                    {'plantId': 4, 'plantName': 'blubbClone'}
                 ]
             );
         });
