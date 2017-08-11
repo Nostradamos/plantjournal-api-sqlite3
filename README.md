@@ -118,7 +118,6 @@ Models
 | environmentLogModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |             |
 
 
-
 ToDo
 =====
 * Improve applyWhere for generationParents, add generationParents.length and add tests

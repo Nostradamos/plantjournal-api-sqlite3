@@ -6,7 +6,7 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../src/pj');
 
-describe('Family()', function() {
+describe('PlantLog()', function() {
 
     describe('#create()', function() {
         let pj;

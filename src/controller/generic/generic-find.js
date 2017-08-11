@@ -143,7 +143,12 @@ class GenericFind {
    *         Criteria object passed to find()
    */
     static setQueryWhere(context, criteria) {
-        QueryUtilsApplyCriteriaFilter(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria);
+        QueryUtilsApplyCriteriaFilter(
+            context.queryWhere,
+            this.ATTRIBUTES_SEARCHABLE,
+            criteria,
+            this.OVERWRITE_TABLE_LOOKUP
+        );
     }
 
     /**
@@ -187,7 +192,12 @@ class GenericFind {
    */
     static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set attributes specified if options.attributes, otherwise all.
-        QueryUtils.applyCriteriaAttributes(context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria.attributes);
+        QueryUtils.applyCriteriaAttributes(
+            context.queryWhere,
+            this.ATTRIBUTES_SEARCHABLE,
+            criteria.attributes,
+            this.OVERWRITE_TABLE_LOOKUP
+        );
     }
 
     /**
@@ -227,7 +237,10 @@ class GenericFind {
      */
     static setQueryWhereOrder(context, criteria) {
         QueryUtils.applyCriteriaSort(
-            context.queryWhere, this.ATTRIBUTES_SEARCHABLE, criteria
+            context.queryWhere,
+            this.ATTRIBUTES_SEARCHABLE,
+            criteria,
+            this.OVERWRITE_TABLE_LOOKUP
         );
     }
 
@@ -337,5 +350,7 @@ GenericFind.DEFAULT_FIELDS;
 
 // You want to apply an GROUP BY to queryWhere? Overwrite this.
 GenericFind.GROUP;
+
+GenericFind.OVERWRITE_TABLE_LOOKUP = null;
 
 module.exports = GenericFind;

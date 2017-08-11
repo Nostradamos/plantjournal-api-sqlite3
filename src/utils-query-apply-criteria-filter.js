@@ -45,10 +45,10 @@ const CONSTANTS = require('./constants');
  *                                                      to be 1 and 2.
  *             {filter: {'plantSex': 'male'}} => only male plants
  */
-function applyCriteriaFilter(query, allowedAttributes, criteria) {
+function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableLookup = null) {
     let squelExpr = squel.expr();
 
-    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1);
+    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1, null, overWriteTableLookup);
     query.where(squelExpr);
 }
 
@@ -83,7 +83,7 @@ function applyCriteriaFilter(query, allowedAttributes, criteria) {
  *         and  -> use and operator for attributes
  *         or   -> use or operator for attributes
  */
-function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
+function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, overWriteTableLookup = null) {
     logger.silly('#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth, 'type:', type);
     let isArray = _.isArray(obj);
 
@@ -105,29 +105,29 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
         // If we have an array, value/element has to be an object. Just use
         // this function again on it
         if (isArray === true) {
-            return eachFilterObject(value, allowedAttributes, squelExpr, depth+1, type);
+            return eachFilterObject(value, allowedAttributes, squelExpr, depth+1, type, overWriteTableLookup);
         }
 
         [attr, attrOptions] = [key, value];
 
         // Handle boolean operators
         if (attr === '$and') {
-            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and');
+            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and', overWriteTableLookup);
         } else if (attr === '$or') {
-            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or');
+            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or', overWriteTableLookup);
         } else if (attr === '$and()') {
             // $and() is a bit different, we want to have child criterias in a
             // sub expression
             let subSquelExpr = squel.expr();
 
-            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'and');
+            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'and', overWriteTableLookup);
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'and');
         } else if (attr === '$or()') {
             // $or() is a bit different, we want to have a child criterias in
             // a subexpression
             let subSquelExpr = squel.expr();
 
-            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or');
+            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or', overWriteTableLookup);
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'or');
         } else if (_.indexOf(allowedAttributes, attr) !== -1){
             translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type);
@@ -157,9 +157,14 @@ function eachFilterObject(obj, allowedAttributes, squelExpr,depth, type=null) {
  * @param  {String} type         - should be `and` or `or`, decides if we use
  *                                 squelExpr.and() or squelExpr.or().
  */
-function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type) {
+function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type, overWriteTableLookup = null) {
     // Get table for this attribute
-    let table = QueryUtils.getTableOfField(attr);
+    let table;
+    if(overWriteTableLookup === null || _.has(overWriteTableLookup, attr) === false) {
+        table = QueryUtils.getTableOfField(attr);
+    } else {
+        table = overWriteTableLookup[attr];
+    }
 
     if (attr === 'generationParents') {
     // First handle special case generationParents

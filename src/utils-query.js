@@ -165,7 +165,7 @@ QueryUtils.joinPlantsDownwards = function (query) {
  * @param {String[]} criteriaAttributes
  *        Array of attributes a user wants to select.
  */
-QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes) {
+QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes, overWriteTableLookup = null) {
     let attributesToSelect;
 
     if (_.isEmpty(criteriaAttributes)) {
@@ -177,6 +177,7 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
         attributesToSelect = _.intersection(allowedAttributes, criteriaAttributes);
     }
 
+    let table;
     _.each(attributesToSelect, function(attr) {
         if (attr === 'generationParents') {
             // special case, generationParents is no real column, but a concat
@@ -186,8 +187,14 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
             );
         } else {
             // translate attribute to explicit column name (tablename.attr)
+            if(overWriteTableLookup === null || _.has(overWriteTableLookup, attr) === false) {
+                table = QueryUtils.getTableOfField(attr);
+            } else {
+                table = overWriteTableLookup[attr];
+            }
+            // ToDo: use ?.? instead of string concatinating
             query.field(
-                QueryUtils.getTableOfField(attr) + '.' + attr
+                table + '.' + attr
             );
         }
     });
@@ -255,7 +262,7 @@ QueryUtils.applyCriteriaLimitAndOffset = function (query, criteria) {
  *         If attribute is illegal (not in allowedAttributes) or the order type
  *         is unknown (not ASC or DESC).
  */
-QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
+QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria, overWriteTableLookup = null) {
     if (_.isEmpty(criteria.sort)) return;
     if (!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
 
@@ -279,7 +286,16 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria) {
             throw new Error('Illegal attribute: ' + attr);
         }
 
-        let table = QueryUtils.getTableOfField(attr);
+        let table;
+
+        // Sometimes it's needed to use the current table when we don't join the referenced table.
+        // Eg: we don't join families but still want to sort by familyId. getTableOfField would
+        // return families as table, but we need generations.
+        if(overWriteTableLookup === null || _.has(overWriteTableLookup, attr) === false) {
+             table = QueryUtils.getTableOfField(attr);
+        } else {
+            table = overWriteTableLookup[attr];
+        }
 
         if (sortType === 'ASC') {
             query.order('?.?', true, table, attr);
@@ -306,7 +322,9 @@ QueryUtils.getTableOfField = function (field) {
     // determine which table we need
     let table;
 
-    if (_.startsWith(field, 'plant')) {
+    if (_.startsWith(field, 'plantLog')) {
+        table = CONSTANTS.TABLE_PLANT_LOGS;
+    } else if (_.startsWith(field, 'plant')) {
         table = CONSTANTS.TABLE_PLANTS;
     } else if (_.startsWith(field, 'genotype')) {
         table = CONSTANTS.TABLE_GENOTYPES;

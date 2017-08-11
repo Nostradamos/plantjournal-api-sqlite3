@@ -10,6 +10,5 @@ PlantLog.create = async function(options) {
 }
 
 PlantLog.find = async function(criteria) {
-    return await PlantLogFind.find(options);
-
+    return await PlantLogFind.find(criteria);
 }
