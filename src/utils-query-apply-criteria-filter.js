@@ -44,6 +44,9 @@ const CONSTANTS = require('./constants');
  *             {filter: {'generationParents': [1,2]}} => generationParents have
  *                                                      to be 1 and 2.
  *             {filter: {'plantSex': 'male'}} => only male plants
+ * @param {Dict} [overWriteTableLookup=null]
+ *        If you want to overwrite the used table for specific attributes, set
+ *        them here. Key should be the attribute, value the new table.
  */
 function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableLookup = null) {
     let squelExpr = squel.expr();
@@ -82,6 +85,9 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableL
  *         otherwise 'and'.
  *         and  -> use and operator for attributes
  *         or   -> use or operator for attributes
+ * @param {Dict} [overWriteTableLookup=null]
+ *        If you want to overwrite the used table for specific attributes, set
+ *        them here. Key should be the attribute, value the new table.
  */
 function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, overWriteTableLookup = null) {
     logger.silly('#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth, 'type:', type);
@@ -153,18 +159,18 @@ function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, o
  *         understand it as an equals instruction. If it's an array, we understand
  *         it as "attribute has to be any of them" (except if attr is generationParents,
  *         this is a special case, see #handleGenerationParents()).
- * @param  {squelExpr} squelExpr - squelExpr to apply where stuff to
- * @param  {String} type         - should be `and` or `or`, decides if we use
- *                                 squelExpr.and() or squelExpr.or().
+ * @param  {squelExpr} squelExpr
+ *         squelExpr to apply where stuff to
+ * @param  {String} type
+ *         should be `and` or `or`, decides if we use squelExpr.and() or
+ *         squelExpr.or().
+ * @param {Dict} [overWriteTableLookup=null]
+ *        If you want to overwrite the used table for specific attributes, set
+ *        them here. Key should be the attribute, value the new table.
  */
 function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type, overWriteTableLookup = null) {
     // Get table for this attribute
-    let table;
-    if(overWriteTableLookup === null || _.has(overWriteTableLookup, attr) === false) {
-        table = QueryUtils.getTableOfField(attr);
-    } else {
-        table = overWriteTableLookup[attr];
-    }
+    let table = QueryUtils.getTableOfField(attr, overWriteTableLookup);
 
     if (attr === 'generationParents') {
     // First handle special case generationParents

@@ -22,54 +22,54 @@ const QueryUtilsApplyCriteriaFilter = require('../../utils-query-apply-criteria-
  */
 class GenericFind {
     /**
-   * This method takes care of the execution of the whole find process.
-   * Your api calls this function.
-   * @async
-   * @param  {object}  [criteria={}]
-   *         Criterias for find
-   * @param  {string[]} [criteria.attributes]
-   *         Specify the attributes to query and return.
-   *         Eg: [familyName, generationName]
-   * @param  {object} [criteria.filter]
-   *         Object which contains
-   * @param  {integer} [criteria.offset]
-   *         Skip the first x results
-   * @param  {integer} [criteria.limit]
-   *         limit to x results
-   * @throws {Error}
-   *         Only throws errors if something unexpected happens with sqlite.
-   * @return {Object}
-   *         returnObject which by default only contains how many entries where
-   *         found (count) and how many are left (remaining). You can modify the
-   *         content by overwriting #buildReturnObjectWhere() method.
-   *         A returnObject should look like this:
-   *         {
-   *           count: 42,
-   *           remaining: 13,
-   *           families: {
-   *             1: {
-   *               familyId: 1,
-   *               familyName: 'TestFamily'
-   *             },
-   *             2: {
-   *               familyId: 2,
-   *               familyName: 'TestFamily2'
-   *             }
-   *           },
-   *           generations: {
-   *             1: {
-   *               generationId: 1,
-   *               generationName: 'F1',
-   *               familyId: 1
-   *             },
-   *             2: {
-   *               generationId: 2,,
-   *               generationName: 'S1',
-   *               familyId: 2
-   *             }
-   *           }
-   *         }
-   */
+     * This method takes care of the execution of the whole find process.
+     * Your api calls this function.
+     * @async
+     * @param  {object}  [criteria={}]
+     *         Criterias for find
+     * @param  {string[]} [criteria.attributes]
+     *         Specify the attributes to query and return.
+     *         Eg: [familyName, generationName]
+     * @param  {object} [criteria.filter]
+     *         Object which contains
+     * @param  {integer} [criteria.offset]
+     *         Skip the first x results
+     * @param  {integer} [criteria.limit]
+     *         limit to x results
+     * @throws {Error}
+     *         Only throws errors if something unexpected happens with sqlite.
+     * @return {Object}
+     *         returnObject which by default only contains how many entries where
+     *         found (count) and how many are left (remaining). You can modify the
+     *         content by overwriting #buildReturnObjectWhere() method.
+     *         A returnObject should look like this:
+     *         {
+     *           count: 42,
+     *           remaining: 13,
+     *           families: {
+     *             1: {
+     *               familyId: 1,
+     *               familyName: 'TestFamily'
+     *             },
+     *             2: {
+     *               familyId: 2,
+     *               familyName: 'TestFamily2'
+     *             }
+     *           },
+     *           generations: {
+     *             1: {
+     *               generationId: 1,
+     *               generationName: 'F1',
+     *               familyId: 1
+     *             },
+     *             2: {
+     *               generationId: 2,,
+     *               generationName: 'S1',
+     *               familyId: 2
+     *             }
+     *           }
+     *         }
+     */
     static async find(criteria) {
         Utils.throwErrorIfNotConnected();
         if (_.isNil(criteria)) criteria = {};
@@ -130,7 +130,6 @@ class GenericFind {
    *         Criteria object passed to find()
    */
     static setQueryWhereJoin(context, criteria) {
-
     }
 
     /**

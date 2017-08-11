@@ -131,6 +131,29 @@ Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(r
     }
 };
 
+Utils.addNeededFromRowToLogReturnObject = function(row, returnObject, attrLogTimestamp, attrLogId, allAttributes, plural, criteria) {
+    let attributesToSelect;
+    if(_.isEmpty(criteria.attributes)) {
+        attributesToSelect = allAttributes;
+    } else {
+        attributesToSelect = _.intersection(
+            criteria.attributes,
+            allAttributes
+        );
+    }
+
+    let logObject = {};
+    for (let attr of attributesToSelect) {
+        logObject[attr] = row[attr];
+    }
+
+    if(!_.has(returnObject[plural], row[attrLogTimestamp])) {
+        returnObject[plural][row[attrLogTimestamp]] = {};
+    }
+
+    returnObject[plural][row[attrLogTimestamp]][row[attrLogId]] = logObject;
+};
+
 /**
  * Adds to returnObject found and remaining count. Mutates returnObject.
 * @param {object}  count        - Count object. Should be sqlite result.

@@ -40,6 +40,6 @@ PlantLogCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_PLANT_LOG;
 
 PlantLogCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_PLANT_LOG;
 
-PlantLogCreate.PLURAL = 'plantLogs';
+PlantLogCreate.PLURAL = CONSTANTS.PLURAL_PLANT_LOG;
 
 module.exports = PlantLogCreate;

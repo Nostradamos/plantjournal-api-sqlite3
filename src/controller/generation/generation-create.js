@@ -187,7 +187,7 @@ GenerationCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
 
 GenerationCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENERATION;
 
-GenerationCreate.PLURAL = 'generations';
+GenerationCreate.PLURAL = CONSTANTS.PLURAL_GENERATION;
 
 GenerationCreate.DEFAULT_VALUES_ATTRIBUTES = {
     'generationParents': [],

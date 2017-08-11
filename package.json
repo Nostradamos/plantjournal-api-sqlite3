@@ -8,7 +8,9 @@
     "coverage": "nyc --reporter=html --reporter=text mocha ./test/*",
     "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs",
     "lint": "eslint \"src/**/*\" \"test/**/*\"",
-    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
+    "lint-fix": "eslint \"src/**/*\" \"test/**/*\" --fix",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "build" : "npm run lint && npm run generate-docs && npm test"
   },
   "author": "",
   "license": "ISC",

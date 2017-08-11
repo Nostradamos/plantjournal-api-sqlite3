@@ -132,6 +132,7 @@ ToDo
 * Add strain?!
 * Don't always select id attributes
 * Improve performance for sql by only joining tables if necessary
+* Use CONSTANTS. and not hardcoded attribute/table names
 
 Development Notes/Coding Style
 ==============================

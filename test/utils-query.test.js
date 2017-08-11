@@ -126,7 +126,7 @@ describe('QueryUtils', function() {
 
         it('should throw error if can\'t resolve table', function() {
             should(() => QueryUtils.getTableOfField('blubbField'))
-                .throw('cannot associate field with a table');
+                .throw('cannot associate attribute with a table');
         });
     });
 

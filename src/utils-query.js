@@ -164,6 +164,9 @@ QueryUtils.joinPlantsDownwards = function (query) {
  *        Array of attributes which are allowed to select.
  * @param {String[]} criteriaAttributes
  *        Array of attributes a user wants to select.
+ * @param {Dict} [overWriteTableLookup=null]
+ *        If you want to overwrite the used table for specific attributes, set
+ *        them here. Key should be the attribute, value the new table. .
  */
 QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes, overWriteTableLookup = null) {
     let attributesToSelect;
@@ -187,11 +190,8 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
             );
         } else {
             // translate attribute to explicit column name (tablename.attr)
-            if(overWriteTableLookup === null || _.has(overWriteTableLookup, attr) === false) {
-                table = QueryUtils.getTableOfField(attr);
-            } else {
-                table = overWriteTableLookup[attr];
-            }
+            table = QueryUtils.getTableOfField(attr, overWriteTableLookup);
+
             // ToDo: use ?.? instead of string concatinating
             query.field(
                 table + '.' + attr
@@ -258,6 +258,9 @@ QueryUtils.applyCriteriaLimitAndOffset = function (query, criteria) {
  *        In both cases strings have to be in the following format:
  *        "<attributeName> <ASC|DESC" or only "<attributeName>" if you
  *        want to sort ascending.
+ * @param {Dict} [overWriteTableLookup=null]
+ *        If you want to overwrite the used table for specific attributes, set
+ *        them here. Key should be the attribute, value the new table.
  * @throws {Error}
  *         If attribute is illegal (not in allowedAttributes) or the order type
  *         is unknown (not ASC or DESC).
@@ -286,16 +289,11 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria, over
             throw new Error('Illegal attribute: ' + attr);
         }
 
-        let table;
 
         // Sometimes it's needed to use the current table when we don't join the referenced table.
         // Eg: we don't join families but still want to sort by familyId. getTableOfField would
         // return families as table, but we need generations.
-        if(overWriteTableLookup === null || _.has(overWriteTableLookup, attr) === false) {
-             table = QueryUtils.getTableOfField(attr);
-        } else {
-            table = overWriteTableLookup[attr];
-        }
+        let table = QueryUtils.getTableOfField(attr, overWriteTableLookup);
 
         if (sortType === 'ASC') {
             query.order('?.?', true, table, attr);
@@ -312,30 +310,36 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria, over
  * Determines in which table this column is. This works because all column names
  * use a prefix, which should be equivalent to the table name.
  * Eg: familyId => family, plantClonedFrom => plant
- * @param  {string} field
- *         column name. Eg. familyId, familyName, generationId, generationName,
+ * @param  {String} attr
+ *         Attribute name. Eg. familyId, familyName, generationId, generationName,
  *         generationParent, genotypeId...
- * @return {string}
+ * @param  {Dict}  [overWriteTableLookup=null]
+ *         If you want to overwrite the returned table for specific attributes,
+ *         set this to an dict where key is attribute, value is the returned
+ *         table name. You can of course set multiple attributes.
+ * @return {String}
  *         Determined Table name
  */
-QueryUtils.getTableOfField = function (field) {
+QueryUtils.getTableOfField = function (attr, overWriteTableLookup = null) {
     // determine which table we need
     let table;
 
-    if (_.startsWith(field, 'plantLog')) {
+    if (overWriteTableLookup !== null && _.has(overWriteTableLookup, attr)) {
+        return overWriteTableLookup[attr];
+    } else if (_.startsWith(attr, 'plantLog')) {
         table = CONSTANTS.TABLE_PLANT_LOGS;
-    } else if (_.startsWith(field, 'plant')) {
+    } else if (_.startsWith(attr, 'plant')) {
         table = CONSTANTS.TABLE_PLANTS;
-    } else if (_.startsWith(field, 'genotype')) {
+    } else if (_.startsWith(attr, 'genotype')) {
         table = CONSTANTS.TABLE_GENOTYPES;
-    } else if (field === 'generationParents') {
+    } else if (attr === 'generationParents') {
         table = CONSTANTS.TABLE_GENERATION_PARENTS;
-    } else if (_.startsWith(field, 'generation')) {
+    } else if (_.startsWith(attr, 'generation')) {
         table = CONSTANTS.TABLE_GENERATIONS;
-    } else if (_.startsWith(field, 'family')) {
+    } else if (_.startsWith(attr, 'family')) {
         table = CONSTANTS.TABLE_FAMILIES;
     } else {
-        throw new Error('cannot associate field with a table');
+        throw new Error('cannot associate attribute with a table');
     }
     return table;
 };

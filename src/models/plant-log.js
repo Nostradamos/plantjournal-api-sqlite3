@@ -7,8 +7,8 @@ let PlantLog = exports;
 
 PlantLog.create = async function(options) {
     return await PlantLogCreate.create(options);
-}
+};
 
 PlantLog.find = async function(criteria) {
     return await PlantLogFind.find(criteria);
-}
+};
