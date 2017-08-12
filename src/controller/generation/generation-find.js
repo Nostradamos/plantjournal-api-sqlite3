@@ -9,14 +9,14 @@ const QueryUtils = require('../../utils-query');
 const GenericFind = require('../generic/generic-find');
 
 /**
-* GenerationFind does all the functionality of Generation.find
-* To manually execute a "GenerationFind-find", call GenerationFind.find().
-* To understand how finds work generally internally, See
-* src/controller/generic-find (we extend that class).
-* If you want to know how to use the Generation.find() API, See
-* src/models/generation #find().
-* @private
-* @extends GenericFind
+ * GenerationFind does all the functionality of Generation.find
+ * To manually execute a "GenerationFind-find", call GenerationFind.find().
+ * To understand how finds work generally internally, See
+ * src/controller/generic-find (we extend that class).
+ * If you want to know how to use the Generation.find() API, See
+ * src/models/generation #find().
+ * @private
+ * @extends GenericFind
  */
 class GenerationFind extends GenericFind {
     /**

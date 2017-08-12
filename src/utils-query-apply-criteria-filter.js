@@ -180,7 +180,6 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
     // Short hand to easily do an equals operation if attrOptions is a string or an integer.
     // @ToDo: we should also do this for null.
         let [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
-
         applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     } else if (_.isArray(attrOptions)) {
     // Short hand to easily do in operation if attrOptions is an array.
@@ -219,7 +218,7 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
                 throw new Error('Unknown relational operator: ' + operator);
             }
             // apply them to passed squel expression builder
-            if (crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+            applyCriteriaToExpression(squelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
@@ -258,8 +257,8 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     let subSquelExprHaving = squel.expr(); // expression for HAVING, mainly for count()
 
     if (_.isInteger(attrOptions) || _.isString(attrOptions)) {
-    // Short hand for in.
-        let [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
+    // Short hand for in, because we only get one integer/string, we just do an `=`.
+        let [crit, critArgs] = createEqualsExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions);
         applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
     } else if (_.isArray(attrOptions)) {
     // Short hand for equals.
@@ -292,8 +291,9 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
                     attrOptions['$eq'],
                     type
                 );
-            } else if (operator === '$neq') {
-                [crit, critArgs] = createNotInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$neq']);
+            } else if (operator === '$neq' || operator === '$nin') {
+            // $nin in $neq do the same for generationParents
+                [crit, critArgs] = createNotInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions[operator]);
             } else if (operator === '$like') {
                 [crit, critArgs] = createLikeExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$like']);
             } else if (operator === '$nlike') {
@@ -308,13 +308,11 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
                 [crit, critArgs] = createLowerThanEqualExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$lte']);
             } else if (operator === '$in') {
                 [crit, critArgs] = createInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$in']);
-            } else if (operator === '$nin') {
-                [crit, critArgs] = createNotInExpression(table, CONSTANTS.ATTR_ID_PLANT, attrOptions['$nin']);
             } else {
                 throw new Error('Unknown relational operator: ' + operator);
             }
             // apply them to passed squel expression builder
-            if(crit !== null) applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+            if(crit !== null) applyCriteriaToExpression(subSquelExpr, crit, critArgs, type);
         }
     } else {
     // Somethings fishy here. Throw an error?
@@ -335,9 +333,11 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     applyCriteriaToExpression(
         squelExpr,
         '?.? IN ?',
-        [CONSTANTS.TABLE_GENERATIONS,
+        [
+            CONSTANTS.TABLE_GENERATIONS,
             CONSTANTS.ATTR_ID_GENERATION,
-            subQuery],
+            subQuery
+        ],
         type
     );
 }

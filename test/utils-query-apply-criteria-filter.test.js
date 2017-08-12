@@ -355,7 +355,6 @@ describe('src/utils-query-apply-criteria-filter', function() {
         });
 
         it('should do `NOT IN` operation for $nin', function() {
-
             let criteria = {
                 'filter': {'generationId': {'$nin': [5, 6]}}
             };
@@ -367,7 +366,6 @@ describe('src/utils-query-apply-criteria-filter', function() {
         });
 
         it('should be possible to combine multiple operators on same attribute', function() {
-
             let criteria = {
                 'filter': {'generationName': {'$neq': 'foo', '$eq': 'bar'}}
             };
@@ -376,6 +374,100 @@ describe('src/utils-query-apply-criteria-filter', function() {
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' != 'foo' AND 'generations'.'generationName' = 'bar')`
             );
+        });
+    });
+
+    describe('#apply-filter() - generationParents', function() {
+        let q;
+        beforeEach(() => q = squel.select().from('test'));
+
+        it('should do `IN` and `HAVING COUNT` for generationParents $eq', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$eq': [13, 37, 42]}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (13, 37, 42)) GROUP BY generation_parents.generationId HAVING (count('generation_parents'.'plantId') = 3)))`
+            );
+        });
+
+        it('should do an $eq for generationParents array short hand', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
+            q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId HAVING (count('generation_parents'.'plantId') = 2)))`);
+        });
+
+        it('should do `NOT IN` for generationParents $neq', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$neq': [13, 37, 42]}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT IN (13, 37, 42)) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `LIKE` for generationParents $like', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$like': '13_7'}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' LIKE '13_7') GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `NOT LIKE` for generationParents $nlike', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$nlike': '13_7'}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT LIKE '13_7') GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `>` for generationParents $gt', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$gt': 42}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' > 42) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `>=` for generationParents $gte', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$gte': 42}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' >= 42) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `<` for generationParents $lt', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$lt': 42}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' < 42) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `<=` for generationParents $lte', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$lte': 42}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' <= 42) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `IN` for generationParents $in', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$in': [42, 43]}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `=` for generationParents integer/string short hand', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: 42}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' = 42) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should do `NOT IN` for generationParents $nin', function() {
+            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$nin': [42, 43]}}});
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT IN (42, 43)) GROUP BY generation_parents.generationId))`
+            );
+        });
+
+        it('should throw error if unknown relational operator is used', function() {
+            should(
+                () => QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$foo': [42, 43]}}})
+
+            ).throw('Unknown relational operator: $foo');
         });
     });
 
@@ -401,10 +493,6 @@ describe('src/utils-query-apply-criteria-filter', function() {
             q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationName' = 'testGenerationName')`);
         });
 
-        it('should set WHERE generationId IN (SELECT generations.generationId...WHERE plantId=parentIdA OR plantId=parentIdB...HAVING count(plantId)=2) if options.filter.generationParents = [parentIdA, parentIdB] is an array', function() {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
-            q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId HAVING (count('generation_parents'.'plantId') = 2)))`);
-        });
 
         it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field !== generationParents)', function() {
             QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': function(){}}});

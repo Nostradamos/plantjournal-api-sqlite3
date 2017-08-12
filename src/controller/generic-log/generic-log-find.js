@@ -6,6 +6,13 @@ const Utils = require('../../utils');
 
 const GenericFind = require('../generic/generic-find');
 
+/**
+ * Extends GenericFind to better fit needs for log finds.
+ * We use this for plantLogFind, environmentLogFind and mediumLogFind.
+ * @private
+ * @extends GenericFind
+ */
+
 class GenericLogFind extends GenericFind {
     static buildReturnObjectWhere(returnObject, context, criteria) {
     // build families object
