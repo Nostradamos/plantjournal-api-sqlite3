@@ -50,7 +50,6 @@ const CONSTANTS = require('./constants');
  */
 function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableLookup = null) {
     let squelExpr = squel.expr();
-
     eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1, null, overWriteTableLookup);
     query.where(squelExpr);
 }
@@ -89,7 +88,7 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableL
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table.
  */
-function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, overWriteTableLookup = null) {
+function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, overWriteTableLookup) {
     logger.silly('#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth, 'type:', type);
     let isArray = _.isArray(obj);
 
@@ -118,9 +117,9 @@ function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, o
 
         // Handle boolean operators
         if (attr === '$and') {
-            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and', overWriteTableLookup);
+            eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and', overWriteTableLookup);
         } else if (attr === '$or') {
-            return eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or', overWriteTableLookup);
+            eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or', overWriteTableLookup);
         } else if (attr === '$and()') {
             // $and() is a bit different, we want to have child criterias in a
             // sub expression
@@ -136,7 +135,7 @@ function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, o
             eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or', overWriteTableLookup);
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'or');
         } else if (_.indexOf(allowedAttributes, attr) !== -1){
-            translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type);
+            translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type, overWriteTableLookup);
         // Handle normal attributes
         } else {
         // No boolean operator nor attribute, something's stinky here
@@ -168,7 +167,7 @@ function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, o
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table.
  */
-function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type, overWriteTableLookup = null) {
+function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type, overWriteTableLookup) {
     // Get table for this attribute
     let table = QueryUtils.getTableOfField(attr, overWriteTableLookup);
 

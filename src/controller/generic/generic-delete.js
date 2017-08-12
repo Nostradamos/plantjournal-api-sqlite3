@@ -129,7 +129,13 @@ class GenericDelete {
    *         Criteria object passed to delete()
    */
     static setQueryRelatedWhere(context, criteria) {
-        QueryUtilsApplyCriteriaFilter(context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria);
+        console.log('hallo', this.OVERWRITE_TABLE_LOOKUP);
+        QueryUtilsApplyCriteriaFilter(
+            context.queryRelated,
+            this.ATTRIBUTES_SEARCHABLE,
+            criteria,
+            this.OVERWRITE_TABLE_LOOKUP
+        );
     }
 
     /**
@@ -153,7 +159,10 @@ class GenericDelete {
      */
     static setQueryRelatedOrder(context, criteria) {
         QueryUtils.applyCriteriaSort(
-            context.queryRelated, this.ATTRIBUTES_SEARCHABLE, criteria
+            context.queryRelated,
+            this.ATTRIBUTES_SEARCHABLE,
+            criteria,
+            this.OVERWRITE_TABLE_LOOKUP
         );
     }
 
@@ -217,14 +226,14 @@ class GenericDelete {
     }
 
     /**
-   * Set filter for queryDelete. Normally which entry ids
+   * Set where for queryDelete. Normally which entry ids
    * should get deleted.
    * @param  {object} context
    *         Internal context object
    * @param  {object} criteria
    *         Criteria object passed to delete()
    */
-    static setQueryDeleteFilter(context, criteria) {
+    static setQueryDeleteWhere(context, criteria) {
     }
 
     /**
@@ -278,5 +287,7 @@ GenericDelete.TABLE;
 
 // Array containing all allowed ALIASES which can we use in our WHERE part.
 GenericDelete.ATTRIBUTES_SEARCHABLE;
+
+GenericDelete.OVERWRITE_TABLE_LOOKUP = null;
 
 module.exports = GenericDelete;

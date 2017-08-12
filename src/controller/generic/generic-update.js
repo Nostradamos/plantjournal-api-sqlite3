@@ -127,7 +127,12 @@ class GenericUpdate {
    * @param  {object} criteria  - Criteria object passed to update()
    */
     static setQueryFindWhere(context, update, criteria) {
-        QueryUtilsApplyCriteriaFilter(context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria);
+        QueryUtilsApplyCriteriaFilter(
+            context.queryFind,
+            this.ATTRIBUTES_SEARCHABLE,
+            criteria,
+            this.OVERWRITE_TABLE_LOOKUP
+        );
     }
 
     /**
@@ -148,7 +153,10 @@ class GenericUpdate {
     */
     static setQueryFindOrder(context, update, criteria) {
         QueryUtils.applyCriteriaSort(
-            context.queryFind, this.ATTRIBUTES_SEARCHABLE, criteria
+            context.queryFind,
+            this.ATTRIBUTES_SEARCHABLE,
+            criteria,
+            this.OVERWRITE_TABLE_LOOKUP
         );
     }
 
@@ -281,5 +289,7 @@ GenericUpdate.ATTR_MODIFIED_AT; // name of modifiedAt Field
 GenericUpdate.ATTRIBUTES_SEARCHABLE; // array of aliases which we can search through
 
 GenericUpdate.ATTRIBUTES_UPDATABLE; // array of aliases which we can update, everything else will be ignored
+
+GenericUpdate.OVERWRITE_TABLE_LOOKUP = null;
 
 module.exports = GenericUpdate;

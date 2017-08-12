@@ -64,14 +64,14 @@ class GenerationDelete extends GenericDelete {
         context.genotypeIdsToDelete = new Set();
         context.plantIdsToDelete = new Set();
 
-        _.each(context.rowsRelated, function(row) {
+        for(let row of context.rowsRelated) {
             //   now we iterate over each row and add all ids to the matching
             // context.xyzIdsToDelete. It's possible that we also add a null
             // field, but we will take care of that later
             context.generationIdsToDelete.add(row.generationId);
             context.genotypeIdsToDelete.add(row.genotypeId);
             context.plantIdsToDelete.add(row.plantId);
-        });
+        }
 
         context.generationIdsToDelete = Utils.filterSetNotNull(context.generationIdsToDelete);
         context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);

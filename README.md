@@ -127,6 +127,7 @@ ToDo
 * Add environment and environmentLog
 * Implement files/pictures/media
 * Add .on events
+* Make it possible to create plants without need of generations/family?!
 * Add resolveParents to find?!
 * Add strain?!
 * Don't always select id attributes
