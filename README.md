@@ -120,17 +120,17 @@ Models
 
 ToDo
 =====
-* Improve applyWhere for generationParents, add generationParents.length and add tests
+* Complete plantLog
+* add generationParents.length and add tests
 * Better errors, with code, computer error string, and human readable error message?!
-* Add plantLog
 * Add medium and mediumLog
 * Add environment and environmentLog
 * Implement files/pictures/media
 * Add .on events
 * Add resolveParents to find?!
-* Harden API against invalid user input
 * Add strain?!
 * Don't always select id attributes
+* Harden API against invalid user input
 * Improve performance for sql by only joining tables if necessary
 * Use CONSTANTS. and not hardcoded attribute/table names
 
