@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 const CONSTANTS = require('../../constants');
 const logger = require('../../logger');
 const Utils = require('../../utils');

@@ -1,10 +1,9 @@
 /* eslint-env node, mocha */
 'use strict';
 
-const should = require('should');
+require('should');
 const sqlite = require('sqlite');
 
-const Utils = require('../../../src/utils');
 const CONSTANTS = require('../../../src/constants');
 
 const plantJournal = require('../../../src/pj');

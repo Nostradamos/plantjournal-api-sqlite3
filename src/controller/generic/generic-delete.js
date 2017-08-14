@@ -129,7 +129,6 @@ class GenericDelete {
    *         Criteria object passed to delete()
    */
     static setQueryRelatedWhere(context, criteria) {
-        console.log('hallo', this.OVERWRITE_TABLE_LOOKUP);
         QueryUtilsApplyCriteriaFilter(
             context.queryRelated,
             this.ATTRIBUTES_SEARCHABLE,
