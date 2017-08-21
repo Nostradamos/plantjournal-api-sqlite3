@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*\" \"test/**/*\"",
     "lint-fix": "eslint \"src/**/*\" \"test/**/*\" --fix",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "build" : "npm run lint && npm run generate-docs && npm test"
+    "build": "npm run lint && npm run generate-docs && npm test"
   },
   "author": "",
   "license": "ISC",

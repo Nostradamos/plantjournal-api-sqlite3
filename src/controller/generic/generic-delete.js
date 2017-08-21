@@ -249,30 +249,30 @@ class GenericDelete {
     }
 
     /**
-   * Executes queryDelete and puts result into context.resultDelete.
-   * Logs results too. No need to overwrite.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to delete()
-   */
+     * Executes queryDelete and puts result into context.resultDelete.
+     * Logs results too. No need to overwrite.
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to delete()
+     */
     static async executeQueryDelete(context, criteria) {
         context.resultDelete = await sqlite.get(context.queryDelete);
         logger.debug(this.name, '#delete() resultDelete', context.resultDelete);
     }
 
     /**
-   * Add all properties you want to have in your returnObject here.
-   * This should contain all ids for the different models which got
-   * deleted.
-   * @param  {object} returnObject
-   *         returnObject, an empty assoc array which will get returned at the
-   *         end of #delete()
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to delete()
-   */
+     * Add all properties you want to have in your returnObject here.
+     * This should contain all ids for the different models which got
+     * deleted.
+     * @param  {object} returnObject
+     *         returnObject, an empty assoc array which will get returned at the
+     *         end of #delete()
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to delete()
+     */
     static async buildReturnObject(returnObject, context, criteria) {
 
     }

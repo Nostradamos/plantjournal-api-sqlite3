@@ -6,6 +6,15 @@ const Utils = require('../../utils');
 const GenericCreate = require('../generic/generic-create');
 
 class PlantLogCreate extends GenericCreate {
+
+    /**
+     * We need to validate input and throw errors if we're unhappy with it.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     */
     static validateOptions(context, options) {
         Utils.hasToBeSet(options, CONSTANTS.ATTR_TIMESTAMP_PLANT_LOG);
         Utils.hasToBeSet(options, CONSTANTS.ATTR_TYPE_PLANT_LOG);
@@ -15,6 +24,16 @@ class PlantLogCreate extends GenericCreate {
         Utils.hasToBeString(options, CONSTANTS.ATTR_TYPE_PLANT_LOG);
     }
 
+    /**
+     * We need to catch SQLITE_CONSTRAINT error and throw custom error
+     * message if this happens.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     * @return {Promise}
+     */
     static async executeQuery(context, options) {
         try {
             await super.executeQuery(context, options);

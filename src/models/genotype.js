@@ -120,7 +120,7 @@ Genotype.delete = async function(criteria) {
  * @param  {Object}    update
  *         Fields to update.
  * @param  {String}    [update.genotypeName]
- *         Update genotypeParents.
+ *         Update name of genotypes.
  * @param  {GenerationId}   [update.generationId]
  *         Update generationId. This has to be an existing generationId,
  *         otherwise we will throw an errror.

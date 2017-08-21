@@ -5,6 +5,16 @@ const CONSTANTS = require('../../constants');
 const GenericUpdate = require('../generic/generic-update');
 
 class PlantLogUpdate extends GenericUpdate {
+    /**
+     * We need to wrap around super.executeQueryUpdate() to catch SQLITE_CONSTRAINT
+     * error and throw a custom error.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     * @return {Promise}
+     */
     static async executeQueryUpdate(context, update, criteria) {
         try {
             await super.executeQueryUpdate(context, update, criteria);

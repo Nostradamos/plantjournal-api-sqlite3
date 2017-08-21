@@ -120,7 +120,6 @@ Models
 
 ToDo
 =====
-* Complete plantLog
 * add generationParents.length and add tests
 * Better errors, with code, computer error string, and human readable error message?!
 * Add medium and mediumLog

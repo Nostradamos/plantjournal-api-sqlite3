@@ -12,13 +12,23 @@ const GenericFind = require('../generic/generic-find');
  * @private
  * @extends GenericFind
  */
-
 class GenericLogFind extends GenericFind {
+
+    /**
+     * Because we know all attributes which need to be placed in returnObject,
+     * we can do this for all GenericLogFind instances.
+     * @param  {object} returnObject
+     *         object which will get returned later from #find().
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to find()
+     */
     static buildReturnObjectWhere(returnObject, context, criteria) {
-    // build families object
         let parentScope = this;
         returnObject.plantLogs = {};
-        _.each(context.rowsWhere, function(row) {
+
+        for(let row of context.rowsWhere) {
             Utils.addNeededFromRowToLogReturnObject(
                 row,
                 returnObject,
@@ -64,10 +74,16 @@ GenericFind.OVERWRITE_TABLE_LOOKUP = null;
  * GenericLogFind Additional class attributes
  *******************/
 
+ // Name of the id attribute of the log table
+ // Eg: plantLogId
 GenericLogFind.ATTR_ID;
 
+// Timestamp attribute for this GenericLogFind instance.
+// Eg: plantLogTimestamp
 GenericLogFind.ATTR_TIMESTAMP;
 
+// Plural of GenericLogDelete instance.
+// Eg: plantlogs/mediumlogs.
 GenericLogFind.PLURAL;
 
 module.exports = GenericLogFind;

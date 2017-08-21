@@ -23,13 +23,13 @@ const GenericCreate = require('../generic/generic-create');
 class PlantCreate extends GenericCreate {
 
     /**
-   * We need to validate input and throw errors if we're unhappy with it.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   */
+     * We need to validate input and throw errors if we're unhappy with it.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     */
     static validateOptions(context, options) {
         Utils.hasToBeSet(options, 'plantName');
         Utils.hasToBeString(options, 'plantName');
@@ -71,22 +71,21 @@ class PlantCreate extends GenericCreate {
             .set('genotypeId', '$genotypeId', {'dontQuote': true});
     }
 
-    /**
-   * If needed (options.genotypId is not set) we need to create a new genotype
-   * (if options.plantClonedFrom is also unset) or resolve it from the plant
-   * with the plantClonedFrom id. The created or resolved genotypeId will
-   * be in context.genotypeId. Also if options.genotyeId is set, we will set
-   * context.genotypeId to the one from options.genotypeId.
-   * @async
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         Throws error if we can't resolve genotypeId, because
-   *         plantClonedFrom does not reference an existing plant.
-   *         Or if sqlite throws an unexpected error.
-   */
+   /**
+    * If needed (options.genotypId is not set) we need to create a new genotype
+    * (if options.plantClonedFrom is also unset) or resolve it from the plant
+    * with the plantClonedFrom id. The created or resolved genotypeId will
+    * be in context.genotypeId. Also if options.genotyeId is set, we will set
+    * context.genotypeId to the one from options.genotypeId.
+    * @async
+    * @param  {object} context
+    *         internal context object in #create().
+    * @param  {object} options
+    *         options object which got passed to GenericCreate.create().
+    * @throws {Error}
+    *         Throws error if we can't resolve genotypeId, because
+    *         Or if sqlite throws an unexpected error.
+    */
     static async createGenotypeOrResolveGenotypeIdIfNeeded(context, options) {
         if (_.isUndefined(context.genotypeId) && _.isUndefined(options.plantClonedFrom)) {
             // If neither genotypeId nor plantClonedFrom is set, we want to create a new genotypeId
