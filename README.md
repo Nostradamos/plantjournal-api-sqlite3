@@ -63,9 +63,13 @@ Models/Tables
 ## Family
 
 **Attribute:** Name of the attribute
+
 **Type:** Type of this attribute
+
 **Default:** Has an default value, not needed to specify this on create (if internal flag is selected too, you can't even).
+
 **Required:** Attribute is required on create.
+
 **Internal:** This attribute gets filled in internally, and can only get modified indirectly by api user.
 
 |     Attribute     |   Type   | Required |      Default      | Internal | Description |
