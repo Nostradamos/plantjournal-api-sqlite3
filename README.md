@@ -120,10 +120,6 @@ Models
 
 ToDo
 =====
-* add generationParents.length and add tests
-* Better errors, with code, computer error string, and human readable error message?!
-* Add medium and mediumLog
-* Add environment and environmentLog
 * Implement files/pictures/media
 * Add .on events
 * Make it possible to create plants without need of generations/family?!
