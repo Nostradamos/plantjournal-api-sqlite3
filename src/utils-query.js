@@ -338,6 +338,10 @@ QueryUtils.getTableOfField = function (attr, overWriteTableLookup = null) {
         table = CONSTANTS.TABLE_GENERATIONS;
     } else if (_.startsWith(attr, 'family')) {
         table = CONSTANTS.TABLE_FAMILIES;
+    } else if (_.startsWith(attr, 'environment')) {
+        table = CONSTANTS.TABLE_ENVIRONMENTS;
+    } else if (_.startsWith(attr, 'medium')) {
+        table = CONSTANTS.TABLE_MEDIUMS;
     } else {
         throw new Error('cannot associate attribute with a table');
     }

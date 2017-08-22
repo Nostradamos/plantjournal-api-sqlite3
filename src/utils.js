@@ -131,7 +131,19 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
     if (forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
 };
 
-Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
+/**
+ * Adds at many enviromnents attributes as possible from row to
+ * returnObject.environments[environmentId].
+ * @param {object} row
+ *        Row object from sqlite. row.{environmentId} have to be set.
+ * @param {object} returnObject
+ *        Object which will contain information about found models.
+ * @param {object} options
+ *        options which got passed to the find function. For advanced use.
+ * @param {bool}   [forceAdd=false]
+ *        adds to returnObject even if row.generatioName is not set.
+ */
+Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject) {
     let environmentId = row.environmentId;
 
     let environment = {};

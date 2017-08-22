@@ -7,11 +7,65 @@ plantjournal-api-sqlite
 
 This repo contains a plantJournal API implementation using sqlite3 as the database engine.
 
-Models
+API
 ======
+
+## Connect to sqlite3 database
+
+You can connect to a sql database file with:
+```
+var pj = new plantJournal();
+await pj.connect('./database.sql');
+```
+
+Or if you want to keep the database in memory, use:
+```
+var pj = new plantJournal();
+await pj.connect(':memory:');
+```
+
+To catch errors, surround `pj.connect()` with a try/catch block.
+
+```
+var pj = new plantJournal();
+try {
+    await pj.connect('./database.sql'): // same for :memory:
+} catch(err) {
+    // ToDo: handle error here
+}
+```
+
+
+## Create a model record
+
+We have a variety of models with different attributes. See "Models/Tables" for detailed information and a list of all models. This includes Family, Generation, Plant....
+
+To create a new model record, you have to call `pj.{Model}.create({options})`, where `{Model}` is the model name, and `{options}` an object with attributes this new model record should have. Check out "Models/Tables" to get more detailed information which attributes are required (and therefore have to be set if you don't want to get any errors) and which additional/optional attributes you can set.
+
+Example #1:
+```
+await pj.Family.create({
+    familyName: 'testFamily'
+});
+```
+
+Example #2:
+```
+await pj.Plant.create({
+    plantName: 'Some chili plant',
+    genotypeId: 3
+});
+```
+
+Models/Tables
+=============
 
 ## Family
 
+**Attribute:** Name of the attribute
+**Type:** Type of this attribute
+**Default:** Has an default value, not needed to specify this on create (if internal flag is selected too, you can't even).
+**Required:** Attribute is required on create.
 **Internal:** This attribute gets filled in internally, and can only get modified indirectly by api user.
 
 |     Attribute     |   Type   | Required |      Default      | Internal | Description |
@@ -22,9 +76,9 @@ Models
 | familyCreatedAt   | datetime |          | CURRENT_TIMESTAMP | *        |             |
 | familyModifiedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
 
-## Generation
+## Generation (=generations)
 
-|       Attribute       |   Type    | Required |      Default      | Internal | Description |
+| Attribute             | Type      | Required | Default           | Internal | Description |
 | --------------------- | --------- | -------- | ----------------- | -------- | ----------- |
 | generationId          | int       |          | AUTO_INCREMENT    | *        |             |
 | familyId              | familyId  | *        |                   |          |             |
@@ -34,7 +88,7 @@ Models
 | generationCreatedAt   | datetime  |          | CURRENT_TIMESTAMP | *        |             |
 | generationModifiedAt  | datetime  |          | CURRENT_TIMESTAMP | *        |             |
 
-## Genotype
+## Genotype (=genotypes)
 
 |      Attribute      |     Type     | Required |      Default      | Internal | Description |
 | ------------------- | ------------ | -------- | ----------------- | -------- | ----------- |
@@ -50,73 +104,53 @@ Models
 |        Attribute         |    Type    | Required |      Default      | Internal | Description |
 | ------------------------ | ---------- | -------- | ----------------- | -------- | ----------- |
 | plantId                  | int        |          | AUTO_INCREMENT    | *        |             |
-| genotypeId               | genotypeId | *        |                   |          |             |
-| mediumId (unimplemented) | mediumId   | *        |                   |          |             |
-| plantName                | text       |          |                   |          |             |
+| plantName                | text       | *        |                   |          |             |
 | plantSex                 | text       |          | null              |          |             |
 | plantClonedFrom          | plantId    |          | null              |          |             |
 | plantDescription         | text       |          | ""                |          |             |
 | plantCreatedAt           | datetime   |          | CURRENT_TIMESTAMP | *        |             |
 | plantModifiedAt          | datetime   |          | CURRENT_TIMESTAMP | *        |             |
+| genotypeId               | genotypeId | *        |                   |          |             |
+| mediumId (unimplemented) | mediumId   | *        |                   |          |             |
 
-## PlantLog
-
-|     Attribute      |   Type   | Required |      Default      | Internal | Description |
-| ------------------ | -------- | -------- | ----------------- | -------- | ----------- |
-| plantLogId         | int      |          | AUTO_INCREMENT    | *        |             |
-| plantId            | plantId  | *        |                   |          |             |
-| plantLogTimestamp  | datetime | *        |                   |          |             |
-| plantLogType       | text     | *        |                   |          |             |
-| plantLogValue      | blob     | *        |                   |          |             |
-| plantLogCreatedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
-| plantLogModifiedAt | datetime |          | CURRENT_TIMESTAMP | *        |             |
-
-## Medium (unimplemented)
+## Medium
 
 |     Attribute     |     Type      | Required |      Default      | Internal | Description |
 | ----------------- | ------------- | -------- | ----------------- | -------- | ----------- |
 | mediumId          | int           |          | AUTO_INCREMENT    | *        |             |
-| environmentId     | environmentId | *        |                   |          |             |
+| mediumName        | text          | *        | ""                |          |             |
 | mediumDescription | text          |          | ""                |          |             |
 | mediumCreatedAt   | datetime      |          | CURRENT_TIMESTAMP | *        |             |
 | mediumModifiedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |             |
-|                   |               |          |                   |          |             |
+| environmentId     | environmentId | *        |                   |          |             |
 
+## Environment
 
-## MediumLog (unimplemented)
-|      Attribute      |   Type   | Required |      Default      | Internal | Description |
-| ------------------- | -------- | -------- | ----------------- | -------- | ----------- |
-| mediumLogId         | int      |          | AUTO_INCREMENT    | *        |             |
-| mediumId            | mediumId | *        |                   |          |             |
-| mediumLogTimestamp  | datetime | *        |                   |          |             |
-| mediumLogType       | text     | *        |                   |          |             |
-| mediumLogValue      | blob     | *        |                   |          |             |
-| mediumLogCreatedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
-| mediumLogModifiedAt | datetime |          | CURRENT_TIMESTAMP | *        |             |
+|       Attribute        |   Type   | Required |      Default      | Internal | Description |
+| ---------------------- | -------- | -------- | ----------------- | -------- | ----------- |
+| environmentId          | int      |          | AUTO_INCREMENT    | *        |             |
+| environmentName        | text     | *        |                   |          |             |
+| environmentDescription | text     |          |                   |          |             |
+| environmentCreatedAt   | datetime |          | CURRENT_TIMESTAMP | *        |             |
+| environmentModifiedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
 
+## Log (unimplemented)
 
+If Required is filled with "**", you can only set/get this attribute if the logFor attribute matches. So for example you can only
+get plantId if logFor is "plant" and you can only get mediumId if logFor is "medium.
 
-## Environment (unimplemented)
-
-|       Attribute       |   Type   | Required |      Default      | Internal | Description |
-| --------------------- | -------- | -------- | ----------------- | -------- | ----------- |
-| environmentId         | int      |          | AUTO_INCREMENT    | *        |             |
-| environmentName       | text     | *        |                   |          |             |
-| environmentCreatedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
-| environmentModifiedAt | datetime |          | CURRENT_TIMESTAMP | *        |             |
-
-## EnvironmentLog (unimplemented)
-
-|        Attribute         |     Type      | Required |      Default      | Internal | Description |
-| ------------------------ | ------------- | -------- | ----------------- | -------- | ----------- |
-| environemntLogId         | int           |          | AUTO_INCREMENT    | *        |             |
-| environmentId            | environmentId | *        |                   |          |             |
-| environmentLogTimestamp  | datetime      | *        |                   |          |             |
-| environmentLogType       | text          | *        |                   |          |             |
-| environmentLogValue      | blob          | *        |                   |          |             |
-| environmentLogCreatedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |             |
-| environmentLogModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |             |
-
+| Attribute     | Type          | Required | Default           | Internal | Description                                                         |
+| ------------- | ------------- | -------- | ----------------- | -------- | -----------                                                         |
+| logId         | int           |          | AUTO_INCREMENT    | *        |                                                                     |
+| logFor        | enum          | *        |                   |          | Has to be either "plant", "medium" or "environment".                |
+| logTimestamp  | datetime      | *        |                   |          |                                                                     |
+| logType       | text          | *        |                   |          |                                                                     |
+| logValue      | blob          | *        |                   |          |                                                                     |
+| logCreatedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                     |
+| logModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                     |
+| plantId       | plantId       | **       |                   |          | Has to reference an existing plant if logFor = "plant".             |
+| mediumId      | mediumId      | **       |                   |          | Has to reference an existing medium if logFor = "medium".           |
+| environmentId | environmentId | **       |                   |          | Has to reference an existing environment if logFor = "environment". |
 
 ToDo
 =====

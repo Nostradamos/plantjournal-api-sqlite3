@@ -9,10 +9,9 @@ const GenericFind = require('../generic/generic-find');
 
 class EnvironmentFind extends GenericFind {
     /**
-     * We need to overwrite this method to, yeah,
-     * build the returnObject. We basically iterate over
-     * each row we get from database and add all family related
-     * attributes to returnObject.families.
+     * We need to overwrite this method to, yeah, build the returnObject. We
+     * basically iterate over each row we get from database and add all
+     * environment related attributes to returnObject.environments.
      * @override
      * @param  {object} returnObject
      *         object which will get returned later from #find().
@@ -24,10 +23,9 @@ class EnvironmentFind extends GenericFind {
         // build families object
         returnObject.environments =  {};
         _.each(context.rowsWhere, function(row) {
-            Utils.addEnvironmentFromRowToReturnObject(row, returnObject, criteria, true);
+            Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
         });
     }
-
 }
 
 EnvironmentFind.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
