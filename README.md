@@ -62,14 +62,10 @@ Models/Tables
 
 ## Family
 
-**Attribute:** Name of the attribute
-
-**Type:** Type of this attribute
-
-**Default:** Has an default value, not needed to specify this on create (if internal flag is selected too, you can't even).
-
-**Required:** Attribute is required on create.
-
+**Attribute:** Name of the attribute  
+**Type:** Type of this attribute  
+**Default:** Has an default value, not needed to specify this on create (if internal flag is selected too, you can't even).  
+**Required:** Attribute is required on create.  
 **Internal:** This attribute gets filled in internally, and can only get modified indirectly by api user.
 
 |     Attribute     |   Type   | Required |      Default      | Internal | Description |
@@ -140,7 +136,7 @@ Models/Tables
 
 ## Log (unimplemented)
 
-If Required is filled with "**", you can only set/get this attribute if the logFor attribute matches. So for example you can only
+If Required is filled with "\*\*", you can only set/get this attribute if the logFor attribute matches. So for example you can only
 get plantId if logFor is "plant" and you can only get mediumId if logFor is "medium.
 
 | Attribute     | Type          | Required | Default           | Internal | Description                                                         |
