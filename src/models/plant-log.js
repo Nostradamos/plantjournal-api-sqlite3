@@ -48,6 +48,8 @@ let PlantLog = exports;
  *         Options how the new family should be.
  * @param  {Number} options.plantId
  *         Has to be the id of the plant this log should be for.
+ * @param  {UnixTimestampUTC} options.plantLogTimestamp
+ *         Timestamp for this log
  * @param  {String} options.plantLogType
  *         Type of the plantLog.
  * @param  {integer} options.plantLogValue
@@ -117,6 +119,8 @@ PlantLog.delete = async function(criteria) {
  * @async
  * @param  {Object} update
  *         Fields to update.
+ * @param  {UnixTimestampUTC} [update.plantLogTimestamp]
+ *         Update plantLogTimestamp.
  * @param  {String} [update.plantLogType]
  *         Update plantLogType.
  * @param  {String} [update.plantLogValue]
