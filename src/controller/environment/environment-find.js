@@ -7,19 +7,7 @@ const Utils = require('../../utils');
 
 const GenericFind = require('../generic/generic-find');
 
-/**
- * FamilyFind does all the functionality of Family.find
- * To manually execute a "FamilyFind-find", call FamilyFind.find().
- * To understand how finds work generally internally, See
- * src/controller/generic-find (we extend that class).
- * If you want to know how to use the Family.find() API, See
- * src/models/family #find().
- * <strong>Note:</strong> Do not use directly.
- * @private
- * @extends GenericFind
- */
-class FamilyFind extends GenericFind {
-
+class EnvironmentFind extends GenericFind {
     /**
      * We need to overwrite this method to, yeah,
      * build the returnObject. We basically iterate over
@@ -34,17 +22,18 @@ class FamilyFind extends GenericFind {
      */
     static buildReturnObjectWhere(returnObject, context, criteria) {
         // build families object
-        returnObject.families =  {};
+        returnObject.environments =  {};
         _.each(context.rowsWhere, function(row) {
-            Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria, true);
+            Utils.addEnvironmentFromRowToReturnObject(row, returnObject, criteria, true);
         });
     }
+
 }
 
-FamilyFind.TABLE = CONSTANTS.TABLE_FAMILIES;
+EnvironmentFind.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
 
-FamilyFind.ATTR_ID = CONSTANTS.ATTR_ID_FAMILY;
+EnvironmentFind.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
 
-FamilyFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_FAMILY;
+EnvironmentFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT;
 
-module.exports = FamilyFind;
+module.exports = EnvironmentFind;

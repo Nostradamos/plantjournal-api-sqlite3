@@ -70,4 +70,6 @@ plantJournal.prototype.Plant = require('./models/plant');
 
 plantJournal.prototype.PlantLog = require('./models/plant-log');
 
+plantJournal.prototype.Environment = require('./models/environment');
+
 module.exports = plantJournal;

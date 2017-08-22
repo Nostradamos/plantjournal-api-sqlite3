@@ -30,51 +30,25 @@ Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
 };
 
 /**
- * Adds to returnObject.plants[row.plantId] the plant object if row.plantName
- * is set. Plant Object holds all information available in row which are important for plant.
- * Mutates returnObject.
- * @param {object} row          - Row object from sqlite. row.{plantId|genotypeId|generationId|familyId} have to be set.
+ * Adds to returnObject.families[row.familyId] the family object if row.familyName
+ * is set. Mutates returnObject.
+ * @param {object} row          - Row object from sqlite. row.familyId has to be set.
  * @param {object} returnObject - Object which will find returned from pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
  * @param {object} options      - options which got passed to the find function. For advanced use.
  * @param {bool}   [forceAdd=false] - adds to returnObject even if row.generatioName is not set.
  */
-Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row, returnObject, options, forceAdd) {
-    let plantId = row.plantId;
+Utils.addFamilyFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
+    let familyId = row.familyId;
+    let family = {};
 
-    let plant = {
-        'genotypeId': row.genotypeId,
-        'generationId': row.generationId,
-        'familyId': row.familyId
-    };
-
-    _.each(CONSTANTS.ALL_ATTRIBUTES_PLANT, function(attr) {
-        if (_.has(row, attr)) plant[attr] = row[attr];
+    _.each(CONSTANTS.ALL_ATTRIBUTES_FAMILY, function(attr) {
+        if (_.has(row, attr)) family[attr] = row[attr];
     });
 
-    if (forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
-};
-
-/**
- * Adds to returnObject.genotypes[row.genotypeId] the genotype object if row.genotypeName
- * is set. Genotype Object holds all information available in row which are important for genotype.
- * Mutates returnObject.
- * @param {object} row          - Row object from sqlite. row.{genotypeId|generationId|familyId} have to be set.
- * @param {object} returnObject - Object which will find returned from pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
- * @param {object} options      - options which got passed to the find function. For advanced use.
- * @param {bool}   [forceAdd=false]     - adds to returnObject even if row.generatioName is not set.
- */
-Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObject(row, returnObject, options, forceAdd) {
-    let genotypeId = row.genotypeId;
-    let genotype = {
-        'generationId': row.generationId,
-        'familyId': row.familyId
-    };
-
-    _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
-        if (_.has(row, attr)) genotype[attr] = row[attr];
-    });
-    if (forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
-
+    // Make sure we have at least two attrs, or forceAdd = true
+    if (forceAdd === true || _.size(family) > 1) {
+        returnObject.families[familyId] = family;
+    }
 };
 
 /**
@@ -110,28 +84,69 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
 };
 
 /**
- * Adds to returnObject.families[row.familyId] the family object if row.familyName
- * is set. Mutates returnObject.
- * @param {object} row          - Row object from sqlite. row.familyId has to be set.
+ * Adds to returnObject.genotypes[row.genotypeId] the genotype object if row.genotypeName
+ * is set. Genotype Object holds all information available in row which are important for genotype.
+ * Mutates returnObject.
+ * @param {object} row          - Row object from sqlite. row.{genotypeId|generationId|familyId} have to be set.
+ * @param {object} returnObject - Object which will find returned from pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
+ * @param {object} options      - options which got passed to the find function. For advanced use.
+ * @param {bool}   [forceAdd=false]     - adds to returnObject even if row.generatioName is not set.
+ */
+Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObject(row, returnObject, options, forceAdd) {
+    let genotypeId = row.genotypeId;
+    let genotype = {
+        'generationId': row.generationId,
+        'familyId': row.familyId
+    };
+
+    _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
+        if (_.has(row, attr)) genotype[attr] = row[attr];
+    });
+    if (forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
+
+};
+
+/**
+ * Adds to returnObject.plants[row.plantId] the plant object if row.plantName
+ * is set. Plant Object holds all information available in row which are important for plant.
+ * Mutates returnObject.
+ * @param {object} row          - Row object from sqlite. row.{plantId|genotypeId|generationId|familyId} have to be set.
  * @param {object} returnObject - Object which will find returned from pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
  * @param {object} options      - options which got passed to the find function. For advanced use.
  * @param {bool}   [forceAdd=false] - adds to returnObject even if row.generatioName is not set.
  */
-Utils.addFamilyFromRowToReturnObject = function addFamilyFromRowToReturnObject(row, returnObject, options, forceAdd) {
-    let familyId = row.familyId;
-    let family = {};
+Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row, returnObject, options, forceAdd) {
+    let plantId = row.plantId;
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_FAMILY, function(attr) {
-        if (_.has(row, attr)) family[attr] = row[attr];
+    let plant = {
+        'genotypeId': row.genotypeId,
+        'generationId': row.generationId,
+        'familyId': row.familyId
+    };
+
+    _.each(CONSTANTS.ALL_ATTRIBUTES_PLANT, function(attr) {
+        if (_.has(row, attr)) plant[attr] = row[attr];
     });
 
-    // Make sure we have at least two attrs, or forceAdd = true
-    if (forceAdd === true || _.size(family) > 1) {
-        returnObject.families[familyId] = family;
-    }
+    if (forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
 };
 
-Utils.addNeededFromRowToLogReturnObject = function(row, returnObject, attrLogTimestamp, attrLogId, allAttributes, plural, criteria) {
+Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
+    let environmentId = row.environmentId;
+
+    let environment = {};
+
+    _.each(CONSTANTS.ALL_ATTRIBUTES_ENVIRONMENT, function(attr) {
+        if (_.has(row, attr)) environment[attr] = row[attr];
+    });
+
+    returnObject.environments[environmentId] = environment;
+}
+
+Utils.addNeededFromRowToLogReturnObject = function(row, returnObject,
+                                                   attrLogTimestamp, attrLogId,
+                                                   allAttributes, plural,
+                                                   criteria) {
     let attributesToSelect;
     if(_.isEmpty(criteria.attributes)) {
         attributesToSelect = allAttributes;
