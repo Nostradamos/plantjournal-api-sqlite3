@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 const Utils = require('../../utils');
 
 const GenericFind = require('../generic/generic-find');
@@ -38,7 +36,7 @@ class GenericLogFind extends GenericFind {
                 parentScope.PLURAL,
                 criteria
             );
-        });
+        }
     }
 }
 
@@ -74,8 +72,8 @@ GenericFind.OVERWRITE_TABLE_LOOKUP = null;
  * GenericLogFind Additional class attributes
  *******************/
 
- // Name of the id attribute of the log table
- // Eg: plantLogId
+// Name of the id attribute of the log table
+// Eg: plantLogId
 GenericLogFind.ATTR_ID;
 
 // Timestamp attribute for this GenericLogFind instance.

@@ -71,7 +71,7 @@ class PlantCreate extends GenericCreate {
             .set('genotypeId', '$genotypeId', {'dontQuote': true});
     }
 
-   /**
+    /**
     * If needed (options.genotypId is not set) we need to create a new genotype
     * (if options.plantClonedFrom is also unset) or resolve it from the plant
     * with the plantClonedFrom id. The created or resolved genotypeId will
