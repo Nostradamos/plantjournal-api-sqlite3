@@ -34,8 +34,8 @@ let Environment = exports;
  *         only be one key, which is the id of the newly created plant.
  */
 Environment.create = async function(options) {
-     return await EnvironmentCreate.create(options);
- };
+    return await EnvironmentCreate.create(options);
+};
 
 /**
  * Searches for environments based on criteria and returns them.
@@ -51,5 +51,5 @@ Environment.create = async function(options) {
  *         Found environments
  */
 Environment.find = async function(criteria) {
-     return await EnvironmentFind.find(criteria);
- }
+    return await EnvironmentFind.find(criteria);
+};

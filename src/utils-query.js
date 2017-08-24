@@ -69,10 +69,14 @@ QueryUtils.joinRelatedPlants = function(queryObj) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinFamilies = function (query) {
+    QueryUtils.joinFamiliesFromGenerations(query);
+};
+
+QueryUtils.joinFamiliesFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_FAMILIES,
         'families',
         'generations.familyId = families.familyId');
-};
+}
 
 /**
  * Left joins generations and generation_parents by referencing to
@@ -81,13 +85,17 @@ QueryUtils.joinFamilies = function (query) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinGenerations = function (query) {
+    QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes(query);
+};
+
+QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATIONS,
         'generations',
         'genotypes.generationId = generations.generationId'
     );
     // We also have to join generation_parents
     QueryUtils.joinGenerationParentsOnly(query);
-};
+}
 
 /**
  * Only join generation parents. Mutates query.
@@ -95,11 +103,15 @@ QueryUtils.joinGenerations = function (query) {
  *         Squel query which can take an .left_join()
  */
 QueryUtils.joinGenerationParentsOnly = function (query) {
+    QueryUtils.joinGenerationParentsFromGenerations(query);
+};
+
+QueryUtils.joinGenerationParentsFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
         'generation_parents',
         'generations.generationId = generation_parents.generationId'
     );
-};
+}
 
 /**
  * Left joins genotypes by referencing to plants.genotypeId. Mutates query
@@ -107,17 +119,25 @@ QueryUtils.joinGenerationParentsOnly = function (query) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinGenotypes = function (query) {
+    QueryUtils.joinGenotypesFromPlants(query);
+};
+
+QueryUtils.joinGenotypesFromPlants = function(query) {
     query.left_join(CONSTANTS.TABLE_GENOTYPES,
         'genotypes',
         'plants.genotypeId = genotypes.genotypeId'
     );
-};
+}
 
 /**
  * Left joins generations by referencing to families.familyId.
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinGenerationsDownwards = function (query) {
+    QueryUtils.joinGenerationsAndGenerationParentsFromFamilies(query);
+};
+
+QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATIONS,
         'generations',
         'families.familyId = generations.familyId'
@@ -126,27 +146,49 @@ QueryUtils.joinGenerationsDownwards = function (query) {
         'generation_parents',
         'generations.generationId = generation_parents.generationId'
     );
-};
+}
 
 /**
  * Left joins Genotypes by referencing to generations.generationId
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinGenotypesDownwards = function (query) {
+    QueryUtils.joinGenotypesFromGenerations(query);
+};
+
+QueryUtils.joinGenotypesFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_GENOTYPES,
         'genotypes',
         'generations.generationId = genotypes.generationId'
     );
-};
+}
 
 /**
  * Left joins Plants by referencing to genotypes.genotypeId
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinPlantsDownwards = function (query) {
+    QueryUtils.joinPlantsFromGenotypes(query);
+};
+
+QueryUtils.joinPlantsFromGenotypes = function(query) {
     query.left_join(CONSTANTS.TABLE_PLANTS,
         'plants',
         'genotypes.genotypeId = plants.genotypeId'
+    );
+}
+
+QueryUtils.joinPlantsFromMediums = function(query) {
+    query.left_join(CONSTANTS.TABLE_PLANTS,
+        'plants',
+        'mediums.mediumId = plants.plantId'
+    );
+}
+
+QueryUtils.joinMediumsFromEnvironments = function(query) {
+    query.left_join(CONSTANTS.TABLE_MEDIUMS,
+        'mediums',
+        'environments.environmentId = mediums.environmentId'
     );
 };
 

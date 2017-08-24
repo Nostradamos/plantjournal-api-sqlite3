@@ -153,12 +153,12 @@ Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject) {
     });
 
     returnObject.environments[environmentId] = environment;
-}
+};
 
 Utils.addNeededFromRowToLogReturnObject = function(row, returnObject,
-                                                   attrLogTimestamp, attrLogId,
-                                                   allAttributes, plural,
-                                                   criteria) {
+    attrLogTimestamp, attrLogId,
+    allAttributes, plural,
+    criteria) {
     let attributesToSelect;
     if(_.isEmpty(criteria.attributes)) {
         attributesToSelect = allAttributes;
