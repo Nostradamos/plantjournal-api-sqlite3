@@ -59,6 +59,7 @@ class plantJournal {
     }
 }
 
+// Attach all models to plantJournal object
 
 plantJournal.prototype.Family = require('./models/family');
 
@@ -71,5 +72,7 @@ plantJournal.prototype.Plant = require('./models/plant');
 plantJournal.prototype.PlantLog = require('./models/plant-log');
 
 plantJournal.prototype.Environment = require('./models/environment');
+
+plantJournal.prototype.Medium = require('./models/medium');
 
 module.exports = plantJournal;
