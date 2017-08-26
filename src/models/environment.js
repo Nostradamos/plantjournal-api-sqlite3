@@ -2,6 +2,8 @@
 
 const EnvironmentCreate = require('../controller/environment/environment-create');
 const EnvironmentFind = require('../controller/environment/environment-find');
+const EnvironmentDelete = require('../controller/environment/environment-delete');
+const EnvironmentUpdate = require('../controller/environment/environment-update');
 
 /**
  * Namespace containing all CRUD methods of Environment.
@@ -52,4 +54,12 @@ Environment.create = async function(options) {
  */
 Environment.find = async function(criteria) {
     return await EnvironmentFind.find(criteria);
+};
+
+Environment.delete = async function(criteria) {
+    return await EnvironmentDelete.delete(criteria);
+};
+
+Environment.update = async function(update, criteria) {
+    return await EnvironmentUpdate.update(update, criteria);
 };

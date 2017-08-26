@@ -28,8 +28,8 @@ class GenerationDelete extends GenericDelete {
    *         Criteria object passed to delete()
    */
     static setQueryRelatedJoin(context, criteria) {
-        QueryUtils.joinGenotypesDownwards(context.queryRelated);
-        QueryUtils.joinPlantsDownwards(context.queryRelated);
+        QueryUtils.joinGenotypesFromGenerations(context.queryRelated);
+        QueryUtils.joinPlantsFromGenotypes(context.queryRelated);
     }
 
     /**

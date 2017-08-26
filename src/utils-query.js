@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 
 const _ = require('lodash');
 
@@ -24,9 +24,9 @@ let QueryUtils = exports;
  */
 QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = true) {
     if (joinGenerationParents === true) {
-        QueryUtils.joinGenerationParentsOnly(queryObj);
+        QueryUtils.joinGenerationParentsFromGenerations(queryObj);
     }
-    QueryUtils.joinFamilies(queryObj);
+    QueryUtils.joinFamiliesFromGenerations(queryObj);
 };
 
 
@@ -40,7 +40,7 @@ QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = t
  * @returns {undefined}
  */
 QueryUtils.joinRelatedGenotypes = function(queryObj) {
-    QueryUtils.joinGenerations(queryObj);
+    QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes(queryObj);
 
     // Because with QueryUtils.joinGenerations we already join
     // generation_parents and generations, we don't have to join
@@ -59,7 +59,7 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
  * @returns {undefined}
  */
 QueryUtils.joinRelatedPlants = function(queryObj) {
-    QueryUtils.joinGenotypes(queryObj);
+    QueryUtils.joinGenotypesFromPlants(queryObj);
     QueryUtils.joinRelatedGenotypes(queryObj);
 };
 
@@ -68,10 +68,6 @@ QueryUtils.joinRelatedPlants = function(queryObj) {
  * @param  {squel} query
  *         Squel query capable of an .left_join()
  */
-QueryUtils.joinFamilies = function (query) {
-    QueryUtils.joinFamiliesFromGenerations(query);
-};
-
 QueryUtils.joinFamiliesFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_FAMILIES,
         'families',
@@ -84,17 +80,18 @@ QueryUtils.joinFamiliesFromGenerations = function(query) {
  * @param  {squel} query
  *         Squel query capable of an .left_join()
  */
-QueryUtils.joinGenerations = function (query) {
-    QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes(query);
-};
-
 QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
+    // First join generations
+    QueryUtils.joinGenerationsFromGenotypes(query);
+    // Now we can also join generation parents
+    QueryUtils.joinGenerationParentsFromGenerations(query);
+}
+
+QueryUtils.joinGenerationsFromGenotypes = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATIONS,
         'generations',
         'genotypes.generationId = generations.generationId'
     );
-    // We also have to join generation_parents
-    QueryUtils.joinGenerationParentsOnly(query);
 }
 
 /**
@@ -102,10 +99,6 @@ QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
  * @param  {squel} query
  *         Squel query which can take an .left_join()
  */
-QueryUtils.joinGenerationParentsOnly = function (query) {
-    QueryUtils.joinGenerationParentsFromGenerations(query);
-};
-
 QueryUtils.joinGenerationParentsFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
         'generation_parents',
@@ -118,10 +111,6 @@ QueryUtils.joinGenerationParentsFromGenerations = function(query) {
  * @param  {squel} query
  *         Squel query capable of an .left_join()
  */
-QueryUtils.joinGenotypes = function (query) {
-    QueryUtils.joinGenotypesFromPlants(query);
-};
-
 QueryUtils.joinGenotypesFromPlants = function(query) {
     query.left_join(CONSTANTS.TABLE_GENOTYPES,
         'genotypes',
@@ -133,18 +122,16 @@ QueryUtils.joinGenotypesFromPlants = function(query) {
  * Left joins generations by referencing to families.familyId.
  * @param  {squel} query - Squel query capable of an .left_join()
  */
-QueryUtils.joinGenerationsDownwards = function (query) {
-    QueryUtils.joinGenerationsAndGenerationParentsFromFamilies(query);
-};
-
 QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
+    QueryUtils.joinGenerationsFromFamilies(query);
+
+    QueryUtils.joinGenerationParentsFromGenerations(query);
+}
+
+QueryUtils.joinGenerationsFromFamilies = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATIONS,
         'generations',
         'families.familyId = generations.familyId'
-    );
-    query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
-        'generation_parents',
-        'generations.generationId = generation_parents.generationId'
     );
 }
 
@@ -152,10 +139,6 @@ QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
  * Left joins Genotypes by referencing to generations.generationId
  * @param  {squel} query - Squel query capable of an .left_join()
  */
-QueryUtils.joinGenotypesDownwards = function (query) {
-    QueryUtils.joinGenotypesFromGenerations(query);
-};
-
 QueryUtils.joinGenotypesFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_GENOTYPES,
         'genotypes',
@@ -167,10 +150,6 @@ QueryUtils.joinGenotypesFromGenerations = function(query) {
  * Left joins Plants by referencing to genotypes.genotypeId
  * @param  {squel} query - Squel query capable of an .left_join()
  */
-QueryUtils.joinPlantsDownwards = function (query) {
-    QueryUtils.joinPlantsFromGenotypes(query);
-};
-
 QueryUtils.joinPlantsFromGenotypes = function(query) {
     query.left_join(CONSTANTS.TABLE_PLANTS,
         'plants',
