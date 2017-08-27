@@ -27,7 +27,7 @@ class PlantLogUpdate extends GenericUpdate {
     }
 }
 
-PlantLogUpdate.TABLE = CONSTANTS.TABLE_PLANT_LOGS; // Table name
+PlantLogUpdate.TABLE = CONSTANTS.TABLE_PLANT_LOG; // Table name
 
 PlantLogUpdate.ATTR_ID = CONSTANTS.ATTR_ID_PLANT_LOG; // name of id field
 
@@ -38,7 +38,7 @@ PlantLogUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.ALL_ATTRIBUTES_PLANT_LOG; // ar
 PlantLogUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_PLANT_LOG; // array of aliases which we can update, everything else will be ignored
 
 PlantLogUpdate.OVERWRITE_TABLE_LOOKUP = {
-    [CONSTANTS.ATTR_ID_PLANT]: CONSTANTS.TABLE_PLANT_LOGS
+    [CONSTANTS.ATTR_ID_PLANT]: CONSTANTS.TABLE_PLANT_LOG
 };
 
 

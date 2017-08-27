@@ -57,7 +57,7 @@ class MediumDelete extends GenericDelete {
     }
 }
 
-MediumDelete.TABLE = CONSTANTS.TABLE_MEDIUMS;
+MediumDelete.TABLE = CONSTANTS.TABLE_MEDIUM;
 
 MediumDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_MEDIUM;
 

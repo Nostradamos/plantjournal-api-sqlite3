@@ -13,7 +13,7 @@ const GenericUpdate = require('../generic/generic-update');
 class FamilyUpdate extends GenericUpdate {
 }
 
-FamilyUpdate.TABLE = CONSTANTS.TABLE_FAMILIES;
+FamilyUpdate.TABLE = CONSTANTS.TABLE_FAMILY;
 
 FamilyUpdate.ATTR_ID = CONSTANTS.ATTR_ID_FAMILY;
 

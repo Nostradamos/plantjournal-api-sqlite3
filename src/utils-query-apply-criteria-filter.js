@@ -249,7 +249,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
 
     logger.silly('#applyCriteriaFilter #handleGenerationParents() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
 
-    let table = CONSTANTS.TABLE_GENERATION_PARENTS;
+    let table = CONSTANTS.TABLE_GENERATION_PARENT;
 
 
     let subSquelExpr = squel.expr(); // expression for WHERE
@@ -320,7 +320,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     }
 
     let subQuery = squel.select()
-        .from(CONSTANTS.TABLE_GENERATION_PARENTS, 'generation_parents')
+        .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
         .field('generation_parents.generationId')
         .group('generation_parents.generationId')
         .where(subSquelExpr);
@@ -333,7 +333,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         squelExpr,
         '?.? IN ?',
         [
-            CONSTANTS.TABLE_GENERATIONS,
+            CONSTANTS.TABLE_GENERATION,
             CONSTANTS.ATTR_ID_GENERATION,
             subQuery
         ],

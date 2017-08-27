@@ -49,7 +49,7 @@ describe('PlantLog()', () => {
             deletedPlantLogs.should.eql({'plantLogs': [3]});
 
             // Make sure we deleted also from database
-            let rowsPlantLogs = await sqlite.all('SELECT plantLogId FROM ' + CONSTANTS.TABLE_PLANT_LOGS);
+            let rowsPlantLogs = await sqlite.all('SELECT plantLogId FROM ' + CONSTANTS.TABLE_PLANT_LOG);
             rowsPlantLogs.should.deepEqual([
                 {'plantLogId': 1},
                 {'plantLogId': 2},

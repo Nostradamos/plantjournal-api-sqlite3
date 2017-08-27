@@ -47,7 +47,7 @@ describe('Family()', () => {
 
             updatedFamilies.should.deepEqual([2]);
 
-            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILY);
 
             rowsFam.should.deepEqual(
                 [
@@ -64,7 +64,7 @@ describe('Family()', () => {
 
             await pj.Family.update({'familyName': 'testFamily2'}, {'filter': {'familyId': 2}});
 
-            let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+            let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILY  + ' WHERE familyId = 2');
 
             (rowsFam[0].familyModifiedAt >= currentTimestamp).should.be.true();
 
@@ -78,7 +78,7 @@ describe('Family()', () => {
 
             updatedFamilies.length.should.eql(0);
 
-            let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+            let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILY  + ' WHERE familyId = 2');
 
             rowsFam[0].familyModifiedAt.should.not.eql(1);
         });
@@ -91,7 +91,7 @@ describe('Family()', () => {
 
             updatedFamilies.length.should.eql(0);
 
-            let rowsFam = await sqlite.all('SELECT familyId, familyCreatedAt FROM ' + CONSTANTS.TABLE_FAMILIES  + ' WHERE familyId = 2');
+            let rowsFam = await sqlite.all('SELECT familyId, familyCreatedAt FROM ' + CONSTANTS.TABLE_FAMILY  + ' WHERE familyId = 2');
 
             rowsFam[0].familyCreatedAt.should.not.eql(1);
         });

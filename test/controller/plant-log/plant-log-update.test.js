@@ -68,7 +68,7 @@ describe('PlantLog()', () => {
 
             updatedPlantLogs.should.eql([3]);
 
-            let rows = await sqlite.all(`SELECT * FROM ` + CONSTANTS.TABLE_PLANT_LOGS + ``);
+            let rows = await sqlite.all(`SELECT * FROM ` + CONSTANTS.TABLE_PLANT_LOG + ``);
             rows.should.containDeep(
                 [
                     {

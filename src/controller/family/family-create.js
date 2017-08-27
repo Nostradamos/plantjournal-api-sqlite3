@@ -33,7 +33,7 @@ class FamilyCreate extends GenericCreate {
     }
 }
 
-FamilyCreate.TABLE = CONSTANTS.TABLE_FAMILIES;
+FamilyCreate.TABLE = CONSTANTS.TABLE_FAMILY;
 
 FamilyCreate.ATTR_ID = CONSTANTS.ATTR_ID_FAMILY;
 

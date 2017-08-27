@@ -49,7 +49,7 @@ class PlantLogCreate extends GenericCreate {
 
 }
 
-PlantLogCreate.TABLE = CONSTANTS.TABLE_PLANT_LOGS;
+PlantLogCreate.TABLE = CONSTANTS.TABLE_PLANT_LOG;
 
 PlantLogCreate.ATTR_ID = CONSTANTS.ATTR_ID_PLANT_LOG;
 

@@ -41,7 +41,7 @@ class FamilyFind extends GenericFind {
     }
 }
 
-FamilyFind.TABLE = CONSTANTS.TABLE_FAMILIES;
+FamilyFind.TABLE = CONSTANTS.TABLE_FAMILY;
 
 FamilyFind.ATTR_ID = CONSTANTS.ATTR_ID_FAMILY;
 

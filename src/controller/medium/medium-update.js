@@ -7,7 +7,7 @@ class EnvironmentUpdate extends GenericUpdate {
 }
 
 
-EnvironmentUpdate.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
+EnvironmentUpdate.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
 
 EnvironmentUpdate.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
 

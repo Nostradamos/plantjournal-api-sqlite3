@@ -57,7 +57,7 @@ describe('Generation()', () => {
 
             // Make sure we deleted also from database
 
-            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILY);
 
             rowsFam.should.deepEqual(
                 [
@@ -68,7 +68,7 @@ describe('Generation()', () => {
                 ]
             );
 
-            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' +  CONSTANTS.TABLE_GENERATION);
 
             rowsGen.should.deepEqual(
                 [
@@ -78,7 +78,7 @@ describe('Generation()', () => {
                 ]
             );
 
-            let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
+            let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPE);
 
             rowsGeno.should.deepEqual(
                 [
@@ -88,7 +88,7 @@ describe('Generation()', () => {
                 ]
             );
 
-            let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANTS);
+            let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANT);
 
             rowsPlant.should.deepEqual(
                 [

@@ -36,15 +36,15 @@ describe('Environment()', () => {
 
             // Make sure we deleted also from database
             let rowsEnv = await sqlite.all(
-                'SELECT environmentId FROM ' + CONSTANTS.TABLE_ENVIRONMENTS);
+                'SELECT environmentId FROM ' + CONSTANTS.TABLE_ENVIRONMENT);
             rowsEnv.should.deepEqual([]);
 
             let rowsMed = await sqlite.all(
-                'SELECT mediumId FROM ' + CONSTANTS.TABLE_MEDIUMS);
+                'SELECT mediumId FROM ' + CONSTANTS.TABLE_MEDIUM);
             rowsMed.should.deepEqual([]);
 
             let rowsPlant = await sqlite.all(
-                'SELECT plantId FROM ' + CONSTANTS.TABLE_PLANTS);
+                'SELECT plantId FROM ' + CONSTANTS.TABLE_PLANT);
             rowsPlant.should.deepEqual([{plantId: 2}]);
 
         });

@@ -69,7 +69,7 @@ class PlantFind extends GenericFind {
     }
 }
 
-PlantFind.TABLE = CONSTANTS.TABLE_PLANTS;
+PlantFind.TABLE = CONSTANTS.TABLE_PLANT;
 
 PlantFind.ATTR_ID = CONSTANTS.ATTR_ID_PLANT;
 

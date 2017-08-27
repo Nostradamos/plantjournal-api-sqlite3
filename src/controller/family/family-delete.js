@@ -127,7 +127,7 @@ class FamilyDelete extends GenericDelete {
     }
 }
 
-FamilyDelete.TABLE = CONSTANTS.TABLE_FAMILIES;
+FamilyDelete.TABLE = CONSTANTS.TABLE_FAMILY;
 
 FamilyDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_FAMILY;
 

@@ -58,7 +58,7 @@ class GenotypeCreate extends GenericCreate {
     }
 }
 
-GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPES;
+GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPE;
 
 GenotypeCreate.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 

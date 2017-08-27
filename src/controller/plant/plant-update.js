@@ -46,7 +46,7 @@ class PlantUpdate extends GenericUpdate {
 
 }
 
-PlantUpdate.TABLE = CONSTANTS.TABLE_PLANTS;
+PlantUpdate.TABLE = CONSTANTS.TABLE_PLANT;
 
 PlantUpdate.ATTR_ID = CONSTANTS.ATTR_ID_PLANT;
 

@@ -105,7 +105,7 @@ class GenotypeDelete extends GenericDelete {
     }
 }
 
-GenotypeDelete.TABLE = CONSTANTS.TABLE_GENOTYPES;
+GenotypeDelete.TABLE = CONSTANTS.TABLE_GENOTYPE;
 
 GenotypeDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENOTYPE;
 

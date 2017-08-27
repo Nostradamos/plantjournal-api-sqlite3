@@ -52,25 +52,25 @@ describe('Family()', () => {
             // Make sure we deleted also from database
 
             let rowsFam = await sqlite.all(
-                'SELECT familyId FROM ' + CONSTANTS.TABLE_FAMILIES);
+                'SELECT familyId FROM ' + CONSTANTS.TABLE_FAMILY);
 
             rowsFam.should.deepEqual(
                 [{familyId: 2}, {familyId: 3}, {familyId: 4}]);
 
             let rowsGen = await sqlite.all(
-                'SELECT generationId FROM ' + CONSTANTS.TABLE_GENERATIONS);
+                'SELECT generationId FROM ' +  CONSTANTS.TABLE_GENERATION);
 
             rowsGen.should.deepEqual(
                 [{generationId: 2}, {generationId: 3}, {generationId: 4}]);
 
             let rowsGeno = await sqlite.all(
-                'SELECT genotypeId FROM ' + CONSTANTS.TABLE_GENOTYPES);
+                'SELECT genotypeId FROM ' + CONSTANTS.TABLE_GENOTYPE);
 
             rowsGeno.should.deepEqual(
                 [{genotypeId: 3}, {genotypeId: 4}, {genotypeId: 5}]);
 
             let rowsPlant = await sqlite.all(
-                'SELECT plantId FROM ' + CONSTANTS.TABLE_PLANTS);
+                'SELECT plantId FROM ' + CONSTANTS.TABLE_PLANT);
 
             rowsPlant.should.deepEqual([{plantId: 3}]);
         });

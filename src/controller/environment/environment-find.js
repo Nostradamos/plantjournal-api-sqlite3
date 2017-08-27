@@ -28,7 +28,7 @@ class EnvironmentFind extends GenericFind {
     }
 }
 
-EnvironmentFind.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
+EnvironmentFind.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
 
 EnvironmentFind.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
 

@@ -46,7 +46,7 @@ class MediumCreate extends GenericCreate {
     }
 }
 
-MediumCreate.TABLE = CONSTANTS.TABLE_MEDIUMS;
+MediumCreate.TABLE = CONSTANTS.TABLE_MEDIUM;
 
 MediumCreate.ATTR_ID = CONSTANTS.ATTR_ID_MEDIUM;
 

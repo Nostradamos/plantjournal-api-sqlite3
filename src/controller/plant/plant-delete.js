@@ -84,7 +84,7 @@ class PlantDelete extends GenericDelete {
     }
 }
 
-PlantDelete.TABLE = CONSTANTS.TABLE_PLANTS;
+PlantDelete.TABLE = CONSTANTS.TABLE_PLANT;
 PlantDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_PLANT;
 
 module.exports = PlantDelete;

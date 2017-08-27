@@ -21,7 +21,7 @@ class EnvironmentCreate extends GenericCreate {
     }
 }
 
-EnvironmentCreate.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
+EnvironmentCreate.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
 
 EnvironmentCreate.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
 

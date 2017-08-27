@@ -83,7 +83,7 @@ QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
 };
 
 QueryUtils.joinGenerationsFromFamilies = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENERATIONS,
+    query.left_join( CONSTANTS.TABLE_GENERATION,
         'generations',
         'families.familyId = generations.familyId'
     );
@@ -94,7 +94,7 @@ QueryUtils.joinGenerationsFromFamilies = function(query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinGenotypesFromGenerations = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENOTYPES,
+    query.left_join(CONSTANTS.TABLE_GENOTYPE,
         'genotypes',
         'generations.generationId = genotypes.generationId'
     );
@@ -105,21 +105,21 @@ QueryUtils.joinGenotypesFromGenerations = function(query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 QueryUtils.joinPlantsFromGenotypes = function(query) {
-    query.left_join(CONSTANTS.TABLE_PLANTS,
+    query.left_join(CONSTANTS.TABLE_PLANT,
         'plants',
         'genotypes.genotypeId = plants.genotypeId'
     );
 };
 
 QueryUtils.joinMediumsFromPlants = function(query) {
-    query.left_join(CONSTANTS.TABLE_MEDIUMS,
+    query.left_join(CONSTANTS.TABLE_MEDIUM,
         'mediums',
         'plants.mediumId = mediums.mediumId'
     );
 };
 
 QueryUtils.joinEnvironmentsFromMediums = function(query) {
-    query.left_join(CONSTANTS.TABLE_ENVIRONMENTS,
+    query.left_join(CONSTANTS.TABLE_ENVIRONMENT,
         'environments',
         'mediums.environmentId = environments.environmentId'
     );
@@ -131,7 +131,7 @@ QueryUtils.joinEnvironmentsFromMediums = function(query) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinFamiliesFromGenerations = function(query) {
-    query.left_join(CONSTANTS.TABLE_FAMILIES,
+    query.left_join(CONSTANTS.TABLE_FAMILY,
         'families',
         'generations.familyId = families.familyId');
 };
@@ -150,7 +150,7 @@ QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
 };
 
 QueryUtils.joinGenerationsFromGenotypes = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENERATIONS,
+    query.left_join( CONSTANTS.TABLE_GENERATION,
         'generations',
         'genotypes.generationId = generations.generationId'
     );
@@ -162,7 +162,7 @@ QueryUtils.joinGenerationsFromGenotypes = function(query) {
  *         Squel query which can take an .left_join()
  */
 QueryUtils.joinGenerationParentsFromGenerations = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENERATION_PARENTS,
+    query.left_join(CONSTANTS.TABLE_GENERATION_PARENT,
         'generation_parents',
         'generations.generationId = generation_parents.generationId'
     );
@@ -174,21 +174,21 @@ QueryUtils.joinGenerationParentsFromGenerations = function(query) {
  *         Squel query capable of an .left_join()
  */
 QueryUtils.joinGenotypesFromPlants = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENOTYPES,
+    query.left_join(CONSTANTS.TABLE_GENOTYPE,
         'genotypes',
         'plants.genotypeId = genotypes.genotypeId'
     );
 };
 
 QueryUtils.joinPlantsFromMediums = function(query) {
-    query.left_join(CONSTANTS.TABLE_PLANTS,
+    query.left_join(CONSTANTS.TABLE_PLANT,
         'plants',
         'mediums.mediumId = plants.mediumId'
     );
 };
 
 QueryUtils.joinMediumsFromEnvironments = function(query) {
-    query.left_join(CONSTANTS.TABLE_MEDIUMS,
+    query.left_join(CONSTANTS.TABLE_MEDIUM,
         'mediums',
         'environments.environmentId = mediums.environmentId'
     );
@@ -232,7 +232,7 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
             // special case, generationParents is no real column, but a concat
             // of all plantIds
             query.field(
-                'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENTS +'.plantId) as generationParents'
+                'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENT +'.plantId) as generationParents'
             );
         } else {
             // translate attribute to explicit column name (tablename.attr)
@@ -373,21 +373,21 @@ QueryUtils.getTableOfField = function (attr, overWriteTableLookup = null) {
     if (overWriteTableLookup !== null && _.has(overWriteTableLookup, attr)) {
         return overWriteTableLookup[attr];
     } else if (_.startsWith(attr, 'plantLog')) {
-        table = CONSTANTS.TABLE_PLANT_LOGS;
+        table = CONSTANTS.TABLE_PLANT_LOG;
     } else if (_.startsWith(attr, 'plant')) {
-        table = CONSTANTS.TABLE_PLANTS;
+        table = CONSTANTS.TABLE_PLANT;
     } else if (_.startsWith(attr, 'genotype')) {
-        table = CONSTANTS.TABLE_GENOTYPES;
+        table = CONSTANTS.TABLE_GENOTYPE;
     } else if (attr === 'generationParents') {
-        table = CONSTANTS.TABLE_GENERATION_PARENTS;
+        table = CONSTANTS.TABLE_GENERATION_PARENT;
     } else if (_.startsWith(attr, 'generation')) {
-        table = CONSTANTS.TABLE_GENERATIONS;
+        table =  CONSTANTS.TABLE_GENERATION;
     } else if (_.startsWith(attr, 'family')) {
-        table = CONSTANTS.TABLE_FAMILIES;
+        table = CONSTANTS.TABLE_FAMILY;
     } else if (_.startsWith(attr, 'environment')) {
-        table = CONSTANTS.TABLE_ENVIRONMENTS;
+        table = CONSTANTS.TABLE_ENVIRONMENT;
     } else if (_.startsWith(attr, 'medium')) {
-        table = CONSTANTS.TABLE_MEDIUMS;
+        table = CONSTANTS.TABLE_MEDIUM;
     } else {
         throw new Error('cannot associate attribute with a table');
     }

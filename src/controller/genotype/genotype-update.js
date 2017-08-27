@@ -45,7 +45,7 @@ class GenotypeUpdate extends GenericUpdate {
     }
 }
 
-GenotypeUpdate.TABLE = CONSTANTS.TABLE_GENOTYPES;
+GenotypeUpdate.TABLE = CONSTANTS.TABLE_GENOTYPE;
 
 GenotypeUpdate.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 

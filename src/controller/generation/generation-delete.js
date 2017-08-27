@@ -112,7 +112,7 @@ class GenerationDelete extends GenericDelete {
     }
 }
 
-GenerationDelete.TABLE = CONSTANTS.TABLE_GENERATIONS;
+GenerationDelete.TABLE =  CONSTANTS.TABLE_GENERATION;
 
 GenerationDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 

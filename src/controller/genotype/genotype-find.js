@@ -58,7 +58,7 @@ class GenotypeFind extends GenericFind {
     }
 }
 
-GenotypeFind.TABLE = CONSTANTS.TABLE_GENOTYPES;
+GenotypeFind.TABLE = CONSTANTS.TABLE_GENOTYPE;
 
 GenotypeFind.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 
@@ -68,8 +68,8 @@ GenotypeFind.DEFAULT_FIELDS = ['genotypes.genotypeId',
     'generations.generationId',
     'families.familyId'];
 
-GenotypeFind.COUNT = 'DISTINCT ' + CONSTANTS.TABLE_GENERATIONS + '.' + CONSTANTS.ATTR_ID_GENERATION;
+GenotypeFind.COUNT = 'DISTINCT ' +  CONSTANTS.TABLE_GENERATION + '.' + CONSTANTS.ATTR_ID_GENERATION;
 
-GenotypeFind.GROUP_BY = CONSTANTS.TABLE_GENERATIONS + '.' + CONSTANTS.ATTR_ID_GENERATION;
+GenotypeFind.GROUP_BY =  CONSTANTS.TABLE_GENERATION + '.' + CONSTANTS.ATTR_ID_GENERATION;
 
 module.exports = GenotypeFind;

@@ -14,14 +14,14 @@ const zealit = require('zealit');
 const CONSTANTS = zealit({});
 
 // Table names for database.
-CONSTANTS.TABLE_FAMILIES = 'families';
-CONSTANTS.TABLE_GENERATIONS = 'generations';
-CONSTANTS.TABLE_GENERATION_PARENTS = 'generation_parents';
-CONSTANTS.TABLE_GENOTYPES = 'genotypes';
-CONSTANTS.TABLE_PLANTS = 'plants';
-CONSTANTS.TABLE_PLANT_LOGS = 'plant_logs';
-CONSTANTS.TABLE_ENVIRONMENTS = 'environments';
-CONSTANTS.TABLE_MEDIUMS = 'mediums';
+CONSTANTS.TABLE_FAMILY = 'families';
+CONSTANTS.TABLE_GENERATION = 'generations';
+CONSTANTS.TABLE_GENERATION_PARENT = 'generation_parents';
+CONSTANTS.TABLE_GENOTYPE = 'genotypes';
+CONSTANTS.TABLE_PLANT = 'plants';
+CONSTANTS.TABLE_PLANT_LOG = 'plant_logs';
+CONSTANTS.TABLE_ENVIRONMENT = 'environments';
+CONSTANTS.TABLE_MEDIUM = 'mediums';
 
 CONSTANTS.PLURAL_FAMILY = 'families';
 CONSTANTS.PLURAL_GENERATION = 'generations';

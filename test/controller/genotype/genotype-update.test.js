@@ -54,7 +54,7 @@ describe('Genotype()', () => {
             updatedGen.should.eql([1]);
 
             // Make sure family rows are untouched
-            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILY);
 
             rowsFam.should.deepEqual(
                 [
@@ -62,7 +62,7 @@ describe('Genotype()', () => {
                 ]
             );
 
-            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' +  CONSTANTS.TABLE_GENERATION);
 
             rowsGen.should.deepEqual(
                 [
@@ -74,7 +74,7 @@ describe('Genotype()', () => {
                 ]
             );
 
-            let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
+            let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPE);
 
             rowsGeno.should.deepEqual(
                 [
@@ -117,7 +117,7 @@ describe('Genotype()', () => {
             updatedGeno.length.should.eql(0);
 
             let rowsGeno = await sqlite.all(
-                'SELECT genotypeId, genotypeModifiedAt FROM ' + CONSTANTS.TABLE_GENOTYPES  + ' WHERE genotypeId = 1'
+                'SELECT genotypeId, genotypeModifiedAt FROM ' + CONSTANTS.TABLE_GENOTYPE  + ' WHERE genotypeId = 1'
             );
 
             rowsGeno[0].genotypeModifiedAt.should.not.eql(1);
@@ -132,7 +132,7 @@ describe('Genotype()', () => {
             updatedGeno.length.should.eql(0);
 
             let rowsGeno = await sqlite.all(
-                'SELECT genotypeId, genotypeCreatedAt FROM ' + CONSTANTS.TABLE_GENOTYPES  + ' WHERE genotypeId = 1'
+                'SELECT genotypeId, genotypeCreatedAt FROM ' + CONSTANTS.TABLE_GENOTYPE  + ' WHERE genotypeId = 1'
             );
 
             rowsGeno[0].genotypeCreatedAt.should.not.eql(1);
@@ -147,7 +147,7 @@ describe('Genotype()', () => {
             updatedGeno.should.eql([5]);
 
             let rowsGeno = await sqlite.all(
-                'SELECT genotypeId, generationId FROM ' + CONSTANTS.TABLE_GENOTYPES  + ' WHERE genotypeId = 5'
+                'SELECT genotypeId, generationId FROM ' + CONSTANTS.TABLE_GENOTYPE  + ' WHERE genotypeId = 5'
             );
 
             rowsGeno[0].generationId.should.eql(2);

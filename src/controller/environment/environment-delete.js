@@ -54,7 +54,7 @@ class EnvironmentDelete extends GenericDelete {
     }
 }
 
-EnvironmentDelete.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
+EnvironmentDelete.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
 
 EnvironmentDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT;
 

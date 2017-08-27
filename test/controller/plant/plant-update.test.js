@@ -58,7 +58,7 @@ describe('Plant()', () => {
             updatedGen.should.eql([1]);
 
             // Make sure family rows are untouched
-            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILY);
 
             rowsFam.should.deepEqual(
                 [
@@ -66,7 +66,7 @@ describe('Plant()', () => {
                 ]
             );
 
-            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' +  CONSTANTS.TABLE_GENERATION);
 
             rowsGen.should.deepEqual(
                 [
@@ -77,7 +77,7 @@ describe('Plant()', () => {
                 ]
             );
 
-            let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
+            let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPE);
 
             rowsGeno.should.deepEqual(
                 [
@@ -89,7 +89,7 @@ describe('Plant()', () => {
                 ]
             );
 
-            let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANTS);
+            let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANT);
 
             rowsPlant.should.deepEqual(
                 [
@@ -136,7 +136,7 @@ describe('Plant()', () => {
             updatedPlant.length.should.eql(0);
 
             let rowsPlant = await sqlite.all(
-                'SELECT plantId, plantModifiedAt FROM ' + CONSTANTS.TABLE_PLANTS  + ' WHERE plantId = 1'
+                'SELECT plantId, plantModifiedAt FROM ' + CONSTANTS.TABLE_PLANT  + ' WHERE plantId = 1'
             );
 
             rowsPlant[0].plantModifiedAt.should.not.eql(1);
@@ -151,7 +151,7 @@ describe('Plant()', () => {
             updatedPlant.length.should.eql(0);
 
             let rowsPlant = await sqlite.all(
-                'SELECT plantId, plantCreatedAt FROM ' + CONSTANTS.TABLE_PLANTS  + ' WHERE plantId = 1'
+                'SELECT plantId, plantCreatedAt FROM ' + CONSTANTS.TABLE_PLANT  + ' WHERE plantId = 1'
             );
 
             rowsPlant[0].plantCreatedAt.should.not.eql(1);
@@ -166,7 +166,7 @@ describe('Plant()', () => {
             updatedPlant.should.eql([1]);
 
             let rowsPlant = await sqlite.all(
-                'SELECT plantId, genotypeId FROM ' + CONSTANTS.TABLE_PLANTS  + ' WHERE plantId = 1'
+                'SELECT plantId, genotypeId FROM ' + CONSTANTS.TABLE_PLANT  + ' WHERE plantId = 1'
             );
 
             rowsPlant[0].genotypeId.should.eql(3);
@@ -189,7 +189,7 @@ describe('Plant()', () => {
             updatedPlant.should.eql([2]);
 
             let rowsPlant = await sqlite.all(
-                'SELECT plantId, plantClonedFrom FROM ' + CONSTANTS.TABLE_PLANTS  + ' WHERE plantId = 2'
+                'SELECT plantId, plantClonedFrom FROM ' + CONSTANTS.TABLE_PLANT  + ' WHERE plantId = 2'
             );
 
             rowsPlant[0].plantClonedFrom.should.eql(4);
