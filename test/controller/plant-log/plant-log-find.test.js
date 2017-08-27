@@ -5,11 +5,11 @@ require('should');
 
 const plantJournal = require('../../../src/pj');
 
-describe('PlantLog()', function() {
-    describe('#create()', function() {
+describe('PlantLog()', () => {
+    describe('#create()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
 
@@ -50,7 +50,7 @@ describe('PlantLog()', function() {
             ); //plantLogId: 4
         });
 
-        it('should return all logs', async function() {
+        it('should return all logs', async () => {
             let plantLogs = await pj.PlantLog.find();
 
             plantLogs.should.containDeep(
@@ -91,7 +91,7 @@ describe('PlantLog()', function() {
             );
         });
 
-        it('should be possible to use criteria.filter', async function() {
+        it('should be possible to use criteria.filter', async () => {
             let plantLogs = await pj.PlantLog.find({'filter': {'plantLogTimestamp': 424242}});
 
             plantLogs.should.containDeep(
@@ -118,7 +118,7 @@ describe('PlantLog()', function() {
             );
         });
 
-        it('should set plantsLogs timestamp key and plantLogs plantLogId key even if they are not selected in attributes', async function() {
+        it('should set plantsLogs timestamp key and plantLogs plantLogId key even if they are not selected in attributes', async () => {
             let plantLogs = await pj.PlantLog.find(
                 {'attributes': ['plantLogType'], 'filter': {'plantLogTimestamp': 424242}}
             );

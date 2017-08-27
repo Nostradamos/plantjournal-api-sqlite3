@@ -7,11 +7,11 @@ const sqlite = require('sqlite');
 const plantJournal = require('../../../src/pj');
 const CONSTANTS = require('../../../src/constants');
 
-describe('Plant()', function() {
-    describe('#update()', function() {
+describe('Plant()', () => {
+    describe('#update()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({'familyName': 'testFamily1'}); //familyId: 1
@@ -31,27 +31,27 @@ describe('Plant()', function() {
             await pj.Plant.create({'plantName': 'F2Geno1Plant1', 'genotypeId': 3}); //plantId: 4
         });
 
-        it('should throw error if no arguments got passed', async function() {
+        it('should throw error if no arguments got passed', async () => {
             await pj.Plant.update()
                 .should.be.rejectedWith('No Update and Critera Object got passed');
         });
 
-        it('should throw error if no criteria object got passed', async function() {
+        it('should throw error if no criteria object got passed', async () => {
             await pj.Plant.update({})
                 .should.be.rejectedWith('No Criteria Object got passed');
         });
 
-        it('should throw error if first argument is not a assoc array/object', async function() {
+        it('should throw error if first argument is not a assoc array/object', async () => {
             await pj.Plant.update([], {})
                 .should.be.rejectedWith('Update Object has to be an associative array');
         });
 
-        it('should throw error if second argument is not an assoc array/object', async function() {
+        it('should throw error if second argument is not an assoc array/object', async () => {
             await pj.Plant.update({'plantName': 'newPlantName'}, null)
                 .should.be.rejectedWith('Criteria Object has to be an associative array');
         });
 
-        it('should update plant in database and return an array containing the updated generationId', async function() {
+        it('should update plant in database and return an array containing the updated generationId', async () => {
             let updatedGen = await pj.Plant
                 .update({'plantName': 'F1Geno1Plant1Updated'}, {'filter': {'plantId': 1}});
 
@@ -101,7 +101,7 @@ describe('Plant()', function() {
             );
         });
 
-        it('should also be possible to find multiple plant to update based on family attributes', async function() {
+        it('should also be possible to find multiple plant to update based on family attributes', async () => {
             let updatedPlant = await pj.Plant
                 .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}});
 
@@ -111,7 +111,7 @@ describe('Plant()', function() {
                 4]);
         });
 
-        it('should also be possible to find multiple plants to update based on generation attributes', async function() {
+        it('should also be possible to find multiple plants to update based on generation attributes', async () => {
             let updatedPlant = await pj.Plant
                 .update({'plantName': 'NoGoodPlantName'}, {'filter': {'generationId': 1}});
 
@@ -120,14 +120,14 @@ describe('Plant()', function() {
                 3]);
         });
 
-        it('should also be possible to limit/offset plant to update when found multiple', async function() {
+        it('should also be possible to limit/offset plant to update when found multiple', async () => {
             let updatedPlant = await pj.Plant
                 .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}, 'offset': 2, 'limit': 2});
 
             updatedPlant.should.eql([3,4]);
         });
 
-        it('should not be possible to manually change plantModifiedAt', async function() {
+        it('should not be possible to manually change plantModifiedAt', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'plantModifiedAt': 1},
                 {'filter': {'plantId': 1}}
@@ -142,7 +142,7 @@ describe('Plant()', function() {
             rowsPlant[0].plantModifiedAt.should.not.eql(1);
         });
 
-        it('should not be possible to manually change plantCreatedAt', async function() {
+        it('should not be possible to manually change plantCreatedAt', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'plantCreatedAt': 1},
                 {'filter': {'plantId': 1}}
@@ -157,7 +157,7 @@ describe('Plant()', function() {
             rowsPlant[0].plantCreatedAt.should.not.eql(1);
         });
 
-        it('should be possible to update genotypeId', async function() {
+        it('should be possible to update genotypeId', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'genotypeId': 3},
                 {'filter': {'plantId': 1}}
@@ -172,7 +172,7 @@ describe('Plant()', function() {
             rowsPlant[0].genotypeId.should.eql(3);
         });
 
-        it('should throw error if genotypeId to update does not reference existing genotype', async function() {
+        it('should throw error if genotypeId to update does not reference existing genotype', async () => {
             await pj.Plant.update(
                 {'genotypeId': 43},
                 {'filter': {'plantId': 1}}
@@ -180,7 +180,7 @@ describe('Plant()', function() {
 
         });
 
-        it('should be possible to update plantClonedFrom', async function() {
+        it('should be possible to update plantClonedFrom', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'plantClonedFrom': 4},
                 {'filter': {'plantId': 2}}
@@ -195,7 +195,7 @@ describe('Plant()', function() {
             rowsPlant[0].plantClonedFrom.should.eql(4);
         });
 
-        it('should throw error if plantClonedFrom does not reference existing plant', async function() {
+        it('should throw error if plantClonedFrom does not reference existing plant', async () => {
             await pj.Plant.update(
                 {'plantClonedFrom': 1337},
                 {'filter': {'plantId': 2}}

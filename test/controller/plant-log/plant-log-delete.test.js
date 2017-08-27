@@ -10,12 +10,12 @@ const CONSTANTS = require('../../../src/constants');
 const plantJournal = require('../../../src/pj');
 
 
-describe('PlantLog()', function() {
+describe('PlantLog()', () => {
 
-    describe('#delete()', function() {
+    describe('#delete()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
 
@@ -37,12 +37,12 @@ describe('PlantLog()', function() {
             );
         });
 
-        it('should throw error if no criteria object got passed', async function() {
+        it('should throw error if no criteria object got passed', async () => {
             await pj.PlantLog.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete plantLogs specified in criteria.filter.plantLogId from database and return an array of deleted plantLogIds', async function() {
+        it('should delete plantLogs specified in criteria.filter.plantLogId from database and return an array of deleted plantLogIds', async () => {
             let deletedPlantLogs = await pj.PlantLog.delete(
                 {filter: {plantLogId: '3'}}
             );
@@ -57,14 +57,14 @@ describe('PlantLog()', function() {
             ]);
         });
 
-        it('should be possible to use criteria.limit and criteria.filter with plantId attribute', async function() {
+        it('should be possible to use criteria.limit and criteria.filter with plantId attribute', async () => {
             let deletedPlantLogs = await pj.PlantLog.delete(
                 {filter: {plantId: 1}, limit: 1}
             );
             deletedPlantLogs.should.eql({'plantLogs': [1]});
         });
 
-        it('should be possible to use criteria.sort', async function() {
+        it('should be possible to use criteria.sort', async () => {
             let deletedPlantLogs = await pj.PlantLog.delete(
                 {sort: 'plantLogId DESC', limit: 1}
             );

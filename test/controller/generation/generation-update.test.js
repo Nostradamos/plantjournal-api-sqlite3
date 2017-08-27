@@ -7,11 +7,11 @@ const sqlite = require('sqlite');
 const plantJournal = require('../../../src/pj');
 const CONSTANTS = require('../../../src/constants');
 
-describe('Generation()', function() {
-    describe('#update()', function() {
+describe('Generation()', () => {
+    describe('#update()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({'familyName': 'testFamily1'}); //familyId: 1
@@ -25,27 +25,27 @@ describe('Generation()', function() {
 
         });
 
-        it('should throw error if no arguments got passed', async function() {
+        it('should throw error if no arguments got passed', async () => {
             await pj.Generation.update()
                 .should.be.rejectedWith('No Update and Critera Object got passed');
         });
 
-        it('should throw error if no criteria object got passed', async function() {
+        it('should throw error if no criteria object got passed', async () => {
             await pj.Generation.update({})
                 .should.be.rejectedWith('No Criteria Object got passed');
         });
 
-        it('should throw error if first argument is not a assoc array/object', async function() {
+        it('should throw error if first argument is not a assoc array/object', async () => {
             await pj.Generation.update([], {})
                 .should.be.rejectedWith('Update Object has to be an associative array');
         });
 
-        it('should throw error if second argument is not an assoc array/object', async function() {
+        it('should throw error if second argument is not an assoc array/object', async () => {
             await pj.Generation.update({'generationName': 'newGenName'}, null)
                 .should.be.rejectedWith('Criteria Object has to be an associative array');
         });
 
-        it('should update generation in database and return an array containing the updated generationId', async function() {
+        it('should update generation in database and return an array containing the updated generationId', async () => {
             let updatedGen = await pj.Generation
                 .update({'generationName': 'F1Updated'}, {'filter': {'generationId': 1}});
 
@@ -73,21 +73,21 @@ describe('Generation()', function() {
             );
         });
 
-        it('should also be possible to find multiple generations to update based on family attributes', async function() {
+        it('should also be possible to find multiple generations to update based on family attributes', async () => {
             let updatedGen = await pj.Generation
                 .update({'generationName': 'NoGoodGenName'}, {'filter': {'familyId': 2}});
 
             updatedGen.should.eql([3,4]);
         });
 
-        it('should also be possible to limit/offset generations to update when found multiple', async function() {
+        it('should also be possible to limit/offset generations to update when found multiple', async () => {
             let updatedGen = await pj.Generation
                 .update({'generationName': 'NoGoodGenName'}, {'filter': {'familyId': 1}, 'offset': 1});
 
             updatedGen.should.eql([2]);
         });
 
-        it('should not be possible to manually change generationModifiedAt', async function() {
+        it('should not be possible to manually change generationModifiedAt', async () => {
             let updatedGenerations = await pj.Generation.update(
                 {'generationModifiedAt': 1},
                 {'filter': {'generationId': 1}}
@@ -102,7 +102,7 @@ describe('Generation()', function() {
             rowsGen[0].generationModifiedAt.should.not.eql(1);
         });
 
-        it('should not be possible to manually change generationCreatedAt', async function() {
+        it('should not be possible to manually change generationCreatedAt', async () => {
             let updatedGenerations = await pj.Generation.update(
                 {'generationCreatedAt': 1},
                 {'filter': {'generationId': 1}}
@@ -117,14 +117,14 @@ describe('Generation()', function() {
             rowsGen[0].generationCreatedAt.should.not.eql(1);
         });
 
-        it('should throw error if familyId to update is invalid', async function() {
+        it('should throw error if familyId to update is invalid', async () => {
             await pj.Generation.update(
                 {'familyId': 42},
                 {'filter': {'generationId': 1}}
             ).should.be.rejectedWith('update.familyId does not reference an existing Family');
         });
 
-        it('should update familyId if not invalid', async function() {
+        it('should update familyId if not invalid', async () => {
             let updatedGenerations = await pj.Generation.update(
                 {'familyId': 2},
                 {'filter': {'generationId': 1}}
@@ -140,7 +140,7 @@ describe('Generation()', function() {
 
         });
 
-        it('should be possible to update generationParents', async function() {
+        it('should be possible to update generationParents', async () => {
             let updatedGenerations = await pj.Generation.update(
                 {'generationParents': [1, 2]},
                 {'filter': {'generationId': 2}}
@@ -159,7 +159,7 @@ describe('Generation()', function() {
             );
         });
 
-        it('should throw error and rollback if generationParents are invalid', async function() {
+        it('should throw error and rollback if generationParents are invalid', async () => {
             await pj.Generation.update(
                 {'generationParents': [5,6]},
                 {'filter': {'generationId': 4}}

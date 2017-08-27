@@ -7,30 +7,30 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../src/pj');
 
-describe('Environment()', function() {
-    describe('#create()', function() {
+describe('Environment()', () => {
+    describe('#create()', () => {
         let pj;
 
-        beforeEach(async function() {
+        beforeEach(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
         });
 
-        afterEach(async function() {
+        afterEach(async () => {
             pj.disconnect();
         });
 
-        it('should throw error if options.environmentName is not set', async function() {
+        it('should throw error if options.environmentName is not set', async () => {
             await pj.Environment.create({environmentDescription: 'blubb'})
                 .should.be.rejectedWith('options.environmentName has to be set');
         });
 
-        it('should throw error if options.environmentName is not a string', async function() {
+        it('should throw error if options.environmentName is not a string', async () => {
             await pj.Environment.create({environmentName: 1})
                 .should.be.rejectedWith('options.environmentName has to be a string');
         });
 
-        it('should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId', async function() {
+        it('should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId', async () => {
             let environment = await pj.Environment.create(
                 {
                     environmentName: 'Greenhouse #1',

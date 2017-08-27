@@ -7,11 +7,11 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../src/pj');
 
-describe('Plant()', function() {
-    describe('#create()', function() {
+describe('Plant()', () => {
+    describe('#create()', () => {
         let pj;
 
-        beforeEach(async function() {
+        beforeEach(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({familyName: 'testFamily1'});
@@ -19,7 +19,7 @@ describe('Plant()', function() {
             await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
         });
 
-        it('should throw error if options is not set or not an associative array', async function() {
+        it('should throw error if options is not set or not an associative array', async () => {
             let tested = 0;
             let toTest = [
                 [1,2],
@@ -38,58 +38,58 @@ describe('Plant()', function() {
         });
 
 
-        it('should throw error if neither options.generationId nor options.genotypeId is set', async function() {
+        it('should throw error if neither options.generationId nor options.genotypeId is set', async () => {
             await pj.Plant.create({plantName: 'testPlant'})
                 .should.be.rejectedWith('Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set');
         });
 
-        it('should throw error if options.generationId is not an integer', async function() {
+        it('should throw error if options.generationId is not an integer', async () => {
             await pj.Plant.create({plantName: 'testPlant', generationId: 'test'})
                 .should.be.rejectedWith('options.generationId has to be an integer');
         });
 
-        it('should throw error if options.genotypeId is not an integer', async function() {
+        it('should throw error if options.genotypeId is not an integer', async () => {
             await pj.Plant.create({plantName: 'testPlant', genotypeId: null})
                 .should.be.rejectedWith('options.genotypeId has to be an integer');
         });
 
-        it('should throw error if options.generationId does not reference an existing generationId', async function() {
+        it('should throw error if options.generationId does not reference an existing generationId', async () => {
             await pj.Plant.create({generationId: 42, plantName: 'test'})
                 .should.be.rejectedWith('options.generationId does not reference an existing Generation');
         });
 
-        it('should throw error if options.plantName is not set', async function() {
+        it('should throw error if options.plantName is not set', async () => {
             await pj.Plant.create({genotypeId: 2})
                 .should.be.rejectedWith('options.plantName has to be set');
         });
 
-        it('should throw error if options.plantName is not a string', async function() {
+        it('should throw error if options.plantName is not a string', async () => {
             await pj.Plant.create({genotypeId: 2, plantName: 1})
                 .should.be.rejectedWith('options.plantName has to be a string');
         });
 
-        it('should throw error if options.plantSex is not a valid sex', async function() {
+        it('should throw error if options.plantSex is not a valid sex', async () => {
             await pj.Plant.create({genotypeId: 2, plantName: 'test', plantSex: 'notavalidsex'})
                 .should.be.rejectedWith('options.plantSex has to be null, male, female or hermaphrodite');
         });
 
-        it('should throw error if options.genotypeId does not reference an existing genotypeId', async function() {
+        it('should throw error if options.genotypeId does not reference an existing genotypeId', async () => {
             await pj.Plant.create({genotypeId: 2, plantName: 'test'})
                 .should.be.rejectedWith('options.genotypeId does not reference an existing Genotype');
         });
 
-        it('should throw error if options.plantClonedFrom does not reference an existing plant', async function() {
+        it('should throw error if options.plantClonedFrom does not reference an existing plant', async () => {
             await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1})
                 .should.be.rejectedWith('options.plantClonedFrom does not reference an existing Plant');
 
         });
 
-        it('should throw error if options.plantClonedFrom is not an integer', async function() {
+        it('should throw error if options.plantClonedFrom is not an integer', async () => {
             await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 'not an integer'})
                 .should.be.rejectedWith('options.plantClonedFrom has to be an integer');
         });
 
-        it('should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId', async function() {
+        it('should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId', async () => {
             let plant = await pj.Plant.create(
                 {
                     genotypeId: 1,
@@ -128,7 +128,7 @@ describe('Plant()', function() {
             );
         });
 
-        it('should create a new plant and genotype entry if options.genotypeId is not set and return plant object + genotype object', async function() {
+        it('should create a new plant and genotype entry if options.genotypeId is not set and return plant object + genotype object', async () => {
             let plant = await pj.Plant.create(
                 {
                     generationId: 1,
@@ -170,7 +170,7 @@ describe('Plant()', function() {
             });
         });
 
-        it('should only create a new plant entry if options.plantClonedFrom is set, and not options.genotypeId is not set but resolve the genotypeId from the mother plant', async function() {
+        it('should only create a new plant entry if options.plantClonedFrom is set, and not options.genotypeId is not set but resolve the genotypeId from the mother plant', async () => {
             await pj.Plant.create({genotypeId: 1, plantName: 'motherPlant1'});
             let plantClone = await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1});
             let [createdAtClone, modifiedAtClone] = [plantClone.plants[2].plantCreatedAt, plantClone.plants[2].plantModifiedAt];
@@ -199,7 +199,7 @@ describe('Plant()', function() {
                 [{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
         });
 
-        afterEach(async function() {
+        afterEach(async () => {
             pj.disconnect();
         });
     });

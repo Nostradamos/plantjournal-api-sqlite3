@@ -104,7 +104,6 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
     });
     if (forceAdd === true || _.size(genotype) > 3)
         returnObject.genotypes[genotypeId] = genotype;
-
 };
 
 /**
@@ -125,7 +124,7 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
         'familyId': row.familyId,
         'mediumId': row.mediumId || null,
         'environmentId': row.environmentId || null
-     };
+    };
 
     _.each(CONSTANTS.ALL_ATTRIBUTES_PLANT, function(attr) {
         if (_.has(row, attr)) plant[attr] = row[attr];
@@ -150,7 +149,8 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
 Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
     let environmentId = row.environmentId;
 
-    if(_.isUndefined(environmentId)) return;
+    if(_.isUndefined(environmentId) || _.isNull(environmentId))
+        return;
 
     let environment = {};
 
@@ -328,7 +328,7 @@ Utils.filterSetNotNull = function filterSetNotNull(set) {
  * Checks if we are connected to sqlite database. If not, throws error.
  * @throws {Error}
  */
-Utils.throwErrorIfNotConnected = function() {
+Utils.throwErrorIfNotConnected = () => {
     if (sqlite.driver != null && sqlite.driver.open === true) {
         return;
     }

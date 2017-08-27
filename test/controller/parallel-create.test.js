@@ -5,15 +5,15 @@ require('should');
 
 const plantJournal = require('../../src/pj');
 
-describe('Parallel', function() {
+describe('Parallel', () => {
     let pj;
 
-    before(async function() {
+    before(async () => {
         pj = new plantJournal(':memory:');
         await pj.connect();
     });
 
-    it('should be possible to create 50 families at once without getting race conditions', async function() {
+    it('should be possible to create 50 families at once without getting race conditions', async () => {
         await Promise.all(
             [
                 pj.Family.create({familyName: 'testFam1'}),

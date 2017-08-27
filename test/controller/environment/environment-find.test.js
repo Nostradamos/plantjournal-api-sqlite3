@@ -6,11 +6,11 @@ const helpers = require('../../helper-functions');
 
 require('should');
 
-describe('Environment()', function() {
-    describe('#find()', function() {
+describe('Environment()', () => {
+    describe('#find()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Environment.create({environmentName: 'Greenhouse #1', environmentDescription: 'This is the first greenhouse in my garden.'});
@@ -19,12 +19,12 @@ describe('Environment()', function() {
             await pj.Environment.create({environmentName: 'Allotment garden #1', environmentDescription: 'Allotment garden where i usually plant all food producing plants or test new varities.'});
         });
 
-        after(async function() {
+        after(async () => {
             await pj.disconnect();
         });
 
 
-        it('should return all environments', async function() {
+        it('should return all environments', async () => {
             let environments = await pj.Environment.find();
 
             environments.should.containDeep({

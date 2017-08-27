@@ -1,4 +1,4 @@
- 'use strict';
+'use strict';
 
 const _ = require('lodash');
 
@@ -70,7 +70,7 @@ QueryUtils.joinRelatedPlants = function(queryObj) {
 
 QueryUtils.joinRelatedMediums = function(queryObj) {
     QueryUtils.joinEnvironmentsFromMediums(queryObj);
-}
+};
 
 /**
  * Left joins generations by referencing to families.familyId.
@@ -80,14 +80,14 @@ QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
     QueryUtils.joinGenerationsFromFamilies(query);
 
     QueryUtils.joinGenerationParentsFromGenerations(query);
-}
+};
 
 QueryUtils.joinGenerationsFromFamilies = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATIONS,
         'generations',
         'families.familyId = generations.familyId'
     );
-}
+};
 
 /**
  * Left joins Genotypes by referencing to generations.generationId
@@ -98,7 +98,7 @@ QueryUtils.joinGenotypesFromGenerations = function(query) {
         'genotypes',
         'generations.generationId = genotypes.generationId'
     );
-}
+};
 
 /**
  * Left joins Plants by referencing to genotypes.genotypeId
@@ -109,21 +109,21 @@ QueryUtils.joinPlantsFromGenotypes = function(query) {
         'plants',
         'genotypes.genotypeId = plants.genotypeId'
     );
-}
+};
 
 QueryUtils.joinMediumsFromPlants = function(query) {
     query.left_join(CONSTANTS.TABLE_MEDIUMS,
         'mediums',
         'plants.mediumId = mediums.mediumId'
     );
-}
+};
 
 QueryUtils.joinEnvironmentsFromMediums = function(query) {
     query.left_join(CONSTANTS.TABLE_ENVIRONMENTS,
         'environments',
         'mediums.environmentId = environments.environmentId'
     );
-}
+};
 
 /**
  * Left joins families by referencing to generations.familyId. Mutates query
@@ -134,7 +134,7 @@ QueryUtils.joinFamiliesFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_FAMILIES,
         'families',
         'generations.familyId = families.familyId');
-}
+};
 
 /**
  * Left joins generations and generation_parents by referencing to
@@ -147,14 +147,14 @@ QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
     QueryUtils.joinGenerationsFromGenotypes(query);
     // Now we can also join generation parents
     QueryUtils.joinGenerationParentsFromGenerations(query);
-}
+};
 
 QueryUtils.joinGenerationsFromGenotypes = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATIONS,
         'generations',
         'genotypes.generationId = generations.generationId'
     );
-}
+};
 
 /**
  * Only join generation parents. Mutates query.
@@ -166,7 +166,7 @@ QueryUtils.joinGenerationParentsFromGenerations = function(query) {
         'generation_parents',
         'generations.generationId = generation_parents.generationId'
     );
-}
+};
 
 /**
  * Left joins genotypes by referencing to plants.genotypeId. Mutates query
@@ -178,14 +178,14 @@ QueryUtils.joinGenotypesFromPlants = function(query) {
         'genotypes',
         'plants.genotypeId = genotypes.genotypeId'
     );
-}
+};
 
 QueryUtils.joinPlantsFromMediums = function(query) {
     query.left_join(CONSTANTS.TABLE_PLANTS,
         'plants',
-        'mediums.mediumId = plants.plantId'
+        'mediums.mediumId = plants.mediumId'
     );
-}
+};
 
 QueryUtils.joinMediumsFromEnvironments = function(query) {
     query.left_join(CONSTANTS.TABLE_MEDIUMS,

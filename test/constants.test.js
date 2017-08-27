@@ -10,9 +10,9 @@ const CONSTANTS = require('../src/constants');
  * the automatic creation of the *ATTRIBUTES* array which should contain
  * all attributes.
  */
-describe('CONSTANTS', function() {
-    describe('All *ATTRIBUTES* of Family', function() {
-        it('ATTRIBUTES_FAMILY should contain all non-internal family attributes', function() {
+describe('CONSTANTS', () => {
+    describe('All *ATTRIBUTES* of Family', () => {
+        it('ATTRIBUTES_FAMILY should contain all non-internal family attributes', () => {
             CONSTANTS.ATTRIBUTES_FAMILY.should.deepEqual(
                 [
                     'familyName', 'familyDescription'
@@ -20,7 +20,7 @@ describe('CONSTANTS', function() {
             );
         });
 
-        it('INTERNAL_ATTRIBUTES_FAMILY should all internal family attributes', function() {
+        it('INTERNAL_ATTRIBUTES_FAMILY should all internal family attributes', () => {
             CONSTANTS.INTERNAL_ATTRIBUTES_FAMILY.should.deepEqual(
                 [
                     'familyId',
@@ -31,8 +31,8 @@ describe('CONSTANTS', function() {
         });
     });
 
-    describe('All *ATTRIBUTES* of Generation', function() {
-        it('ATTRIBUTES_GENERATION should contain all non-internal generation attributes', function() {
+    describe('All *ATTRIBUTES* of Generation', () => {
+        it('ATTRIBUTES_GENERATION should contain all non-internal generation attributes', () => {
             CONSTANTS.ATTRIBUTES_GENERATION.should.deepEqual(
                 [
                     'generationName',
@@ -43,7 +43,7 @@ describe('CONSTANTS', function() {
             );
         });
 
-        it('INTERNAL_ATTRIBUTES_GENERATION should all internal generation attributes', function() {
+        it('INTERNAL_ATTRIBUTES_GENERATION should all internal generation attributes', () => {
             CONSTANTS.INTERNAL_ATTRIBUTES_GENERATION.should.deepEqual(
                 [
                     'generationId',
@@ -54,8 +54,8 @@ describe('CONSTANTS', function() {
         });
     });
 
-    describe('All *ATTRIBUTES* of Genotype', function() {
-        it('ATTRIBUTES_GENOTYPE should contain all non-internal genotype attributes', function() {
+    describe('All *ATTRIBUTES* of Genotype', () => {
+        it('ATTRIBUTES_GENOTYPE should contain all non-internal genotype attributes', () => {
             CONSTANTS.ATTRIBUTES_GENOTYPE.should.deepEqual(
                 [
                     'genotypeName',
@@ -65,7 +65,7 @@ describe('CONSTANTS', function() {
             );
         });
 
-        it('INTERNAL_ATTRIBUTES_GENERATION should all internal genotype attributes', function() {
+        it('INTERNAL_ATTRIBUTES_GENERATION should all internal genotype attributes', () => {
             CONSTANTS.INTERNAL_ATTRIBUTES_GENOTYPE.should.deepEqual(
                 [
                     'genotypeId',
@@ -76,8 +76,8 @@ describe('CONSTANTS', function() {
         });
     });
 
-    describe('All *ATTRIBUTES* of Plant', function() {
-        it('ATTRIBUTES_PLANT should contain all non-internal plant attributes', function() {
+    describe('All *ATTRIBUTES* of Plant', () => {
+        it('ATTRIBUTES_PLANT should contain all non-internal plant attributes', () => {
             CONSTANTS.ATTRIBUTES_PLANT.should.deepEqual(
                 [
                     'plantName',
@@ -90,7 +90,7 @@ describe('CONSTANTS', function() {
             );
         });
 
-        it('INTERNAL_ATTRIBUTES_PLANT should all internal genotype attributes', function() {
+        it('INTERNAL_ATTRIBUTES_PLANT should all internal genotype attributes', () => {
             CONSTANTS.INTERNAL_ATTRIBUTES_PLANT.should.deepEqual(
                 [
                     'plantId',

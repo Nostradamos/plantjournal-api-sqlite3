@@ -7,11 +7,11 @@ const sqlite = require('sqlite');
 const plantJournal = require('../../../src/pj');
 const CONSTANTS = require('../../../src/constants');
 
-describe('Plant()', function() {
-    describe('#delete()', async function() {
+describe('Plant()', () => {
+    describe('#delete()', async () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({familyName: 'test1'}); // familyId:1
@@ -34,12 +34,12 @@ describe('Plant()', function() {
             await pj.Plant.create({generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
         });
 
-        it('should throw error if no criteria object got passed', async function() {
+        it('should throw error if no criteria object got passed', async () => {
             await pj.Plant.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete plants specified in criteria.filter.plantId', async function() {
+        it('should delete plants specified in criteria.filter.plantId', async () => {
             let deletedPlants = await pj.Plant.delete(
                 {
                     'filter': {

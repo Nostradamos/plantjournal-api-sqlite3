@@ -7,6 +7,16 @@ const CONSTANTS = require('../../constants');
 
 const GenericDelete = require('../generic/generic-delete');
 
+/**
+ * This class extends {@link GenericDelete} to fit the needs for Medium
+ * deletions. The delete() method gets called internally from Medium.delete().
+ * If you want to know how delete works internally, see
+ * {@link GenericCreate|src/controller/generic/generic-create}.
+ * If you want to know how to use the Medium.delete()
+ * API from outside, see {@link Genotype|src/models/Medium #delete()}.
+ * @private
+ * @extends GenericDelete
+ */
 class MediumDelete extends GenericDelete {
     static setQueryRelatedJoin(context, criteria) {
         QueryUtils.joinPlantsFromMediums(context.queryRelated);

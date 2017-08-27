@@ -6,12 +6,12 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../src/pj');
 
-describe('PlantLog()', function() {
+describe('PlantLog()', () => {
 
-    describe('#create()', function() {
+    describe('#create()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
 
@@ -20,43 +20,43 @@ describe('PlantLog()', function() {
             await pj.Plant.create({'plantName': 'testPlant1', 'generationId': 1});
         });
 
-        it('should throw error if plantId is not set', async function() {
+        it('should throw error if plantId is not set', async () => {
             await pj.PlantLog.create(
                 {'plantLogTimestamp': 424242, 'plantLogType': 'log', 'plantLogValue': 'This is a log'})
                 .should.be.rejectedWith('options.plantId has to be set');
         });
 
-        it('should throw error if plantLogTimestamp is not set', async function() {
+        it('should throw error if plantLogTimestamp is not set', async () => {
             await pj.PlantLog.create(
                 {'plantId': 1, 'plantLogType': 'log', 'plantLogValue': 'This is a log'})
                 .should.be.rejectedWith('options.plantLogTimestamp has to be set');
         });
 
-        it('should throw error if plantLogType is not set', async function() {
+        it('should throw error if plantLogType is not set', async () => {
             await pj.PlantLog.create(
                 {'plantId': 1, 'plantLogTimestamp': 424242, 'plantLogValue': 'This is a log'})
                 .should.be.rejectedWith('options.plantLogType has to be set');
         });
 
-        it('should throw error if plantLogValue is not set', async function() {
+        it('should throw error if plantLogValue is not set', async () => {
             await pj.PlantLog.create(
                 {'plantId': 1, 'plantLogTimestamp': 424242, 'plantLogType': 'log'})
                 .should.be.rejectedWith('options.plantLogValue has to be set');
         });
 
-        it('should throw error if plantLogType is not a string', async function() {
+        it('should throw error if plantLogType is not a string', async () => {
             await pj.PlantLog.create(
                 {'plantId': 1, 'plantLogTimestamp': 424242, 'plantLogType': 13, 'plantLogValue': 'This is a log' })
                 .should.be.rejectedWith('options.plantLogType has to be a string');
         });
 
-        it('should throw error if plantId is not an existing plant', async function() {
+        it('should throw error if plantId is not an existing plant', async () => {
             await pj.PlantLog.create(
                 {'plantId': 42, 'plantLogTimestamp': 424242, 'plantLogType': 'log', 'plantLogValue': 'This is a log' })
                 .should.be.rejectedWith('options.plantId does not reference an existing Plant');
         });
 
-        it('should create database record and return inserted plantLog', async function() {
+        it('should create database record and return inserted plantLog', async () => {
             let plantLog = await pj.PlantLog.create(
                 {'plantId': 1, 'plantLogTimestamp': 424242, 'plantLogType': 'log', 'plantLogValue': 'This is a log'}
             );

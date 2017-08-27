@@ -4,6 +4,8 @@ const _ = require('lodash');
 
 const logger = require('../../logger');
 const CONSTANTS = require('../../constants');
+const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
 
 const GenericDelete = require('../generic/generic-delete');
 
@@ -26,7 +28,7 @@ class EnvironmentDelete extends GenericDelete {
         context.plantIdsToDelete = new Set();
 
         _.each(context.rowsRelated, function(row) {
-            context.environmentIdsToDelete.add(row.familyId);
+            context.environmentIdsToDelete.add(row.environmentId);
             context.mediumIdsToDelete.add(row.mediumId);
             context.plantIdsToDelete.add(row.plantId);
         });
@@ -51,3 +53,9 @@ class EnvironmentDelete extends GenericDelete {
         returnObject['plants'] = context.plantIdsToDelete;
     }
 }
+
+EnvironmentDelete.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
+
+EnvironmentDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT;
+
+module.exports = EnvironmentDelete;

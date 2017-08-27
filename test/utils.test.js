@@ -7,13 +7,13 @@ const sqlite = require('sqlite');
 
 const Utils = require('../src/utils');
 
-describe('Utils', function() {
-    describe('#deleteEmptyProperties()', function() {
-        it('should mutate object to only contain non empty properties', function() {
+describe('Utils', () => {
+    describe('#deleteEmptyProperties()', () => {
+        it('should mutate object to only contain non empty properties', () => {
             Utils.deleteEmptyProperties({a:{}, b:[], c:null, d:false, e:-1, f:1, z:{a:1}})
                 .should.deepEqual({z:{a:1}});
         });
-        it('should mutate object delete non empty properties defined in limitTo', function() {
+        it('should mutate object delete non empty properties defined in limitTo', () => {
             Utils.deleteEmptyProperties({a:{}, b:[], c:null, d:false, e:-1, f:1, z:{a:1}}, ['a',
                 'b',
                 'c'])
@@ -21,8 +21,8 @@ describe('Utils', function() {
         });
     });
 
-    describe('#addFamilyFromRowToReturnObject()', function() {
-        it('should add family object to returnObject.families[familyId]', function() {
+    describe('#addFamilyFromRowToReturnObject()', () => {
+        it('should add family object to returnObject.families[familyId]', () => {
             let row = {'familyId': 42, 'familyName': 'testFam'};
             let returnObject = {'families': {}};
 
@@ -39,7 +39,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should not add family object to returnObject.families if row.familyName is not set', function() {
+        it('should not add family object to returnObject.families if row.familyName is not set', () => {
             let row = {'familyId': 42};
             let returnObject = {'families': {}};
 
@@ -52,7 +52,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should add family object to returnObject.familys[familyId] if row.familyName is not defined but forceAdd=true', function() {
+        it('should add family object to returnObject.familys[familyId] if row.familyName is not defined but forceAdd=true', () => {
             let row = {'familyId': 42};
             let returnObject = {'families': {}};
 
@@ -69,8 +69,8 @@ describe('Utils', function() {
         });
     });
 
-    describe('#addGenerationFromRowToReturnObject()', function() {
-        it('should add generation object to returnObject.generations[generationId]', function() {
+    describe('#addGenerationFromRowToReturnObject()', () => {
+        it('should add generation object to returnObject.generations[generationId]', () => {
             let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'generationParents': '13,14'};
             let returnObject = {'families': {}, 'generations': {}};
 
@@ -91,7 +91,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should not add generation object to returnObject.generations[generationId] if the only generation* field which is set is row.generationId', function() {
+        it('should not add generation object to returnObject.generations[generationId] if the only generation* field which is set is row.generationId', () => {
             let row = {'familyId': 42, 'generationId': 13};
             let returnObject = {'families': {}, 'generations': {}};
 
@@ -99,7 +99,7 @@ describe('Utils', function() {
             returnObject.should.deepEqual({'families': {}, 'generations': {}});
         });
 
-        it('should add generation object to returnObject.generations[generationId] if row.generationName is not defined but forceAdd=true', function() {
+        it('should add generation object to returnObject.generations[generationId] if row.generationName is not defined but forceAdd=true', () => {
             let row = {'familyId': 42, 'generationId': 13};
             let returnObject = {'families': {}, 'generations': {}};
 
@@ -117,7 +117,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should add generation object to returnObject... if row.generationParents is defined and it should split it and cast to integers', function() {
+        it('should add generation object to returnObject... if row.generationParents is defined and it should split it and cast to integers', () => {
             let row = {'familyId': 42, 'generationId': 13, 'generationParents': '27,100'};
             let returnObject = {'families': {}, 'generations': {}};
 
@@ -133,7 +133,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should set returnObject.generationParents = [] if row.generationParents = null', function() {
+        it('should set returnObject.generationParents = [] if row.generationParents = null', () => {
             let row = {'familyId': 42, 'generationId': 13, 'generationParents': null};
             let returnObject = {'families': {}, 'generations': {}};
 
@@ -150,8 +150,8 @@ describe('Utils', function() {
         });
     });
 
-    describe('#addGenotypeFromRowToReturnObject', function() {
-        it('should add genotype object to returnObject.genotypes[genotypeId]', function() {
+    describe('#addGenotypeFromRowToReturnObject', () => {
+        it('should add genotype object to returnObject.genotypes[genotypeId]', () => {
             let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno'};
             let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}};
 
@@ -173,7 +173,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should not add genotype object to returnObject.genotypes[genotypeId] if row.genotypeName is not defined', function() {
+        it('should not add genotype object to returnObject.genotypes[genotypeId] if row.genotypeName is not defined', () => {
             let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337};
             let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}};
 
@@ -181,7 +181,7 @@ describe('Utils', function() {
             returnObject.should.deepEqual({'families': {}, 'generations': {}, 'genotypes': {}});
         });
 
-        it('should add genotype object to returnObject.genotypes[genotypeId] if row.genotypeName is not defined but forceAdd=true', function() {
+        it('should add genotype object to returnObject.genotypes[genotypeId] if row.genotypeName is not defined but forceAdd=true', () => {
             let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337};
             let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}};
 
@@ -202,8 +202,8 @@ describe('Utils', function() {
         });
     });
 
-    describe('#addPlantFromRowToReturnObject()', function() {
-        it('should add plant object to returnObject.plants[plantId]', function() {
+    describe('#addPlantFromRowToReturnObject()', () => {
+        it('should add plant object to returnObject.plants[plantId]', () => {
             let row = {
                 'familyId': 42,
                 'generationId': 13, 'generationName': 'F4',
@@ -238,7 +238,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should not add plant object to returnObject.plants[plantId] if only id attributes (plantId, generationId...) are defined (and forceAdd=false)', function() {
+        it('should not add plant object to returnObject.plants[plantId] if only id attributes (plantId, generationId...) are defined (and forceAdd=false)', () => {
             let row = {
                 'familyId': 42, 'generationId': 13, 'generationName': 'F4',
                 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12};
@@ -248,7 +248,7 @@ describe('Utils', function() {
             returnObject.should.deepEqual({'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}});
         });
 
-        it('should add plant object to returnObject.plants[plantId] if row.plantName is not defined but forceAdd=true', function() {
+        it('should add plant object to returnObject.plants[plantId] if row.plantName is not defined but forceAdd=true', () => {
             let row = {
                 'familyId': 42, 'generationId': 13, 'generationName': 'F4',
                 'genotypeId': 1337, 'plantId': 12, 'mediumId': 24,
@@ -275,7 +275,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should set environmentId: null if row.environmentId is not defined', function() {
+        it('should set environmentId: null if row.environmentId is not defined', () => {
             let row = {
                 'familyId': 42,
                 'generationId': 13,
@@ -300,7 +300,7 @@ describe('Utils', function() {
             );
         });
 
-        it('should set mediumId: null if row.mediumId is not defined', function() {
+        it('should set mediumId: null if row.mediumId is not defined', () => {
             let row = {
                 'familyId': 42,
                 'generationId': 13,
@@ -325,8 +325,8 @@ describe('Utils', function() {
         });
     });
 
-    describe('#addFoundAndRemainingFromCountToReturnObject()', function() {
-        it('should calculate remaining count and add with found to returnObject', function() {
+    describe('#addFoundAndRemainingFromCountToReturnObject()', () => {
+        it('should calculate remaining count and add with found to returnObject', () => {
             let returnObject = {};
             let options = {offset: 42};
             let count = {'count': 130};
@@ -335,7 +335,7 @@ describe('Utils', function() {
             returnObject.should.deepEqual({'found': 130, 'remaining': 83});
         });
 
-        it('should calculate remaining count if options.offset is not defined and add with found to returnObject', function() {
+        it('should calculate remaining count if options.offset is not defined and add with found to returnObject', () => {
             let returnObject = {};
             let options = {};
             let count = {'count': 42};
@@ -345,38 +345,38 @@ describe('Utils', function() {
         });
     });
 
-    describe('#throwErrorIfNotConnected()', function() {
-        before(async function() {
+    describe('#throwErrorIfNotConnected()', () => {
+        before(async () => {
             sqlite.open(':memory:');
         });
-        it('should throw error if sqlite is not connected', async function() {
+        it('should throw error if sqlite is not connected', async () => {
             await sqlite.close();
             should(() => Utils.throwErrorIfNotConnected())
                 .throw('plantJournal is not connected to database.');
         });
 
-        it('should not throw error if sqlite is connected', async function() {
+        it('should not throw error if sqlite is connected', async () => {
             await sqlite.open(':memory:');
             Utils.throwErrorIfNotConnected();
         });
     });
 
-    describe('#hasToBeIntOrNull()', function() {
-        it('should throw error if object[property] is undefined', function() {
+    describe('#hasToBeIntOrNull()', () => {
+        it('should throw error if object[property] is undefined', () => {
             should(() => Utils.hasToBeIntOrNull({}, 'foo', 'obj'))
                 .throw('obj.foo has to be an integer or null');
         });
 
-        it('should throw error if object[property] is not an integer', function() {
+        it('should throw error if object[property] is not an integer', () => {
             should(() => Utils.hasToBeIntOrNull({foo: '123'}, 'foo', 'obj'))
                 .throw('obj.foo has to be an integer or null');
         });
 
-        it('should NOT throw error if object[property] is null', function() {
+        it('should NOT throw error if object[property] is null', () => {
             Utils.hasToBeIntOrNull({foo: null}, 'foo', 'obj');
         });
 
-        it('should NOT throw error if object[property] is integer', function() {
+        it('should NOT throw error if object[property] is integer', () => {
             Utils.hasToBeIntOrNull({foo: 42}, 'foo', 'obj');
         });
     });

@@ -8,14 +8,14 @@ require('should');
 const plantJournal = require('../../../src/pj');
 const CONSTANTS = require('../../../src/constants');
 
-describe('Environment()', function() {
-    describe('#delete()', function() {
+describe('Environment()', () => {
+    describe('#delete()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
-            
+
             await pj.Environment.create({environmentName: 'environment1'});
             await pj.Medium.create({mediumName: 'medium1', environmentId: 1});
             await pj.Medium.create({mediumName: 'medium2', environmentId: 1});
@@ -23,11 +23,30 @@ describe('Environment()', function() {
             await pj.Family.create({familyName: 'family1'}); // familyId:1
             await pj.Generation.create({generationName : 'generation1', familyId: 1}); // generationId: 1
             await pj.Plant.create({generationId: 1, plantName: 'plant1', mediumId: 1}); // plantId: 1 genotypeId: 1
-            await pj.Plant.create({generationId: 1, plantName: 'plant1', mediumId: 2}); // plantId: 1 genotypeId: 1
+            await pj.Plant.create({generationId: 1, plantName: 'plant2', mediumId: null}); // plantId: 1 genotypeId: 1
         });
 
-        it('should delete environment with matching id and related medium and plant', async function() {
+        it('should delete environment with matching id and related mediums and plants', async () => {
             let deleted = await pj.Environment.delete({environmentId: 1});
+            deleted.should.deepEqual({
+                'environments': [1],
+                'mediums': [1, 2],
+                'plants': [1]
+            });
+
+            // Make sure we deleted also from database
+            let rowsEnv = await sqlite.all(
+                'SELECT environmentId FROM ' + CONSTANTS.TABLE_ENVIRONMENTS);
+            rowsEnv.should.deepEqual([]);
+
+            let rowsMed = await sqlite.all(
+                'SELECT mediumId FROM ' + CONSTANTS.TABLE_MEDIUMS);
+            rowsMed.should.deepEqual([]);
+
+            let rowsPlant = await sqlite.all(
+                'SELECT plantId FROM ' + CONSTANTS.TABLE_PLANTS);
+            rowsPlant.should.deepEqual([{plantId: 2}]);
+
         });
     });
 });

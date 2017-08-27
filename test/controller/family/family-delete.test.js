@@ -8,11 +8,11 @@ require('should');
 const plantJournal = require('../../../src/pj');
 const CONSTANTS = require('../../../src/constants');
 
-describe('Family()', function() {
-    describe('#delete()', function() {
+describe('Family()', () => {
+    describe('#delete()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({familyName: 'test1'}); // familyId:1
@@ -34,19 +34,13 @@ describe('Family()', function() {
             await pj.Family.create({familyName: 'testD'}); // id:4
         });
 
-        it('should throw error if no criteria object got passed', async function() {
+        it('should throw error if no criteria object got passed', async () => {
             await pj.Family.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete specified family in criteria.filter.familyId and return the id', async function() {
-            let deletedFam = await pj.Family.delete(
-                {
-                    'filter': {
-                        'familyId': 1
-                    }
-                }
-            );
+        it('should delete specified family in criteria.filter.familyId and return the id', async () => {
+            let deletedFam = await pj.Family.delete({filter: {familyId: 1}});
 
             deletedFam.should.deepEqual({
                 'families': [1],
@@ -57,46 +51,31 @@ describe('Family()', function() {
 
             // Make sure we deleted also from database
 
-            let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILIES);
+            let rowsFam = await sqlite.all(
+                'SELECT familyId FROM ' + CONSTANTS.TABLE_FAMILIES);
 
             rowsFam.should.deepEqual(
-                [
-                    {'familyId': 2, 'familyName': 'testB'},
-                    {'familyId': 3, 'familyName': 'test3'},
-                    {'familyId': 4, 'familyName': 'testD'}
-                ]
-            );
+                [{familyId: 2}, {familyId: 3}, {familyId: 4}]);
 
-            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' + CONSTANTS.TABLE_GENERATIONS);
+            let rowsGen = await sqlite.all(
+                'SELECT generationId FROM ' + CONSTANTS.TABLE_GENERATIONS);
 
             rowsGen.should.deepEqual(
-                [
-                    {'generationId': 2, 'generationName': 'testGen2'},
-                    {'generationId': 3, 'generationName': 'testGen3'},
-                    {'generationId': 4, 'generationName': 'testGen4'}
-                ]
-            );
+                [{generationId: 2}, {generationId: 3}, {generationId: 4}]);
 
-            let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPES);
+            let rowsGeno = await sqlite.all(
+                'SELECT genotypeId FROM ' + CONSTANTS.TABLE_GENOTYPES);
 
             rowsGeno.should.deepEqual(
-                [
-                    {'genotypeId': 3, 'genotypeName': ''},
-                    {'genotypeId': 4, 'genotypeName': 'testGeno1'},
-                    {'genotypeId': 5, 'genotypeName': 'testGeno2'}
-                ]
-            );
+                [{genotypeId: 3}, {genotypeId: 4}, {genotypeId: 5}]);
 
-            let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANTS);
+            let rowsPlant = await sqlite.all(
+                'SELECT plantId FROM ' + CONSTANTS.TABLE_PLANTS);
 
-            rowsPlant.should.deepEqual(
-                [
-                    {'plantId': 3, 'plantName': 'blubb'}
-                ]
-            );
+            rowsPlant.should.deepEqual([{plantId: 3}]);
         });
 
-        it('should be possibe to delete families with criteria.sort and criteria.limit instruction', async function() {
+        it('should be possibe to delete families with criteria.sort and criteria.limit instruction', async () => {
             let deletedFam = await pj.Family.delete(
                 {
                     'limit': 2,

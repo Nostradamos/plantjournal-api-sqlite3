@@ -8,11 +8,11 @@ const CONSTANTS = require('../../../src/constants');
 
 const plantJournal = require('../../../src/pj');
 
-describe('PlantLog()', function() {
-    describe('#create()', function() {
+describe('PlantLog()', () => {
+    describe('#create()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
 
@@ -53,14 +53,14 @@ describe('PlantLog()', function() {
             ); //plantLogId: 4
         });
 
-        it('should throw error if we try to update plantId to a non existing plant', async function() {
+        it('should throw error if we try to update plantId to a non existing plant', async () => {
             await pj.PlantLog.update(
                 {plantId: 42},
                 {filter: {plantLogId: 3}}
             ).should.be.rejectedWith('update.plantId does not reference an existing plant');
         });
 
-        it('should return updated plantLogId, update requested changes in plantLog record, and update plantLogModifiedAt', async function() {
+        it('should return updated plantLogId, update requested changes in plantLog record, and update plantLogModifiedAt', async () => {
             let updatedPlantLogs = await pj.PlantLog.update(
                 {plantLogValue: 'Bugs are gone, ladybugs love the plants! Besides that, it looks like the chilis finally start to produce flowers!'},
                 {filter: {plantLogId: 3}}

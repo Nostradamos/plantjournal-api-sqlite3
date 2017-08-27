@@ -7,11 +7,11 @@ const sqlite = require('sqlite');
 const plantJournal = require('../../../src/pj');
 const CONSTANTS = require('../../../src/constants');
 
-describe('Generation()', function() {
-    describe('#delete()', async function() {
+describe('Generation()', () => {
+    describe('#delete()', async () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({familyName: 'test1'}); // familyId:1
@@ -33,12 +33,12 @@ describe('Generation()', function() {
             await pj.Family.create({familyName: 'testD'}); // id:4
         });
 
-        it('should throw error if no criteria object got passed', async function() {
+        it('should throw error if no criteria object got passed', async () => {
             await pj.Generation.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete generation specified in criteria.filter.generationId and downwards referenced genotypes/plants', async function() {
+        it('should delete generation specified in criteria.filter.generationId and downwards referenced genotypes/plants', async () => {
             let deletedGen = await pj.Generation.delete(
                 {
                     'filter': {

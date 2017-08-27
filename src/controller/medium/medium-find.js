@@ -41,6 +41,8 @@ class MediumFind extends GenericFind {
             Utils.addMediumFromRowToReturnObject(row, returnObject);
             Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
         });
+
+        Utils.deleteEmptyProperties(returnObject, ['environments']);
     }
 }
 

@@ -6,8 +6,8 @@ const sqlite = require('sqlite');
 
 const createTables = require('../src/create-tables');
 
-describe('#createTables()', function() {
-    it('should finish without any sql errors', async function() {
+describe('#createTables()', () => {
+    it('should finish without any sql errors', async () => {
         await sqlite.open(':memory:');
         let catched = false;
 

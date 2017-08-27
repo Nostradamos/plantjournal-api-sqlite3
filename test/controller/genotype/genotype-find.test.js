@@ -7,11 +7,11 @@ const plantJournal = require('../../../src/pj');
 
 const helperFunctions = require('../../helper-functions');
 
-describe('Genotype()', function() {
-    describe('#find()', function() {
+describe('Genotype()', () => {
+    describe('#find()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({familyName: 'testFamily1'});
@@ -28,7 +28,7 @@ describe('Genotype()', function() {
             await pj.Genotype.create({generationId: 4, genotypeName: 'testGenotype4'});
         });
 
-        it('should find genotypes, referenced generations and families', async function() {
+        it('should find genotypes, referenced generations and families', async () => {
             let genotypes = await pj.Genotype.find();
 
             genotypes.should.containDeep(
@@ -107,7 +107,7 @@ describe('Genotype()', function() {
                 .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
         });
 
-        it('should not have an empty families property object if familyName is NOT in options.attributes', async function() {
+        it('should not have an empty families property object if familyName is NOT in options.attributes', async () => {
             let genotypes = await pj.Genotype.find(
                 {
                     'attributes': ['familyId', 'generationName']
@@ -117,7 +117,7 @@ describe('Genotype()', function() {
             should(genotypes.families).be.undefined();
         });
 
-        it('should not have an empty generations property object if not generationName is in options.attributes', async function() {
+        it('should not have an empty generations property object if not generationName is in options.attributes', async () => {
             let genotypes = await pj.Genotype.find(
                 {
                     'attributes': ['familyId']
@@ -127,7 +127,7 @@ describe('Genotype()', function() {
             should(genotypes.generations).be.undefined();
         });
 
-        it('should skip x genotypes specified with options.offset and limit the count of results to option.limit', async function() {
+        it('should skip x genotypes specified with options.offset and limit the count of results to option.limit', async () => {
             let genotypes = await pj.Genotype.find(
                 {
                     'attributes': ['genotypeName'],
@@ -156,7 +156,7 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype attributes)', async function() {
+        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype attributes)', async () => {
             let genotypes = await pj.Genotype.find(
                 {
                     'attributes': ['genotypeName'],
@@ -180,7 +180,7 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async function() {
+        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async () => {
             let genotypes = await pj.Genotype.find({
                 'attributes': ['genotypeName'],
                 'filter': {
@@ -202,7 +202,7 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family attributes)', async function() {
+        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family attributes)', async () => {
             let genotypes = await pj.Genotype.find({
                 'attributes': ['genotypeName'],
                 'filter': {
@@ -230,7 +230,7 @@ describe('Genotype()', function() {
             });
         });
 
-        it('should only return genotypes filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
+        it('should only return genotypes filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async () => {
             let genotypes = await pj.Genotype.find(
                 {
                     'attributes': ['generationParents',
@@ -264,7 +264,7 @@ describe('Genotype()', function() {
             );
         });
 
-        after(async function() {
+        after(async () => {
             await pj.disconnect();
         });
     });

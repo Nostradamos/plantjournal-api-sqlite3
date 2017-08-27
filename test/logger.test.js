@@ -5,8 +5,8 @@ require('should');
 
 const logger = require('../src/logger');
 
-describe('logger()', function() {
-    it('should just log.', function() {
+describe('logger()', () => {
+    it('should just log.', () => {
         logger.log('silly', '127.0.0.1 - there\'s no place like home');
         logger.log('debug', '127.0.0.1 - there\'s no place like home');
         logger.log('verbose', '127.0.0.1 - there\'s no place like home');

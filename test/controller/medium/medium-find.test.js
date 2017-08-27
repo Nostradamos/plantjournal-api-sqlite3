@@ -7,11 +7,11 @@ const plantJournal = require('../../../src/pj');
 
 const helperFunctions = require('../../helper-functions');
 
-describe('Medium()', function() {
-    describe('#find()', function() {
+describe('Medium()', () => {
+    describe('#find()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Environment.create({
@@ -28,11 +28,11 @@ describe('Medium()', function() {
 
         });
 
-        after(async function() {
+        after(async () => {
             await pj.disconnect();
         });
 
-        it('should find genotypes, referenced generations and families', async function() {
+        it('should find genotypes, referenced generations and families', async () => {
             let mediums = await pj.Medium.find();
 
             mediums.should.containDeep(
@@ -70,7 +70,7 @@ describe('Medium()', function() {
             );
         });
 
-        it('should skip first medium with criteria.offset = 1', async function() {
+        it('should skip first medium with criteria.offset = 1', async () => {
             let mediums = await pj.Medium.find({offset: 1});
 
             mediums.should.containDeep(
@@ -95,7 +95,7 @@ describe('Medium()', function() {
             );
         });
 
-        it('should be possible to find mediums based on environment attributes', async function() {
+        it('should be possible to find mediums based on environment attributes', async () => {
             let mediums = await pj.Medium.find(
                 {filter: {environmentName: 'testEnv1'}});
 
@@ -121,7 +121,7 @@ describe('Medium()', function() {
             );
         });
 
-        it('should be possible to find mediums where environmentId = null', async function() {
+        it('should be possible to find mediums where environmentId = null and environments should not be set', async () => {
             let mediums = await pj.Medium.find(
                 {filter: {environmentId: null}});
 
@@ -139,7 +139,8 @@ describe('Medium()', function() {
                     }
                 }
             );
-        });
 
+            should(mediums.environments).be.undefined();
+        });
     });
 });

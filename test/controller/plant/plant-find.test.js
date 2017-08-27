@@ -6,11 +6,11 @@ let should = require('should');
 const plantJournal = require('../../../src/pj');
 const helpers = require('../../helper-functions');
 
-describe('Plant()', function() {
-    describe('#find()', function() {
+describe('Plant()', () => {
+    describe('#find()', () => {
         let pj;
 
-        before(async function() {
+        before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Family.create({familyName: 'testFamily1'}); // familyId: 1
@@ -31,7 +31,7 @@ describe('Plant()', function() {
             await pj.Plant.create({generationId: 4, plantName: 'testPlant5'}); // plantId: 5 genotypeId: 4
         });
 
-        it('should find plants, referenced genotypes, generations and families', async function() {
+        it('should find plants, referenced genotypes, generations and families', async () => {
             let plants = await pj.Plant.find();
 
             plants.should.containDeep(
@@ -159,7 +159,7 @@ describe('Plant()', function() {
                 .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(plants);
         });
 
-        it('should not have an empty families property object if familyName is NOT in options.attributes', async function() {
+        it('should not have an empty families property object if familyName is NOT in options.attributes', async () => {
             let plants = await pj.Plant.find(
                 {
                     'attributes': ['familyId',
@@ -171,7 +171,7 @@ describe('Plant()', function() {
             should(plants.families).be.undefined();
         });
 
-        it('should not have an empty generations property object if generationName is NOT in options.attributes', async function() {
+        it('should not have an empty generations property object if generationName is NOT in options.attributes', async () => {
             let plants = await pj.Plant.find(
                 {
                     'attributes': ['familyId', 'genotypeName']
@@ -181,7 +181,7 @@ describe('Plant()', function() {
             should(plants.generations).be.undefined();
         });
 
-        it('should not have an empty genotypes object if phenotypeName is NOT in options.attributes', async function() {
+        it('should not have an empty genotypes object if phenotypeName is NOT in options.attributes', async () => {
             let plants = await pj.Plant.find(
                 {
                     'attributes': ['familyId']
@@ -191,7 +191,7 @@ describe('Plant()', function() {
             should(plants.phenotypes).be.undefined();
         });
 
-        it('should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1', async function() {
+        it('should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1', async () => {
             let plants = await pj.Plant.find({'offset': 2, 'limit': 1, 'attributes': ['plantName']});
 
             plants.should.containDeep({
@@ -203,7 +203,7 @@ describe('Plant()', function() {
             });
         });
 
-        it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)', async function() {
+        it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)', async () => {
             let plants = await pj.Plant.find({'filter': {'plantName': 'testPlant3'}, 'attributes': ['plantId']});
 
             plants.should.containDeep({
@@ -216,7 +216,7 @@ describe('Plant()', function() {
             });
         });
 
-        it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async function() {
+        it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async () => {
             let plants = await pj.Plant.find({'filter': {'genotypeName': 'testGenotype3'}, 'attributes': ['plantId']});
 
             plants.should.containDeep({
@@ -229,7 +229,7 @@ describe('Plant()', function() {
             });
         });
 
-        it('should only return plants filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async function() {
+        it('should only return plants filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async () => {
             let plants = await pj.Plant.find({'filter': {'generationParents': [1,2]}, 'attributes': ['plantId',
                 'plantName',
                 'generationParents',
@@ -265,7 +265,7 @@ describe('Plant()', function() {
             });
         });
 
-        it('should be possible to find plants where parents are [1,2] OR [1,3]', async function() {
+        it('should be possible to find plants where parents are [1,2] OR [1,3]', async () => {
             let plants = await pj.Plant.find(
                 {
                     'filter':
@@ -323,7 +323,7 @@ describe('Plant()', function() {
             });
         });
 
-        after(async function() {
+        after(async () => {
             await pj.disconnect();
         });
     });

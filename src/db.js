@@ -8,6 +8,6 @@ db.connect = async function(options) {
     return await db.sqlite.open(options);
 };
 
-db.close = async function() {
+db.close = async () => {
     await db.sqlite.close();
 };
