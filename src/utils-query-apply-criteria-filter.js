@@ -175,7 +175,7 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
     // First handle special case generationParents
         handleGenerationParents(attr, attrOptions, squelExpr, type);
         return;
-    } else if (_.isInteger(attrOptions) || _.isString(attrOptions)) {
+    } else if (_.isInteger(attrOptions) || _.isString(attrOptions) || _.isNull(attrOptions)) {
     // Short hand to easily do an equals operation if attrOptions is a string or an integer.
     // @ToDo: we should also do this for null.
         let [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
@@ -365,14 +365,29 @@ function createGenericExpression(table, attr, operator, equal, func=null) {
         (func === null ? '?.? ' : func + '(?.?) ') + operator + ' ?',
         [table, attr, equal]
     ];
+}
 
+function createIsNullExpression(table, attr) {
+    return [
+        '?.? IS NULL',
+        [table, attr]
+    ];
+}
+
+function createIsNotNullExpression(table, attr) {
+    return [
+        '?.? IS NOT NULL',
+        [table, attr]
+    ];
 }
 
 function createEqualsExpression(table, attr, toEqual, func=null) {
+    if(_.isNull(toEqual)) return createIsNullExpression(table, attr);
     return createGenericExpression(table, attr, '=', toEqual, func);
 }
 
 function createNotEqualsExpression(table, attr, notToEqual, func=null) {
+    if(_.isNull(notToEqual)) return createIsNotNullExpression(table, attr);
     return createGenericExpression(table, attr, '!=', notToEqual, func);
 }
 

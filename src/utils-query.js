@@ -53,6 +53,8 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
  * Joins all related tables of Plant. So joins all genotypes, joins all related
  * tables of genotype (which joins generations, which joins all related tables
  * of generation...)
+ * And we also join Mediums and all related to mediums, which is currently
+ * only Environment.
  * Mutates queryObj.
  * @param {squel} queryObj
  *        Squel Query Builder to add joins
@@ -61,7 +63,67 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
 QueryUtils.joinRelatedPlants = function(queryObj) {
     QueryUtils.joinGenotypesFromPlants(queryObj);
     QueryUtils.joinRelatedGenotypes(queryObj);
+    QueryUtils.joinMediumsFromPlants(queryObj);
+    QueryUtils.joinRelatedMediums(queryObj);
 };
+
+
+QueryUtils.joinRelatedMediums = function(queryObj) {
+    QueryUtils.joinEnvironmentsFromMediums(queryObj);
+}
+
+/**
+ * Left joins generations by referencing to families.familyId.
+ * @param  {squel} query - Squel query capable of an .left_join()
+ */
+QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
+    QueryUtils.joinGenerationsFromFamilies(query);
+
+    QueryUtils.joinGenerationParentsFromGenerations(query);
+}
+
+QueryUtils.joinGenerationsFromFamilies = function(query) {
+    query.left_join(CONSTANTS.TABLE_GENERATIONS,
+        'generations',
+        'families.familyId = generations.familyId'
+    );
+}
+
+/**
+ * Left joins Genotypes by referencing to generations.generationId
+ * @param  {squel} query - Squel query capable of an .left_join()
+ */
+QueryUtils.joinGenotypesFromGenerations = function(query) {
+    query.left_join(CONSTANTS.TABLE_GENOTYPES,
+        'genotypes',
+        'generations.generationId = genotypes.generationId'
+    );
+}
+
+/**
+ * Left joins Plants by referencing to genotypes.genotypeId
+ * @param  {squel} query - Squel query capable of an .left_join()
+ */
+QueryUtils.joinPlantsFromGenotypes = function(query) {
+    query.left_join(CONSTANTS.TABLE_PLANTS,
+        'plants',
+        'genotypes.genotypeId = plants.genotypeId'
+    );
+}
+
+QueryUtils.joinMediumsFromPlants = function(query) {
+    query.left_join(CONSTANTS.TABLE_MEDIUMS,
+        'mediums',
+        'plants.mediumId = mediums.mediumId'
+    );
+}
+
+QueryUtils.joinEnvironmentsFromMediums = function(query) {
+    query.left_join(CONSTANTS.TABLE_ENVIRONMENTS,
+        'environments',
+        'mediums.environmentId = environments.environmentId'
+    );
+}
 
 /**
  * Left joins families by referencing to generations.familyId. Mutates query
@@ -118,45 +180,6 @@ QueryUtils.joinGenotypesFromPlants = function(query) {
     );
 }
 
-/**
- * Left joins generations by referencing to families.familyId.
- * @param  {squel} query - Squel query capable of an .left_join()
- */
-QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
-    QueryUtils.joinGenerationsFromFamilies(query);
-
-    QueryUtils.joinGenerationParentsFromGenerations(query);
-}
-
-QueryUtils.joinGenerationsFromFamilies = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENERATIONS,
-        'generations',
-        'families.familyId = generations.familyId'
-    );
-}
-
-/**
- * Left joins Genotypes by referencing to generations.generationId
- * @param  {squel} query - Squel query capable of an .left_join()
- */
-QueryUtils.joinGenotypesFromGenerations = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENOTYPES,
-        'genotypes',
-        'generations.generationId = genotypes.generationId'
-    );
-}
-
-/**
- * Left joins Plants by referencing to genotypes.genotypeId
- * @param  {squel} query - Squel query capable of an .left_join()
- */
-QueryUtils.joinPlantsFromGenotypes = function(query) {
-    query.left_join(CONSTANTS.TABLE_PLANTS,
-        'plants',
-        'genotypes.genotypeId = plants.genotypeId'
-    );
-}
-
 QueryUtils.joinPlantsFromMediums = function(query) {
     query.left_join(CONSTANTS.TABLE_PLANTS,
         'plants',
@@ -170,6 +193,8 @@ QueryUtils.joinMediumsFromEnvironments = function(query) {
         'environments.environmentId = mediums.environmentId'
     );
 };
+
+
 
 /**
  * Sets attributes to select for squel query object.

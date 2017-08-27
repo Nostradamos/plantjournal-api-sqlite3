@@ -28,7 +28,7 @@ class GenerationFind extends GenericFind {
      *         Criteria object passed to find()
      */
     static setQueryWhereJoin(context, criteria) {
-    // Joins families, and because of the true flag also generation_parents.
+        // Joins families, and because of the true flag also generation_parents.
         QueryUtils.joinRelatedGenerations(context.queryWhere, true);
     }
 

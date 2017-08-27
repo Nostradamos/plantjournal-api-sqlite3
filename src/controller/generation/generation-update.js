@@ -56,7 +56,7 @@ class GenerationUpdate extends GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
     static initQueryUpdateParents(context, update, criteria) {
-    // We have to delete the old parents, build query for this
+        // We have to delete the old parents, build query for this
         context.queryDeleteOldParents = squel.remove().from(this.TABLE_PARENTS)
             .where('generationId IN ?', context.idsToUpdate).toString();
         logger.debug(this.name, '#update() queryDeleteOldParents:', context.queryDeleteOldParents);

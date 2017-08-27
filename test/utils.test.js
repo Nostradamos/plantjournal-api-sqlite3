@@ -204,7 +204,14 @@ describe('Utils', function() {
 
     describe('#addPlantFromRowToReturnObject()', function() {
         it('should add plant object to returnObject.plants[plantId]', function() {
-            let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12, 'plantName': 'testPlant', 'plantClonedFrom': null, 'plantSex': 'male'};
+            let row = {
+                'familyId': 42,
+                'generationId': 13, 'generationName': 'F4',
+                'genotypeId': 1337, 'genotypeName': 'testpheno',
+                'plantId': 12, 'plantName': 'testPlant', 'plantClonedFrom': null,
+                'plantSex': 'male',
+                'mediumId': 11, 'mediumName': 'blubb',
+                'environmentId': 3, 'environmentName': 'xyz'};
             let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
 
             Utils.addPlantFromRowToReturnObject(row, returnObject, {});
@@ -222,7 +229,9 @@ describe('Utils', function() {
                             'plantSex': 'male',
                             'genotypeId': 1337,
                             'generationId': 13,
-                            'familyId': 42
+                            'familyId': 42,
+                            'mediumId': 11,
+                            'environmentId': 3
                         }
                     }
                 }
@@ -230,7 +239,9 @@ describe('Utils', function() {
         });
 
         it('should not add plant object to returnObject.plants[plantId] if only id attributes (plantId, generationId...) are defined (and forceAdd=false)', function() {
-            let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12};
+            let row = {
+                'familyId': 42, 'generationId': 13, 'generationName': 'F4',
+                'genotypeId': 1337, 'genotypeName': 'testpheno', 'plantId': 12};
             let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
 
             Utils.addPlantFromRowToReturnObject(row, returnObject, {});
@@ -238,7 +249,10 @@ describe('Utils', function() {
         });
 
         it('should add plant object to returnObject.plants[plantId] if row.plantName is not defined but forceAdd=true', function() {
-            let row = {'familyId': 42, 'generationId': 13, 'generationName': 'F4', 'genotypeId': 1337, 'plantId': 12};
+            let row = {
+                'familyId': 42, 'generationId': 13, 'generationName': 'F4',
+                'genotypeId': 1337, 'plantId': 12, 'mediumId': 24,
+                'environmentId': 11};
             let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
 
             Utils.addPlantFromRowToReturnObject(row, returnObject, {}, true);
@@ -252,8 +266,59 @@ describe('Utils', function() {
                             'plantId': 12,
                             'genotypeId': 1337,
                             'generationId': 13,
-                            'familyId': 42
+                            'familyId': 42,
+                            'mediumId': 24,
+                            'environmentId': 11
                         }
+                    }
+                }
+            );
+        });
+
+        it('should set environmentId: null if row.environmentId is not defined', function() {
+            let row = {
+                'familyId': 42,
+                'generationId': 13,
+                'genotypeId': 1337,
+                'plantId': 12, 'plantName': 'testPlant',
+                'mediumId': 24};
+            let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
+
+            Utils.addPlantFromRowToReturnObject(row, returnObject, {});
+            returnObject.plants.should.deepEqual(
+                {
+                    '12': {
+                        'plantId': 12,
+                        'plantName': 'testPlant',
+                        'genotypeId': 1337,
+                        'generationId': 13,
+                        'familyId': 42,
+                        'mediumId': 24,
+                        'environmentId': null
+                    }
+                }
+            );
+        });
+
+        it('should set mediumId: null if row.mediumId is not defined', function() {
+            let row = {
+                'familyId': 42,
+                'generationId': 13,
+                'genotypeId': 1337,
+                'plantId': 12, 'plantName': 'testPlant'};
+            let returnObject = {'families': {}, 'generations': {}, 'genotypes': {}, 'plants': {}};
+
+            Utils.addPlantFromRowToReturnObject(row, returnObject, {});
+            returnObject.plants.should.deepEqual(
+                {
+                    '12': {
+                        'plantId': 12,
+                        'plantName': 'testPlant',
+                        'genotypeId': 1337,
+                        'generationId': 13,
+                        'familyId': 42,
+                        'mediumId': null,
+                        'environmentId': null
                     }
                 }
             );
@@ -281,6 +346,9 @@ describe('Utils', function() {
     });
 
     describe('#throwErrorIfNotConnected()', function() {
+        before(async function() {
+            sqlite.open(':memory:');
+        });
         it('should throw error if sqlite is not connected', async function() {
             await sqlite.close();
             should(() => Utils.throwErrorIfNotConnected())
@@ -290,6 +358,26 @@ describe('Utils', function() {
         it('should not throw error if sqlite is connected', async function() {
             await sqlite.open(':memory:');
             Utils.throwErrorIfNotConnected();
+        });
+    });
+
+    describe('#hasToBeIntOrNull()', function() {
+        it('should throw error if object[property] is undefined', function() {
+            should(() => Utils.hasToBeIntOrNull({}, 'foo', 'obj'))
+                .throw('obj.foo has to be an integer or null');
+        });
+
+        it('should throw error if object[property] is not an integer', function() {
+            should(() => Utils.hasToBeIntOrNull({foo: '123'}, 'foo', 'obj'))
+                .throw('obj.foo has to be an integer or null');
+        });
+
+        it('should NOT throw error if object[property] is null', function() {
+            Utils.hasToBeIntOrNull({foo: null}, 'foo', 'obj');
+        });
+
+        it('should NOT throw error if object[property] is integer', function() {
+            Utils.hasToBeIntOrNull({foo: 42}, 'foo', 'obj');
         });
     });
 });

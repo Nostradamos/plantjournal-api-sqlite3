@@ -18,8 +18,7 @@ class MediumCreate extends GenericCreate {
         Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_MEDIUM);
         Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_MEDIUM);
         Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_MEDIUM);
-        Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_ENVIRONMENT);
-        Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_ENVIRONMENT);
+        Utils.hasToBeIntOrNull(options, CONSTANTS.ATTR_ID_ENVIRONMENT);
     }
 
 

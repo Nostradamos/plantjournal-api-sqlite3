@@ -8,6 +8,30 @@ const CONSTANTS = require('./constants');
  */
 module.exports =  async function createTables() {
     await sqlite.run(`
+      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_ENVIRONMENTS + ` (
+        environmentId INTEGER,
+        environmentName TEXT NOT NULL,
+        environmentDescription TEXT NOT NULL DEFAULT '',
+        environmentCreatedAt DATETIME NOT NULL,
+        environmentModifiedAt DATETIME NOT NULL,
+        PRIMARY KEY (environmentId)
+      );
+    `);
+
+    await sqlite.run(`
+      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_MEDIUMS + ` (
+        mediumId INTEGER,
+        mediumName TEXT NOT NULL,
+        mediumDescription TEXT NOT NULL DEFAULT '',
+        mediumCreatedAt DATETIME NOT NULL,
+        mediumModifiedAt DATETIME NOT NULL,
+        environmentId INTEGER DEAULT NULL,
+        PRIMARY KEY (mediumId),
+        FOREIGN KEY (environmentId) REFERENCES environments(environmentId) ON UPDATE CASCADE ON DELETE CASCADE
+      );
+    `);
+
+    await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_FAMILIES + ` (
         familyId INTEGER,
         familyName TEXT NOT NULL,
@@ -45,30 +69,6 @@ module.exports =  async function createTables() {
     `);
 
     await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_ENVIRONMENTS + ` (
-        environmentId INTEGER,
-        environmentName TEXT NOT NULL,
-        environmentDescription TEXT NOT NULL DEFAULT '',
-        environmentCreatedAt DATETIME NOT NULL,
-        environmentModifiedAt DATETIME NOT NULL,
-        PRIMARY KEY (environmentId)
-      );
-    `);
-
-    await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_MEDIUMS + ` (
-        mediumId INTEGER,
-        mediumName TEXT NOT NULL,
-        mediumDescription TEXT NOT NULL DEFAULT '',
-        mediumCreatedAt DATETIME NOT NULL,
-        mediumModifiedAt DATETIME NOT NULL,
-        environmentId INTEGER NOT NULL,
-        PRIMARY KEY (mediumId),
-        FOREIGN KEY (environmentId) REFERENCES environments(environmentId) ON UPDATE CASCADE ON DELETE CASCADE
-      );
-    `);
-
-    await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_PLANTS + ` (
         plantId INTEGER,
         plantName TEXT NOT NULL,
@@ -78,9 +78,11 @@ module.exports =  async function createTables() {
         plantCreatedAt DATETIME NOT NULL,
         plantModifiedAt DATETIME NOT NULL,
         genotypeId INTEGER NOT NULL,
+        mediumId INTEGER DEFAULT NULL,
         PRIMARY KEY (plantId),
         FOREIGN KEY (plantClonedFrom) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE SET NULL,
-        FOREIGN KEY(genotypeId) REFERENCES genotypes(genotypeId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY(genotypeId) REFERENCES genotypes(genotypeId) ON UPDATE CASCADE ON DELETE CASCADE,
+        FOREIGN KEY(mediumId) REFERENCES mediums(mediumId) ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 

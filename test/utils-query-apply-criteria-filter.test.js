@@ -211,7 +211,6 @@ describe('src/utils-query-apply-criteria-filter', function() {
         });
 
         it('should do an `=` (equals) operation for $eq', function() {
-
             let criteria = {
                 'filter': {'generationName': {'$eq': 'foo'}}
             };
@@ -223,7 +222,6 @@ describe('src/utils-query-apply-criteria-filter', function() {
         });
 
         it('should do an `=` (equals) operation if attribute value is string', function() {
-
             let criteria = {
                 'filter': {'generationName': 'foo'}
             };
@@ -235,9 +233,8 @@ describe('src/utils-query-apply-criteria-filter', function() {
         });
 
         it('should do an `=` (equals) operation if attribute value is integer', function() {
-
             let criteria = {
-                'filter': {'generationName': {'$eq': 1}}
+                'filter': {'generationName': 1}
             };
 
             QueryUtilsApplyFilter(q, ['generationName'], criteria);
@@ -246,8 +243,30 @@ describe('src/utils-query-apply-criteria-filter', function() {
             );
         });
 
-        it('should do an `!=` (not equals) operation for $neq', function() {
+        it('should do an `IS NULL` (equals) operation if attribute value is null', function() {
+            let criteria = {
+                'filter': {'generationName': null}
+            };
 
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationName' IS NULL)`
+            );
+        });
+
+        it('should do an `IS NULL` (equals) operation if $eq value is null', function() {
+            let criteria = {
+                'filter': {'generationName': {'$eq': null}}
+            };
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationName' IS NULL)`
+            );
+        });
+
+
+        it('should do an `!=` (not equals) operation for $neq', function() {
             let criteria = {
                 'filter': {'generationName': {'$neq': 'foo'}}
             };
@@ -255,6 +274,17 @@ describe('src/utils-query-apply-criteria-filter', function() {
             QueryUtilsApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' != 'foo')`
+            );
+        });
+
+        it('should do an `IS NOT NULL` (not equals) operation for $neq: null', function() {
+            let criteria = {
+                'filter': {'generationName': {'$neq': null}}
+            };
+
+            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            q.toString().should.eql(
+                `SELECT * FROM test WHERE ('generations'.'generationName' IS NOT NULL)`
             );
         });
 

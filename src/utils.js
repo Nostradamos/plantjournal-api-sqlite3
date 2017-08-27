@@ -46,9 +46,8 @@ Utils.addFamilyFromRowToReturnObject = function(row, returnObject, options, forc
     });
 
     // Make sure we have at least two attrs, or forceAdd = true
-    if (forceAdd === true || _.size(family) > 1) {
+    if (forceAdd === true || _.size(family) > 1)
         returnObject.families[familyId] = family;
-    }
 };
 
 /**
@@ -80,7 +79,8 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
         }
     });
     // Make sure that we only add it returnObject if we not only have generationId and familyId set.
-    if (forceAdd === true || _.size(generation) > 2) returnObject.generations[generationId] = generation;
+    if (forceAdd === true || _.size(generation) > 2)
+        returnObject.generations[generationId] = generation;
 };
 
 /**
@@ -102,7 +102,8 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
     _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
         if (_.has(row, attr)) genotype[attr] = row[attr];
     });
-    if (forceAdd === true || _.size(genotype) > 3) returnObject.genotypes[genotypeId] = genotype;
+    if (forceAdd === true || _.size(genotype) > 3)
+        returnObject.genotypes[genotypeId] = genotype;
 
 };
 
@@ -121,18 +122,21 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
     let plant = {
         'genotypeId': row.genotypeId,
         'generationId': row.generationId,
-        'familyId': row.familyId
-    };
+        'familyId': row.familyId,
+        'mediumId': row.mediumId || null,
+        'environmentId': row.environmentId || null
+     };
 
     _.each(CONSTANTS.ALL_ATTRIBUTES_PLANT, function(attr) {
         if (_.has(row, attr)) plant[attr] = row[attr];
     });
 
-    if (forceAdd === true || _.size(plant) > 4) returnObject.plants[plantId] = plant;
+    if (forceAdd === true || _.size(plant) > 6)
+        returnObject.plants[plantId] = plant;
 };
 
 /**
- * Adds at many enviromnents attributes as possible from row to
+ * Adds at many environment attributes as possible from row to
  * returnObject.environments[environmentId].
  * @param {object} row
  *        Row object from sqlite. row.{environmentId} have to be set.
@@ -143,8 +147,10 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
  * @param {bool}   [forceAdd=false]
  *        adds to returnObject even if row.generatioName is not set.
  */
-Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject) {
+Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
     let environmentId = row.environmentId;
+
+    if(_.isUndefined(environmentId)) return;
 
     let environment = {};
 
@@ -153,6 +159,32 @@ Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject) {
     });
 
     returnObject.environments[environmentId] = environment;
+};
+
+/**
+ * Adds at many medium attributes as possible from row to
+ * returnObject.mediums[mediumId].
+ * @param {object} row
+ *        Row object from sqlite. row.{mediumId} has to be set.
+ * @param {object} returnObject
+ *        Object which will contain information about found models.
+ * @param {object} options
+ *        options which got passed to the find function. For advanced use.
+ * @param {bool}   [forceAdd=false]
+ *        adds to returnObject even if row.generatioName is not set.
+ */
+Utils.addMediumFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
+    let mediumId = row.mediumId;
+    let medium = {
+        'environmentId': row.environmentId
+    };
+
+    _.each(CONSTANTS.ALL_ATTRIBUTES_MEDIUM, function(attr) {
+        if (_.has(row, attr)) medium[attr] = row[attr];
+    });
+
+    if (forceAdd === true || _.size(medium) > 2)
+        returnObject.mediums[mediumId] = medium;
 };
 
 Utils.addNeededFromRowToLogReturnObject = function(row, returnObject,
@@ -236,6 +268,13 @@ Utils.hasToBeString = function hasToBeString(obj, property, name = 'options') {
 Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
     if (_.has(obj, property) && !_.isInteger(obj[property])) {
         throw new Error(name + '.' + property + ' has to be an integer');
+    }
+};
+
+Utils.hasToBeIntOrNull = function hasToBeInt(obj, property, name = 'options') {
+    let value = obj[property];
+    if (!_.isInteger(value) && !_.isNull(value)) {
+        throw new Error(name + '.' + property + ' has to be an integer or null');
     }
 };
 

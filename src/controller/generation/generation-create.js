@@ -67,7 +67,7 @@ class GenerationCreate extends GenericCreate {
      *         options object which got passed to GenericCreate.create().
      */
     static buildQueryInsertParentsIfNeeded(context, options) {
-    // No parents, nothing to do
+        // No parents, nothing to do
         if (_.isEmpty(options.generationParents)) return;
 
         // for every plant we have to insert a own row.
@@ -130,8 +130,9 @@ class GenerationCreate extends GenericCreate {
      *         in this case. Other errors should only be unexpected sqlite errors.
      */
     static async executeQueryInsertParentsIfNeeded(context, options) {
-    // If we don't have a query, do nothing
+        // If we don't have a query, do nothing
         if (_.isUndefined(context.queryInsertParents)) return;
+
         try {
             await sqlite.get(context.queryInsertParents);
         } catch (err) {

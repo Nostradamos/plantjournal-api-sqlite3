@@ -84,7 +84,8 @@ describe('CONSTANTS', function() {
                     'plantClonedFrom',
                     'plantSex',
                     'plantDescription',
-                    'genotypeId'
+                    'genotypeId',
+                    'mediumId'
                 ]
             );
         });

@@ -5,7 +5,7 @@ require('should');
 const plantJournal = require('../../../src/pj');
 const sqlite = require('sqlite');
 
-describe('Generation()', function() {
+describe('Medium()', function() {
     describe('#create()', function() {
         let pj;
 
@@ -30,15 +30,9 @@ describe('Generation()', function() {
                 .should.be.rejectedWith('options.mediumDescription has to be a string');
         });
 
-        it('should throw error if options.environmentId is not set', async function() {
-            await pj.Medium.create({'mediumName': 'testMedium1', 'mediumDescription': '123'})
-                .should.be.rejectedWith('options.environmentId has to be set');
-
-        });
-
         it('should throw error if options.environmentId is not an int', async function() {
-            await pj.Medium.create({'environmentId': null, 'mediumName': 'testMedium1', 'mediumDescription': '123'})
-                .should.be.rejectedWith('options.environmentId has to be an integer');
+            await pj.Medium.create({'environmentId': '123', 'mediumName': 'testMedium1', 'mediumDescription': '123'})
+                .should.be.rejectedWith('options.environmentId has to be an integer or null');
         });
 
         it('should throw error if options.environmentId doesn\'t reference existing environment', async function() {
@@ -49,7 +43,9 @@ describe('Generation()', function() {
         it('should create a new generations entry and return generation object', async function() {
             let medium = await pj.Medium.create(
                 {'environmentId': 1, 'mediumName': 'testMedium', 'mediumDescription': 'This is a test'});
-            let [createdAt, modifiedAt] = [medium.mediums[1].mediumCreatedAt, medium.mediums[1].mediumModifiedAt];
+            let [createdAt, modifiedAt] = [
+                medium.mediums[1].mediumCreatedAt,
+                medium.mediums[1].mediumModifiedAt];
 
             createdAt.should.eql(modifiedAt);
 
@@ -66,9 +62,7 @@ describe('Generation()', function() {
                 }
             });
 
-            let rows = await sqlite.all(
-                `SELECT * FROM mediums`);
-
+            let rows = await sqlite.all(`SELECT * FROM mediums`);
             medium.mediums[1].should.containDeep(rows[0]);
         });
     });

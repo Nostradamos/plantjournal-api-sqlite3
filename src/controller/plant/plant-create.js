@@ -36,6 +36,7 @@ class PlantCreate extends GenericCreate {
         Utils.hasToBeInt(options, 'plantClonedFrom');
         Utils.hasToBeInt(options, 'genotypeId');
         Utils.hasToBeInt(options, 'generationId');
+        Utils.hasToBeInt(options, 'environmentId');
 
         // Either generationId or genotypeId has to be set.
         if (!_.has(options, 'generationId') &&
@@ -216,7 +217,8 @@ PlantCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_PLANT;
 PlantCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_PLANT;
 
 PlantCreate.DEFAULT_VALUES_ATTRIBUTES = {
-    [CONSTANTS.ATTR_DESCRIPTION_PLANT]: ''
+    [CONSTANTS.ATTR_DESCRIPTION_PLANT]: '',
+    [CONSTANTS.ATTR_ID_MEDIUM]: null
 };
 
 PlantCreate.PLURAL = CONSTANTS.PLURAL_PLANT;

@@ -109,7 +109,8 @@ describe('Plant()', function() {
                         'plantDescription': 'we found this plant in the backyard of our grandma',
                         'plantCreatedAt': createdAt,
                         'plantModifiedAt': modifiedAt,
-                        'genotypeId': 1
+                        'genotypeId': 1,
+                        'mediumId': null
                     }
                 }
             });
@@ -160,9 +161,10 @@ describe('Plant()', function() {
                         'plantClonedFrom': null,
                         'plantSex': null,
                         'plantDescription': '',
-                        'genotypeId': 2,
                         'plantCreatedAt': createdAtPlant,
-                        'plantModifiedAt': modifiedAtPlant
+                        'plantModifiedAt': modifiedAtPlant,
+                        'genotypeId': 2,
+                        'mediumId': null
                     }
                 }
             });
@@ -182,9 +184,10 @@ describe('Plant()', function() {
                         'plantClonedFrom': 1,
                         'plantSex': null,
                         'plantDescription': '',
-                        'genotypeId': 1,
                         'plantCreatedAt': createdAtClone,
-                        'plantModifiedAt': modifiedAtClone
+                        'plantModifiedAt': modifiedAtClone,
+                        'genotypeId': 1,
+                        'mediumId': null
                     }
                 }
             });

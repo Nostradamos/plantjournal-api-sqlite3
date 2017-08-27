@@ -57,6 +57,8 @@ class PlantFind extends GenericFind {
             Utils.addGenotypeFromRowToReturnObject(row, returnObject, criteria);
             Utils.addGenerationFromRowToReturnObject(row, returnObject, criteria);
             Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria);
+            Utils.addMediumFromRowToReturnObject(row, returnObject, criteria);
+            Utils.addEnvironmentFromRowToReturnObject(row, returnObject, criteria);
         });
 
         Utils.deleteEmptyProperties(
@@ -77,7 +79,8 @@ PlantFind.DEFAULT_FIELDS = [
     'plants.plantId',
     'genotypes.genotypeId',
     'generations.generationId',
-    'families.familyId'
+    'families.familyId',
+    'mediums.mediumId'
 ];
 
 PlantFind.COUNT = 'DISTINCT plants.plantId';

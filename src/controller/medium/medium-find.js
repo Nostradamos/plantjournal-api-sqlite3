@@ -4,10 +4,24 @@ const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
 
 const GenericFind = require('../generic/generic-find');
 
-class EnvironmentFind extends GenericFind {
+class MediumFind extends GenericFind {
+    /**
+     * We need to join families table, so that we can for example also find
+     * generations based on their family name.
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to find()
+     */
+    static setQueryWhereJoin(context, criteria) {
+        // Joins families, and because of the true flag also generation_parents.
+        QueryUtils.joinRelatedMediums(context.queryWhere, true);
+    }
+
     /**
      * We need to overwrite this method to, yeah, build the returnObject. We
      * basically iterate over each row we get from database and add all
@@ -22,16 +36,24 @@ class EnvironmentFind extends GenericFind {
     static buildReturnObjectWhere(returnObject, context, criteria) {
         // build families object
         returnObject.environments =  {};
+        returnObject.mediums = {};
         _.each(context.rowsWhere, function(row) {
+            Utils.addMediumFromRowToReturnObject(row, returnObject);
             Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
         });
     }
 }
 
-EnvironmentFind.TABLE = CONSTANTS.TABLE_ENVIRONMENTS;
+MediumFind.TABLE = CONSTANTS.TABLE_MEDIUMS;
 
-EnvironmentFind.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
+MediumFind.ATTR_ID = CONSTANTS.ATTR_ID_MEDIUM;
 
-EnvironmentFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT;
+MediumFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_MEDIUM;
 
-module.exports = EnvironmentFind;
+MediumFind.OVERWRITE_TABLE_LOOKUP = {
+    [CONSTANTS.ATTR_ID_ENVIRONMENT]: CONSTANTS.TABLE_MEDIUMS
+};
+
+console.log(MediumFind.ATTRIBUTES_SEARCHABLE);
+
+module.exports = MediumFind;

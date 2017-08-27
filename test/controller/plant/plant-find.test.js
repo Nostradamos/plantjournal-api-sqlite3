@@ -45,6 +45,7 @@ describe('Plant()', function() {
                             'plantClonedFrom': null,
                             'plantSex': null,
                             'genotypeId': 1,
+                            'mediumId': null,
                             'generationId': 1,
                             'familyId': 1
                         },
@@ -54,6 +55,7 @@ describe('Plant()', function() {
                             'plantClonedFrom': null,
                             'plantSex': 'male',
                             'genotypeId': 2,
+                            'mediumId': null,
                             'generationId': 2,
                             'familyId': 1
                         },
@@ -63,6 +65,7 @@ describe('Plant()', function() {
                             'plantClonedFrom': null,
                             'plantSex': 'male',
                             'genotypeId': 3,
+                            'mediumId': null,
                             'generationId': 3,
                             'familyId': 2
                         },
@@ -72,6 +75,7 @@ describe('Plant()', function() {
                             'plantClonedFrom': 3,
                             'plantSex': 'female',
                             'genotypeId': 3,
+                            'mediumId': null,
                             'generationId': 3,
                             'familyId': 2
                         },
@@ -81,6 +85,7 @@ describe('Plant()', function() {
                             'plantClonedFrom': null,
                             'plantSex': null,
                             'genotypeId': 4,
+                            'mediumId': null,
                             'generationId': 4,
                             'familyId': 2
                         }
@@ -189,7 +194,7 @@ describe('Plant()', function() {
         it('should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1', async function() {
             let plants = await pj.Plant.find({'offset': 2, 'limit': 1, 'attributes': ['plantName']});
 
-            plants.should.deepEqual({
+            plants.should.containDeep({
                 'found': 5,
                 'remaining': 2,
                 'plants': {
@@ -201,7 +206,7 @@ describe('Plant()', function() {
         it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)', async function() {
             let plants = await pj.Plant.find({'filter': {'plantName': 'testPlant3'}, 'attributes': ['plantId']});
 
-            plants.should.deepEqual({
+            plants.should.containDeep({
                 'found': 1,
                 'remaining': 0,
                 'plants': {
@@ -214,7 +219,7 @@ describe('Plant()', function() {
         it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async function() {
             let plants = await pj.Plant.find({'filter': {'genotypeName': 'testGenotype3'}, 'attributes': ['plantId']});
 
-            plants.should.deepEqual({
+            plants.should.containDeep({
                 'found': 2,
                 'remaining': 0,
                 'plants': {
@@ -230,7 +235,7 @@ describe('Plant()', function() {
                 'generationParents',
                 'generationName']});
 
-            plants.should.deepEqual({
+            plants.should.containDeep({
                 'found': 2,
                 'remaining': 0,
                 'plants': {
@@ -267,14 +272,15 @@ describe('Plant()', function() {
                         {'generationParents': [1,2],
                             '$or': {'generationParents': [1,3]}
                         },
-                    'attributes': ['plantId',
+                    'attributes': [
                         'plantName',
                         'generationParents',
-                        'generationName']
+                        'generationName',
+                    ]
                 }
             );
 
-            plants.should.deepEqual({
+            plants.should.containDeep({
                 'found': 3,
                 'remaining': 0,
                 'plants': {
@@ -283,7 +289,7 @@ describe('Plant()', function() {
                         'plantName': 'testPlant3',
                         'genotypeId': 3,
                         'generationId': 3,
-                        'familyId': 2
+                        'familyId': 2,
                     },
                     '4': {
                         'plantId': 4,
