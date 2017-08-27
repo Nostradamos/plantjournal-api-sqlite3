@@ -100,11 +100,11 @@ describe('Genotype()', () => {
                 }
             );
             helperFunctions
-                .allGenotypesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
+                .allGenotypesShouldHaveCreatedAtAndModifiedAt(genotypes);
             helperFunctions
-                .allGenerationsShouldHaveCreatedAtAndModifiedAtFields(genotypes);
+                .allGenerationsShouldHaveCreatedAtAndModifiedAt(genotypes);
             helperFunctions
-                .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(genotypes);
+                .allFamiliesShouldHaveCreatedAtAndModifiedAt(genotypes);
         });
 
         it('should not have an empty families property object if familyName is NOT in options.attributes', async () => {

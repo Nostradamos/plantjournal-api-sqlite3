@@ -36,7 +36,7 @@ class FamilyFind extends GenericFind {
         // build families object
         returnObject.families =  {};
         _.each(context.rowsWhere, function(row) {
-            Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria, true);
+            Utils.addFamilyFromRowToReturnObject(row, returnObject, true);
         });
     }
 }

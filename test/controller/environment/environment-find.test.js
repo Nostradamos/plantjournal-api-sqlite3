@@ -2,7 +2,7 @@
 'use strict';
 
 const plantJournal = require('../../../src/pj');
-const helpers = require('../../helper-functions');
+const helperFunctions = require('../../helper-functions');
 
 require('should');
 
@@ -53,6 +53,9 @@ describe('Environment()', () => {
                     }
                 }
             });
+
+            helperFunctions
+                .allEnvironmentsShouldHaveCreatedAtAndModifiedAt(environments);
         });
     });
 });

@@ -56,6 +56,4 @@ MediumFind.OVERWRITE_TABLE_LOOKUP = {
     [CONSTANTS.ATTR_ID_ENVIRONMENT]: CONSTANTS.TABLE_MEDIUMS
 };
 
-console.log(MediumFind.ATTRIBUTES_SEARCHABLE);
-
 module.exports = MediumFind;

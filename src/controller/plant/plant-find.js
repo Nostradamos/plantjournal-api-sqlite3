@@ -53,12 +53,12 @@ class PlantFind extends GenericFind {
         returnObject.generations = {};
         returnObject.families = {};
         _.each(context.rowsWhere, function(row) {
-            Utils.addPlantFromRowToReturnObject(row, returnObject, criteria, true);
-            Utils.addGenotypeFromRowToReturnObject(row, returnObject, criteria);
-            Utils.addGenerationFromRowToReturnObject(row, returnObject, criteria);
-            Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria);
-            Utils.addMediumFromRowToReturnObject(row, returnObject, criteria);
-            Utils.addEnvironmentFromRowToReturnObject(row, returnObject, criteria);
+            Utils.addPlantFromRowToReturnObject(row, returnObject, true);
+            Utils.addGenotypeFromRowToReturnObject(row, returnObject);
+            Utils.addGenerationFromRowToReturnObject(row, returnObject);
+            Utils.addFamilyFromRowToReturnObject(row, returnObject);
+            Utils.addMediumFromRowToReturnObject(row, returnObject);
+            Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
         });
 
         Utils.deleteEmptyProperties(

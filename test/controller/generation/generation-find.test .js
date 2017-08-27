@@ -68,9 +68,9 @@ describe('Generation()', () => {
                 }
             });
             helpers
-                .allGenerationsShouldHaveCreatedAtAndModifiedAtFields(generations);
+                .allGenerationsShouldHaveCreatedAtAndModifiedAt(generations);
             helpers
-                .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(generations);
+                .allFamiliesShouldHaveCreatedAtAndModifiedAt(generations);
 
         });
 

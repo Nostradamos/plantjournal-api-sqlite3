@@ -22,7 +22,7 @@ let QueryUtils = exports;
  * @param {boolean} [joinGenerationParents=true]
  *        True if we want to join generationParents
  */
-QueryUtils.joinRelatedGenerations = function(queryObj, joinGenerationParents = true) {
+QueryUtils.joinRelatedGenerations = (queryObj, joinGenerationParents=true) => {
     if (joinGenerationParents === true) {
         QueryUtils.joinGenerationParentsFromGenerations(queryObj);
     }

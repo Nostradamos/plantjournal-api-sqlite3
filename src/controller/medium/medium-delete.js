@@ -4,6 +4,8 @@ const _ = require('lodash');
 
 const logger = require('../../logger');
 const CONSTANTS = require('../../constants');
+const Utils = require('../../utils');
+const QueryUtils = require('../../utils-query');
 
 const GenericDelete = require('../generic/generic-delete');
 
@@ -54,3 +56,9 @@ class MediumDelete extends GenericDelete {
         returnObject['plants'] = context.plantIdsToDelete;
     }
 }
+
+MediumDelete.TABLE = CONSTANTS.TABLE_MEDIUMS;
+
+MediumDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_MEDIUM;
+
+module.exports = MediumDelete;

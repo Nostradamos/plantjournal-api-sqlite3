@@ -79,7 +79,6 @@ describe('Generation()', () => {
             let rows = await sqlite.all(
                 `SELECT generationId, generationDescription, generationName,
                 familyId, generationCreatedAt, generationModifiedAt FROM generations`);
-            console.log(rows);
             generation.generations[1].should.containDeep(rows[0]);
         });
 

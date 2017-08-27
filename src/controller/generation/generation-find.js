@@ -48,8 +48,8 @@ class GenerationFind extends GenericFind {
         returnObject.generations = {};
 
         _.each(context.rowsWhere, function(row) {
-            Utils.addGenerationFromRowToReturnObject(row, returnObject, criteria, true);
-            Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria);
+            Utils.addGenerationFromRowToReturnObject(row, returnObject, true);
+            Utils.addFamilyFromRowToReturnObject(row, returnObject);
         });
 
         // We could use Utils.deleteEmptyProperties() but this is maybe more performant.

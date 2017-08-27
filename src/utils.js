@@ -15,11 +15,13 @@ let Utils = exports;
  * Mutates obj to only contain non empty properties. You can limit it with
  * limitTo to specific properties.
  *
- * @param  {object} obj      - [description]
- * @param  {array} [limitTo] - Array of properties. If this is set, function
- *                             will only delete empty properties where key is
- *                             defined in this array.
- * @return {object}          - returns obj again (also mutates obj)
+ * @param  {object} obj
+ *         Object to delete from
+ * @param  {array} [limitTo]
+ *         Array of properties. If this is set, function will only delete empty
+ *         properties where key is defined in this array.
+ * @return {object}
+ *         returns obj again (also mutates obj)
  */
 Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
     if (_.isEmpty(limitTo)) limitTo = _.keys(obj);
@@ -30,14 +32,19 @@ Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
 };
 
 /**
- * Adds to returnObject.families[row.familyId] the family object if row.familyName
- * is set. Mutates returnObject.
- * @param {object} row          - Row object from sqlite. row.familyId has to be set.
- * @param {object} returnObject - Object which will find returned from pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
- * @param {object} options      - options which got passed to the find function. For advanced use.
- * @param {bool}   [forceAdd=false] - adds to returnObject even if row.generatioName is not set.
+ * Adds to returnObject.families[row.familyId] the family object if
+ * row.familyName is set. Mutates returnObject.
+ * @param {object} row
+ *        Row object from sqlite. row.familyId has to be set.
+ * @param {object} returnObject
+ *        Object which will find returned from
+ *        pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
+ * @param {object} options
+ *        options which got passed to the find function. For advanced use.
+ * @param {bool}   [forceAdd=false]
+ *        adds to returnObject even if row.generatioName is not set.
  */
-Utils.addFamilyFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
+Utils.addFamilyFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let familyId = row.familyId;
     let family = {};
 
@@ -51,16 +58,22 @@ Utils.addFamilyFromRowToReturnObject = function(row, returnObject, options, forc
 };
 
 /**
- * Adds to returnObject.generations[row.generationId] the generation object if at least one of
- * [row.generationName, row.generationParents] is set.
- * Generation Object holds all information in row which are important for generation.
+ * Adds to returnObject.generations[row.generationId] the generation object if
+ * at least one of [row.generationName, row.generationParents] is set.
+ * Generation Object holds all information in row which are important for
+ * generation.
  * Mutates returnObject.
- * @param {object} row              - Row object from sqlite. row.{generationId|familyId} have to be set.
- * @param {object} returnObject     - Object which will find returned from pj.{Plant|Plant|Generation|...|Family}.find. Gets mutated.
- * @param {object} options          - options which got passed to the find function. For advanced use.
- * @param {bool}   [forceAdd=false] - adds to returnObject even if row.generatioName is not set.
+ * @param {object} row
+ *        Row object from sqlite. row.{generationId|familyId} have to be set.
+ * @param {object} returnObject
+ *        Object which will find returned from pj.{Plant|Plant|...|Family}.find.
+ *        Gets mutated.
+ * @param {object} options
+ *        options which got passed to the find function. For advanced use.
+ * @param {bool}   [forceAdd=false]
+ *        adds to returnObject even if row.generatioName is not set.
  */
-Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options, forceAdd) {
+Utils.addGenerationFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let generationId = row.generationId;
     let generation = {
         'familyId': row.familyId
@@ -69,30 +82,41 @@ Utils.addGenerationFromRowToReturnObject = function (row, returnObject, options,
     _.each(CONSTANTS.ALL_ATTRIBUTES_GENERATION, function(attr) {
         if (_.has(row, attr)) {
             let rowattr = row[attr];
-            // if we have row.generationParents and it's null, set an empty array [], else split it into an array
-            // and cast every element to an integer
+            // if we have row.generationParents and it's null, set an empty
+            // array [], else split it into an array and cast every element to
+            // an integer
 
             if (attr === 'generationParents') {
-                rowattr = rowattr === null ? [] : _(rowattr).split(',').map(_.toInteger).value();
+                if(rowattr === null) {
+                    rowattr = [];
+                } else {
+                    rowattr =  _(rowattr).split(',').map(_.toInteger).value();
+                }
             }
             generation[attr] = rowattr;
         }
     });
-    // Make sure that we only add it returnObject if we not only have generationId and familyId set.
+    // Make sure that we only add it returnObject if we not only have
+    // generationId and familyId set.
     if (forceAdd === true || _.size(generation) > 2)
         returnObject.generations[generationId] = generation;
 };
 
 /**
- * Adds to returnObject.genotypes[row.genotypeId] the genotype object if row.genotypeName
- * is set. Genotype Object holds all information available in row which are important for genotype.
+ * Adds to returnObject.genotypes[row.genotypeId] the genotype object if
+ * row.genotypeName is set. Genotype Object holds all information available in
+ * row which are important for genotype.
  * Mutates returnObject.
- * @param {object} row          - Row object from sqlite. row.{genotypeId|generationId|familyId} have to be set.
- * @param {object} returnObject - Object which will find returned from pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
- * @param {object} options      - options which got passed to the find function. For advanced use.
- * @param {bool}   [forceAdd=false]     - adds to returnObject even if row.generatioName is not set.
+ * @param {object} row
+ *        Row object from sqlite.
+ *        row.{genotypeId|generationId|familyId} have to be set.
+ * @param {object} returnObject
+ *        Object which will find returned from
+ *        pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
+ * @param {bool}   [forceAdd=false]
+ *        adds to returnObject even if row.generatioName is not set.
  */
-Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObject(row, returnObject, options, forceAdd) {
+Utils.addGenotypeFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let genotypeId = row.genotypeId;
     let genotype = {
         'generationId': row.generationId,
@@ -108,14 +132,18 @@ Utils.addGenotypeFromRowToReturnObject = function addGenotypeFromRowToReturnObje
 
 /**
  * Adds to returnObject.plants[row.plantId] the plant object if row.plantName
- * is set. Plant Object holds all information available in row which are important for plant.
- * Mutates returnObject.
- * @param {object} row          - Row object from sqlite. row.{plantId|genotypeId|generationId|familyId} have to be set.
- * @param {object} returnObject - Object which will find returned from pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
- * @param {object} options      - options which got passed to the find function. For advanced use.
- * @param {bool}   [forceAdd=false] - adds to returnObject even if row.generatioName is not set.
+ * is set. Plant Object holds all information available in row which are
+ * important for plant. Mutates returnObject.
+ * @param {object} row
+ *        Row object from sqlite.
+ *        row.{plantId|genotypeId|generationId|familyId} have to be set.
+ * @param {object} returnObject
+ *        Object which will find returned from
+ *        pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
+ * @param {bool}   [forceAdd=false]
+ *        adds to returnObject even if row.generatioName is not set.
  */
-Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row, returnObject, options, forceAdd) {
+Utils.addPlantFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let plantId = row.plantId;
 
     let plant = {
@@ -141,12 +169,10 @@ Utils.addPlantFromRowToReturnObject = function addPlantFromRowToReturnObject(row
  *        Row object from sqlite. row.{environmentId} have to be set.
  * @param {object} returnObject
  *        Object which will contain information about found models.
- * @param {object} options
- *        options which got passed to the find function. For advanced use.
  * @param {bool}   [forceAdd=false]
  *        adds to returnObject even if row.generatioName is not set.
  */
-Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
+Utils.addEnvironmentFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let environmentId = row.environmentId;
 
     if(_.isUndefined(environmentId) || _.isNull(environmentId))
@@ -173,7 +199,7 @@ Utils.addEnvironmentFromRowToReturnObject = function(row, returnObject, options,
  * @param {bool}   [forceAdd=false]
  *        adds to returnObject even if row.generatioName is not set.
  */
-Utils.addMediumFromRowToReturnObject = function(row, returnObject, options, forceAdd) {
+Utils.addMediumFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let mediumId = row.mediumId;
     let medium = {
         'environmentId': row.environmentId
@@ -215,16 +241,20 @@ Utils.addNeededFromRowToLogReturnObject = function(row, returnObject,
 
 /**
  * Adds to returnObject found and remaining count. Mutates returnObject.
-* @param {object}  count        - Count object. Should be sqlite result.
-* @param {integer} count.count  - How many records could be found for this
-                                  request?
-* @param {integer} lenRows      - how many records got grabbed in this request?
-* @param {object}  returnObject - Object which will find returned from
-                                  pj.{Plant|Plant|Generation|...|Famiy}.find.
-                                  Gets mutated.
-* @param {object}  options      - options which got passed to the find function.
+* @param {object}  count
+*        Count object. Should be sqlite result.
+* @param {integer} count.count
+*        How many records could be found for this request?
+* @param {integer} lenRows
+*        how many records got grabbed in this request?
+* @param {object}  returnObject
+*        Object which will find returned from
+*        pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
+* @param {object}  options
+*        options which got passed to the find function.
 */
-Utils.addFoundAndRemainingFromCountToReturnObject = function addFoundAndRemainingFromCountToReturnObject(count, lenRows, returnObject, options) {
+Utils.addFoundAndRemainingFromCountToReturnObject =
+function (count, lenRows, returnObject, options) {
     let c = count['count'];
 
     returnObject['found'] = c;
@@ -234,10 +264,12 @@ Utils.addFoundAndRemainingFromCountToReturnObject = function addFoundAndRemainin
 /**
  * Make sure obj is an assoc array/object with key/value pairs.
  * If not, throws an error.
- * @param  {Object}  obj                       - Object to check
- * @param  {String}  [prefix='First argument'] - Name of object for error message.
+ * @param  {Object}  obj
+ *         Object to check
+ * @param  {String}  [prefix='First argument']
+ *         Name of object for error message.
  */
-Utils.hasToBeAssocArray = function hasToBeAssocArray(obj, prefix = 'First argument') {
+Utils.hasToBeAssocArray = function (obj, prefix = 'First argument') {
     if (!_.isObjectLike(obj) || _.isArray(obj)) {
         throw new Error(prefix + ' has to be an associative array');
     }
@@ -274,7 +306,8 @@ Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
 Utils.hasToBeIntOrNull = function hasToBeInt(obj, property, name = 'options') {
     let value = obj[property];
     if (!_.isInteger(value) && !_.isNull(value)) {
-        throw new Error(name + '.' + property + ' has to be an integer or null');
+        throw new Error(
+            name + '.' + property + ' has to be an integer or null');
     }
 };
 
@@ -287,9 +320,12 @@ Utils.hasToBeIntOrNull = function hasToBeInt(obj, property, name = 'options') {
  * @param  {String}  [name='options'] - In case of an error, how to name the
  *                                      Object? Defaults to options.
  */
-Utils.hasToBeIntArray = function hasToBeIntArray(obj, property, name = 'options') {
-    if (_.has(obj, property) && (!_.isArray(obj[property]) || !_.every(obj[property], _.isInteger))) {
-        throw new Error(name + '.' + property + ' has to be an array of integers');
+Utils.hasToBeIntArray = function (obj, property, name = 'options') {
+    let value = obj[property];
+    if(_.isUndefined(value)) return;
+    if (!_.isArray(value) || !_.every(value, _.isInteger)) {
+        throw new Error(
+            name + '.' + property + ' has to be an array of integers');
     }
 };
 

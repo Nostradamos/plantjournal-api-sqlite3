@@ -187,6 +187,17 @@ ToDo
 Development Notes/Coding Style
 ==============================
 
-* Always use explicit column names (explicit => including table name) in your queries as soon as you query to different tables. Why? Because for all foreign keys we use the same column name in source and destination table. SQLite can't know which table you mean, so we just use explicit column names for everything. Eg: `generations.familyId` references `families.familyId`.
+* Always use explicit column names (explicit => including table name) in your
+  queries as soon as you join different tables. Why? Because for all 
+  foreign keys we use the same column name in source and destination table.
+  SQLite can't know which table you mean, so we just use explicit column names
+  for everything. Eg: `generations.familyId` references `families.familyId`.
 
-* Try to use CONSTANTS wherever you can, especially for attributes. This makes it easier to change the attribute or variable names and reduces the risk of misspelling any constant.
+* Try to use CONSTANTS wherever you can, especially for attributes. This makes
+  it easier to change the attribute or variable names and reduces the risk of 
+  misspelling any constant, because we throw an error if you try to read an
+  undefined property from constants (thanks to es6 proxies and zealot).
+
+* Use lamda expression for all anonymous functions. For named functions (also 
+  assigned functions) use `function()` style. If the shorted lamda expression 
+  allows you to fit max line length for named functions, feel free to use it.

@@ -150,13 +150,13 @@ describe('Plant()', () => {
             );
 
             helpers
-                .allPlantsShouldHaveCreatedAtAndModifiedAtFields(plants);
+                .allPlantsShouldHaveCreatedAtAndModifiedAt(plants);
             helpers
-                .allGenotypesShouldHaveCreatedAtAndModifiedAtFields(plants);
+                .allGenotypesShouldHaveCreatedAtAndModifiedAt(plants);
             helpers
-                .allGenerationsShouldHaveCreatedAtAndModifiedAtFields(plants);
+                .allGenerationsShouldHaveCreatedAtAndModifiedAt(plants);
             helpers
-                .allFamiliesShouldHaveCreatedAtAndModifiedAtFields(plants);
+                .allFamiliesShouldHaveCreatedAtAndModifiedAt(plants);
         });
 
         it('should not have an empty families property object if familyName is NOT in options.attributes', async () => {

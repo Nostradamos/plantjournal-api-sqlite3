@@ -68,6 +68,11 @@ describe('Medium()', () => {
                     }
                 }
             );
+
+            helperFunctions
+                .allMediumsShouldHaveCreatedAtAndModifiedAt(mediums);
+            helperFunctions
+                .allEnvironmentsShouldHaveCreatedAtAndModifiedAt(mediums);
         });
 
         it('should skip first medium with criteria.offset = 1', async () => {

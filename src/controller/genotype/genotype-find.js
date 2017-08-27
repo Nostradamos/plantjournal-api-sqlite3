@@ -50,9 +50,9 @@ class GenotypeFind extends GenericFind {
         returnObject.generations = {};
         returnObject.families = {};
         _.each(context.rowsWhere, function(row) {
-            Utils.addGenotypeFromRowToReturnObject(row, returnObject, criteria, true);
-            Utils.addGenerationFromRowToReturnObject(row, returnObject, criteria);
-            Utils.addFamilyFromRowToReturnObject(row, returnObject, criteria);
+            Utils.addGenotypeFromRowToReturnObject(row, returnObject, true);
+            Utils.addGenerationFromRowToReturnObject(row, returnObject);
+            Utils.addFamilyFromRowToReturnObject(row, returnObject);
         });
         Utils.deleteEmptyProperties(returnObject, ['families', 'generations']);
     }

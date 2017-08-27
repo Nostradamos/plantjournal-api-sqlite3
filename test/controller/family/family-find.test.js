@@ -32,7 +32,7 @@ describe('Family()', () => {
                     '4': { familyId: 4, familyName: 'testD' }
                 }
             });
-            helpers.allFamiliesShouldHaveCreatedAtAndModifiedAtFields(families);
+            helpers.allFamiliesShouldHaveCreatedAtAndModifiedAt(families);
         });
 
         it('should only return the first two families if options.limit=2', async () => {
