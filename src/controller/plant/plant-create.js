@@ -59,12 +59,12 @@ class PlantCreate extends GenericCreate {
     }
 
     /**
-   * We need to set some attributes for query.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
+     * We need to set some attributes for query.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     */
     static setQueryFields(context, options) {
         super.setQueryFields(context, options);
         context.query
@@ -72,20 +72,20 @@ class PlantCreate extends GenericCreate {
     }
 
     /**
-    * If needed (options.genotypId is not set) we need to create a new genotype
-    * (if options.plantClonedFrom is also unset) or resolve it from the plant
-    * with the plantClonedFrom id. The created or resolved genotypeId will
-    * be in context.genotypeId. Also if options.genotyeId is set, we will set
-    * context.genotypeId to the one from options.genotypeId.
-    * @async
-    * @param  {object} context
-    *         internal context object in #create().
-    * @param  {object} options
-    *         options object which got passed to GenericCreate.create().
-    * @throws {Error}
-    *         Throws error if we can't resolve genotypeId, because
-    *         Or if sqlite throws an unexpected error.
-    */
+     * If needed (options.genotypId is not set) we need to create a new genotype
+     * (if options.plantClonedFrom is also unset) or resolve it from the plant
+     * with the plantClonedFrom id. The created or resolved genotypeId will
+     * be in context.genotypeId. Also if options.genotyeId is set, we will set
+     * context.genotypeId to the one from options.genotypeId.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         Throws error if we can't resolve genotypeId, because
+     *         Or if sqlite throws an unexpected error.
+     */
     static async createGenotypeOrResolveGenotypeIdIfNeeded(context, options) {
         if (_.isUndefined(context.genotypeId) && _.isUndefined(options.plantClonedFrom)) {
             // If neither genotypeId nor plantClonedFrom is set, we want to create a new genotypeId
@@ -126,21 +126,21 @@ class PlantCreate extends GenericCreate {
     }
 
     /**
-   * Executes the inserting of plant and throws custom error if genotypeId
-   * reference fails.
-   * We need to execute context.query with a paramater for genotypeId, so can't
-   * use GenericCreate.executeQuery(). Besides this, we want to execute a
-   * rollback command if insertion fails. It's possible that we created a
-   * genotype before for this plant, so undo that.
-   * @async
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         We throw an error if reference for genotype fails. Otherwise
-   *         we will give back all other unexpected errors.
-   */
+     * Executes the inserting of plant and throws custom error if genotypeId
+     * reference fails.
+     * We need to execute context.query with a paramater for genotypeId, so can't
+     * use GenericCreate.executeQuery(). Besides this, we want to execute a
+     * rollback command if insertion fails. It's possible that we created a
+     * genotype before for this plant, so undo that.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         We throw an error if reference for genotype fails. Otherwise
+     *         we will give back all other unexpected errors.
+     */
     static async executeQueryInsertPlant(context, options) {
         try {
             context.result = await sqlite.run(context.query, {'$genotypeId': context.genotypeId});
@@ -158,18 +158,18 @@ class PlantCreate extends GenericCreate {
     }
 
     /**
-   * It's possible we need to create a genotype for this plant. If this is the
-   * case we have to create genotype before plant. To undo the insert of
-   * genotype if shit happens, we need to do this in a transaction.
-   * @async
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         Any errors from #createGenotypeOrResolveGenotypeIdIfNeeded() or
-   *         #executeQueryInsertPlant() or unexpected sqlite errors.
-   */
+     * It's possible we need to create a genotype for this plant. If this is the
+     * case we have to create genotype before plant. To undo the insert of
+     * genotype if shit happens, we need to do this in a transaction.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         Any errors from #createGenotypeOrResolveGenotypeIdIfNeeded() or
+     *         #executeQueryInsertPlant() or unexpected sqlite errors.
+     */
     static async executeQuery(context, options) {
         await sqlite.get('BEGIN');
 
@@ -185,15 +185,15 @@ class PlantCreate extends GenericCreate {
     }
 
     /**
-   * Build the Generation object which should get returned. just
-   * insert all info we have, this is enough.
-   * @param  {object} returnObject
-   *         object which will find returned from #create()
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
+     * Build the Generation object which should get returned. just
+     * insert all info we have, this is enough.
+     * @param  {object} returnObject
+     *         object which will find returned from #create()
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     */
     static buildReturnObject(returnObject, context, options) {
         super.buildReturnObject(returnObject, context, options);
 

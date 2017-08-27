@@ -21,24 +21,24 @@ const GenericDelete = require('../generic/generic-delete');
 class PlantDelete extends GenericDelete {
 
     /**
-   * We need to select plantId.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to delete()
-   */
+     * We need to select plantId.
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to delete()
+     */
     static setQueryRelatedFields(context, criteria) {
         context.queryRelated
             .field('plants.plantId');
     }
 
     /**
-   * Get all plantIds from rowsRelated.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to delete()
-   */
+     * Get all plantIds from rowsRelated.
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to delete()
+     */
     static extractIdsToDelete(context, criteria) {
     // It's very possible that we have the same model id's multiple
     // times in our rows, therefore we use Set() which makes sure each
@@ -58,27 +58,27 @@ class PlantDelete extends GenericDelete {
     }
 
     /**
-   * Set which plants should get deleted.
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to delete()
-   */
+     * Set which plants should get deleted.
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to delete()
+     */
     static setQueryDeleteWhere(context, criteria) {
         context.queryDelete
             .where('plants.plantId IN ?', context.plantIdsToDelete);
     }
 
     /**
-   * Apply deleted plantIds to returnObject['plants'].
-   * @param  {object} returnObject
-   *         returnObject, an empty assoc array which will get returned at the
-   *         end of #delete()
-   * @param  {object} context
-   *         Internal context object
-   * @param  {object} criteria
-   *         Criteria object passed to delete()
-   */
+     * Apply deleted plantIds to returnObject['plants'].
+     * @param  {object} returnObject
+     *         returnObject, an empty assoc array which will get returned at the
+     *         end of #delete()
+     * @param  {object} context
+     *         Internal context object
+     * @param  {object} criteria
+     *         Criteria object passed to delete()
+     */
     static buildReturnObject(returnObject, context, criteria) {
         returnObject['plants'] = context.plantIdsToDelete;
     }

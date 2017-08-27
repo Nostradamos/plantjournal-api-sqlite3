@@ -18,14 +18,14 @@ const GenericCreate = require('../generic/generic-create');
 class FamilyCreate extends GenericCreate {
 
     /**
-   * We need to validate the options.familyName property and throw
-   * Error if we don't accept the input.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   */
+     * We need to validate the options.familyName property and throw
+     * Error if we don't accept the input.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     */
     static validateOptions(context, options) {
         Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_FAMILY);
         Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_FAMILY);

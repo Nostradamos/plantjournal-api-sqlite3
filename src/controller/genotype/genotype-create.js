@@ -18,14 +18,14 @@ const GenericCreate = require('../generic/generic-create');
 class GenotypeCreate extends GenericCreate {
 
     /**
-   * We need to validate input and throw errors if we're
-   * unhappy with it.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   */
+     * We need to validate input and throw errors if we're
+     * unhappy with it.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     */
     static validateOptions(context, options) {
         Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
         Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_GENERATION);
@@ -33,17 +33,17 @@ class GenotypeCreate extends GenericCreate {
     }
 
     /**
-   * We want to catch foreign key error to custom throw error that genotype
-   * reference failed.
-   * @async
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         If generationId reference fails we will throw custom error,
-   *         everything else should be a sqlite error.
-   */
+     * We want to catch foreign key error to custom throw error that genotype
+     * reference failed.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         If generationId reference fails we will throw custom error,
+     *         everything else should be a sqlite error.
+     */
     static async executeQuery(context, options) {
         try {
             await super.executeQuery(context, options);
