@@ -15,27 +15,53 @@ class MediumCreate extends GenericCreate {
      * @throws {Error}
      */
     static validateOptions(context, options) {
-        Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_Medium);
-        Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_Medium);
-        Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_Medium);
+        Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_MEDIUM);
+        Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_MEDIUM);
+        Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_MEDIUM);
+        Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_ENVIRONMENT);
+        Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_ENVIRONMENT);
+    }
+
+
+    /**
+     * We need to catch foreig key constraing failed error to throw our
+     * own error.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         Will throw error if options.familyId does not reference an
+     *         existing family.
+     */
+    static async executeQuery(context, options) {
+        try {
+            await super.executeQuery(context, options);
+        } catch(err) {
+            if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+                throw new Error('options.environmentId does not reference an existing environment');
+            }
+            throw err;
+        }
     }
 }
 
-MediumCreate.TABLE = CONSTANTS.TABLE_MediumS;
+MediumCreate.TABLE = CONSTANTS.TABLE_MEDIUMS;
 
-MediumCreate.ATTR_ID = CONSTANTS.ATTR_ID_Medium;
+MediumCreate.ATTR_ID = CONSTANTS.ATTR_ID_MEDIUM;
 
-MediumCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_Medium;
+MediumCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_MEDIUM;
 
-MediumCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_Medium;
+MediumCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_MEDIUM;
 
-MediumCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_Medium;
+MediumCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_MEDIUM;
 
 MediumCreate.DEFAULT_VALUES_ATTRIBUTES = {
-    [CONSTANTS.ATTR_DESCRIPTION_Medium]: ''
+    [CONSTANTS.ATTR_DESCRIPTION_MEDIUM]: ''
 };
 
-MediumCreate.PLURAL = CONSTANTS.PLURAL_Medium;
+MediumCreate.PLURAL = CONSTANTS.PLURAL_MEDIUM;
 
 
 module.exports = MediumCreate;

@@ -252,7 +252,7 @@ class GenericUpdate {
    * Sets where part for which ids to update.
    * Uses context.idsToUpdate.
    * @param  {object} context   - Internal context object
-   * @param  {object} update    - Updated object passed to update()
+     * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
    */
     static setQueryUpdateWhere(context, update, criteria) {

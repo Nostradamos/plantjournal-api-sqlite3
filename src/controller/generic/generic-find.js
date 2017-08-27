@@ -274,7 +274,7 @@ class GenericFind {
     /**
    * Executes queryWhere and queryCount in parallel and puts the results
    * in context.rowsWhere and context.rowCount (mind the missing s on rowCount).
-   * You shouldn't need to overwrite this method if you don't rename the
+     * You shouldn't need to overwrite this method if you don't rename the
    * queries.
    * @async
    * @param  {object} context

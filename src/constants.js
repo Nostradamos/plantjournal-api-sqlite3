@@ -1,12 +1,17 @@
 'use strict';
 
 const _ = require('lodash');
+const zealit = require('zealit');
 
 /**
  * @namespace CONSTANTS
  * @private
  */
-const CONSTANTS = exports;
+
+// Zealit uses es6 proxies to throw an error if we try to read
+// an undefined property from CONSTANTS
+// @ToDo: only do this when running tests?!
+const CONSTANTS = zealit({});
 
 // Table names for database.
 CONSTANTS.TABLE_FAMILIES = 'families';
@@ -228,3 +233,5 @@ CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT = CONSTANTS.ALL_ATTRIBUTES_ENVIRONMENT;
 CONSTANTS.RELATED_ATTRIBUTES_MEDIUM = _(CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT)
     .concat(CONSTANTS.ALL_ATTRIBUTES_MEDIUM)
     .uniq().value();
+
+module.exports = CONSTANTS;

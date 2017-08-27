@@ -23,14 +23,14 @@ const GenericCreate = require('../generic/generic-create');
 class GenerationCreate extends GenericCreate {
 
     /**
-   * We need to validate input and throw errors if we're unhappy with it.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         Throws error if we are unhappy with the options object.
-   */
+     * We need to validate input and throw errors if we're unhappy with it.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         Throws error if we are unhappy with the options object.
+     */
     static validateOptions(context, options) {
         Utils.hasToBeSet(options, 'generationName');
         Utils.hasToBeString(options, 'generationName');
@@ -41,12 +41,12 @@ class GenerationCreate extends GenericCreate {
     }
 
     /**
-   * We need to set some attributes for query.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
+     * We need to set some attributes for query.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     */
     static setQueryFields(context, options) {
         context.query
             .set('generationId', null)
@@ -55,16 +55,16 @@ class GenerationCreate extends GenericCreate {
     }
 
     /**
-   * If we have generationParents in options, we need to  build a second query
-   * to insert parents into the generation_parents table. Query will be in
-   * context.queryInsertParents. We won't execute query, for this see
-   * #executeQueryInsertGeneration().
-   * This method is NOT part of GenericCreate but specific to GenerationCreate.
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   */
+     * If we have generationParents in options, we need to  build a second query
+     * to insert parents into the generation_parents table. Query will be in
+     * context.queryInsertParents. We won't execute query, for this see
+     * #executeQueryInsertGeneration().
+     * This method is NOT part of GenericCreate but specific to GenerationCreate.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     */
     static buildQueryInsertParentsIfNeeded(context, options) {
     // No parents, nothing to do
         if (_.isEmpty(options.generationParents)) return;
@@ -85,19 +85,19 @@ class GenerationCreate extends GenericCreate {
     }
 
     /**
-   * This function will execute the generation insert. This function won't
-   * insert an parents, only generation. Basically wraps around
-   * GenericCreate.create() to catch foreign key error.
-   * This method is NOT part of GenericCreate but specific to GenerationCreate.
-   * @async
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         Will throw error if options.familyId does not reference an
-   *         existing family.
-   */
+     * This function will execute the generation insert. This function won't
+     * insert any parents, only generation. Basically wraps around
+     * GenericCreate.create() to catch foreign key error.
+     * This method is NOT part of GenericCreate but specific to GenerationCreate.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         Will throw error if options.familyId does not reference an
+     *         existing family.
+     */
     static async executeQueryInsertGeneration(context, options) {
         try {
             await super.executeQuery(context, options);
@@ -113,21 +113,21 @@ class GenerationCreate extends GenericCreate {
     }
 
     /**
-   * If needed, this method will execute the query to insert the generation
-   * parents. Generation has to be inserted before! Will rollback if this
-   * fails.
-   * This method is NOT part of GenericCreate but specific to GenerationCreate.
-   * @async
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         We hope generationId is valid (because we created it before in
-   *         #executeQueryInsertGeneration()) so we can assume if get a foreign
-   *         key error, it's because of familyId. We will throw a custom error
-   *         in this case. Other errors should only be unexpected sqlite errors.
-   */
+     * If needed, this method will execute the query to insert the generation
+     * parents. Generation has to be inserted before! Will rollback if this
+     * fails.
+     * This method is NOT part of GenericCreate but specific to GenerationCreate.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         We hope generationId is valid (because we created it before in
+     *         #executeQueryInsertGeneration()) so we can assume if get a foreign
+     *         key error, it's because of familyId. We will throw a custom error
+     *         in this case. Other errors should only be unexpected sqlite errors.
+     */
     static async executeQueryInsertParentsIfNeeded(context, options) {
     // If we don't have a query, do nothing
         if (_.isUndefined(context.queryInsertParents)) return;
@@ -144,18 +144,18 @@ class GenerationCreate extends GenericCreate {
     }
 
     /**
-   * Because we have to generation and generation parents seperately, we want
-   * to do this in a transaction so we can rollback if the second executed
-   * query fails and no generation will be inserted.
-   * @async
-   * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
-   * @throws {Error}
-   *         Throws unexpected sqlite errors or errors thrown from
-   *         executeQueryInsertParentsIfNeeded().
-   */
+     * Because we have to generation and generation parents seperately, we want
+     * to do this in a transaction so we can rollback if the second executed
+     * query fails and no generation will be inserted.
+     * @async
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     * @throws {Error}
+     *         Throws unexpected sqlite errors or errors thrown from
+     *         executeQueryInsertParentsIfNeeded().
+     */
     static async executeQuery(context, options) {
 
     // Execute insertion in a transaction block so we can rollback if inserting
