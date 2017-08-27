@@ -328,7 +328,7 @@ Utils.filterSetNotNull = function filterSetNotNull(set) {
  * Checks if we are connected to sqlite database. If not, throws error.
  * @throws {Error}
  */
-Utils.throwErrorIfNotConnected = () => {
+Utils.throwErrorIfNotConnected = function() {
     if (sqlite.driver != null && sqlite.driver.open === true) {
         return;
     }
