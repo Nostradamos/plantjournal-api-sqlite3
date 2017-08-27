@@ -19,12 +19,15 @@ describe('Family()', function() {
         it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async function() {
             let tested = 0;
 
-            for (let value in [[1,2],
+            let toTest = [
+                [1,2],
                 null,
                 'string',
                 1,
                 true,
-                undefined]) {
+                undefined
+            ];
+            for (let value in toTest) {
                 await pj.Family.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
                 tested++;
@@ -61,7 +64,7 @@ describe('Family()', function() {
                 }
             );
 
-            let rows = await sqlite.all('SELECT familyId, familyName, familyCreatedAt, familyModifiedAt, familyDescription FROM families');
+            let rows = await sqlite.all('SELECT * FROM families');
 
             rows[0].should.deepEqual(family.families[1]);
         });
@@ -69,40 +72,21 @@ describe('Family()', function() {
         it('should set familyDescription on create', async function() {
             let family = await pj.Family.create(
                 {
-                    familyName: 'testName',
+                    familyName: 'testName3',
                     familyDescription: 'This is a test family'
                 }
             );
 
-            let [familyCreatedAt, familyModifiedAt] = [
-                family.families[1].familyCreatedAt,
-                family.families[1].familyModifiedAt
-            ];
-
-            familyCreatedAt.should.eql(familyModifiedAt);
-            family.should.deepEqual(
+            family.families[1].should.containDeep(
                 {
-                    families: {
-                        1: {
-                            familyId: 1,
-                            familyName: 'testName',
-                            familyDescription: 'This is a test family',
-                            familyCreatedAt: familyCreatedAt,
-                            familyModifiedAt: familyModifiedAt
-                        }
-                    }
+                    familyId: 1,
+                    familyName: 'testName3',
+                    familyDescription: 'This is a test family',
                 }
             );
-            let rows = await sqlite.all('SELECT familyId, familyDescription FROM families');
+            let rows = await sqlite.all('SELECT * FROM families');
 
-            rows.should.deepEqual(
-                [
-                    {
-                        'familyId': 1,
-                        'familyDescription': 'This is a test family'
-                    }
-                ]
-            );
+            rows[0].should.containDeep(family.families[1]);
         });
 
         afterEach(async function() {

@@ -45,5 +45,31 @@ describe('Generation()', function() {
             await pj.Medium.create({'environmentId': 3, 'mediumName': 'testMedium1', 'mediumDescription': '123'})
                 .should.be.rejectedWith('options.environmentId does not reference an existing environment');
         });
+
+        it('should create a new generations entry and return generation object', async function() {
+            let medium = await pj.Medium.create(
+                {'environmentId': 1, 'mediumName': 'testMedium', 'mediumDescription': 'This is a test'});
+            let [createdAt, modifiedAt] = [medium.mediums[1].mediumCreatedAt, medium.mediums[1].mediumModifiedAt];
+
+            createdAt.should.eql(modifiedAt);
+
+            medium.should.deepEqual({
+                mediums: {
+                    '1': {
+                        'mediumId': 1,
+                        'mediumDescription': 'This is a test',
+                        'mediumName': 'testMedium',
+                        'environmentId': 1,
+                        'mediumCreatedAt': createdAt,
+                        'mediumModifiedAt': modifiedAt
+                    }
+                }
+            });
+
+            let rows = await sqlite.all(
+                `SELECT * FROM mediums`);
+
+            medium.mediums[1].should.containDeep(rows[0]);
+        });
     });
 });

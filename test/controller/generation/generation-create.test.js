@@ -16,7 +16,8 @@ describe('Generation()', function() {
         });
 
         it('should throw error if options.familyId is not an integer', async function() {
-            await pj.Generation.create({'generationName': 'testGeneration2', 'familyId': '1'})
+            await pj.Generation.create(
+                {'generationName': 'testGeneration2', 'familyId': '1'})
                 .should.be.rejectedWith('options.familyId has to be an integer');
         });
 
@@ -36,23 +37,36 @@ describe('Generation()', function() {
         });
 
         it('should throw Error if familyId does not reference an entry in families', async function() {
-            await pj.Generation.create({'familyId': 1337, 'generationName': 'testGeneration3'})
+            await pj.Generation.create(
+                {'familyId': 1337, 'generationName': 'testGeneration3'})
                 .should.be.rejectedWith('options.familyId does not reference an existing Family');
-            let result = await sqlite.all('SELECT familyId, generationId, generationName FROM generations WHERE generationName = "testGeneration3"');
+
+            let result = await sqlite.all(
+                `SELECT familyId, generationId, generationName
+                 FROM generations WHERE generationName = "testGeneration3"`);
 
             result.should.deepEqual([]);
         });
 
         it('should create a new generations entry and return generation object', async function() {
-            let generation = await pj.Generation.create({'familyId': 1, 'generationName': 'testGeneration'});
-            let [createdAt, modifiedAt] = [generation.generations[1].generationCreatedAt, generation.generations[1].generationModifiedAt];
+            let generation = await pj.Generation.create(
+                {
+                    familyId: 1,
+                    generationName: 'testGeneration',
+                    generationDescription: 'test description'
+                 }
+            );
+
+            let [createdAt, modifiedAt] = [
+                generation.generations[1].generationCreatedAt,
+                generation.generations[1].generationModifiedAt];
 
             createdAt.should.eql(modifiedAt);
             generation.should.deepEqual({
                 generations: {
                     '1': {
                         'generationId': 1,
-                        'generationDescription': '',
+                        'generationDescription': 'test description',
                         'generationName': 'testGeneration',
                         'generationParents': [],
                         'familyId': 1,
@@ -63,9 +77,9 @@ describe('Generation()', function() {
             });
 
             let rows = await sqlite.all(
-                `SELECT familyId, generationId, generationDescription, generationName,
-         generationCreatedAt, generationModifiedAt FROM generations`);
-
+                `SELECT generationId, generationDescription, generationName,
+                familyId, generationCreatedAt, generationModifiedAt FROM generations`);
+            console.log(rows);
             generation.generations[1].should.containDeep(rows[0]);
         });
 
@@ -119,7 +133,9 @@ describe('Generation()', function() {
                     'generationParents': [1,2]
                 }
             );
-            let [createdAt, modifiedAt] = [generation.generations[2].generationCreatedAt, generation.generations[2].generationModifiedAt];
+            let [createdAt, modifiedAt] = [
+                generation.generations[2].generationCreatedAt,
+                generation.generations[2].generationModifiedAt];
 
             generation.should.deepEqual({
                 'generations': {
@@ -138,12 +154,13 @@ describe('Generation()', function() {
 
             rows.should.deepEqual(
                 [
-                    {'parentId': 1, 'generationId': 2, 'plantId': 1}, {'parentId': 2, 'generationId': 2, 'plantId': 2}
+                    {'parentId': 1, 'generationId': 2, 'plantId': 1},
+                    {'parentId': 2, 'generationId': 2, 'plantId': 2}
                 ]
             );
         });
 
-        it('should throw error if options.generationParents does not reference existing plants and not add generation', async function() {
+        it(`should throw error if options.generationParents does not reference existing plants and not add generation`, async function() {
             await pj.Generation.create(
                 {
                     'familyId': 1,
@@ -154,7 +171,9 @@ describe('Generation()', function() {
                 'options.generationParents contains at least one plantId which does not reference an existing plant'
             );
 
-            let rowsGen = await sqlite.all('SELECT generationId, generationName FROM generations WHERE generationName = "testWithParents2"');
+            let rowsGen = await sqlite.all(
+                `SELECT generationId, generationName FROM generations
+                 WHERE generationName = "testWithParents2"`);
 
             rowsGen.should.deepEqual([]);
         });

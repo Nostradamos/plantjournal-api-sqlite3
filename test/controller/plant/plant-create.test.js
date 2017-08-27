@@ -21,13 +21,15 @@ describe('Plant()', function() {
 
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
-
-            for (let value in [[1,2],
+            let toTest = [
+                [1,2],
                 null,
                 'string',
                 1,
                 true,
-                undefined]) {
+                undefined
+            ];
+            for (let value in toTest) {
                 await pj.Family.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
                 tested++;
@@ -76,6 +78,17 @@ describe('Plant()', function() {
                 .should.be.rejectedWith('options.genotypeId does not reference an existing Genotype');
         });
 
+        it('should throw error if options.plantClonedFrom does not reference an existing plant', async function() {
+            await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1})
+                .should.be.rejectedWith('options.plantClonedFrom does not reference an existing Plant');
+
+        });
+
+        it('should throw error if options.plantClonedFrom is not an integer', async function() {
+            await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 'not an integer'})
+                .should.be.rejectedWith('options.plantClonedFrom has to be an integer');
+        });
+
         it('should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId', async function() {
             let plant = await pj.Plant.create(
                 {
@@ -101,30 +114,28 @@ describe('Plant()', function() {
                 }
             });
 
-            let rowsPlants = await sqlite.all(
-                `SELECT plantId, plantName, plantSex, plantClonedFrom, plantDescription,
-         plantCreatedAt, plantModifiedAt, genotypeId FROM plants`
-            );
-
+            let rowsPlants = await sqlite.all(`SELECT * FROM plants`);
             rowsPlants[0].should.deepEqual(plant.plants[1]);
 
-            let rowsGenotypes = await sqlite.all(
-                'SELECT genotypeId, genotypeName, generationId FROM genotypes'
-            );
-
-            rowsGenotypes.should.deepEqual(
-                [
-                    {
-                        'genotypeId': 1,
-                        'genotypeName': 'testGenotype1',
-                        'generationId': 1
-                    }
-                ]
+            let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
+            rowsGenotypes[0].should.containDeep(
+                {
+                    'genotypeId': 1,
+                    'genotypeName': 'testGenotype1',
+                    'generationId': 1
+                }
             );
         });
 
         it('should create a new plant and genotype entry if options.genotypeId is not set and return plant object + genotype object', async function() {
-            let plant = await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
+            let plant = await pj.Plant.create(
+                {
+                    generationId: 1,
+                    genotypeName: 'testGeno2',
+                    genotypeDescription: 'foobar',
+                    plantName: 'testPlant1'
+                }
+            );
 
             let [createdAtPlant, modifiedAtPlant] = [
                 plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt
@@ -135,8 +146,8 @@ describe('Plant()', function() {
                 'genotypes': {
                     '2': {
                         'genotypeId': 2,
-                        'genotypeName': '',
-                        'genotypeDescription': '',
+                        'genotypeName': 'testGeno2',
+                        'genotypeDescription': 'foobar',
                         'generationId': 1,
                         'genotypeCreatedAt': createdAtGenotype,
                         'genotypeModifiedAt': modifiedAtGenotype
@@ -177,25 +188,12 @@ describe('Plant()', function() {
                     }
                 }
             });
-            let rowsPlants = await sqlite.all(
-                `SELECT plantId, plantName, plantClonedFrom, plantSex, plantDescription, plantCreatedAt, plantModifiedAt, genotypeId FROM plants`
-            );
-
+            let rowsPlants = await sqlite.all(`SELECT * FROM plants`);
             rowsPlants[1].should.deepEqual(plantClone.plants[2]);
-            let rowsGenotypes = await sqlite.all('SELECT genotypeId, genotypeName, generationId FROM genotypes');
 
-            rowsGenotypes.should.deepEqual([{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
-        });
-
-        it('should throw error if options.plantClonedFrom does not reference an existing plant', async function() {
-            await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1})
-                .should.be.rejectedWith('options.plantClonedFrom does not reference an existing Plant');
-
-        });
-
-        it('should throw error if options.plantClonedFrom is not an integer', async function() {
-            await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 'not an integer'})
-                .should.be.rejectedWith('options.plantClonedFrom has to be an integer');
+            let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
+            rowsGenotypes.should.containDeep(
+                [{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
         });
 
         afterEach(async function() {

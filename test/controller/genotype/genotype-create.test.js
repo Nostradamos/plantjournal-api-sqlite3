@@ -19,13 +19,15 @@ describe('Genotype()', function() {
 
         it('should throw error if options is not set or not an associative array', async function() {
             let tested = 0;
-
-            for (let value in [[1,2],
+            let toTest = [
+                [1,2],
                 null,
                 'string',
                 1,
                 true,
-                undefined]) {
+                undefined
+            ];
+            for (let value in toTest) {
                 await pj.Genotype.create(value)
                     .should.be.rejectedWith('First argument has to be an associative array');
                 tested++;
@@ -61,7 +63,9 @@ describe('Genotype()', function() {
                     genotypeDescription: 'this is a very special genotype'
                 }
             );
-            let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt];
+            let [createdAt, modifiedAt] = [
+                genotype.genotypes[1].genotypeCreatedAt,
+                genotype.genotypes[1].genotypeModifiedAt];
 
             genotype.should.deepEqual({
                 'genotypes': {
@@ -78,7 +82,7 @@ describe('Genotype()', function() {
 
             let rows = await sqlite.all(
                 `SELECT genotypeId, genotypeName, genotypeDescription, generationId,
-        genotypeCreatedAt, genotypeModifiedAt FROM genotypes`
+                genotypeCreatedAt, genotypeModifiedAt FROM genotypes`
             );
 
             rows[0].should.deepEqual(genotype.genotypes[1]);
@@ -86,17 +90,12 @@ describe('Genotype()', function() {
 
         it('should be possible to create a new genotype with genotypeName not set', async function() {
             let genotype = await pj.Genotype.create({generationId: 1});
-            let [createdAt, modifiedAt] = [genotype.genotypes[1].genotypeCreatedAt, genotype.genotypes[1].genotypeModifiedAt];
 
-            genotype.should.deepEqual({
+            genotype.should.containDeep({
                 'genotypes': {
                     '1': {
                         'genotypeId': 1,
                         'genotypeName': '',
-                        'genotypeDescription': '',
-                        'genotypeCreatedAt': createdAt,
-                        'genotypeModifiedAt': modifiedAt,
-                        'generationId': 1
                     }
                 }
             });

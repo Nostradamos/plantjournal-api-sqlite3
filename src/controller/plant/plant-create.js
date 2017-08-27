@@ -39,8 +39,8 @@ class PlantCreate extends GenericCreate {
 
         // Either generationId or genotypeId has to be set.
         if (!_.has(options, 'generationId') &&
-       !_.has(options, 'genotypeId') &&
-       !_.has(options, 'plantClonedFrom')) {
+            !_.has(options, 'genotypeId') &&
+            !_.has(options, 'plantClonedFrom')) {
             throw new Error(
                 'Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set'
             );
@@ -48,7 +48,7 @@ class PlantCreate extends GenericCreate {
 
         // plantSex has to be either male, female or hermaphrodite
         if (_.has(options, 'plantSex') &&
-       _.indexOf(CONSTANTS.PLANT_SEXES, options.plantSex) === -1) {
+            _.indexOf(CONSTANTS.PLANT_SEXES, options.plantSex) === -1) {
             throw new Error(
                 'options.plantSex has to be null, male, female or hermaphrodite'
             );
@@ -100,9 +100,9 @@ class PlantCreate extends GenericCreate {
             // plantClonedFrom is defined, but genotypId not, so we wan't to retrieve
             // the genotypeId from the "mother plant". Mother plant => plant with the
             // id equaling plantClonedFrom.
-            let queryRetrieveGenotypeId = 'SELECT plants.genotypeId FROM ' +
-                                    CONSTANTS.TABLE_PLANTS +
-                                    ' plants WHERE plants.plantId = $plantClonedFrom';
+            let queryRetrieveGenotypeId =
+                `SELECT plants.genotypeId FROM ` + CONSTANTS.TABLE_PLANTS +
+                ` plants WHERE plants.plantId = $plantClonedFrom`;
 
             logger.debug(this.name, '#create() queryRetrieveGenotypeId:',
                 queryRetrieveGenotypeId, '? = :', options.plantClonedFrom);
