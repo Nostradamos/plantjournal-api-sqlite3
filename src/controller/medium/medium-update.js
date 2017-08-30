@@ -3,18 +3,18 @@
 const CONSTANTS = require('../../constants');
 const GenericUpdate = require('../generic/generic-update');
 
-class EnvironmentUpdate extends GenericUpdate {
+class MediumUpdate extends GenericUpdate {
 }
 
 
-EnvironmentUpdate.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
+MediumUpdate.TABLE = CONSTANTS.TABLE_MEDIUM;
 
-EnvironmentUpdate.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
+MediumUpdate.ATTR_ID = CONSTANTS.ATTR_ID_MEDIUM;
 
-EnvironmentUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_ENVIRONMENT;
+MediumUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_MEDIUM;
 
-EnvironmentUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT;
+MediumUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_MEDIUM;
 
-EnvironmentUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_ENVIRONMENT;
+MediumUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_MEDIUM;
 
-module.exports = EnvironmentUpdate;
+module.exports = MediumUpdate;

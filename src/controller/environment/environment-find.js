@@ -7,6 +7,17 @@ const Utils = require('../../utils');
 
 const GenericFind = require('../generic/generic-find');
 
+/**
+ * This class find environments and related records and returns all this
+ * information. To manually execute, call EnvironmentFind.find(). To understand
+ * how finds work generally internally, See
+ * src/controller/generic/generic-find (we extend that class). If you want to
+ * know how to use the Environment.find() API, See
+ * src/models/environment #find().
+ * <strong>Note:</strong> Do not use directly.
+ * @private
+ * @extends GenericFind
+ */
 class EnvironmentFind extends GenericFind {
     /**
      * We need to overwrite this method to, yeah, build the returnObject. We

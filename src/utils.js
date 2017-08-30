@@ -305,7 +305,7 @@ Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
 
 Utils.hasToBeIntOrNull = function hasToBeInt(obj, property, name = 'options') {
     let value = obj[property];
-    if (!_.isInteger(value) && !_.isNull(value)) {
+    if (!_.isUndefined(value) && !_.isInteger(value) && !_.isNull(value)) {
         throw new Error(
             name + '.' + property + ' has to be an integer or null');
     }

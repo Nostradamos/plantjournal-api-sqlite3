@@ -18,22 +18,34 @@ let Environment = exports;
  */
 
 /**
+ * @typedef {Object} EnvironmentObject
+ *          Object containing all information specific to this environment.
+ * @property {environmentId} [environmentId]
+ *           Unique Identifier for this environment.
+ * @property {String} [environmentName]
+ *           Description for this environment.
+ * @property {UnixTimestampUTC} [environmentCreatedAt]
+ *           UTC Timestamp when this environment got created.
+ * @property {UnixTimestampUTC} [environmentModifiedAt]
+ *           UTC Timestamp when this environment got modified the last time.
+ */
+
+
+/**
  * Creates a new environment record and returns the created environment object.
  * @memberof plantJournal.Environment
  * @async
- * @param {Object} options
- *         Options how the new environment should be.
- * @param {String} options.environmentName
- *        Name of this plant.
- * @param {String} [options.environmentDescription='']
- *        Description for this environment
+ * @param {EnvironmentObject} options
+ *        Subset of EnvironmentObject. On create we will ignore
+ *        environmentId, environmentCreatedAt and environmentModifiedAt.
+ *        All other are needed, otherwise we will throw an error.
  * @throws {Error}
  *         Will throw error if an unexpected sqlite error happens.
- * @return {Object} plantCreate
- * @return {Object.<EnvironmentId, EnvironmentObject>} plantCreate.plants
- *         Object holding information about created plant. This will only
+ * @return {ReturnFind} plantCreate
+ *         Object holding information about created environment. This will only
  *         happen if no options.genotypId was set. There should
  *         only be one key, which is the id of the newly created plant.
+ * @return {ReturnFind} plantCreate.environments
  */
 Environment.create = async function(options) {
     return await EnvironmentCreate.create(options);
@@ -49,17 +61,58 @@ Environment.create = async function(options) {
  *         environmentDescription, environmentCreatedAt, environmentModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
- * @return {ReturnFindEnvironment}
+ * @return {ReturnFind}
+ * @return {ReturnFind.environments}
  *         Found environments
  */
 Environment.find = async function(criteria) {
     return await EnvironmentFind.find(criteria);
 };
 
+/**
+ * Deletes environments and related mediums/plants based on search
+ * criteria. Returns which model record ids got deleted.
+ * @memberof plantJournal.Environment
+ * @async
+ * @param  {Criteria} [criteria]
+ *         Criteria Object. With this you can control which families you want
+ *         to delete. Queryable Attributes: familyId, familyName,
+ *         familyCreatedAt, familyModifiedAt.
+ * @throws {Error}
+ *         Should only throw error if an unexpected sqlite error happens.
+ * @return {Object} returnEnvironmentDelete
+ *         Object containing info about all deleted records from the different
+ *         models.
+ *         Not all child arrays have to be set.
+ * @return {EnvironmentId[]} returnEnvironmentDelete.environments
+ *         Array containing all deleted environment ids.
+ * @return {MediumId[]} returnEnvironmentDelete.mediums
+ * @return {PlantId[]} returnEnvironmentDelete.plants
+ *         Array containing all deleted plant ids.
+ */
 Environment.delete = async function(criteria) {
     return await EnvironmentDelete.delete(criteria);
 };
 
+/**
+ * Finds environments and updates attributes based on the passed update Object.
+ * Sets environmentUpdatedAt to current UTC Timestamp of all changed families.
+ * @memberof plantJournal.Family
+ * @async
+ * @param  {EnvironmentObject} update
+ *         Subset of EnvironmentObject containing attributes which should get
+ *         updated. You can't update environmentId, environmentCreatedAt
+ *         and environmentUpdatedAt.
+ * @param  {Criteria} criteria
+ *         With criteria you can control which environments should get deleted.
+ *         Same as Environment.find().
+ * @throws {Error}
+ *         Should only throw error if something suspicous and unexpected
+ *         happend to our sqlite connection.
+ * @return {EnvironmentId[]}
+ *         Returns an array of updated {@link EnvironmentId|EnvironmentIds}.
+ *         Empty if none got updated.
+ */
 Environment.update = async function(update, criteria) {
     return await EnvironmentUpdate.update(update, criteria);
 };

@@ -5,6 +5,14 @@ const Utils = require('../../utils');
 
 const GenericCreate = require('../generic/generic-create');
 
+/**
+ * This class creates a new Environment and gets internally called from
+ * Environment.create(). If you want to know how Create works internally, see
+ * src/controller/generic-create. If you want to know how to use the
+ * Environment.create() API from outside, see src/models/Environment #create().
+ * @private
+ * @extends GenericCreate
+ */
 class EnvironmentCreate extends GenericCreate {
     /**
      * We need to validate the properties for new environment.

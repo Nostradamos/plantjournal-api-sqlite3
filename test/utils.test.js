@@ -458,14 +458,13 @@ describe('Utils', () => {
     });
 
     describe('#hasToBeIntOrNull()', () => {
-        it('should throw error if object[property] is undefined', () => {
-            should(() => Utils.hasToBeIntOrNull({}, 'foo', 'obj'))
-                .throw('obj.foo has to be an integer or null');
-        });
-
         it('should throw error if object[property] is not an integer', () => {
             should(() => Utils.hasToBeIntOrNull({foo: '123'}, 'foo', 'obj'))
                 .throw('obj.foo has to be an integer or null');
+        });
+
+        it('should NOT throw error if object[property] is undefined', () => {
+            should(() => Utils.hasToBeIntOrNull({}, 'foo', 'obj'));
         });
 
         it('should NOT throw error if object[property] is null', () => {

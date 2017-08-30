@@ -62,9 +62,9 @@ class FamilyDelete extends GenericDelete {
      *         Criteria object passed to delete()
      */
     static extractIdsToDelete(context, criteria) {
-    // It's very possible that we have the same model id's multiple
-    // times in our rows, therefore we use Set() which makes sure each
-    // id is only once present in our datastructure.
+        // It's very possible that we have the same model id's multiple
+        // times in our rows, therefore we use Set() which makes sure each
+        // id is only once present in our datastructure.
         context.familyIdsToDelete = new Set();
         context.generationIdsToDelete = new Set();
         context.genotypeIdsToDelete = new Set();

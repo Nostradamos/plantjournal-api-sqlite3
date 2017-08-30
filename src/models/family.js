@@ -38,6 +38,8 @@ const FamilyUpdate = require('../controller/family/family-update');
  * @property {Object<PlantId, PlantObject>} [ReturnFind.plants]
  *         Found or related Generations. Similiar to families, key is
  *         generationId, value is GenerationObject.
+ * @property {Object<MediumId, MediumObject>}
+ * @property {Object<EnvironmentId, EnvironmentObject>}
  */
 
 

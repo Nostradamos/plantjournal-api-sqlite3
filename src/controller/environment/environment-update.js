@@ -3,6 +3,12 @@
 const CONSTANTS = require('../../constants');
 const GenericUpdate = require('../generic/generic-update');
 
+/**
+ * This class updates environments. To call it manually use
+ * EnvironmentUpdate.update().
+ * @private
+ * @extends GenericUpdate
+ */
 class EnvironmentUpdate extends GenericUpdate {
 }
 
