@@ -8,6 +8,17 @@ const QueryUtils = require('../../utils-query');
 
 const GenericFind = require('../generic/generic-find');
 
+/**
+ * This class find mediums and related records and returns all this
+ * information. To manually execute, call MediumFind.find(). To understand
+ * how finds work generally internally, See
+ * src/controller/generic/generic-find (we extend that class). If you want to
+ * know how to use the Medium.find() API, See
+ * src/models/medium #find().
+ * <strong>Note:</strong> Do not use directly.
+ * @private
+ * @extends GenericFind
+ */
 class MediumFind extends GenericFind {
     /**
      * We need to join families table, so that we can for example also find

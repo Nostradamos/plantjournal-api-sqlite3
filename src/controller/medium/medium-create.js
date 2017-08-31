@@ -5,6 +5,14 @@ const Utils = require('../../utils');
 
 const GenericCreate = require('../generic/generic-create');
 
+/**
+ * This class creates a new Medium and gets internally called from
+ * Medium.create(). If you want to know how Create works internally, see
+ * src/controller/generic-create. If you want to know how to use the
+ * Medium.create() API from outside, see src/models/Medium #create().
+ * @private
+ * @extends GenericCreate
+ */
 class MediumCreate extends GenericCreate {
     /**
      * We need to validate the properties for new Medium.

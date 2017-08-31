@@ -3,6 +3,15 @@
 const CONSTANTS = require('../../constants');
 const GenericUpdate = require('../generic/generic-update');
 
+<<<<<<< HEAD
+/**
+ * This class updates mediums. To call it manually use
+ * MediumUpdate.update().
+ * @private
+ * @extends GenericUpdate
+ */
+=======
+>>>>>>> bd835b7... Added tests for medium delete and update
 class MediumUpdate extends GenericUpdate {
 }
 

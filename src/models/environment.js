@@ -23,13 +23,14 @@ let Environment = exports;
  * @property {environmentId} [environmentId]
  *           Unique Identifier for this environment.
  * @property {String} [environmentName]
+ *           Name of this environment.
+ * @property {String} [environmentDescription]
  *           Description for this environment.
  * @property {UnixTimestampUTC} [environmentCreatedAt]
  *           UTC Timestamp when this environment got created.
  * @property {UnixTimestampUTC} [environmentModifiedAt]
  *           UTC Timestamp when this environment got modified the last time.
  */
-
 
 /**
  * Creates a new environment record and returns the created environment object.
