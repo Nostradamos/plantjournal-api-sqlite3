@@ -28,7 +28,6 @@ class GenotypeCreate extends GenericCreate {
      */
     static validateOptions(context, options) {
         Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
-        Utils.hasToBeSet(options, CONSTANTS.ATTR_ID_GENERATION);
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
     }
 
