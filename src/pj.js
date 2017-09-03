@@ -54,6 +54,10 @@ class plantJournal {
         }
     }
 
+    /**
+     * Disconnect from sqlite3 database
+     * @return {Promise}
+     */
     async disconnect() {
         await sqlite.close();
     }
