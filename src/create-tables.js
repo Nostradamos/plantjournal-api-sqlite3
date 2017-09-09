@@ -62,7 +62,7 @@ module.exports =  async function createTables() {
         genotypeDescription TEXT NOT NULL DEFAULT '',
         genotypeCreatedAt DATETIME NOT NULL,
         genotypeModifiedAt DATETIME NOT NULL,
-        generationId INTEGER NOT NULL,
+        generationId INTEGER DEFAULT NULL,
         PRIMARY KEY (genotypeId),
         FOREIGN KEY(generationId) REFERENCES generations(generationId) ON UPDATE CASCADE ON DELETE CASCADE
       );
@@ -100,16 +100,20 @@ module.exports =  async function createTables() {
     `);
 
     await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_PLANT_LOG + ` (
-        plantLogId INTEGER,
-        plantLogTimestamp DATETIME NOT NULL,
-        plantLogType TEXT NOT NULL,
-        plantLogValue BLOB NOT NULL,
-        plantLogCreatedAt DATETIME NOT NULL,
-        plantLogModifiedAt DATETIME NOT NULL,
-        plantId INTEGER NOT NULL,
-        PRIMARY KEY (plantLogId),
+      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_JOURNAL + ` (
+        journalId INTEGER,
+        journalTimestamp DATETIME NOT NULL,
+        journalType TEXT NOT NULL,
+        journalValue BLOB NOT NULL,
+        journalCreatedAt DATETIME NOT NULL,
+        journalModifiedAt DATETIME NOT NULL,
+        plantId INTEGER DEFAULT NULL,
+        mediumId INTEGER DEFAULT NULL,
+        environmentId INTEGER DEFAULT NULL,
+        PRIMARY KEY (journalId),
         FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (mediumId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (environmentId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 };
