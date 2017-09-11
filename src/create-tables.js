@@ -104,7 +104,7 @@ module.exports =  async function createTables() {
         journalId INTEGER,
         journalTimestamp DATETIME NOT NULL,
         journalType TEXT NOT NULL,
-        journalValue BLOB NOT NULL,
+        journalValue JSON NOT NULL,
         journalCreatedAt DATETIME NOT NULL,
         journalModifiedAt DATETIME NOT NULL,
         plantId INTEGER DEFAULT NULL,

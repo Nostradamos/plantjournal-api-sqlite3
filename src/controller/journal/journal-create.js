@@ -52,7 +52,15 @@ class JournalCreate extends GenericCreate {
 
     }
 
+    static sanitizeOptions(context, options) {
+        if(_.isBoolean(options.journalValue)) {
+            options.journalValue = _.toString(options.journalValue);
+        }
+    }
+
     static setQueryFields(context, options) {
+        this.sanitizeOptions(context, options);
+
         super.setQueryFields(context, options);
         context.query
             .set(context.journalFor, options[context.journalFor])

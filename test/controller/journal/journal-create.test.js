@@ -92,12 +92,35 @@ describe('Journal()', () => {
             });
 
             let rowsJournals = await sqlite.all(
-                `SELECT * FROM journals`
+                `SELECT * FROM journals WHERE journalId = 1`
             );
 
             rowsJournals[0].should.containDeep(journal.journals[1]);
             should(rowsJournals[0]['mediumId']).be.null();
             should(rowsJournals[0]['environmentId']).be.null();
+        });
+
+        it('should be possible to insert a journal where journalValue is a boolean', async () => {
+            let journal = await pj.Journal.create(
+                {
+                    plantId: 1, journalTimestamp: 1111,
+                    journalType: 'log', journalValue: true
+                }
+            );
+
+            journal.journals.should.containDeep({
+                '2': {
+                    'journalId': 2,
+                    'journalType': 'log',
+                    'journalValue': true,
+                }
+            });
+
+            let rowsJournals = await sqlite.all(
+                `SELECT journalValue FROM journals WHERE journalId = 2`
+            );
+
+            rowsJournals[0].journalValue.should.eql('true');
         });
     });
 });
