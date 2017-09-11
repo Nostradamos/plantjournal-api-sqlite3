@@ -29,7 +29,7 @@ const CONSTANTS = require('./constants');
  * $nin       Non in array of values
  * @param  {squel} query
  *         squel query, needs to be in a state to take .where() calls
- * @param  {string[]} allowedAttributes
+ * @param  {string[]} self.allowedAttributes
  *         An array of allowed attributes
  * @param  {Object} criteria
  *         criteria object which gets passed to update/delete/find functions.
@@ -44,13 +44,21 @@ const CONSTANTS = require('./constants');
  *             {filter: {'generationParents': [1,2]}} => generationParents have
  *                                                      to be 1 and 2.
  *             {filter: {'plantSex': 'male'}} => only male plants
- * @param {Dict} [overWriteTableLookup=null]
+ * @param {Dict} [self.overwriteTableLookup=null]
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table.
  */
-function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableLookup = null) {
+function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableLookup = null) {
+    let self = {
+        query: query,
+        allowedAttributes: allowedAttributes,
+        overwriteTableLookup: overwriteTableLookup,
+        selectedJournalJsonTree: false
+    };
+
     let squelExpr = squel.expr();
-    eachFilterObject(criteria.filter, allowedAttributes, squelExpr, 1, null, overWriteTableLookup);
+    eachFilterObject(self, criteria.filter, squelExpr, 1, null);
+
     query.where(squelExpr);
 }
 
@@ -65,7 +73,7 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableL
  *         have to be $and/$or.. boolean operators or valid attributes. Eg:
  *         {'generationParents': [1,2],
  *          'or': {'familyId': 3}}
- * @param  {String[]} allowedAttributes
+ * @param  {String[]} self.allowedAttributes
  *         String array of allowed attributes. It will throw an error if you
  *         use an attribute which is illegal.
  * @param  {SquelExpression} squelExpr
@@ -84,11 +92,11 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overWriteTableL
  *         otherwise 'and'.
  *         and  -> use and operator for attributes
  *         or   -> use or operator for attributes
- * @param {Dict} [overWriteTableLookup=null]
+ * @param {Dict} [self.overwriteTableLookup=null]
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table.
  */
-function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, overWriteTableLookup) {
+function eachFilterObject(self, obj, squelExpr, depth, type=null) {
     logger.silly('#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth, 'type:', type);
     let isArray = _.isArray(obj);
 
@@ -110,32 +118,32 @@ function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, o
         // If we have an array, value/element has to be an object. Just use
         // this function again on it
         if (isArray === true) {
-            return eachFilterObject(value, allowedAttributes, squelExpr, depth+1, type, overWriteTableLookup);
+            return eachFilterObject(self, value, squelExpr, depth+1, type);
         }
 
         [attr, attrOptions] = [key, value];
 
         // Handle boolean operators
         if (attr === '$and') {
-            eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'and', overWriteTableLookup);
+            eachFilterObject(self, attrOptions, squelExpr, depth+1, 'and');
         } else if (attr === '$or') {
-            eachFilterObject(attrOptions, allowedAttributes, squelExpr, depth+1, 'or', overWriteTableLookup);
+            eachFilterObject(self, attrOptions, squelExpr, depth+1, 'or');
         } else if (attr === '$and()') {
             // $and() is a bit different, we want to have child criterias in a
             // sub expression
             let subSquelExpr = squel.expr();
 
-            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'and', overWriteTableLookup);
+            eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'and');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'and');
         } else if (attr === '$or()') {
             // $or() is a bit different, we want to have a child criterias in
             // a subexpression
             let subSquelExpr = squel.expr();
 
-            eachFilterObject(attrOptions, allowedAttributes, subSquelExpr, depth+1, 'or', overWriteTableLookup);
+            eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'or');
             applyCriteriaToExpression(squelExpr, subSquelExpr, [], 'or');
-        } else if (_.indexOf(allowedAttributes, attr) !== -1){
-            translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type, overWriteTableLookup);
+        } else if (_.indexOf(self.allowedAttributes, attr) !== -1){
+            translateAndApplyOperators(self, attr, attrOptions, squelExpr, type);
         // Handle normal attributes
         } else {
         // No boolean operator nor attribute, something's stinky here
@@ -145,11 +153,8 @@ function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, o
 }
 
 /**
- * Helper method of #eachFilterObject(). This method "parses" the criteria
- * instructions for an attribute, translates the relational operators
- * like $eq, $neq, $in.. into sql expressions and applies them to the
- * given sqlExr. We also handle short hands. For generationParents
- * attribute we call the #handleGenerationParents() method.
+ * Helper method of #eachFilterObject().
+ * This method
  * Mutates squelExpr.
  * @param  {String} attr
  *         Name of attribute. This has to be checked for validity.
@@ -157,71 +162,86 @@ function eachFilterObject(obj, allowedAttributes, squelExpr, depth, type=null, o
  *         Attribute Options. Can be a lot. If it's an String/Integer we will
  *         understand it as an equals instruction. If it's an array, we understand
  *         it as "attribute has to be any of them" (except if attr is generationParents,
- *         this is a special case, see #handleGenerationParents()).
+ *         this is a special case, see #translateAndApplyGenerationParentsOperators()).
  * @param  {squelExpr} squelExpr
  *         squelExpr to apply where stuff to
  * @param  {String} type
  *         should be `and` or `or`, decides if we use squelExpr.and() or
  *         squelExpr.or().
- * @param {Dict} [overWriteTableLookup=null]
+ * @param {Dict} [self.overwriteTableLookup=null]
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table.
  */
-function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type, overWriteTableLookup) {
-    // Get table for this attribute
-    let table = QueryUtils.getTableOfField(attr, overWriteTableLookup);
-
+function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
+    // Check if we have special cases
     if (attr === 'generationParents') {
-    // First handle special case generationParents
-        handleGenerationParents(attr, attrOptions, squelExpr, type);
-        return;
-    } else if (_.isInteger(attrOptions) || _.isString(attrOptions) || _.isNull(attrOptions)) {
+        return translateAndApplyGenerationParentsOperators(self, attr, attrOptions, squelExpr, type);
+    } else if(_.startsWith(attr, 'journalValue')) {
+    // This is something starting with journalValue, special case
+        return translateAndApplyJournalValueOperators(self, attr, attrOptions, squelExpr, type);
+    }
+
+    // Maybe plain object?
+    if (_.isPlainObject(attrOptions)) {
+        return translateAndApplyRelationalOperators(self, attr, attrOptions, squelExpr, type);
+    }
+
+    // Now check for short hands
+
+    // Get table for this attribute
+    let table = QueryUtils.getTableOfField(attr, self.overwriteTableLookup);
+
+    let crit, critArgs;
+    if (_.isInteger(attrOptions) || _.isString(attrOptions) || _.isNull(attrOptions)) {
     // Short hand to easily do an equals operation if attrOptions is a string or an integer.
-    // @ToDo: we should also do this for null.
-        let [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
-        applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+        [crit, critArgs] = createEqualsExpression(table, attr, attrOptions);
     } else if (_.isArray(attrOptions)) {
     // Short hand to easily do in operation if attrOptions is an array.
-        let [crit, critArgs] = createInExpression(table, attr, attrOptions);
-
-        applyCriteriaToExpression(squelExpr, crit, critArgs, type);
-    } else if (_.isPlainObject(attrOptions)) {
-        // Translate api operators into sql operators/expressions
-        for (let operator in attrOptions) {
-            // Iterate over all keys of attrOptions and translate relational
-            // api operators into sql expressions
-            let crit = null,
-                critArgs;
-
-            if (operator === '$eq') {
-                [crit, critArgs] = createEqualsExpression(table, attr, attrOptions['$eq']);
-            } else if (operator === '$neq') {
-                [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
-            } else if (operator === '$like') {
-                [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
-            } else if (operator === '$nlike') {
-                [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
-            } else if (operator === '$gt') {
-                [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
-            } else if (operator === '$gte') {
-                [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
-            } else if (operator === '$lt') {
-                [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
-            } else if (operator === '$lte') {
-                [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
-            } else if (operator === '$in') {
-                [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
-            } else if (operator === '$nin') {
-                [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
-            } else {
-                throw new Error('Unknown relational operator: ' + operator);
-            }
-            // apply them to passed squel expression builder
-            applyCriteriaToExpression(squelExpr, crit, critArgs, type);
-        }
+        [crit, critArgs] = createInExpression(table, attr, attrOptions);
     } else {
-    // Somethings fishy here. Throw an error?
-        logger.warn('#applyCriteriaFilter() #translateAndApplyRelationalOperators() Don\'t know what to do with this attribute:', attr);
+    // It's not even a short hand, return and log this
+        return logger.warn('#applyCriteriaFilter() #translateAndApplyRelationalOperators() Don\'t know what to do with this attribute:', attr);
+    }
+
+    applyCriteriaToExpression(squelExpr, crit, critArgs, type);
+}
+
+function translateAndApplyRelationalOperators(self, attr, attrOptions, squelExpr, type) {
+    // Get table for this attribute
+    let table = QueryUtils.getTableOfField(attr, self.overwriteTableLookup);
+
+    // Translate api operators into sql operators/expressions
+    for (let operator in attrOptions) {
+        // Iterate over all keys of attrOptions and translate relational
+        // api operators into sql expressions
+        let crit = null,
+            critArgs;
+
+        if (operator === '$eq') {
+            [crit, critArgs] = createEqualsExpression(table, attr, attrOptions['$eq']);
+        } else if (operator === '$neq') {
+            [crit, critArgs] = createNotEqualsExpression(table, attr, attrOptions['$neq']);
+        } else if (operator === '$like') {
+            [crit, critArgs] = createLikeExpression(table, attr, attrOptions['$like']);
+        } else if (operator === '$nlike') {
+            [crit, critArgs] = createNotLikeExpression(table, attr, attrOptions['$nlike']);
+        } else if (operator === '$gt') {
+            [crit, critArgs] = createGreaterThanExpression(table, attr, attrOptions['$gt']);
+        } else if (operator === '$gte') {
+            [crit, critArgs] = createGreaterThanEqualExpression(table, attr, attrOptions['$gte']);
+        } else if (operator === '$lt') {
+            [crit, critArgs] = createLowerThanExpression(table, attr, attrOptions['$lt']);
+        } else if (operator === '$lte') {
+            [crit, critArgs] = createLowerThanEqualExpression(table, attr, attrOptions['$lte']);
+        } else if (operator === '$in') {
+            [crit, critArgs] = createInExpression(table, attr, attrOptions['$in']);
+        } else if (operator === '$nin') {
+            [crit, critArgs] = createNotInExpression(table, attr, attrOptions['$nin']);
+        else {
+            throw new Error('Unknown relational operator: ' + operator);
+        }
+        // apply them to passed squel expression builder
+        applyCriteriaToExpression(squelExpr, crit, critArgs, type);
     }
 }
 
@@ -237,20 +257,18 @@ function translateAndApplyRelationalOperators(attr, attrOptions, squelExpr, type
  *         Attribute Options. Can be a lot. If it's an String/Integer we will
  *         understand it as an equals instruction. If it's an array, we understand
  *         it as "attribute has to be any of them" (except if attr is generationParents,
- *         this is a special case, see #handleGenerationParents()).
+ *         this is a special case, see #translateAndApplyGenerationParentsOperators()).
  * @param  {squelExpr} squelExpr - squelExpr to apply where stuff to
  * @param  {String} type         - should be `and` or `or`, decides if we use
  *                                 squelExpr.and() or squelExpr.or().
  */
-function handleGenerationParents(attr, attrOptions, squelExpr, type) {
+function translateAndApplyGenerationParentsOperators(self, attr, attrOptions, squelExpr, type) {
     // generationParents is special. We want it to act like an array, so
     // a lot which works for other "normal" attributes, works not or differently
     // for generationParents.
-
-    logger.silly('#applyCriteriaFilter #handleGenerationParents() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
+    logger.silly('#applyCriteriaFilter #translateAndApplyGenerationParentsOperators() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
 
     let table = CONSTANTS.TABLE_GENERATION_PARENT;
-
 
     let subSquelExpr = squel.expr(); // expression for WHERE
     let subSquelExprHaving = squel.expr(); // expression for HAVING, mainly for count()
@@ -267,13 +285,8 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
     // different from the other array handling, because we don't only look if any
     // parent is given. If you want that, use generationParents: {'$in'...}
         applyEqualsExpressionGenerationParents(
-            subSquelExpr,
-            subSquelExprHaving,
-            table,
-            CONSTANTS.ATTR_ID_PLANT,
-            attrOptions,
-            type
-        );
+            subSquelExpr, subSquelExprHaving, table, CONSTANTS.ATTR_ID_PLANT,
+            attrOptions, type);
     } else if (_.isPlainObject(attrOptions)) {
         for (let operator in attrOptions) {
             // Iterate over all keys of attrOptions and translate relational
@@ -315,7 +328,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         }
     } else {
     // Somethings fishy here. Throw an error?
-        logger.warn('#applyCriteriaFilter #handleGenerationParents() Unknown type of generationParents options:', attrOptions);
+        logger.warn('#applyCriteriaFilter #translateAndApplyGenerationParentsOperators() Unknown type of generationParents options:', attrOptions);
         return;
     }
 
@@ -327,7 +340,7 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
 
     subQuery.having(subSquelExprHaving);
 
-    logger.silly('#applyCriteriaFilter #handleGenerationParents() generationParents subQuery:', subQuery.toString());
+    logger.silly('#applyCriteriaFilter #translateAndApplyGenerationParentsOperators() generationParents subQuery:', subQuery.toString());
 
     applyCriteriaToExpression(
         squelExpr,
@@ -339,6 +352,31 @@ function handleGenerationParents(attr, attrOptions, squelExpr, type) {
         ],
         type
     );
+}
+
+function translateAndApplyJournalValueOperators(self, attr, attrOptions, squelExpr, type) {
+    if(attr === 'journalValue') {
+
+    } else if(attr[12] === '.') {
+        return translateAndApplyJournalValuePathOperators(self, attr, attrOptions, squelExpr, type);
+    } else {
+        return logger.warn('#applyCriteriaFilter() translateAndApplyJournalValueOperators() Don\'t know what to do with this attribute:', attr);
+
+    }
+}
+
+function translateAndApplyJournalValuePathOperators(self, attr, attrOptions, squelExpr, type) {
+
+}
+
+function selectJournalJsonTree(self) {
+    if(self.selectedJournalJsonTree === false) {
+        self.query.from(
+            'json_tree(?.?)',
+            CONSTANTS.TABLE_JOURNAL,
+            CONSTANTS.ATTR_VALUE_JOURNAL);
+        self.selectedJournalJsonTree = true;
+    }
 }
 
 /********************
@@ -445,4 +483,4 @@ function applyCriteriaToExpression(squelExpr, crit, critArgs, type) {
     }
 }
 
-module.exports =  applyCriteriaFilter;
+module.exports = applyCriteriaFilter;
