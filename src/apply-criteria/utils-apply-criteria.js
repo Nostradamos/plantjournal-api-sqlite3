@@ -55,37 +55,37 @@ UtilsApplyCriteria.createEqualsExpression = function(table, attr, toEqual, func=
 
 UtilsApplyCriteria.createNotEqualsExpression = function(table, attr, notToEqual, func=null) {
     if(_.isNull(notToEqual)) return createIsNotNullExpression(table, attr);
-    return createGenericExpression(table, attr, '!=', notToEqual, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, '!=', notToEqual, func);
 }
 
 UtilsApplyCriteria.createLikeExpression = function(table, attr, like, func=null) {
-    return createGenericExpression(table, attr, 'LIKE', like, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, 'LIKE', like, func);
 }
 
 UtilsApplyCriteria.createNotLikeExpression = function(table, attr, notLike, func=null) {
-    return createGenericExpression(table, attr, 'NOT LIKE', notLike, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, 'NOT LIKE', notLike, func);
 }
 
 UtilsApplyCriteria.createGreaterThanExpression = function(table, attr, greaterThan, func=null) {
-    return createGenericExpression(table, attr, '>', greaterThan, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, '>', greaterThan, func);
 }
 
 UtilsApplyCriteria.createGreaterThanEqualExpression = function(table, attr, greaterThanEqual, func=null) {
-    return createGenericExpression(table, attr, '>=', greaterThanEqual, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, '>=', greaterThanEqual, func);
 }
 
 UtilsApplyCriteria.createLowerThanExpression = function(table, attr, lowerThan, func=null) {
-    return createGenericExpression(table, attr, '<', lowerThan, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, '<', lowerThan, func);
 }
 
 UtilsApplyCriteria.createLowerThanEqualExpression = function(table, attr, lowerThanEqual, func=null) {
-    return createGenericExpression(table, attr, '<=', lowerThanEqual, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, '<=', lowerThanEqual, func);
 }
 
 UtilsApplyCriteria.createInExpression = function(table, attr, inArr, func=null) {
-    return createGenericExpression(table, attr, 'IN', inArr, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, 'IN', inArr, func);
 }
 
 UtilsApplyCriteria.createNotInExpression = function (table, attr, notInArr, func=null) {
-    return createGenericExpression(table, attr, 'NOT IN', notInArr, func);
+    return UtilsApplyCriteria.createGenericExpression(table, attr, 'NOT IN', notInArr, func);
 }

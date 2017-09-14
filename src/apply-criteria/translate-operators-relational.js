@@ -26,47 +26,47 @@ class TranslateOperatorsRelational extends TranslateOperatorsGeneric {
     }
 
     static operatorNotEquals(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createNotEqualsExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorLike(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createLikeExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorNotLike(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createNotLikeExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorGreatherThan(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createGreaterThanExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorGreatherThanEqual(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createGreaterThanEqualExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorLowerThan(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createLowerThanExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorLowerThanEqual(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createLowerThanEqualExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorIn(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createInExpression(
             self.table, self.attr, operatorOptions);
     }
 
     static operatorNotIn(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
+        [crit.crit, crit.args] = UtilsApplyCriteria.createNotInExpression(
             self.table, self.attr, operatorOptions);
     }
 
