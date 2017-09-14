@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
+const UtilsQuery = require('../../utils-query');
 
 const GenericFind = require('../generic/generic-find');
 
@@ -30,7 +30,7 @@ class MediumFind extends GenericFind {
      */
     static setQueryWhereJoin(context, criteria) {
         // Joins families, and because of the true flag also generation_parents.
-        QueryUtils.joinRelatedMediums(context.queryWhere, true);
+        UtilsQuery.joinRelatedMediums(context.queryWhere, true);
     }
 
     /**

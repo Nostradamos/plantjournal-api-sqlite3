@@ -6,8 +6,8 @@ const sqlite = require('sqlite');
 
 const logger = require('../../logger');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
+const UtilsQuery = require('../../utils-query');
+const UtilsQueryApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
 
 /**
  * Generic Delete class which tries to build a skeleton for all
@@ -120,7 +120,7 @@ class GenericDelete {
     }
 
     /**
-     * Applies {@link QueryUtilsApplyCriteriaFilter} to context.queryRelated. Normally
+     * Applies {@link UtilsQueryApplyCriteriaFilter} to context.queryRelated. Normally
      * you shouldn't have to overwrite this, to change the queryable
      * attributes simply set GenericDelete.ATTRIBUTES_SEARCHABLE.
      * @param  {object} context
@@ -129,7 +129,7 @@ class GenericDelete {
      *         Criteria object passed to delete()
      */
     static setQueryRelatedWhere(context, criteria) {
-        QueryUtilsApplyCriteriaFilter(
+        UtilsQueryApplyCriteriaFilter(
             context.queryRelated,
             this.ATTRIBUTES_SEARCHABLE,
             criteria,
@@ -146,7 +146,7 @@ class GenericDelete {
      *         Criteria object passed to delete()
      */
     static setQueryRelatedLimitAndOffset(context, criteria) {
-        QueryUtils.applyCriteriaLimitAndOffset(context.queryRelated, criteria);
+        UtilsQuery.applyCriteriaLimitAndOffset(context.queryRelated, criteria);
     }
 
     /**
@@ -157,7 +157,7 @@ class GenericDelete {
      *         Criteria object passed to delete()
      */
     static setQueryRelatedOrder(context, criteria) {
-        QueryUtils.applyCriteriaSort(
+        UtilsQuery.applyCriteriaSort(
             context.queryRelated,
             this.ATTRIBUTES_SEARCHABLE,
             criteria,

@@ -5,7 +5,7 @@ const squel = require('squel');
 const sqlite = require('sqlite');
 
 const logger = require('../../logger');
-const QueryUtils = require('../../utils-query');
+const UtilsQuery = require('../../utils-query');
 
 const CONSTANTS = require('../../constants');
 const GenericUpdate = require('../generic/generic-update');
@@ -28,7 +28,7 @@ class GenerationUpdate extends GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
     static setQueryFindJoin(context, update, criteria) {
-        QueryUtils.joinRelatedGenerations(context.queryFind);
+        UtilsQuery.joinRelatedGenerations(context.queryFind);
     }
 
     /**

@@ -5,14 +5,14 @@ const _ = require('lodash');
 const logger = require('../logger');
 const Utils = require('../utils');
 const UtilsApplyCriteria = require('./utils-apply-criteria');
-const QueryUtils = require('../utils-query');
+const UtilsQuery = require('../utils-query');
 
 const TranslateOperatorsGeneric = require('./translate-operators-generic');
 
 
 class TranslateOperatorsRelational extends TranslateOperatorsGeneric {
     static getTable(self) {
-        self.table = QueryUtils.getTableOfField(
+        self.table = UtilsQuery.getTableOfField(
             self.attr, self.selfSelf.overwriteTableLookup);
     }
 

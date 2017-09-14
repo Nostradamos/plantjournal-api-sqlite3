@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
+const UtilsQuery = require('../../utils-query');
 
 const GenericFind = require('../generic/generic-find');
 
@@ -30,7 +30,7 @@ class GenotypeFind extends GenericFind {
      *         Criteria object passed to find()
      */
     static setQueryWhereJoin(context, criteria) {
-        QueryUtils.joinRelatedGenotypes(context.queryWhere);
+        UtilsQuery.joinRelatedGenotypes(context.queryWhere);
     }
 
     /**

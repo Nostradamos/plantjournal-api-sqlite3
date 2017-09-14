@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
+const UtilsQuery = require('../../utils-query');
 
 const GenericFind = require('../generic/generic-find');
 
@@ -31,7 +31,7 @@ class PlantFind extends GenericFind {
      *         Criteria object passed to find()
      */
     static setQueryWhereJoin(context, criteria) {
-        QueryUtils.joinRelatedPlants(context.queryWhere);
+        UtilsQuery.joinRelatedPlants(context.queryWhere);
     }
 
     /**

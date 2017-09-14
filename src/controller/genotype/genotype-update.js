@@ -1,6 +1,6 @@
 'use strict';
 
-const QueryUtils = require('../../utils-query');
+const UtilsQuery = require('../../utils-query');
 
 const CONSTANTS = require('../../constants');
 const GenericUpdate = require('../generic/generic-update');
@@ -23,7 +23,7 @@ class GenotypeUpdate extends GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
     static setQueryFindJoin(context, update, criteria) {
-        QueryUtils.joinRelatedGenotypes(context.queryFind);
+        UtilsQuery.joinRelatedGenotypes(context.queryFind);
     }
 
     /**

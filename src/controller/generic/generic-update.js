@@ -6,8 +6,8 @@ const sqlite = require('sqlite');
 
 const logger = require('../../logger');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
+const UtilsQuery = require('../../utils-query');
+const UtilsQueryApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
 
 /**
  * Generic update class which is the skeleton for all *-update classes.
@@ -127,7 +127,7 @@ class GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
     static setQueryFindWhere(context, update, criteria) {
-        QueryUtilsApplyCriteriaFilter(
+        UtilsQueryApplyCriteriaFilter(
             context.queryFind,
             this.ATTRIBUTES_SEARCHABLE,
             criteria,
@@ -142,7 +142,7 @@ class GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
     static setQueryFindLimitAndOffset(context, update, criteria) {
-        QueryUtils.applyCriteriaLimitAndOffset(context.queryFind, criteria);
+        UtilsQuery.applyCriteriaLimitAndOffset(context.queryFind, criteria);
     }
 
     /**
@@ -152,7 +152,7 @@ class GenericUpdate {
     * @param  {object} criteria  - Criteria object passed to update()
     */
     static setQueryFindOrder(context, update, criteria) {
-        QueryUtils.applyCriteriaSort(
+        UtilsQuery.applyCriteriaSort(
             context.queryFind,
             this.ATTRIBUTES_SEARCHABLE,
             criteria,

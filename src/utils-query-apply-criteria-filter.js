@@ -4,7 +4,7 @@ const _ = require('lodash');
 const squel = require('squel');
 
 const logger = require('./logger');
-const QueryUtils = require('./utils-query');
+const UtilsQuery = require('./utils-query');
 const CONSTANTS = require('./constants');
 
 /**
@@ -189,7 +189,7 @@ function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
     // Now check for short hands
 
     // Get table for this attribute
-    let table = QueryUtils.getTableOfField(attr, self.overwriteTableLookup);
+    let table = UtilsQuery.getTableOfField(attr, self.overwriteTableLookup);
 
     let crit, critArgs;
     if (_.isInteger(attrOptions) || _.isString(attrOptions) || _.isNull(attrOptions)) {
@@ -208,7 +208,7 @@ function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
 
 function translateAndApplyRelationalOperators(self, attr, attrOptions, squelExpr, type) {
     // Get table for this attribute
-    let table = QueryUtils.getTableOfField(attr, self.overwriteTableLookup);
+    let table = UtilsQuery.getTableOfField(attr, self.overwriteTableLookup);
 
     // Translate api operators into sql operators/expressions
     for (let operator in attrOptions) {

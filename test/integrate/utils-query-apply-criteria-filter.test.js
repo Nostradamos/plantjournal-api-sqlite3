@@ -5,18 +5,18 @@ const should = require('should');
 
 const squel = require('squel');
 
-const QueryUtilsApplyFilter = require('../../src/utils-query-apply-criteria-filter');
+const UtilsQueryApplyFilter = require('../../src/utils-query-apply-criteria-filter');
 
 
 describe('src/utils-query-apply-criteria-filter', () => {
-    describe('#QueryUtilsApplyCriteriaFilter() - errors', () => {
+    describe('#UtilsQueryApplyCriteriaFilter() - errors', () => {
         let q;
         beforeEach(() => q = squel.select().from('test'));
 
         it('should throw error if unknown logical operator is used', () => {
             should(
                 () => {
-                    QueryUtilsApplyFilter
+                    UtilsQueryApplyFilter
                     (
                         q,
                         ['generationId', 'generationName'],
@@ -28,18 +28,18 @@ describe('src/utils-query-apply-criteria-filter', () => {
 
         it('should throw error if attribute is not in allowedFields', () => {
             should(
-                () => QueryUtilsApplyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}})
+                () => UtilsQueryApplyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}})
             ).throw('Illegal attribute or unknown logical operator: generationName');
         });
 
         it('should throw error if unknown relational operator is used', () => {
             should(
-                () => QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': {'$foo': 'bar'}}})
+                () => UtilsQueryApplyFilter(q, ['generationName'], {filter: {'generationName': {'$foo': 'bar'}}})
             ).throw('Unknown relational operator: $foo');
         });
     });
 
-    describe('#QueryUtilsApplyCriteriaFilter() - boolean operators', () => {
+    describe('#UtilsQueryApplyCriteriaFilter() - boolean operators', () => {
         let q;
         beforeEach(() => q = squel.select().from('test'));
 
@@ -48,7 +48,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'$and': {'generationId': 'a', 'generationName': 'b'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId', 'generationName'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' AND 'generations'.'generationName' = 'b')`
@@ -60,7 +60,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'$or': {'generationId': 'a', 'generationName': 'b'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId', 'generationName'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'generations'.'generationName' = 'b')`
@@ -73,7 +73,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': 'a', '$and': {'generationName': 'b', '$and' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -88,7 +88,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': 'a', '$or': {'generationName': 'b', '$or' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -103,7 +103,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': 'a', '$or': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -118,7 +118,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'$and()': {'generationId': 'a', '$and': {'generationName': 'b'}}, '$or()': {'generationId': 'c', '$and': {'generationName': 'd'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -134,7 +134,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': 'a', '$or()': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -149,7 +149,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': 'a', 'familyId': 'c'}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -164,7 +164,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': [{'generationId': 'a'}, {'familyId': 'c'}]
             };
 
-            QueryUtilsApplyFilter(q, ['generationId', 'familyId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId', 'familyId'], criteria);
 
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' = 'a' OR 'families'.'familyId' = 'c')`
@@ -177,7 +177,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': 'b', '$and':[{'generationId': 'a'}, {'familyId': 'c'}]}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -192,7 +192,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': 'b', '$or': {'generationId': 'a', 'familyId': 'c'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId',
+            UtilsQueryApplyFilter(q, ['generationId',
                 'generationName',
                 'familyId'], criteria);
 
@@ -215,7 +215,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': {'$eq': 'foo'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'foo')`
             );
@@ -226,7 +226,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': 'foo'}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 'foo')`
             );
@@ -237,7 +237,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': 1}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' = 1)`
             );
@@ -248,7 +248,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': null}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' IS NULL)`
             );
@@ -259,7 +259,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': {'$eq': null}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' IS NULL)`
             );
@@ -271,7 +271,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': {'$neq': 'foo'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' != 'foo')`
             );
@@ -282,7 +282,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': {'$neq': null}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' IS NOT NULL)`
             );
@@ -294,7 +294,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': {'$like': 'foo_'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' LIKE 'foo_')`
             );
@@ -306,7 +306,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': {'$nlike': 'foo_'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' NOT LIKE 'foo_')`
             );
@@ -318,7 +318,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': {'$gt': 5}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' > 5)`
             );
@@ -330,7 +330,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': {'$gte': 5}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' >= 5)`
             );
@@ -342,7 +342,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': {'$lt': 5}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' < 5)`
             );
@@ -354,7 +354,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': {'$lte': 5}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' <= 5)`
             );
@@ -366,7 +366,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': {'$in': [5, 6]}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (5, 6))`
             );
@@ -378,7 +378,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': [5, 6]}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (5, 6))`
             );
@@ -389,7 +389,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationId': {'$nin': [5, 6]}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationId'], criteria);
+            UtilsQueryApplyFilter(q, ['generationId'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' NOT IN (5, 6))`
             );
@@ -400,7 +400,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 'filter': {'generationName': {'$neq': 'foo', '$eq': 'bar'}}
             };
 
-            QueryUtilsApplyFilter(q, ['generationName'], criteria);
+            UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationName' != 'foo' AND 'generations'.'generationName' = 'bar')`
             );
@@ -412,82 +412,82 @@ describe('src/utils-query-apply-criteria-filter', () => {
         beforeEach(() => q = squel.select().from('test'));
 
         it('should do `IN` and `HAVING COUNT` for generationParents $eq', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$eq': [13, 37, 42]}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$eq': [13, 37, 42]}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (13, 37, 42)) GROUP BY generation_parents.generationId HAVING (count('generation_parents'.'plantId') = 3)))`
             );
         });
 
         it('should do an $eq for generationParents array short hand', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
             q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId HAVING (count('generation_parents'.'plantId') = 2)))`);
         });
 
         it('should do `NOT IN` for generationParents $neq', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$neq': [13, 37, 42]}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$neq': [13, 37, 42]}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT IN (13, 37, 42)) GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `LIKE` for generationParents $like', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$like': '13_7'}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$like': '13_7'}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' LIKE '13_7') GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `NOT LIKE` for generationParents $nlike', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$nlike': '13_7'}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$nlike': '13_7'}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT LIKE '13_7') GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `>` for generationParents $gt', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$gt': 42}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$gt': 42}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' > 42) GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `>=` for generationParents $gte', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$gte': 42}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$gte': 42}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' >= 42) GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `<` for generationParents $lt', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$lt': 42}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$lt': 42}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' < 42) GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `<=` for generationParents $lte', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$lte': 42}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$lte': 42}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' <= 42) GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `IN` for generationParents $in', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$in': [42, 43]}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$in': [42, 43]}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `=` for generationParents integer/string short hand', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: 42}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: 42}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' = 42) GROUP BY generation_parents.generationId))`
             );
         });
 
         it('should do `NOT IN` for generationParents $nin', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$nin': [42, 43]}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$nin': [42, 43]}}});
             q.toString().should.eql(
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT IN (42, 43)) GROUP BY generation_parents.generationId))`
             );
@@ -495,7 +495,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
 
         it('should throw error if unknown relational operator is used', () => {
             should(
-                () => QueryUtilsApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$foo': [42, 43]}}})
+                () => UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$foo': [42, 43]}}})
 
             ).throw('Unknown relational operator: $foo');
         });
@@ -509,28 +509,28 @@ describe('src/utils-query-apply-criteria-filter', () => {
         });
 
         it('should not do anything if options.filter is not an plainObject', () => {
-            QueryUtilsApplyFilter(q, [], {});
+            UtilsQueryApplyFilter(q, [], {});
             q.toString().should.eql('SELECT * FROM test');
         });
 
         it('should set WHERE (translated)field = fieldValue if options.filter[field] = fieldValue is an integer and correctly translate field to database.databasefield', () => {
-            QueryUtilsApplyFilter(q, ['familyId'], {filter: {'familyId': 42}});
+            UtilsQueryApplyFilter(q, ['familyId'], {filter: {'familyId': 42}});
             q.toString().should.eql(`SELECT * FROM test WHERE ('families'.'familyId' = 42)`);
         });
 
         it('should set WHERE (translated)field = "fieldValue" if options.filter[field] = fieldValue is a string', () => {
-            QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': 'testGenerationName'}});
+            UtilsQueryApplyFilter(q, ['generationName'], {filter: {'generationName': 'testGenerationName'}});
             q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationName' = 'testGenerationName')`);
         });
 
 
         it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field !== generationParents)', () => {
-            QueryUtilsApplyFilter(q, ['generationName'], {filter: {'generationName': () =>{}}});
+            UtilsQueryApplyFilter(q, ['generationName'], {filter: {'generationName': () =>{}}});
             q.toString().should.eql(`SELECT * FROM test`);
         });
 
         it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field === generationParents)', () => {
-            QueryUtilsApplyFilter(q, ['generationParents'], {filter: {'generationParents': () =>{}}});
+            UtilsQueryApplyFilter(q, ['generationParents'], {filter: {'generationParents': () =>{}}});
             q.toString().should.eql(`SELECT * FROM test`);
         });
     });

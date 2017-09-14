@@ -3,7 +3,7 @@
 const CONSTANTS = require('../../constants');
 const logger = require('../../logger');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
+const UtilsQuery = require('../../utils-query');
 
 const GenericDelete = require('../generic/generic-delete');
 
@@ -28,8 +28,8 @@ class GenerationDelete extends GenericDelete {
      *         Criteria object passed to delete()
      */
     static setQueryRelatedJoin(context, criteria) {
-        QueryUtils.joinGenotypesFromGenerations(context.queryRelated);
-        QueryUtils.joinPlantsFromGenotypes(context.queryRelated);
+        UtilsQuery.joinGenotypesFromGenerations(context.queryRelated);
+        UtilsQuery.joinPlantsFromGenotypes(context.queryRelated);
     }
 
     /**

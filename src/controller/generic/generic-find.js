@@ -6,8 +6,8 @@ const sqlite = require('sqlite');
 
 const logger = require('../../logger');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
-const QueryUtilsApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
+const UtilsQuery = require('../../utils-query');
+const UtilsQueryApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
 
 /**
  * Generic find class which is the skeleton for all *find methods
@@ -133,7 +133,7 @@ class GenericFind {
     }
 
     /**
-     * This method just applies {@link QueryUtilsApplyCriteriaFilter} to the context.queryWhere query.
+     * This method just applies {@link UtilsQueryApplyCriteriaFilter} to the context.queryWhere query.
      * Normally you shouldn't overwrite this, you can use this.ATTRIBUTES_SEARCHABLE to
      * adjust the behaviour.
      * @param  {object} context
@@ -142,7 +142,7 @@ class GenericFind {
      *         Criteria object passed to find()
      */
     static setQueryWhere(context, criteria) {
-        QueryUtilsApplyCriteriaFilter(
+        UtilsQueryApplyCriteriaFilter(
             context.queryWhere,
             this.ATTRIBUTES_SEARCHABLE,
             criteria,
@@ -182,7 +182,7 @@ class GenericFind {
     }
 
     /**
-     * Applies {@link QueryUtils.applyCriteriaAttributes} to context.queryWhere.
+     * Applies {@link UtilsQuery.applyCriteriaAttributes} to context.queryWhere.
      * Normally you shouldn't overwrite this function.
      * @param  {object} context
      *         Internal context object
@@ -191,7 +191,7 @@ class GenericFind {
      */
     static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set attributes specified if options.attributes, otherwise all.
-        QueryUtils.applyCriteriaAttributes(
+        UtilsQuery.applyCriteriaAttributes(
             context.queryWhere,
             this.ATTRIBUTES_SEARCHABLE,
             criteria.attributes,
@@ -224,7 +224,7 @@ class GenericFind {
      */
     static setQueryWhereLimitAndOffset(context, criteria) {
     // Set LIMIT and OFFSET for queryWhere (and only for queryWhere)
-        QueryUtils.applyCriteriaLimitAndOffset(context.queryWhere, criteria);
+        UtilsQuery.applyCriteriaLimitAndOffset(context.queryWhere, criteria);
     }
 
     /**
@@ -235,7 +235,7 @@ class GenericFind {
      *         Criteria object passed to find()
      */
     static setQueryWhereOrder(context, criteria) {
-        QueryUtils.applyCriteriaSort(
+        UtilsQuery.applyCriteriaSort(
             context.queryWhere,
             this.ATTRIBUTES_SEARCHABLE,
             criteria,

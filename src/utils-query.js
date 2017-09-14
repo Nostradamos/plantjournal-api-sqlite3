@@ -6,9 +6,9 @@ const CONSTANTS = require('./constants');
 
 /**
  * Set of utils mainly used for query building.
- * @namespace QueryUtils
+ * @namespace UtilsQuery
  */
-let QueryUtils = exports;
+let UtilsQuery = exports;
 
 
 /**
@@ -22,30 +22,30 @@ let QueryUtils = exports;
  * @param {boolean} [joinGenerationParents=true]
  *        True if we want to join generationParents
  */
-QueryUtils.joinRelatedGenerations = (queryObj, joinGenerationParents=true) => {
+UtilsQuery.joinRelatedGenerations = (queryObj, joinGenerationParents=true) => {
     if (joinGenerationParents === true) {
-        QueryUtils.joinGenerationParentsFromGenerations(queryObj);
+        UtilsQuery.joinGenerationParentsFromGenerations(queryObj);
     }
-    QueryUtils.joinFamiliesFromGenerations(queryObj);
+    UtilsQuery.joinFamiliesFromGenerations(queryObj);
 };
 
 
 /**
  * Join to all related tables of Genotypes.
- * This will also execute QueryUtils.joinRelatedGenerations(queryObj).
+ * This will also execute UtilsQuery.joinRelatedGenerations(queryObj).
  * Mutates queryObj.
  *
  * @param {squel} queryObj
  *        Squel Query Builder to add joins
  * @returns {undefined}
  */
-QueryUtils.joinRelatedGenotypes = function(queryObj) {
-    QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes(queryObj);
+UtilsQuery.joinRelatedGenotypes = function(queryObj) {
+    UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes(queryObj);
 
-    // Because with QueryUtils.joinGenerations we already join
+    // Because with UtilsQuery.joinGenerations we already join
     // generation_parents and generations, we don't have to join
     // generation_parents again, therefore set false
-    QueryUtils.joinRelatedGenerations(queryObj, false);
+    UtilsQuery.joinRelatedGenerations(queryObj, false);
 };
 
 
@@ -60,29 +60,29 @@ QueryUtils.joinRelatedGenotypes = function(queryObj) {
  *        Squel Query Builder to add joins
  * @returns {undefined}
  */
-QueryUtils.joinRelatedPlants = function(queryObj) {
-    QueryUtils.joinGenotypesFromPlants(queryObj);
-    QueryUtils.joinRelatedGenotypes(queryObj);
-    QueryUtils.joinMediumsFromPlants(queryObj);
-    QueryUtils.joinRelatedMediums(queryObj);
+UtilsQuery.joinRelatedPlants = function(queryObj) {
+    UtilsQuery.joinGenotypesFromPlants(queryObj);
+    UtilsQuery.joinRelatedGenotypes(queryObj);
+    UtilsQuery.joinMediumsFromPlants(queryObj);
+    UtilsQuery.joinRelatedMediums(queryObj);
 };
 
 
-QueryUtils.joinRelatedMediums = function(queryObj) {
-    QueryUtils.joinEnvironmentsFromMediums(queryObj);
+UtilsQuery.joinRelatedMediums = function(queryObj) {
+    UtilsQuery.joinEnvironmentsFromMediums(queryObj);
 };
 
 /**
  * Left joins generations by referencing to families.familyId.
  * @param  {squel} query - Squel query capable of an .left_join()
  */
-QueryUtils.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
-    QueryUtils.joinGenerationsFromFamilies(query);
+UtilsQuery.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
+    UtilsQuery.joinGenerationsFromFamilies(query);
 
-    QueryUtils.joinGenerationParentsFromGenerations(query);
+    UtilsQuery.joinGenerationParentsFromGenerations(query);
 };
 
-QueryUtils.joinGenerationsFromFamilies = function(query) {
+UtilsQuery.joinGenerationsFromFamilies = function(query) {
     query.left_join( CONSTANTS.TABLE_GENERATION,
         'generations',
         'families.familyId = generations.familyId'
@@ -93,7 +93,7 @@ QueryUtils.joinGenerationsFromFamilies = function(query) {
  * Left joins Genotypes by referencing to generations.generationId
  * @param  {squel} query - Squel query capable of an .left_join()
  */
-QueryUtils.joinGenotypesFromGenerations = function(query) {
+UtilsQuery.joinGenotypesFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_GENOTYPE,
         'genotypes',
         'generations.generationId = genotypes.generationId'
@@ -104,21 +104,21 @@ QueryUtils.joinGenotypesFromGenerations = function(query) {
  * Left joins Plants by referencing to genotypes.genotypeId
  * @param  {squel} query - Squel query capable of an .left_join()
  */
-QueryUtils.joinPlantsFromGenotypes = function(query) {
+UtilsQuery.joinPlantsFromGenotypes = function(query) {
     query.left_join(CONSTANTS.TABLE_PLANT,
         'plants',
         'genotypes.genotypeId = plants.genotypeId'
     );
 };
 
-QueryUtils.joinMediumsFromPlants = function(query) {
+UtilsQuery.joinMediumsFromPlants = function(query) {
     query.left_join(CONSTANTS.TABLE_MEDIUM,
         'mediums',
         'plants.mediumId = mediums.mediumId'
     );
 };
 
-QueryUtils.joinEnvironmentsFromMediums = function(query) {
+UtilsQuery.joinEnvironmentsFromMediums = function(query) {
     query.left_join(CONSTANTS.TABLE_ENVIRONMENT,
         'environments',
         'mediums.environmentId = environments.environmentId'
@@ -130,7 +130,7 @@ QueryUtils.joinEnvironmentsFromMediums = function(query) {
  * @param  {squel} query
  *         Squel query capable of an .left_join()
  */
-QueryUtils.joinFamiliesFromGenerations = function(query) {
+UtilsQuery.joinFamiliesFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_FAMILY,
         'families',
         'generations.familyId = families.familyId');
@@ -142,14 +142,14 @@ QueryUtils.joinFamiliesFromGenerations = function(query) {
  * @param  {squel} query
  *         Squel query capable of an .left_join()
  */
-QueryUtils.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
+UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
     // First join generations
-    QueryUtils.joinGenerationsFromGenotypes(query);
+    UtilsQuery.joinGenerationsFromGenotypes(query);
     // Now we can also join generation parents
-    QueryUtils.joinGenerationParentsFromGenerations(query);
+    UtilsQuery.joinGenerationParentsFromGenerations(query);
 };
 
-QueryUtils.joinGenerationsFromGenotypes = function(query) {
+UtilsQuery.joinGenerationsFromGenotypes = function(query) {
     query.left_join( CONSTANTS.TABLE_GENERATION,
         'generations',
         'genotypes.generationId = generations.generationId'
@@ -161,7 +161,7 @@ QueryUtils.joinGenerationsFromGenotypes = function(query) {
  * @param  {squel} query
  *         Squel query which can take an .left_join()
  */
-QueryUtils.joinGenerationParentsFromGenerations = function(query) {
+UtilsQuery.joinGenerationParentsFromGenerations = function(query) {
     query.left_join(CONSTANTS.TABLE_GENERATION_PARENT,
         'generation_parents',
         'generations.generationId = generation_parents.generationId'
@@ -173,21 +173,21 @@ QueryUtils.joinGenerationParentsFromGenerations = function(query) {
  * @param  {squel} query
  *         Squel query capable of an .left_join()
  */
-QueryUtils.joinGenotypesFromPlants = function(query) {
+UtilsQuery.joinGenotypesFromPlants = function(query) {
     query.left_join(CONSTANTS.TABLE_GENOTYPE,
         'genotypes',
         'plants.genotypeId = genotypes.genotypeId'
     );
 };
 
-QueryUtils.joinPlantsFromMediums = function(query) {
+UtilsQuery.joinPlantsFromMediums = function(query) {
     query.left_join(CONSTANTS.TABLE_PLANT,
         'plants',
         'mediums.mediumId = plants.mediumId'
     );
 };
 
-QueryUtils.joinMediumsFromEnvironments = function(query) {
+UtilsQuery.joinMediumsFromEnvironments = function(query) {
     query.left_join(CONSTANTS.TABLE_MEDIUM,
         'mediums',
         'environments.environmentId = mediums.environmentId'
@@ -214,7 +214,7 @@ QueryUtils.joinMediumsFromEnvironments = function(query) {
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table. .
  */
-QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes, overWriteTableLookup = null) {
+UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes, overWriteTableLookup = null) {
     let attributesToSelect;
 
     if (_.isEmpty(criteriaAttributes)) {
@@ -236,7 +236,7 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
             );
         } else {
             // translate attribute to explicit column name (tablename.attr)
-            table = QueryUtils.getTableOfField(attr, overWriteTableLookup);
+            table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);
 
             // ToDo: use ?.? instead of string concatinating
             query.field(
@@ -260,7 +260,7 @@ QueryUtils.applyCriteriaAttributes = function (query, allowedAttributes, criteri
  * @param {int} [criteria.offset=0]
  *        Offset to set. If empty, will set to 0.
  */
-QueryUtils.applyCriteriaLimitAndOffset = function (query, criteria) {
+UtilsQuery.applyCriteriaLimitAndOffset = function (query, criteria) {
     let limit = criteria.limit || 10;
     let offset = criteria.offset || 0;
 
@@ -311,7 +311,7 @@ QueryUtils.applyCriteriaLimitAndOffset = function (query, criteria) {
  *         If attribute is illegal (not in allowedAttributes) or the order type
  *         is unknown (not ASC or DESC).
  */
-QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria, overWriteTableLookup = null) {
+UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, overWriteTableLookup = null) {
     if (_.isEmpty(criteria.sort)) return;
     if (!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
 
@@ -339,7 +339,7 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria, over
         // Sometimes it's needed to use the current table when we don't join the referenced table.
         // Eg: we don't join families but still want to sort by familyId. getTableOfField would
         // return families as table, but we need generations.
-        let table = QueryUtils.getTableOfField(attr, overWriteTableLookup);
+        let table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);
 
         if (sortType === 'ASC') {
             query.order('?.?', true, table, attr);
@@ -366,7 +366,7 @@ QueryUtils.applyCriteriaSort = function(query, allowedAttributes, criteria, over
  * @return {String}
  *         Determined Table name
  */
-QueryUtils.getTableOfField = function (attr, overWriteTableLookup = null) {
+UtilsQuery.getTableOfField = function (attr, overWriteTableLookup = null) {
     // determine which table we need
     let table;
 

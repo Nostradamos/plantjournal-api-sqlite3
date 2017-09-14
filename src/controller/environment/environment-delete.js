@@ -5,7 +5,7 @@ const _ = require('lodash');
 const logger = require('../../logger');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils');
-const QueryUtils = require('../../utils-query');
+const UtilsQuery = require('../../utils-query');
 
 const GenericDelete = require('../generic/generic-delete');
 
@@ -32,8 +32,8 @@ class EnvironmentDelete extends GenericDelete {
      *         Criteria object passed to delete()
      */
     static setQueryRelatedJoin(context, criteria) {
-        QueryUtils.joinMediumsFromEnvironments(context.queryRelated);
-        QueryUtils.joinPlantsFromMediums(context.queryRelated);
+        UtilsQuery.joinMediumsFromEnvironments(context.queryRelated);
+        UtilsQuery.joinPlantsFromMediums(context.queryRelated);
     }
 
     /**
