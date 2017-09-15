@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const CONSTANTS = require('./constants');
+const CONSTANTS = require('../constants');
 
 /**
  * Set of utils mainly used for query building.

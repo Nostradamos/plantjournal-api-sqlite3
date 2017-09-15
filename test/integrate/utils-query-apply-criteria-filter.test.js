@@ -5,11 +5,11 @@ const should = require('should');
 
 const squel = require('squel');
 
-const UtilsQueryApplyFilter = require('../../src/utils-query-apply-criteria-filter');
+const UtilsQueryApplyFilter = require('../../src/apply-where/apply-where');
 
 
-describe('src/utils-query-apply-criteria-filter', () => {
-    describe('#UtilsQueryApplyCriteriaFilter() - errors', () => {
+describe('src/apply-where/apply-where', () => {
+    describe('#ApplyWhere() - errors', () => {
         let q;
         beforeEach(() => q = squel.select().from('test'));
 
@@ -33,7 +33,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
         });
     });
 
-    describe('#UtilsQueryApplyCriteriaFilter() - boolean operators', () => {
+    describe('#ApplyWhere() - boolean operators', () => {
         let q;
         beforeEach(() => q = squel.select().from('test'));
 

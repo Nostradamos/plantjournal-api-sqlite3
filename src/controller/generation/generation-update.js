@@ -5,7 +5,7 @@ const squel = require('squel');
 const sqlite = require('sqlite');
 
 const logger = require('../../logger');
-const UtilsQuery = require('../../utils-query');
+const UtilsQuery = require('../../utils/utils-query');
 
 const CONSTANTS = require('../../constants');
 const GenericUpdate = require('../generic/generic-update');

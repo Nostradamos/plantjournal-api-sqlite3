@@ -5,7 +5,7 @@ const sqlite = require('sqlite');
 
 const CONSTANTS = require('../../constants');
 const logger = require('../../logger');
-const Utils = require('../../utils');
+const Utils = require('../../utils/utils');
 const Genotype = require('../../models/genotype');
 
 const GenericCreate = require('../generic/generic-create');

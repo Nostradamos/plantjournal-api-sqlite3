@@ -4,7 +4,7 @@ const _ = require('lodash');
 const squel = require('squel');
 
 const logger = require('../logger');
-const UtilsApplyCriteria = require('./utils-apply-criteria');
+const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require(
     './translate-operators-relational');
@@ -141,7 +141,7 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
             let subSquelExpr = squel.expr();
 
             eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'and');
-            UtilsApplyCriteria.applyCriteriaToExpression(
+            UtilsExpression.applyExpression(
                 squelExpr, subSquelExpr, [], 'and');
         } else if (attr === '$or()') {
         // $or() is a bit different, we want to have a child criterias in
@@ -149,7 +149,7 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
             let subSquelExpr = squel.expr();
 
             eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'or');
-            UtilsApplyCriteria.applyCriteriaToExpression(
+            UtilsExpression.applyExpression(
                 squelExpr, subSquelExpr, [], 'or');
         } else if (_.indexOf(self.allowedAttributes, attr) !== -1){
         // Handle normal attributes

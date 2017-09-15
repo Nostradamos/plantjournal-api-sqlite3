@@ -4,8 +4,8 @@ const _ = require('lodash');
 
 const logger = require('../../logger');
 const CONSTANTS = require('../../constants');
-const Utils = require('../../utils');
-const UtilsQuery = require('../../utils-query');
+const Utils = require('../../utils/utils');
+const UtilsQuery = require('../../utils/utils-query');
 
 const GenericDelete = require('../generic/generic-delete');
 

@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
 const logger = require('../../logger');
-const Utils = require('../../utils');
+const Utils = require('../../utils/utils');
 
 const GenericDelete = require('../generic/generic-delete');
 

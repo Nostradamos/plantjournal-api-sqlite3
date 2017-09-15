@@ -3,7 +3,7 @@
 const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
-const Utils = require('../../utils');
+const Utils = require('../../utils/utils');
 
 const GenericFind = require('../generic/generic-find');
 

@@ -5,9 +5,9 @@ const squel = require('squel');
 const sqlite = require('sqlite');
 
 const logger = require('../../logger');
-const Utils = require('../../utils');
-const UtilsQuery = require('../../utils-query');
-const UtilsQueryApplyCriteriaFilter = require('../../utils-query-apply-criteria-filter');
+const Utils = require('../../utils/utils');
+const UtilsQuery = require('../../utils/utils-query');
+const ApplyWhere = require('../../apply-where/apply-where');
 
 /**
  * Generic update class which is the skeleton for all *-update classes.
@@ -127,7 +127,7 @@ class GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
     static setQueryFindWhere(context, update, criteria) {
-        UtilsQueryApplyCriteriaFilter(
+        ApplyWhere(
             context.queryFind,
             this.ATTRIBUTES_SEARCHABLE,
             criteria,

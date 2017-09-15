@@ -5,7 +5,7 @@ const should = require('should');
 const squel = require('squel');
 
 var TranslateOperatorsGeneric = require(
-    '../../../src/apply-criteria/translate-operators-generic');
+    '../../../src/apply-where/translate-operators-generic');
 
 describe('TranslateOperatorsGeneric', () => {
     describe('#callOperatorFuncsAndApplyCriterias()', () => {

@@ -5,7 +5,7 @@ require('should');
 const squel = require('squel');
 
 var TranslateOperatorsRelational = require(
-    '../../../src/apply-criteria/translate-operators-relational');
+    '../../../src/apply-where/translate-operators-relational');
 
 describe('TranslateOperatorsRelational', () => {
     describe('#translateAndApplyOperators()', () => {

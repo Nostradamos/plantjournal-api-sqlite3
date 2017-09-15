@@ -5,7 +5,7 @@ const squel = require('squel');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
-const UtilsApplyCriteria = require('./utils-apply-criteria');
+const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require('./translate-operators-relational');
 
@@ -30,12 +30,12 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
     static operatorEquals(self, operatorOptions, crit) {
         this.operatorIn(self, operatorOptions, crit);
 
-        let [critHaving, critHavingArgs] = UtilsApplyCriteria.
+        let [critHaving, critHavingArgs] = UtilsExpression.
             createEqualsExpression(self.table, self.attr, operatorOptions.length, 'count');
 
         logger.silly(this.name, '#operatorEquals()', critHaving, critHavingArgs);
 
-        UtilsApplyCriteria.applyCriteriaToExpression(
+        UtilsExpression.applyExpression(
             self.squelExprHaving, critHaving, critHavingArgs, self.type);
 
     }
@@ -76,7 +76,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
             '#applyCriteriaFilter #translateAndApplyGenerationParentsOperators() ' +
             'generationParents subQuery:', subQuery.toString());
 
-        UtilsApplyCriteria.applyCriteriaToExpression(
+        UtilsExpression.applyExpression(
             self.squelExprOld,
             '?.? IN ?',
             [
@@ -91,8 +91,8 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
 TranslateOperatorsGenerationParents.OPERATORS = _.clone(TranslateOperatorsRelational.OPERATORS);
 
-TranslateOperatorsGenerationParents.OPERATORS['$eq'] = TranslateOperatorsGenerationParents.operatorEquals;
-TranslateOperatorsGenerationParents.OPERATORS['$neq'] = TranslateOperatorsGenerationParents.operatorNotEquals;
+TranslateOperatorsGenerationParents.OPERATORS.$eq = TranslateOperatorsGenerationParents.operatorEquals;
+TranslateOperatorsGenerationParents.OPERATORS.$neq = TranslateOperatorsGenerationParents.operatorNotEquals;
 
 
 module.exports = TranslateOperatorsGenerationParents;

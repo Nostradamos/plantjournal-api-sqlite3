@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const logger = require('../logger');
 
-const UtilsApplyCriteria = require('./utils-apply-criteria');
+const UtilsExpression = require('../utils/utils-expression');
 
 
 class TranslateOperatorsGeneric {
@@ -107,7 +107,7 @@ class TranslateOperatorsGeneric {
 
     static _applycrit(self, crit) {
         if(crit.crit !== null) {
-            UtilsApplyCriteria.applyCriteriaToExpression(
+            UtilsExpression.applyExpression(
                 self.squelExpr, crit.crit, crit.args, self.type);
         } else {
             logger.warn('crit.crit is null');

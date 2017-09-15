@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const sqlite = require('sqlite');
 
-const CONSTANTS = require('./constants');
+const CONSTANTS = require('../constants');
 
 /**
  * Utils.

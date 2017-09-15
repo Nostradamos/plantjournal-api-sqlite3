@@ -7,9 +7,9 @@ const should = require('should');
 
 const sqlite = require('sqlite');
 
-const Utils = require('../../src/utils');
+const Utils = require('../../src/utils/utils');
 
-describe('Utils', () => {
+describe('utils/utils', () => {
     describe('#deleteEmptyProperties()', () => {
         it(
             'should mutate object to only contain non empty properties',

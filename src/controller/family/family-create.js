@@ -1,7 +1,7 @@
 'use strict';
 
 const CONSTANTS = require('../../constants');
-const Utils = require('../../utils');
+const Utils = require('../../utils/utils');
 
 const GenericCreate = require('../generic/generic-create');
 

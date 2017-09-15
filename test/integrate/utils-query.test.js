@@ -5,7 +5,7 @@ const should = require('should');
 const squel = require('squel');
 
 const CONSTANTS = require('../../src/constants');
-const UtilsQuery = require('../../src/utils-query');
+const UtilsQuery = require('../../src/utils/utils-query');
 
 describe('UtilsQuery', () => {
     describe('#setFields()', () => {
