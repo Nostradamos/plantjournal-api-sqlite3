@@ -10,6 +10,9 @@ const UtilsExpression = require('../utils/utils-expression');
 const TranslateOperatorsRelational = require('./translate-operators-relational');
 
 class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
+    static getTable(self) {
+        self.table = CONSTANTS.TABLE_GENERATION_PARENT;        
+    }
     /**
      * We can force set attribute (self.attr) to plantId, because we will only
      * query this attribute. Also the the table we will query will always be
@@ -21,7 +24,6 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      */
     static modifiySelf(self) {
         self.attr = CONSTANTS.ATTR_ID_PLANT;
-        self.table = CONSTANTS.TABLE_GENERATION_PARENT;
         self.squelExprOld = self.squelExpr;
         self.squelExpr = squel.expr();
         self.squelExprHaving = squel.expr();

@@ -5,7 +5,7 @@ const should = require('should');
 
 const squel = require('squel');
 
-const UtilsQueryApplyFilter = require('../../src/apply-where/apply-where');
+const UtilsQueryApplyFilter = require('../../../src/apply-where/apply-where');
 
 
 describe('src/apply-where/apply-where', () => {

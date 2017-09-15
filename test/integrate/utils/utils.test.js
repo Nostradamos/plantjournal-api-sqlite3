@@ -7,7 +7,7 @@ const should = require('should');
 
 const sqlite = require('sqlite');
 
-const Utils = require('../../src/utils/utils');
+const Utils = require('../../../src/utils/utils');
 
 describe('utils/utils', () => {
     describe('#deleteEmptyProperties()', () => {

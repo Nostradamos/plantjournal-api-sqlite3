@@ -154,26 +154,102 @@ Models/Tables
 | environmentCreatedAt   | datetime |          | CURRENT_TIMESTAMP | *        |             |
 | environmentModifiedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
 
-## Log (unimplemented)
+## Journal (unimplemented)
 
 If Required is filled with "\*\*", you can only set/get this attribute if the logFor attribute matches. So for example you can only
 get plantId if logFor is "plant" and you can only get mediumId if logFor is "medium etc.
 
-| Attribute     | Type          | Required | Default           | Internal | Description                                                         |
-| ------------- | ------------- | -------- | ----------------- | -------- | -----------                                                         |
-| logId         | int           |          | AUTO_INCREMENT    | *        |                                                                     |
-| logFor        | enum          | *        |                   |          | Has to be either "plant", "medium" or "environment".                |
-| logTimestamp  | datetime      | *        |                   |          |                                                                     |
-| logType       | text          | *        |                   |          |                                                                     |
-| logValue      | blob          | *        |                   |          |                                                                     |
-| logCreatedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                     |
-| logModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                     |
-| plantId       | plantId       | **       |                   |          | Has to reference an existing plant if logFor = "plant".             |
-| mediumId      | mediumId      | **       |                   |          | Has to reference an existing medium if logFor = "medium".           |
-| environmentId | environmentId | **       |                   |          | Has to reference an existing environment if logFor = "environment". |
+| Attribute         | Type          | Required | Default           | Internal | Description                                                             |
+| ----------------- | ------------- | -------- | ----------------- | -------- | ----------------------------------------------------------------------- |
+| journalId         | int           |          | AUTO_INCREMENT    | *        |                                                                         |
+| journalTimestamp  | datetime      | *        |                   |          |                                                                         |
+| journalType       | text          | *        |                   |          |                                                                         |
+| journalValue      | json          | *        |                   |          |                                                                         |
+| journalCreatedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                         |
+| journalModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                         |
+| plantId           | plantId       | **       |                   |          | Has to reference an existing plant if journalFor = "plant".             |
+| mediumId          | mediumId      | **       |                   |          | Has to reference an existing medium if journalFor = "medium".           |
+| environmentId     | environmentId | **       |                   |          | Has to reference an existing environment if journalFor = "environment". |
 
-ToDo
-=====
+# Query Operators
+
+## Operators for most attributes
+NOTE: This excludes the special cases `generationParents` and `journalValue`. Scroll to the next sections to get details about the operators available for those special cases.
+
+### $eq (equals)
+### $neq (equals not)
+### $gt (greater than)
+### $gte (greater than equals)
+### $lt (lower than)
+### $lte (lower than equals)
+### $in (in)
+### $nin (not in)
+### $like (like)
+### $nlike (not like)
+
+## Operators for `generationParents`
+### $eq
+### $neq
+### $has
+### $nhas
+### $len
+
+## Operators for `journalValue`
+### $eq (equals)
+### $neq (equals not)
+### $gt (greater than)
+### $gte (greater than equals)
+### $lt (lower than)
+### $lte (lower than equals)
+### $in (in)
+### $nin (not in)
+### $like (like)
+### $nlike (not like)
+### $has
+### $nhas
+### $type
+### $len
+
+# Journal Types
+
+## `log`
+
+### Example:
+```
+{
+    journalType: 'log',
+    journalValue: 'Lorem Ipsum
+    Asd dasldk'
+}
+```
+
+
+## `water`
+
+### Example:
+```
+{
+    journalType: 'water',
+    journalValue: {
+        amountL: 13.0,
+        ec: 0.8
+        ph: 6.5
+        fertRatio: {
+            n: 5
+            p: 7
+        },
+        fertAmountML: {
+            n: 1.0
+        },
+        fertilizers: ['Hakaphos Green', 'Hakaphos Blue']
+    }
+}
+```
+
+
+
+
+# ToDo
 * Implement files/pictures/media
 * Add .on events
 * Make it possible to create plants without need of generations/family?!
@@ -184,20 +260,19 @@ ToDo
 * Improve performance for sql by only joining tables if necessary
 * Use CONSTANTS. and not hardcoded attribute/table names
 
-Development Notes/Coding Style
-==============================
+# Development Notes/Coding Style
 
 * Always use explicit column names (explicit => including table name) in your
-  queries as soon as you join different tables. Why? Because for all 
+  queries as soon as you join different tables. Why? Because for all
   foreign keys we use the same column name in source and destination table.
   SQLite can't know which table you mean, so we just use explicit column names
   for everything. Eg: `generations.familyId` references `families.familyId`.
 
 * Try to use CONSTANTS wherever you can, especially for attributes. This makes
-  it easier to change the attribute or variable names and reduces the risk of 
+  it easier to change the attribute or variable names and reduces the risk of
   misspelling any constant, because we throw an error if you try to read an
   undefined property from constants (thanks to es6 proxies and zealot).
 
-* Use lamda expression for all anonymous functions. For named functions (also 
-  assigned functions) use `function()` style. If the shorted lamda expression 
+* Use lamda expression for all anonymous functions. For named functions (also
+  assigned functions) use `function()` style. If the shorted lamda expression
   allows you to fit max line length for named functions, feel free to use it.

@@ -10,6 +10,9 @@ const TranslateOperatorsRelational = require(
     './translate-operators-relational');
 const TranslateOperatorsGenerationParents = require(
     './translate-operators-generation-parents');
+const TranslateOperatorsJournalValuePath = require(
+    './translate-operators-journal-value-path');
+
 /**
  * This function sets the filter parts for our queries and handles
  * many special cases. Mutates query.
@@ -190,7 +193,7 @@ function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
         translator = TranslateOperatorsGenerationParents;
     } else if(_.startsWith(attr, 'journalValue')) {
     // This is something starting with journalValue, special case
-        //translator = TranslateOperatorsJournalValue;
+        translator = TranslateOperatorsJournalValue;
     } else {
         translator = TranslateOperatorsRelational;
     }

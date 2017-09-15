@@ -27,69 +27,79 @@ UtilsExpression.applyExpression = function (squelExpr, expr, exprArgs, type) {
     }
 };
 
-UtilsExpression.createGenericExpression = function(table, attr, operator, equal, func=null) {
-    return [
-        (func === null ? '?.? ' : func + '(?.?) ') + operator + ' ?',
-        [table, attr, equal]
-    ];
+UtilsExpression.createGenericExpression = function(table, attr, operator, equal, func=null, funcArgs=null) {
+    let expr = '';
+    let exprArgs = [table, attr];
+
+    if(func === null) {
+        expr += '?.?';
+    } else {
+        expr += func + '(?.?';
+        if(funcArgs !== null) {
+            expr += ' ' + _.chain('?,').repeat(3).trimEnd(',').value();
+            exprArgs.push(...funcArgs);
+        }
+        expr += ')';
+    }
+
+    expr += ' ' + operator + ' ?';
+    exprArgs.push(equal);
+
+    return [expr, exprArgs];
 };
 
-UtilsExpression.createIsNullExpression = function(table, attr) {
-    return [
-        '?.? IS NULL',
-        [table, attr]
-    ];
+UtilsExpression.createIsNullExpression = function(table, attr, func=null, funcArgs=null) {
+    return UtilsExpression.createGenericExpression(
+        table, attr, 'IS', null, func);
 };
 
-UtilsExpression.createIsNotNullExpression = function(table, attr) {
-    return [
-        '?.? IS NOT NULL',
-        [table, attr]
-    ];
+UtilsExpression.createIsNotNullExpression = function(table, attr, func=null, funcArgs=null) {
+    return UtilsExpression.createGenericExpression(
+        table, attr, 'IS NOT', null, func);
 };
 
-UtilsExpression.createEqualsExpression = function(table, attr, toEqual, func=null) {
+UtilsExpression.createEqualsExpression = function(table, attr, toEqual, func=null, funcArgs=null) {
     if(_.isNull(toEqual)) {
         return UtilsExpression.createIsNullExpression(table, attr);
     }
     return UtilsExpression.createGenericExpression(table, attr, '=', toEqual, func);
 };
 
-UtilsExpression.createNotEqualsExpression = function(table, attr, notToEqual, func=null) {
+UtilsExpression.createNotEqualsExpression = function(table, attr, notToEqual, func=null, funcArgs=null) {
     if(_.isNull(notToEqual)) {
         return UtilsExpression.createIsNotNullExpression(table, attr);
     }
     return UtilsExpression.createGenericExpression(table, attr, '!=', notToEqual, func);
 };
 
-UtilsExpression.createLikeExpression = function(table, attr, like, func=null) {
+UtilsExpression.createLikeExpression = function(table, attr, like, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, 'LIKE', like, func);
 };
 
-UtilsExpression.createNotLikeExpression = function(table, attr, notLike, func=null) {
+UtilsExpression.createNotLikeExpression = function(table, attr, notLike, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, 'NOT LIKE', notLike, func);
 };
 
-UtilsExpression.createGreaterThanExpression = function(table, attr, greaterThan, func=null) {
+UtilsExpression.createGreaterThanExpression = function(table, attr, greaterThan, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, '>', greaterThan, func);
 };
 
-UtilsExpression.createGreaterThanEqualExpression = function(table, attr, greaterThanEqual, func=null) {
+UtilsExpression.createGreaterThanEqualExpression = function(table, attr, greaterThanEqual, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, '>=', greaterThanEqual, func);
 };
 
-UtilsExpression.createLowerThanExpression = function(table, attr, lowerThan, func=null) {
+UtilsExpression.createLowerThanExpression = function(table, attr, lowerThan, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, '<', lowerThan, func);
 };
 
-UtilsExpression.createLowerThanEqualExpression = function(table, attr, lowerThanEqual, func=null) {
+UtilsExpression.createLowerThanEqualExpression = function(table, attr, lowerThanEqual, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, '<=', lowerThanEqual, func);
 };
 
-UtilsExpression.createInExpression = function(table, attr, inArr, func=null) {
+UtilsExpression.createInExpression = function(table, attr, inArr, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, 'IN', inArr, func);
 };
 
-UtilsExpression.createNotInExpression = function (table, attr, notInArr, func=null) {
+UtilsExpression.createNotInExpression = function (table, attr, notInArr, func=null, funcArgs=null) {
     return UtilsExpression.createGenericExpression(table, attr, 'NOT IN', notInArr, func);
 };
