@@ -1,8 +1,7 @@
 /* eslint-env node, mocha */
 'use strict';
 
-
-require('should');
+const should = require('should');
 const sqlite = require('sqlite');
 
 const plantJournal = require('../../../../src/pj');

@@ -1,8 +1,7 @@
+/* eslint-env node, mocha */
 'use strict';
 
-require('should');
-const _ = require('lodash');
-
+const should = require('should');
 const squel = require('squel');
 
 var TranslateOperatorsGeneric = require(
@@ -20,7 +19,7 @@ describe('TranslateOperatorsGeneric', () => {
             TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
                 operatorOptions.should.eql('test');
                 gotCalled = true;
-            }
+            };
 
             TranslateOperatorsGeneric.callOperatorFuncsAndApplyCriterias({
                 attrOptions: {'$eq': 'test'}
@@ -34,7 +33,7 @@ describe('TranslateOperatorsGeneric', () => {
 
             TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
                 gotCalled = true;
-            }
+            };
 
             TranslateOperatorsGeneric.callOperatorFuncsAndApplyCriterias({
                 attrOptions: {'$neq': 'test'}
@@ -45,10 +44,9 @@ describe('TranslateOperatorsGeneric', () => {
 
         it('should apply critieria from operatorFunc to self.squelExpr', () => {
             TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
-                crit.crit = "?.? = ?";
+                crit.crit = '?.? = ?';
                 crit.args = [1, 2, operatorOptions];
-                console.log("hallo");
-            }
+            };
 
             let self = {
                 attrOptions: {'$eq': 'test'}, squelExpr: squel.expr(),
@@ -77,7 +75,7 @@ describe('TranslateOperatorsGeneric', () => {
 
             TranslateOperatorsGeneric.unhandledShortHand = function(self) {
                 gotCalled = true;
-            }
+            };
 
             TranslateOperatorsGeneric.checkForShortHands({attrOptions: Function});
             should(gotCalled).be.true();
@@ -88,9 +86,9 @@ describe('TranslateOperatorsGeneric', () => {
 
             TranslateOperatorsGeneric.processStringNumberBooleanNullShortHand = function(self) {
                 gotCalled = true;
-            }
+            };
 
-            TranslateOperatorsGeneric.checkForShortHands({attrOptions: "Test"});
+            TranslateOperatorsGeneric.checkForShortHands({attrOptions: 'Test'});
             should(gotCalled).be.true();
         });
 
@@ -99,7 +97,7 @@ describe('TranslateOperatorsGeneric', () => {
 
             TranslateOperatorsGeneric.processArrayShortHand = function(self) {
                 gotCalled = true;
-            }
+            };
 
             TranslateOperatorsGeneric.checkForShortHands({attrOptions: [1,2]});
             should(gotCalled).be.true();
@@ -107,9 +105,9 @@ describe('TranslateOperatorsGeneric', () => {
 
         it('should apply crits from proccessArrayShortHand function', () => {
             TranslateOperatorsGeneric.processArrayShortHand = function(self, crit) {
-                crit.crit = "?.? IN ?";
+                crit.crit = '?.? IN ?';
                 crit.args = ['foo', 'bar', self.attrOptions];
-            }
+            };
 
             let self = {squelExpr: squel.expr(), type: 'and', attrOptions: [1,2]};
 

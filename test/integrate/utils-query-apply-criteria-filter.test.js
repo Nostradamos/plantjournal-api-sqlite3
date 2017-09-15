@@ -31,12 +31,6 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 () => UtilsQueryApplyFilter(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}})
             ).throw('Illegal attribute or unknown logical operator: generationName');
         });
-
-        it('should throw error if unknown relational operator is used', () => {
-            should(
-                () => UtilsQueryApplyFilter(q, ['generationName'], {filter: {'generationName': {'$foo': 'bar'}}})
-            ).throw('Unknown relational operator: $foo');
-        });
     });
 
     describe('#UtilsQueryApplyCriteriaFilter() - boolean operators', () => {
@@ -397,12 +391,12 @@ describe('src/utils-query-apply-criteria-filter', () => {
 
         it('should be possible to combine multiple operators on same attribute', () => {
             let criteria = {
-                'filter': {'generationName': {'$neq': 'foo', '$eq': 'bar'}}
+                'filter': {'generationName': {'$eq': 'bar', '$neq': 'foo', }}
             };
 
             UtilsQueryApplyFilter(q, ['generationName'], criteria);
             q.toString().should.eql(
-                `SELECT * FROM test WHERE ('generations'.'generationName' != 'foo' AND 'generations'.'generationName' = 'bar')`
+                `SELECT * FROM test WHERE ('generations'.'generationName' = 'bar' AND 'generations'.'generationName' != 'foo')`
             );
         });
     });
@@ -492,13 +486,6 @@ describe('src/utils-query-apply-criteria-filter', () => {
                 `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT IN (42, 43)) GROUP BY generation_parents.generationId))`
             );
         });
-
-        it('should throw error if unknown relational operator is used', () => {
-            should(
-                () => UtilsQueryApplyFilter(q, ['generationParents'], {filter: {generationParents: {'$foo': [42, 43]}}})
-
-            ).throw('Unknown relational operator: $foo');
-        });
     });
 
     describe('#apply-filter() - old tests (general)', () => {
@@ -525,7 +512,7 @@ describe('src/utils-query-apply-criteria-filter', () => {
 
 
         it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field !== generationParents)', () => {
-            UtilsQueryApplyFilter(q, ['generationName'], {filter: {'generationName': () =>{}}});
+            UtilsQueryApplyFilter(q, ['generationName'], {filter: {'generationName': () => {}}});
             q.toString().should.eql(`SELECT * FROM test`);
         });
 

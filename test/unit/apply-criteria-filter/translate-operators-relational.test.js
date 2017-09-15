@@ -1,8 +1,7 @@
+/* eslint-env node, mocha */
 'use strict';
 
 require('should');
-const _ = require('lodash');
-
 const squel = require('squel');
 
 var TranslateOperatorsRelational = require(
@@ -19,7 +18,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? = ?',
-                para:['environments', 'environmentName', 'TestEnvironment420']}]);
+                    para:['environments', 'environmentName', 'TestEnvironment420']}]);
         });
 
         it('should apply an TABLE.ATTR != OPEARTOROPTIONS expression for $neq', () => {
@@ -31,7 +30,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? != ?',
-                para:['environments', 'environmentName', 'TestEnvironment420']}]);
+                    para:['environments', 'environmentName', 'TestEnvironment420']}]);
         });
 
         it('should apply an TABLE.ATTR LIKE OPEARTOROPTIONS expression for $like', () => {
@@ -43,7 +42,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? LIKE ?',
-                para:['environments', 'environmentName', '_estEnvironment420']}]);
+                    para:['environments', 'environmentName', '_estEnvironment420']}]);
         });
 
         it('should apply an TABLE.ATTR NOT LIKE OPEARTOROPTIONS expression for $nlike', () => {
@@ -55,7 +54,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? NOT LIKE ?',
-                para:['environments', 'environmentName', '_estEnvironment420']}]);
+                    para:['environments', 'environmentName', '_estEnvironment420']}]);
         });
 
         it('should apply an TABLE.ATTR > OPEARTOROPTIONS expression for $gt', () => {
@@ -67,7 +66,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? > ?',
-                para:['environments', 'environmentId', 3]}]);
+                    para:['environments', 'environmentId', 3]}]);
         });
 
         it('should apply an TABLE.ATTR >= OPEARTOROPTIONS expression for $gte', () => {
@@ -79,7 +78,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? >= ?',
-                para:['environments', 'environmentId', 3]}]);
+                    para:['environments', 'environmentId', 3]}]);
         });
 
         it('should apply an TABLE.ATTR < OPEARTOROPTIONS expression for $lt', () => {
@@ -91,7 +90,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? < ?',
-                para:['environments', 'environmentId', 3]}]);
+                    para:['environments', 'environmentId', 3]}]);
         });
 
         it('should apply an TABLE.ATTR <= OPEARTOROPTIONS expression for $lte', () => {
@@ -103,7 +102,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? <= ?',
-                para:['environments', 'environmentId', 3]}]);
+                    para:['environments', 'environmentId', 3]}]);
         });
 
         it('should apply an TABLE.ATTR IN OPEARTOROPTIONS expression for $in', () => {
@@ -115,7 +114,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? IN ?',
-                para:['environments', 'environmentId', [3, 4]]}]);
+                    para:['environments', 'environmentId', [3, 4]]}]);
         });
 
 
@@ -128,7 +127,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? NOT IN ?',
-                para:['environments', 'environmentId', [3, 4]]}]);
+                    para:['environments', 'environmentId', [3, 4]]}]);
         });
 
         it('should apply an TABLE.ATTR = ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is a string (string shorthand)', () => {
@@ -140,7 +139,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? = ?',
-                para:['environments', 'environmentName', 'TestEnvironment420']}]);
+                    para:['environments', 'environmentName', 'TestEnvironment420']}]);
         });
 
         it('should apply an TABLE.ATTR IN ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is an array (array shorthand)', () => {
@@ -152,7 +151,7 @@ describe('TranslateOperatorsRelational', () => {
 
             squelExpr._nodes.should.eql(
                 [{type:'AND',expr:'?.? IN ?',
-                para:['environments', 'environmentName', ['TestEnvironment420', 'TestEnv2']]}]);
+                    para:['environments', 'environmentName', ['TestEnvironment420', 'TestEnv2']]}]);
         });
     });
 });

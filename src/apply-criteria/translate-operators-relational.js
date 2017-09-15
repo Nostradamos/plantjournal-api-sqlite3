@@ -1,9 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
-const logger = require('../logger');
-const Utils = require('../utils');
 const UtilsApplyCriteria = require('./utils-apply-criteria');
 const UtilsQuery = require('../utils-query');
 
@@ -14,10 +10,6 @@ class TranslateOperatorsRelational extends TranslateOperatorsGeneric {
     static getTable(self) {
         self.table = UtilsQuery.getTableOfField(
             self.attr, self.selfSelf.overwriteTableLookup);
-    }
-
-    static registerOperators(self) {
-
     }
 
     static operatorEquals(self, operatorOptions, crit) {
@@ -71,13 +63,11 @@ class TranslateOperatorsRelational extends TranslateOperatorsGeneric {
     }
 
     static processStringNumberBooleanNullShortHand(self, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createEqualsExpression(
-            self.table, self.attr, self.attrOptions);
+        this.operatorEquals(self, self.attrOptions, crit);
     }
 
     static processArrayShortHand(self, crit) {
-        [crit.crit, crit.args] = UtilsApplyCriteria.createInExpression(
-            self.table, self.attr, self.attrOptions);
+        this.operatorIn(self, self.attrOptions, crit);
     }
 }
 
@@ -92,6 +82,6 @@ TranslateOperatorsRelational.OPERATORS = {
     '$lte': TranslateOperatorsRelational.operatorLowerThanEqual,
     '$in': TranslateOperatorsRelational.operatorIn,
     '$nin': TranslateOperatorsRelational.operatorNotIn
-}
+};
 
 module.exports = TranslateOperatorsRelational;

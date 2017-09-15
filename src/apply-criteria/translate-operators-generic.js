@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 
-const Utils = require('../utils');
 const logger = require('../logger');
 
 const UtilsApplyCriteria = require('./utils-apply-criteria');
@@ -14,9 +13,11 @@ class TranslateOperatorsGeneric {
             this.name, '#translateAndApplyOperators() selfSelf',
             JSON.stringify(selfSelf), 'attr:', attr, 'attrOptions:', attrOptions,
             'squelExpr:', squelExpr, 'type:', type);
-        let self = {selfSelf, attr, attrOptions, squelExpr, type};
 
+        let self = {selfSelf, attr, attrOptions, squelExpr, type};
         this.getTable(self);
+
+        this.modifiySelf(self);
 
         logger.silly(this.name, '#translateAndApplyOperators() self.table:', self.table);
 
@@ -25,19 +26,21 @@ class TranslateOperatorsGeneric {
         } else {
             this.checkForShortHands(self);
         }
+
+        this.beforeDone(self);
     }
 
     static getTable(self) {
         self.table = undefined;
     }
 
-    static registerOperators(self) {
+    static modifiySelf(self) {
 
     }
 
     static callOperatorFuncsAndApplyCriterias(self) {
         let handledOperators = 0;
-        let lengthAttrOptions = self.attrOptions.length;
+        let lengthAttrOptions = _.keys(self.attrOptions);
 
         let crit = {};
         for(let operator in this.OPERATORS) {
@@ -50,7 +53,7 @@ class TranslateOperatorsGeneric {
                     operator, 'is defined operatorOptions:', operatorOptions);
 
                 [crit.crit, crit.args]  = [null, []];
-                operatorFunc(self, operatorOptions, crit);
+                operatorFunc.call(this, self, operatorOptions, crit);
 
                 logger.silly(
                     this.name, '#callOperatorFuncsAndApplyCriterias()', crit);
@@ -61,7 +64,12 @@ class TranslateOperatorsGeneric {
 
             // If we checked for more operators then the object has attributes,
             // break the loop.
-            if(handledOperators >= lengthAttrOptions) break;
+            if(handledOperators >= lengthAttrOptions) {
+                break;
+            }
+        }
+        if(handledOperators < lengthAttrOptions) {
+            logger.warn('Looks like we have unhandled operators');
         }
     }
 
@@ -80,7 +88,7 @@ class TranslateOperatorsGeneric {
                 this.name, '#checkForShortHands() looks like Array short hand');
             this.processArrayShortHand(self, crit);
         } else {
-            return this.unhandledShortHand();
+            return this.unhandledShortHand(self);
         }
 
         logger.silly(this.name, '#checkForShortHands()', crit);
@@ -93,7 +101,7 @@ class TranslateOperatorsGeneric {
     static processArrayShortHand(self, crit) {}
 
     static unhandledShortHand(self) {
-        logger.warn("Unhandled short hand:", self.attrOptions);
+        logger.warn('Unhandled short hand:', typeof self.attrOptions);
 
     }
 
@@ -105,6 +113,8 @@ class TranslateOperatorsGeneric {
             logger.warn('crit.crit is null');
         }
     }
+
+    static beforeDone(self) {}
 }
 
 TranslateOperatorsGeneric.OPERATORS = [];
