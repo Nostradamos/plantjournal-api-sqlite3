@@ -2,7 +2,6 @@
 'use strict';
 
 require('should');
-const squel = require('squel');
 
 var TranslateOperatorsJournalValue = require(
     '../../../src/apply-where/translate-operators-journal-value');
@@ -204,5 +203,5 @@ describe('TranslateOperatorsJournalValue', () => {
                     });
             });
         });
-    })
+    });
 });

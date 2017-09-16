@@ -1,12 +1,6 @@
 /* eslint-env node, mocha */
 'use strict';
 
-const _ = require('lodash');
-
-const should = require('should');
-
-const sqlite = require('sqlite');
-
 const UtilsExpression = require('../../../src/utils/utils-expression');
 
 describe('UtilsExpression', () => {
