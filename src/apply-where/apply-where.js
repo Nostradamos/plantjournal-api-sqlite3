@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const squel = require('squel');
 
+const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const UtilsExpression = require('../utils/utils-expression');
 
@@ -10,8 +11,8 @@ const TranslateOperatorsRelational = require(
     './translate-operators-relational');
 const TranslateOperatorsGenerationParents = require(
     './translate-operators-generation-parents');
-const TranslateOperatorsJournalValuePath = require(
-    './translate-operators-journal-value-path');
+const TranslateOperatorsJournalValue = require(
+    './translate-operators-journal-value');
 
 /**
  * This function sets the filter parts for our queries and handles
@@ -154,13 +155,10 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
             eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'or');
             UtilsExpression.applyExpression(
                 squelExpr, subSquelExpr, [], 'or');
-        } else if (_.indexOf(self.allowedAttributes, attr) !== -1){
+        } else {
         // Handle normal attributes
             translateAndApplyOperators(
                 self, attr, attrOptions, squelExpr, type);
-        } else {
-        // No boolean operator nor attribute, something's stinky here
-            throw new Error('Illegal attribute or unknown logical operator: ' + attr);
         }
     });
 }
@@ -189,13 +187,16 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
 function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
     let translator = null;
     // Check if we have special cases
-    if (attr === 'generationParents') {
+    if (attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
         translator = TranslateOperatorsGenerationParents;
-    } else if(_.startsWith(attr, 'journalValue')) {
+    } else if (_.startsWith(attr, CONSTANTS.ATTR_VALUE_JOURNAL)) {
     // This is something starting with journalValue, special case
         translator = TranslateOperatorsJournalValue;
-    } else {
+    } else if (_.indexOf(self.allowedAttributes, attr) !== -1){
         translator = TranslateOperatorsRelational;
+    } else {
+        throw new Error(
+            'Illegal attribute or unknown logical operator: ' + attr);
     }
 
     translator.translateAndApplyOperators(

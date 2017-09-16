@@ -11,7 +11,7 @@ const TranslateOperatorsRelational = require('./translate-operators-relational')
 
 class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
     static getTable(self) {
-        self.table = CONSTANTS.TABLE_GENERATION_PARENT;        
+        self.table = CONSTANTS.TABLE_GENERATION_PARENT;
     }
     /**
      * We can force set attribute (self.attr) to plantId, because we will only
@@ -22,7 +22,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      * squel expression to handle the having part of the new sub query.
      * @param  {Object} self
      */
-    static modifiySelf(self) {
+    static modifySelf(self) {
         self.attr = CONSTANTS.ATTR_ID_PLANT;
         self.squelExprOld = self.squelExpr;
         self.squelExpr = squel.expr();

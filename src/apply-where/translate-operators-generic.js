@@ -17,7 +17,7 @@ class TranslateOperatorsGeneric {
         let self = {selfSelf, attr, attrOptions, squelExpr, type};
         this.getTable(self);
 
-        this.modifiySelf(self);
+        this.modifySelf(self);
 
         logger.silly(this.name, '#translateAndApplyOperators() self.table:', self.table);
 
@@ -34,9 +34,7 @@ class TranslateOperatorsGeneric {
         self.table = undefined;
     }
 
-    static modifiySelf(self) {
-
-    }
+    static modifySelf(self) {}
 
     static callOperatorFuncsAndApplyCriterias(self) {
         let handledOperators = 0;
