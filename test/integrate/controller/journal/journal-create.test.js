@@ -10,7 +10,7 @@ describe('Journal()', () => {
     describe('#create()', () => {
         let pj;
 
-        before(async () => {
+        beforeEach(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
             await pj.Environment.create({environmentName: 'testEnv1'});
@@ -21,7 +21,7 @@ describe('Journal()', () => {
             await pj.Plant.create({plantName: 'testPlant1', mediumId: 1, generationId: 1});
         });
 
-        after(async () => {
+        afterEach(async () => {
             pj.disconnect();
         });
 
@@ -63,7 +63,6 @@ describe('Journal()', () => {
             await pj.Journal.create({plantId: 1, journalTimestamp: 1111, journalType: 'log'})
                 .should.be.rejectedWith('options.journalValue has to be set');
         });
-
 
         it('should create new journal record and return the journal object', async () => {
             let journal = await pj.Journal.create(
@@ -111,7 +110,7 @@ describe('Journal()', () => {
                 '2': {
                     'journalId': 2,
                     'journalType': 'log',
-                    'journalValue': true,
+                    'journalValue': 'true',
                 }
             });
 

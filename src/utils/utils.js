@@ -370,3 +370,12 @@ Utils.throwErrorIfNotConnected = function() {
     }
     throw Error('plantJournal is not connected to database.');
 };
+
+Utils.isValidJSON = function(str) {
+    try {
+        JSON.parse(str);
+    } catch(err) {
+        return false;
+    }
+    return true;
+};

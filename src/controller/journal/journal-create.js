@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const squel = require('squel');
 
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
@@ -56,6 +57,8 @@ class JournalCreate extends GenericCreate {
         if(_.isBoolean(options.journalValue)) {
             options.journalValue = _.toString(options.journalValue);
         }
+
+        context.quoteJournalValue = Utils.isValidJSON(options.journalValue);
     }
 
     static setQueryFields(context, options) {
@@ -66,8 +69,17 @@ class JournalCreate extends GenericCreate {
             .set(context.journalFor, options[context.journalFor])
             .set(CONSTANTS.ATTR_ID_JOURNAL, null)
             .set(CONSTANTS.ATTR_TIMESTAMP_JOURNAL, options.journalTimestamp)
-            .set(CONSTANTS.ATTR_TYPE_JOURNAL, options.journalType)
-            .set(CONSTANTS.ATTR_VALUE_JOURNAL, options.journalValue);
+            .set(CONSTANTS.ATTR_TYPE_JOURNAL, options.journalType);
+
+        let valueJournalValue = squel.rstr(
+            context.quoteJournalValue === true ? 'json(json_quote(?))' : 'json(?)',
+            options.journalValue);
+
+        context.query.set(
+            CONSTANTS.ATTR_VALUE_JOURNAL,
+            valueJournalValue,
+            {dontQuote: true});
+
     }
 
     static buildReturnObject(returnObject, context, options) {
