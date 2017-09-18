@@ -2,6 +2,7 @@
 'use strict';
 
 const should = require('should');
+const _ = require('lodash');
 const sqlite = require('sqlite');
 
 const plantJournal = require('../../../../src/pj');
@@ -93,7 +94,10 @@ describe('Journal()', () => {
                 `SELECT * FROM journals WHERE journalId = 1`
             );
 
-            rowsJournals[0].should.containDeep(journal.journals[1]);
+            rowsJournals[0].should.containDeep(
+                _.omit(journal.journals[1], 'journalValue'));
+            rowsJournals[0].journalValue.should.eql(
+                '"' + journal.journals[1].journalValue + '"');
             should(rowsJournals[0]['mediumId']).be.null();
             should(rowsJournals[0]['environmentId']).be.null();
         });
@@ -107,15 +111,15 @@ describe('Journal()', () => {
             );
 
             journal.journals.should.containDeep({
-                '2': {
-                    'journalId': 2,
+                '1': {
+                    'journalId': 1,
                     'journalType': 'log',
                     'journalValue': 'true',
                 }
             });
 
             let rowsJournals = await sqlite.all(
-                `SELECT journalValue FROM journals WHERE journalId = 2`
+                `SELECT journalValue FROM journals WHERE journalId = 1`
             );
 
             rowsJournals[0].journalValue.should.eql('true');

@@ -5,6 +5,7 @@ const squel = require('squel');
 
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
+const logger = require('../../logger');
 
 const GenericCreate = require('../generic/generic-create');
 
@@ -57,8 +58,8 @@ class JournalCreate extends GenericCreate {
         if(_.isBoolean(options.journalValue)) {
             options.journalValue = _.toString(options.journalValue);
         }
-
-        context.quoteJournalValue = Utils.isValidJSON(options.journalValue);
+        context.quoteJournalValue = !Utils.isValidJSON(options.journalValue);
+        logger.silly(this.name, '#sanitizeOptions() quoteJournalValue:', context.quoteJournalValue);
     }
 
     static setQueryFields(context, options) {
