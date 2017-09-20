@@ -8,21 +8,21 @@ const Utils = require('../../utils/utils');
 const GenericFind = require('../generic/generic-find');
 
 /**
- * This class find environments and related records and returns all this
- * information. To manually execute, call EnvironmentFind.find(). To understand
+ * This class find journals and related records and returns all this
+ * information. To manually execute, call JournalFind.find(). To understand
  * how finds work generally internally, See
  * src/controller/generic/generic-find (we extend that class). If you want to
- * know how to use the Environment.find() API, See
- * src/models/environment #find().
+ * know how to use the Journal.find() API, See
+ * src/models/journal #find().
  * <strong>Note:</strong> Do not use directly.
  * @private
  * @extends GenericFind
  */
-class EnvironmentFind extends GenericFind {
+class JournalFind extends GenericFind {
     /**
      * We need to overwrite this method to, yeah, build the returnObject. We
      * basically iterate over each row we get from database and add all
-     * environment related attributes to returnObject.environments.
+     * journal related attributes to returnObject.journals.
      * @override
      * @param  {object} returnObject
      *         object which will get returned later from #find().
@@ -32,17 +32,23 @@ class EnvironmentFind extends GenericFind {
      */
     static buildReturnObjectWhere(returnObject, context, criteria) {
         // build families object
-        returnObject.environments =  {};
+        returnObject.journals =  {};
         _.each(context.rowsWhere, function(row) {
-            Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
+            Utils.addJournalFromRowToReturnObject(row, returnObject);
         });
     }
 }
 
-EnvironmentFind.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
+JournalFind.TABLE = CONSTANTS.TABLE_JOURNAL;
 
-EnvironmentFind.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
+JournalFind.ATTR_ID = CONSTANTS.ATTR_ID_JOURNAL;
 
-EnvironmentFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT;
+JournalFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_JOURNAL;
 
-module.exports = EnvironmentFind;
+JournalFind.OVERWRITE_TABLE_LOOKUP = {
+    [CONSTANTS.ATTR_ID_ENVIRONMENT]: CONSTANTS.TABLE_JOURNAL,
+    [CONSTANTS.ATTR_ID_MEDIUM]: CONSTANTS.TABLE_JOURNAL,
+    [CONSTANTS.ATTR_ID_PLANT]: CONSTANTS.TABLE_JOURNAL
+};
+
+module.exports = JournalFind;

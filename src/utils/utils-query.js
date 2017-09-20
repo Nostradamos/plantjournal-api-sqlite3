@@ -388,6 +388,8 @@ UtilsQuery.getTableOfField = function (attr, overWriteTableLookup = null) {
         table = CONSTANTS.TABLE_ENVIRONMENT;
     } else if (_.startsWith(attr, 'medium')) {
         table = CONSTANTS.TABLE_MEDIUM;
+    } else if (_.startsWith(attr, 'journal')) {
+        table = CONSTANTS.TABLE_JOURNAL;
     } else {
         throw new Error('cannot associate attribute with a table');
     }

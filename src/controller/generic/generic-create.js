@@ -132,7 +132,7 @@ class GenericCreate {
      */
     static setQueryCreatedAtAndModifiedAt(context, options) {
         context.createdAt = context.modifiedAt = Utils.getUnixTimestampUTC();
-        logger.debug(this.name, '#find() createdAt:', context.createdAt,
+        logger.debug(this.name, '#setQueryCreatedAtAndModifiedAt() createdAt:', context.createdAt,
             'modifiedAt:', context.modifiedAt);
 
         context.query

@@ -112,8 +112,8 @@ module.exports =  async function createTables() {
         environmentId INTEGER DEFAULT NULL,
         PRIMARY KEY (journalId),
         FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
-        FOREIGN KEY (mediumId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
-        FOREIGN KEY (environmentId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (mediumId) REFERENCES mediums(mediumId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (environmentId) REFERENCES environments(environmentId) ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 };

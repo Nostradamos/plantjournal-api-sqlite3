@@ -213,6 +213,29 @@ Utils.addMediumFromRowToReturnObject = (row, returnObject, forceAdd) => {
         returnObject.mediums[mediumId] = medium;
 };
 
+Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
+    let journalId = row.journalId;
+    let journal = {
+    };
+
+    _.each(CONSTANTS.ALL_ATTRIBUTES_JOURNAL, function(attr) {
+        if (_.has(row, attr)) {
+            let value = row[attr];
+            let isForeignAttr = _.indexOf(
+                [
+                    CONSTANTS.ATTR_ID_ENVIRONMENT,
+                    CONSTANTS.ATTR_ID_MEDIUM,
+                    CONSTANTS.ATTR_ID_PLANT
+                ], attr);
+            if (value === null && isForeignAttr !== -1) return;
+            journal[attr] = value;
+        }
+    });
+
+    if (forceAdd === true || _.size(journal) > 4)
+        returnObject.journals[journalId] = journal;
+};
+
 Utils.addNeededFromRowToLogReturnObject = function(row, returnObject,
     attrLogTimestamp, attrLogId,
     allAttributes, plural,

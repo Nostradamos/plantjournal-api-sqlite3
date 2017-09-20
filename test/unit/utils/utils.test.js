@@ -1,10 +1,7 @@
 /* eslint-env node, mocha */
 'use strict';
 
-const _ = require('lodash');
-
 const should = require('should');
-
 const sqlite = require('sqlite');
 
 const Utils = require('../../../src/utils/utils');
@@ -423,7 +420,13 @@ describe('utils/utils', () => {
 
     describe('#throwErrorIfNotConnected()', () => {
         it('should throw error if sqlite is not connected', async () => {
-            if(!_.isNull(sqlite.driver)) await sqlite.close();
+            if(sqlite.driver !== null) {
+                try {
+                    await sqlite.close();
+                catch(err) {
+                    null;
+                }
+            }
             should(() => Utils.throwErrorIfNotConnected())
                 .throw('plantJournal is not connected to database.');
         });
