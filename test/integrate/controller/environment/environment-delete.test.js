@@ -38,7 +38,7 @@ describe('Environment()', () => {
 
         it('should delete environment with matching id and related mediums and plants', async () => {
             let deleted = await pj.Environment.delete(
-                {filter: {environmentId: 1}});
+                {where: {environmentId: 1}});
             deleted.should.deepEqual({
                 'environments': [1],
                 'mediums': [1, 2],

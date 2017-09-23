@@ -54,7 +54,7 @@ describe('Medium()', () => {
             async () => {
                 let updated = await pj.Medium.update(
                     {'mediumName': 'updatedMedium2'},
-                    {filter: {mediumId: 2}});
+                    {where: {mediumId: 2}});
                 updated.should.deepEqual([2]);
 
                 let rows = await sqlite.all(

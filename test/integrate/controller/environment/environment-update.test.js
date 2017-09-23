@@ -55,7 +55,7 @@ describe('Environment()', () => {
             async () => {
                 let updated = await pj.Environment.update(
                     {'environmentName': 'testEnvironment2'},
-                    {filter: {environmentId: 2}});
+                    {where: {environmentId: 2}});
                 updated.should.deepEqual([2]);
 
                 let rows = await sqlite.all(
@@ -71,7 +71,7 @@ describe('Environment()', () => {
             async() => {
                 let updated = await pj.Environment.update(
                     {'environmentName': 'NonFoo'},
-                    {filter: {environmentName: 'foobar'}});
+                    {where: {environmentName: 'foobar'}});
                 updated.should.deepEqual([]);
             }
         );

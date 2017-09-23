@@ -70,8 +70,8 @@ class GenotypeDelete extends GenericDelete {
             context.plantIdsToDelete.add(row.plantId);
         });
 
-        context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);
-        context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
+        context.genotypeIdsToDelete = Utils.whereSetNotNull(context.genotypeIdsToDelete);
+        context.plantIdsToDelete = Utils.whereSetNotNull(context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.genotypeIdsToDelete.length > 0;
 

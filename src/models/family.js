@@ -53,10 +53,10 @@ const FamilyUpdate = require('../controller/family/family-update');
  * @typedef {Object} Criteria
  * @property  {String[]} [criteria.attributes]
  *         Define which attributes you want to return. By default all available.
- * @property  {Object} [criteria.filter]
+ * @property  {Object} [criteria.where]
  *         See Utils.applyFilter how to use this. Small example:
- *         filter: {familyId: [1,2,3]} => filter familyId is either 1,2 or 3
- *         filter: {familyName: 'TestFamily2'} => filter familyName is TestFamily2
+ *         where: {familyId: [1,2,3]} => where familyId is either 1,2 or 3
+ *         where: {familyName: 'TestFamily2'} => where familyName is TestFamily2
  *         Queryable Fields: familyId, familyName
  * @property  {integer} [criteria.limit=10]
  *         Limit how many record should we search for (and return).

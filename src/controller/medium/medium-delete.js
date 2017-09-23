@@ -67,9 +67,9 @@ class MediumDelete extends GenericDelete {
             context.plantIdsToDelete.add(row.plantId);
         });
 
-        context.mediumIdsToDelete = Utils.filterSetNotNull(
+        context.mediumIdsToDelete = Utils.whereSetNotNull(
             context.mediumIdsToDelete);
-        context.plantIdsToDelete = Utils.filterSetNotNull(
+        context.plantIdsToDelete = Utils.whereSetNotNull(
             context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.mediumIdsToDelete.length > 0;

@@ -74,10 +74,10 @@ describe('Family()', () => {
         })
       });*/
 
-        it('should only return families filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches extactly', async () => {
+        it('should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches extactly', async () => {
             let families = await pj.Family.find(
                 {
-                    filter : {
+                    where : {
                         'familyId': 3
                     },
                     attributes: ['familyId', 'familyName']
@@ -93,10 +93,10 @@ describe('Family()', () => {
             });
         });
 
-        it('should only return families filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly', async () => {
+        it('should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly', async () => {
             let families = await pj.Family.find(
                 {
-                    filter : {
+                    where : {
                         'familyName': 'testD'
                     },
                     attributes: ['familyId', 'familyName']

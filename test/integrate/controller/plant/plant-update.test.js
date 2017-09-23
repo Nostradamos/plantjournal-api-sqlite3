@@ -53,7 +53,7 @@ describe('Plant()', () => {
 
         it('should update plant in database and return an array containing the updated generationId', async () => {
             let updatedGen = await pj.Plant
-                .update({'plantName': 'F1Geno1Plant1Updated'}, {'filter': {'plantId': 1}});
+                .update({'plantName': 'F1Geno1Plant1Updated'}, {'where': {'plantId': 1}});
 
             updatedGen.should.eql([1]);
 
@@ -103,7 +103,7 @@ describe('Plant()', () => {
 
         it('should also be possible to find multiple plant to update based on family attributes', async () => {
             let updatedPlant = await pj.Plant
-                .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}});
+                .update({'plantName': 'NoGoodPlantName'}, {'where': {'familyId': 1}});
 
             updatedPlant.should.eql([1,
                 2,
@@ -113,7 +113,7 @@ describe('Plant()', () => {
 
         it('should also be possible to find multiple plants to update based on generation attributes', async () => {
             let updatedPlant = await pj.Plant
-                .update({'plantName': 'NoGoodPlantName'}, {'filter': {'generationId': 1}});
+                .update({'plantName': 'NoGoodPlantName'}, {'where': {'generationId': 1}});
 
             updatedPlant.should.eql([1,
                 2,
@@ -122,7 +122,7 @@ describe('Plant()', () => {
 
         it('should also be possible to limit/offset plant to update when found multiple', async () => {
             let updatedPlant = await pj.Plant
-                .update({'plantName': 'NoGoodPlantName'}, {'filter': {'familyId': 1}, 'offset': 2, 'limit': 2});
+                .update({'plantName': 'NoGoodPlantName'}, {'where': {'familyId': 1}, 'offset': 2, 'limit': 2});
 
             updatedPlant.should.eql([3,4]);
         });
@@ -130,7 +130,7 @@ describe('Plant()', () => {
         it('should not be possible to manually change plantModifiedAt', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'plantModifiedAt': 1},
-                {'filter': {'plantId': 1}}
+                {'where': {'plantId': 1}}
             );
 
             updatedPlant.length.should.eql(0);
@@ -145,7 +145,7 @@ describe('Plant()', () => {
         it('should not be possible to manually change plantCreatedAt', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'plantCreatedAt': 1},
-                {'filter': {'plantId': 1}}
+                {'where': {'plantId': 1}}
             );
 
             updatedPlant.length.should.eql(0);
@@ -160,7 +160,7 @@ describe('Plant()', () => {
         it('should be possible to update genotypeId', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'genotypeId': 3},
-                {'filter': {'plantId': 1}}
+                {'where': {'plantId': 1}}
             );
 
             updatedPlant.should.eql([1]);
@@ -175,7 +175,7 @@ describe('Plant()', () => {
         it('should throw error if genotypeId to update does not reference existing genotype', async () => {
             await pj.Plant.update(
                 {'genotypeId': 43},
-                {'filter': {'plantId': 1}}
+                {'where': {'plantId': 1}}
             ).should.be.rejectedWith('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
 
         });
@@ -183,7 +183,7 @@ describe('Plant()', () => {
         it('should be possible to update plantClonedFrom', async () => {
             let updatedPlant = await pj.Plant.update(
                 {'plantClonedFrom': 4},
-                {'filter': {'plantId': 2}}
+                {'where': {'plantId': 2}}
             );
 
             updatedPlant.should.eql([2]);
@@ -198,7 +198,7 @@ describe('Plant()', () => {
         it('should throw error if plantClonedFrom does not reference existing plant', async () => {
             await pj.Plant.update(
                 {'plantClonedFrom': 1337},
-                {'filter': {'plantId': 2}}
+                {'where': {'plantId': 2}}
             ).should.be.rejectedWith('update.genotypeId or update.plantClonedFrom does not reference an existing genotype/plant');
         });
     });

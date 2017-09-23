@@ -34,7 +34,7 @@ class GenericDelete {
      * @param  {string[]} [criteria.attributes]
      *         Specify the attributes to query and return. Eg: [familyName,
      *         generationName]
-     * @param  {object} [criteria.filter]
+     * @param  {object} [criteria.where]
      *         Object which contains
      * @param  {integer} [criteria.offset]
      *         Skip the first x results

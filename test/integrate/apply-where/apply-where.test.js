@@ -21,7 +21,7 @@ describe('src/apply-where/apply-where', () => {
                         (
                             q,
                             ['generationId', 'generationName'],
-                            {'filter': {'$nand': {'generationId': 'a'}}}
+                            {'where': {'$nand': {'generationId': 'a'}}}
                         );
                     }
                 ).throw('Illegal attribute or unknown logical operator: $nand');
@@ -29,7 +29,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should throw error if attribute is not in allowedFields', () => {
                 should(
-                    () => applyWhere(q, [], {filter: {'generationName': 'testGenerationName', 'generationParents': [1,2]}})
+                    () => applyWhere(q, [], {where: {'generationName': 'testGenerationName', 'generationParents': [1,2]}})
                 ).throw('Illegal attribute or unknown logical operator: generationName');
             });
         });
@@ -37,7 +37,7 @@ describe('src/apply-where/apply-where', () => {
         describe('boolean operators', () => {
             it('should do AND conjunction for $and', () => {
                 let criteria = {
-                    'filter': {'$and': {'generationId': 'a', 'generationName': 'b'}}
+                    'where': {'$and': {'generationId': 'a', 'generationName': 'b'}}
                 };
 
                 applyWhere(q, ['generationId', 'generationName'], criteria);
@@ -49,7 +49,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do OR conjunction for $or', () => {
                 let criteria = {
-                    'filter': {'$or': {'generationId': 'a', 'generationName': 'b'}}
+                    'where': {'$or': {'generationId': 'a', 'generationName': 'b'}}
                 };
 
                 applyWhere(q, ['generationId', 'generationName'], criteria);
@@ -61,7 +61,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do AND conjunction for nested $and', () => {
                 let criteria = {
-                    'filter': {'generationId': 'a', '$and': {'generationName': 'b', '$and' : {'familyId': 'c'}}}
+                    'where': {'generationId': 'a', '$and': {'generationName': 'b', '$and' : {'familyId': 'c'}}}
                 };
 
                 applyWhere(q, ['generationId',
@@ -75,7 +75,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do OR conjunction for nested $and', () => {
                 let criteria = {
-                    'filter': {'generationId': 'a', '$or': {'generationName': 'b', '$or' : {'familyId': 'c'}}}
+                    'where': {'generationId': 'a', '$or': {'generationName': 'b', '$or' : {'familyId': 'c'}}}
                 };
 
                 applyWhere(q, ['generationId',
@@ -89,7 +89,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do mixed AND/OR conjunction for nested and mixed $and/$or', () => {
                 let criteria = {
-                    'filter': {'generationId': 'a', '$or': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
+                    'where': {'generationId': 'a', '$or': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
                 };
 
                 applyWhere(q, ['generationId',
@@ -103,7 +103,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do AND sub expression (=>AND (..)) for $and()', () => {
                 let criteria = {
-                    'filter': {'$and()': {'generationId': 'a', '$and': {'generationName': 'b'}}, '$or()': {'generationId': 'c', '$and': {'generationName': 'd'}}}
+                    'where': {'$and()': {'generationId': 'a', '$and': {'generationName': 'b'}}, '$or()': {'generationId': 'c', '$and': {'generationName': 'd'}}}
                 };
 
                 applyWhere(q, ['generationId',
@@ -118,7 +118,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do OR sub expression (=>OR (..)) for $or()', () => {
                 let criteria = {
-                    'filter': {'generationId': 'a', '$or()': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
+                    'where': {'generationId': 'a', '$or()': {'generationId': 'b', '$and' : {'familyId': 'c'}}}
                 };
 
                 applyWhere(q, ['generationId',
@@ -132,7 +132,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do AND conjunction for dicts if it\'s not a child of $and/$or..', () => {
                 let criteria = {
-                    'filter': {'generationId': 'a', 'familyId': 'c'}
+                    'where': {'generationId': 'a', 'familyId': 'c'}
                 };
 
                 applyWhere(q, ['generationId',
@@ -146,7 +146,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do OR conjunction for arrays if it\'s not a child of $and/$or..', () => {
                 let criteria = {
-                    'filter': [{'generationId': 'a'}, {'familyId': 'c'}]
+                    'where': [{'generationId': 'a'}, {'familyId': 'c'}]
                 };
 
                 applyWhere(q, ['generationId', 'familyId'], criteria);
@@ -158,7 +158,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do AND conjunctions for arrays if it\'s a child of $and', () => {
                 let criteria = {
-                    'filter': {'generationName': 'b', '$and':[{'generationId': 'a'}, {'familyId': 'c'}]}
+                    'where': {'generationName': 'b', '$and':[{'generationId': 'a'}, {'familyId': 'c'}]}
                 };
 
                 applyWhere(q, ['generationId',
@@ -172,7 +172,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do OR conjunctions for dicts if it\'s a child of $or', () => {
                 let criteria = {
-                    'filter': {'generationName': 'b', '$or': {'generationId': 'a', 'familyId': 'c'}}
+                    'where': {'generationName': 'b', '$or': {'generationId': 'a', 'familyId': 'c'}}
                 };
 
                 applyWhere(q, ['generationId',
@@ -188,7 +188,7 @@ describe('src/apply-where/apply-where', () => {
         describe('relational operators', () => {
             it('should do an `=` (equals) operation for $eq', () => {
                 let criteria = {
-                    'filter': {'generationName': {'$eq': 'foo'}}
+                    'where': {'generationName': {'$eq': 'foo'}}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -199,7 +199,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do an `=` (equals) operation if attribute value is string', () => {
                 let criteria = {
-                    'filter': {'generationName': 'foo'}
+                    'where': {'generationName': 'foo'}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -210,7 +210,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do an `=` (equals) operation if attribute value is integer', () => {
                 let criteria = {
-                    'filter': {'generationName': 1}
+                    'where': {'generationName': 1}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -221,7 +221,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do an `IS NULL` (equals) operation if attribute value is null', () => {
                 let criteria = {
-                    'filter': {'generationName': null}
+                    'where': {'generationName': null}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -232,7 +232,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do an `IS NULL` (equals) operation if $eq value is null', () => {
                 let criteria = {
-                    'filter': {'generationName': {'$eq': null}}
+                    'where': {'generationName': {'$eq': null}}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -244,7 +244,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do an `!=` (not equals) operation for $neq', () => {
                 let criteria = {
-                    'filter': {'generationName': {'$neq': 'foo'}}
+                    'where': {'generationName': {'$neq': 'foo'}}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -255,7 +255,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do an `IS NOT NULL` (not equals) operation for $neq: null', () => {
                 let criteria = {
-                    'filter': {'generationName': {'$neq': null}}
+                    'where': {'generationName': {'$neq': null}}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -267,7 +267,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `LIKE` operation for $like', () => {
 
                 let criteria = {
-                    'filter': {'generationName': {'$like': 'foo_'}}
+                    'where': {'generationName': {'$like': 'foo_'}}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -279,7 +279,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `NOT LIKE` operation for $nlike', () => {
 
                 let criteria = {
-                    'filter': {'generationName': {'$nlike': 'foo_'}}
+                    'where': {'generationName': {'$nlike': 'foo_'}}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -291,7 +291,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `>` operation for $gt', () => {
 
                 let criteria = {
-                    'filter': {'generationId': {'$gt': 5}}
+                    'where': {'generationId': {'$gt': 5}}
                 };
 
                 applyWhere(q, ['generationId'], criteria);
@@ -303,7 +303,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `>=` operation for $gte', () => {
 
                 let criteria = {
-                    'filter': {'generationId': {'$gte': 5}}
+                    'where': {'generationId': {'$gte': 5}}
                 };
 
                 applyWhere(q, ['generationId'], criteria);
@@ -315,7 +315,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `<` operation for $lt', () => {
 
                 let criteria = {
-                    'filter': {'generationId': {'$lt': 5}}
+                    'where': {'generationId': {'$lt': 5}}
                 };
 
                 applyWhere(q, ['generationId'], criteria);
@@ -327,7 +327,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `<=` operation for $lte', () => {
 
                 let criteria = {
-                    'filter': {'generationId': {'$lte': 5}}
+                    'where': {'generationId': {'$lte': 5}}
                 };
 
                 applyWhere(q, ['generationId'], criteria);
@@ -339,7 +339,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `IN` operation for $in', () => {
 
                 let criteria = {
-                    'filter': {'generationId': {'$in': [5, 6]}}
+                    'where': {'generationId': {'$in': [5, 6]}}
                 };
 
                 applyWhere(q, ['generationId'], criteria);
@@ -351,7 +351,7 @@ describe('src/apply-where/apply-where', () => {
             it('should do `IN` operation if attribute value is array', () => {
 
                 let criteria = {
-                    'filter': {'generationId': [5, 6]}
+                    'where': {'generationId': [5, 6]}
                 };
 
                 applyWhere(q, ['generationId'], criteria);
@@ -362,7 +362,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should do `NOT IN` operation for $nin', () => {
                 let criteria = {
-                    'filter': {'generationId': {'$nin': [5, 6]}}
+                    'where': {'generationId': {'$nin': [5, 6]}}
                 };
 
                 applyWhere(q, ['generationId'], criteria);
@@ -373,7 +373,7 @@ describe('src/apply-where/apply-where', () => {
 
             it('should be possible to combine multiple operators on same attribute', () => {
                 let criteria = {
-                    'filter': {'generationName': {'$eq': 'bar', '$neq': 'foo', }}
+                    'where': {'generationName': {'$eq': 'bar', '$neq': 'foo', }}
                 };
 
                 applyWhere(q, ['generationName'], criteria);
@@ -385,82 +385,82 @@ describe('src/apply-where/apply-where', () => {
 
         describe('generationParents', () => {
             it('should do `IN` and `HAVING COUNT` for generationParents $eq', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$eq': [13, 37, 42]}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$eq': [13, 37, 42]}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (13, 37, 42)) GROUP BY generation_parents.generationId HAVING (count('generation_parents'.'plantId') = 3)))`
                 );
             });
 
             it('should do an $eq for generationParents array short hand', () => {
-                applyWhere(q, ['generationParents'], {filter: {'generationParents': [42,43]}});
+                applyWhere(q, ['generationParents'], {where: {'generationParents': [42,43]}});
                 q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId HAVING (count('generation_parents'.'plantId') = 2)))`);
             });
 
             it('should do `NOT IN` for generationParents $neq', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$neq': [13, 37, 42]}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$neq': [13, 37, 42]}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT IN (13, 37, 42)) GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `LIKE` for generationParents $like', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$like': '13_7'}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$like': '13_7'}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' LIKE '13_7') GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `NOT LIKE` for generationParents $nlike', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$nlike': '13_7'}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$nlike': '13_7'}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT LIKE '13_7') GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `>` for generationParents $gt', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$gt': 42}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$gt': 42}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' > 42) GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `>=` for generationParents $gte', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$gte': 42}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$gte': 42}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' >= 42) GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `<` for generationParents $lt', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$lt': 42}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$lt': 42}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' < 42) GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `<=` for generationParents $lte', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$lte': 42}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$lte': 42}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' <= 42) GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `IN` for generationParents $in', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$in': [42, 43]}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$in': [42, 43]}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' IN (42, 43)) GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `=` for generationParents integer/string short hand', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: 42}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: 42}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' = 42) GROUP BY generation_parents.generationId))`
                 );
             });
 
             it('should do `NOT IN` for generationParents $nin', () => {
-                applyWhere(q, ['generationParents'], {filter: {generationParents: {'$nin': [42, 43]}}});
+                applyWhere(q, ['generationParents'], {where: {generationParents: {'$nin': [42, 43]}}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE ('generations'.'generationId' IN (SELECT generation_parents.generationId FROM generation_parents \`generation_parents\` WHERE ('generation_parents'.'plantId' NOT IN (42, 43)) GROUP BY generation_parents.generationId))`
                 );
@@ -469,41 +469,41 @@ describe('src/apply-where/apply-where', () => {
 
         describe('journalValue', () => {
             it('should set WHERE journals.journalValue = "foo" if attr is just journalValue', () => {
-                applyWhere(q, ['journalValue'], {filter: {'journalValue': 'foo'}});
+                applyWhere(q, ['journalValue'], {where: {'journalValue': 'foo'}});
                 q.toString().should.eql(`SELECT * FROM test WHERE ('journals'.'journalValue' = 'foo')`);
             });
 
             it('should set WHERE json_extract(journals.journalValue, "$.foo.bar[2]") = "foo" if attr is journalValue.foo.bar[2]', () => {
-                applyWhere(q, ['journalValue'], {filter: {'journalValue.foo.bar[2]': 'foo'}});
+                applyWhere(q, ['journalValue'], {where: {'journalValue.foo.bar[2]': 'foo'}});
                 q.toString().should.eql(
                     `SELECT * FROM test WHERE (json_extract('journals'.'journalValue', '$.foo.bar[2]') = 'foo')`);
             });
         });
 
         describe('old tests', () => {
-            it('should not do anything if options.filter is not an plainObject', () => {
+            it('should not do anything if options.where is not an plainObject', () => {
                 applyWhere(q, [], {});
                 q.toString().should.eql('SELECT * FROM test');
             });
 
-            it('should set WHERE (translated)field = fieldValue if options.filter[field] = fieldValue is an integer and correctly translate field to database.databasefield', () => {
-                applyWhere(q, ['familyId'], {filter: {'familyId': 42}});
+            it('should set WHERE (translated)field = fieldValue if options.where[field] = fieldValue is an integer and correctly translate field to database.databasefield', () => {
+                applyWhere(q, ['familyId'], {where: {'familyId': 42}});
                 q.toString().should.eql(`SELECT * FROM test WHERE ('families'.'familyId' = 42)`);
             });
 
-            it('should set WHERE (translated)field = "fieldValue" if options.filter[field] = fieldValue is a string', () => {
-                applyWhere(q, ['generationName'], {filter: {'generationName': 'testGenerationName'}});
+            it('should set WHERE (translated)field = "fieldValue" if options.where[field] = fieldValue is a string', () => {
+                applyWhere(q, ['generationName'], {where: {'generationName': 'testGenerationName'}});
                 q.toString().should.eql(`SELECT * FROM test WHERE ('generations'.'generationName' = 'testGenerationName')`);
             });
 
 
-            it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field !== generationParents)', () => {
-                applyWhere(q, ['generationName'], {filter: {'generationName': () => {}}});
+            it('should do nothing if options.where key is valid but value is something we don\'t know how to handle (for field !== generationParents)', () => {
+                applyWhere(q, ['generationName'], {where: {'generationName': () => {}}});
                 q.toString().should.eql(`SELECT * FROM test`);
             });
 
-            it('should do nothing if options.filter key is valid but value is something we don\'t know how to handle (for field === generationParents)', () => {
-                applyWhere(q, ['generationParents'], {filter: {'generationParents': () =>{}}});
+            it('should do nothing if options.where key is valid but value is something we don\'t know how to handle (for field === generationParents)', () => {
+                applyWhere(q, ['generationParents'], {where: {'generationParents': () =>{}}});
                 q.toString().should.eql(`SELECT * FROM test`);
             });
         });

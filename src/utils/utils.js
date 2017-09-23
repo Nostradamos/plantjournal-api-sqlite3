@@ -374,11 +374,11 @@ Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
 };
 
 /**
- * Converts Set to array and filters out null. Mutates set.
- * @param  {Set} set - Set to filter and convert
+ * Converts Set to array and wheres out null. Mutates set.
+ * @param  {Set} set - Set to where and convert
  * @return {Array}   - Arrayfied set without null elements
  */
-Utils.filterSetNotNull = function filterSetNotNull(set) {
+Utils.whereSetNotNull = function whereSetNotNull(set) {
     set.delete(null);
     return Array.from(set);
 };

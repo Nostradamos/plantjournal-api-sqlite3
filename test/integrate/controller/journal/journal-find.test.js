@@ -93,7 +93,7 @@ describe('Journal()', () => {
         });
 
         it('should be possible to find journals for a specific medium', async () => {
-            let journals = await pj.Journal.find({filter: {mediumId: {'$neq': null}}});
+            let journals = await pj.Journal.find({where: {mediumId: {'$neq': null}}});
             journals.should.containDeep(
                 {
                     found: 4,

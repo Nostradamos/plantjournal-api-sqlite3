@@ -49,7 +49,7 @@ describe('Genotype()', () => {
 
         it('should update generation in database and return an array containing the updated generationId', async () => {
             let updatedGen = await pj.Genotype
-                .update({'genotypeName': 'F1Geno1Updated'}, {'filter': {'genotypeId': 1}});
+                .update({'genotypeName': 'F1Geno1Updated'}, {'where': {'genotypeId': 1}});
 
             updatedGen.should.eql([1]);
 
@@ -89,21 +89,21 @@ describe('Genotype()', () => {
 
         it('should also be possible to find multiple genotypes to update based on family attributes', async () => {
             let updatedGeno = await pj.Genotype
-                .update({'genotypeName': 'NoGoodGenoName'}, {'filter': {'familyId': 2}});
+                .update({'genotypeName': 'NoGoodGenoName'}, {'where': {'familyId': 2}});
 
             updatedGeno.should.eql([4,5]);
         });
 
         it('should also be possible to find multiple genotypes to update based on generation attributes', async () => {
             let updatedGeno = await pj.Genotype
-                .update({'genotypeName': 'NoGoodGenoName'}, {'filter': {'generationId': 1}});
+                .update({'genotypeName': 'NoGoodGenoName'}, {'where': {'generationId': 1}});
 
             updatedGeno.should.eql([1,2]);
         });
 
         it('should also be possible to limit/offset genotypes to update when found multiple', async () => {
             let updatedGeno = await pj.Genotype
-                .update({'genotypeName': 'NoGoodGenoName'}, {'filter': {'familyId': 1}, 'offset': 1, 'limit': 2});
+                .update({'genotypeName': 'NoGoodGenoName'}, {'where': {'familyId': 1}, 'offset': 1, 'limit': 2});
 
             updatedGeno.should.eql([2, 3]);
         });
@@ -111,7 +111,7 @@ describe('Genotype()', () => {
         it('should not be possible to manually change genotypeModifiedAt', async () => {
             let updatedGeno = await pj.Generation.update(
                 {'generationModifiedAt': 1},
-                {'filter': {'genotypeId': 1}}
+                {'where': {'genotypeId': 1}}
             );
 
             updatedGeno.length.should.eql(0);
@@ -126,7 +126,7 @@ describe('Genotype()', () => {
         it('should not be possible to manually change genotypeCreatedAt', async () => {
             let updatedGeno = await pj.Genotype.update(
                 {'genotypeCreatedAt': 1},
-                {'filter': {'genotypeId': 1}}
+                {'where': {'genotypeId': 1}}
             );
 
             updatedGeno.length.should.eql(0);
@@ -141,7 +141,7 @@ describe('Genotype()', () => {
         it('should be possible to update generationId', async () => {
             let updatedGeno = await pj.Genotype.update(
                 {'generationId': 2},
-                {'filter': {'genotypeId': 5}}
+                {'where': {'genotypeId': 5}}
             );
 
             updatedGeno.should.eql([5]);
@@ -156,7 +156,7 @@ describe('Genotype()', () => {
         it('should throw error if generationId does not reference existing generation', async () => {
             await pj.Genotype.update(
                 {'generationId': 42},
-                {'filter': {'genotypeId': 5}}
+                {'where': {'genotypeId': 5}}
             ).should.be.rejectedWith('update.generationId does not reference an existing Generation');
         });
     });

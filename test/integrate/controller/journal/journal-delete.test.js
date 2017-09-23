@@ -33,7 +33,7 @@ describe('Journal()', () => {
 
         it('should delete journal with matching id', async () => {
             let deleted = await pj.Journal.delete(
-                {filter: {journalId: 1}});
+                {where: {journalId: 1}});
             deleted.journals.should.deepEqual([1]);
 
             let rowsPlant = await sqlite.all(
@@ -44,7 +44,7 @@ describe('Journal()', () => {
 
         it('should delete all journals with journalType=log', async () => {
             let deleted = await pj.Journal.delete(
-                {filter: {journalType: 'ph-sensor'}});
+                {where: {journalType: 'ph-sensor'}});
 
             deleted.journals.should.deepEqual([2, 7]);
 
@@ -57,14 +57,14 @@ describe('Journal()', () => {
 
         it('should delete all journals where journalValue contains sensor', async () => {
             let deleted = await pj.Journal.delete(
-                {filter: {journalType: {'$like': '%sensor%'}}});
+                {where: {journalType: {'$like': '%sensor%'}}});
 
             deleted.journals.should.deepEqual([3, 4]);
         });
 
         it('should not delete anything if no journals match', async () => {
             let deleted = await pj.Journal.delete(
-                {filter: {journalType: {'$like': '_sensor_'}}});
+                {where: {journalType: {'$like': '_sensor_'}}});
 
             deleted.journals.should.deepEqual([]);
         });

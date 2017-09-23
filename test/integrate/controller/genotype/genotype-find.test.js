@@ -156,11 +156,11 @@ describe('Genotype()', () => {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype attributes)', async () => {
+        it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype attributes)', async () => {
             let genotypes = await pj.Genotype.find(
                 {
                     'attributes': ['genotypeName'],
-                    'filter': {
+                    'where': {
                         'genotypeId': 2
                     }
                 }
@@ -180,10 +180,10 @@ describe('Genotype()', () => {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async () => {
+        it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async () => {
             let genotypes = await pj.Genotype.find({
                 'attributes': ['genotypeName'],
-                'filter': {
+                'where': {
                     'genotypeName': 'testGenotype3'
                 }
             });
@@ -202,10 +202,10 @@ describe('Genotype()', () => {
             });
         });
 
-        it('should only return genotypes filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family attributes)', async () => {
+        it('should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family attributes)', async () => {
             let genotypes = await pj.Genotype.find({
                 'attributes': ['genotypeName'],
-                'filter': {
+                'where': {
                     'familyName': 'testFamily1'
                 }
             });
@@ -230,13 +230,13 @@ describe('Genotype()', () => {
             });
         });
 
-        it('should only return genotypes filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async () => {
+        it('should only return genotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async () => {
             let genotypes = await pj.Genotype.find(
                 {
                     'attributes': ['generationParents',
                         'generationName',
                         'genotypeName'],
-                    'filter': {'generationParents': [1,2]}
+                    'where': {'generationParents': [1,2]}
                 }
             );
 

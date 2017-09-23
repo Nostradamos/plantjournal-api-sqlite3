@@ -126,9 +126,9 @@ describe('Generation()', () => {
             });
         });
 
-        it('should only return generations filter options.filter.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly', async () => {
+        it('should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly', async () => {
             let generations = await pj.Generation.find({
-                'filter': {
+                'where': {
                     'familyId': 1
                 }
             });
@@ -159,9 +159,9 @@ describe('Generation()', () => {
             });
         });
 
-        it('should only return generations filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly', async () => {
+        it('should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly', async () => {
             let generations = await pj.Generation.find({
-                'filter': {
+                'where': {
                     'familyName': 'testFamily1'
                 }
             });
@@ -192,8 +192,8 @@ describe('Generation()', () => {
             });
         });
 
-        it('should only return generations filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async () => {
-            let generations = await pj.Generation.find({'attributes': ['generationParents', 'generationName'], 'filter': {'generationParents': [1,2]}});
+        it('should only return generations where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async () => {
+            let generations = await pj.Generation.find({'attributes': ['generationParents', 'generationName'], 'where': {'generationParents': [1,2]}});
 
             generations.should.deepEqual({
                 'found': 1,

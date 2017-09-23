@@ -80,10 +80,10 @@ class FamilyDelete extends GenericDelete {
             context.plantIdsToDelete.add(row.plantId);
         });
 
-        context.familyIdsToDelete = Utils.filterSetNotNull(context.familyIdsToDelete);
-        context.generationIdsToDelete = Utils.filterSetNotNull(context.generationIdsToDelete);
-        context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);
-        context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
+        context.familyIdsToDelete = Utils.whereSetNotNull(context.familyIdsToDelete);
+        context.generationIdsToDelete = Utils.whereSetNotNull(context.generationIdsToDelete);
+        context.genotypeIdsToDelete = Utils.whereSetNotNull(context.genotypeIdsToDelete);
+        context.plantIdsToDelete = Utils.whereSetNotNull(context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.familyIdsToDelete.length > 0;
 

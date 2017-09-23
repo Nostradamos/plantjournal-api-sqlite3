@@ -102,7 +102,7 @@ describe('Medium()', () => {
 
         it('should be possible to find mediums based on environment attributes', async () => {
             let mediums = await pj.Medium.find(
-                {filter: {environmentName: 'testEnv1'}});
+                {where: {environmentName: 'testEnv1'}});
 
             mediums.should.containDeep(
                 {
@@ -128,7 +128,7 @@ describe('Medium()', () => {
 
         it('should be possible to find mediums where environmentId = null and environments should not be set', async () => {
             let mediums = await pj.Medium.find(
-                {filter: {environmentId: null}});
+                {where: {environmentId: null}});
 
             mediums.should.containDeep(
                 {

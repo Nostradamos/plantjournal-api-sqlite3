@@ -39,8 +39,8 @@ describe('Family()', () => {
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete specified family in criteria.filter.familyId and return the id', async () => {
-            let deletedFam = await pj.Family.delete({filter: {familyId: 1}});
+        it('should delete specified family in criteria.where.familyId and return the id', async () => {
+            let deletedFam = await pj.Family.delete({where: {familyId: 1}});
 
             deletedFam.should.deepEqual({
                 'families': [1],

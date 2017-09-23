@@ -52,7 +52,7 @@ class PlantDelete extends GenericDelete {
             context.plantIdsToDelete.add(row.plantId);
         });
 
-        context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
+        context.plantIdsToDelete = Utils.whereSetNotNull(context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.plantIdsToDelete.length > 0;
 

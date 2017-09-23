@@ -71,9 +71,9 @@ class GenerationDelete extends GenericDelete {
             context.plantIdsToDelete.add(row.plantId);
         }
 
-        context.generationIdsToDelete = Utils.filterSetNotNull(context.generationIdsToDelete);
-        context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);
-        context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
+        context.generationIdsToDelete = Utils.whereSetNotNull(context.generationIdsToDelete);
+        context.genotypeIdsToDelete = Utils.whereSetNotNull(context.genotypeIdsToDelete);
+        context.plantIdsToDelete = Utils.whereSetNotNull(context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.generationIdsToDelete.length > 0;
 

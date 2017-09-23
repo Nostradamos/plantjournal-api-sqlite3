@@ -71,11 +71,11 @@ class EnvironmentDelete extends GenericDelete {
         });
 
         context.environmentIdsToDelete = Utils
-            .filterSetNotNull(context.environmentIdsToDelete);
+            .whereSetNotNull(context.environmentIdsToDelete);
         context.mediumIdsToDelete = Utils
-            .filterSetNotNull(context.mediumIdsToDelete);
+            .whereSetNotNull(context.mediumIdsToDelete);
         context.plantIdsToDelete = Utils
-            .filterSetNotNull(context.plantIdsToDelete);
+            .whereSetNotNull(context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.environmentIdsToDelete.length > 0;
 

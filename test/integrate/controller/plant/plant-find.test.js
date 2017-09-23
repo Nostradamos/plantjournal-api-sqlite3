@@ -203,8 +203,8 @@ describe('Plant()', () => {
             });
         });
 
-        it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)', async () => {
-            let plants = await pj.Plant.find({'filter': {'plantName': 'testPlant3'}, 'attributes': ['plantId']});
+        it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)', async () => {
+            let plants = await pj.Plant.find({'where': {'plantName': 'testPlant3'}, 'attributes': ['plantId']});
 
             plants.should.containDeep({
                 'found': 1,
@@ -216,8 +216,8 @@ describe('Plant()', () => {
             });
         });
 
-        it('should only return plants filter options.filter.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async () => {
-            let plants = await pj.Plant.find({'filter': {'genotypeName': 'testGenotype3'}, 'attributes': ['plantId']});
+        it('should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)', async () => {
+            let plants = await pj.Plant.find({'where': {'genotypeName': 'testGenotype3'}, 'attributes': ['plantId']});
 
             plants.should.containDeep({
                 'found': 2,
@@ -229,8 +229,8 @@ describe('Plant()', () => {
             });
         });
 
-        it('should only return plants filter generation has only parents specified in options.filter.generationParents = [plantIdA, plantIdB]', async () => {
-            let plants = await pj.Plant.find({'filter': {'generationParents': [1,2]}, 'attributes': ['plantId',
+        it('should only return plants where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async () => {
+            let plants = await pj.Plant.find({'where': {'generationParents': [1,2]}, 'attributes': ['plantId',
                 'plantName',
                 'generationParents',
                 'generationName']});
@@ -268,7 +268,7 @@ describe('Plant()', () => {
         it('should be possible to find plants where parents are [1,2] OR [1,3]', async () => {
             let plants = await pj.Plant.find(
                 {
-                    'filter':
+                    'where':
                         {'generationParents': [1,2],
                             '$or': {'generationParents': [1,3]}
                         },

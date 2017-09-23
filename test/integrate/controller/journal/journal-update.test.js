@@ -59,7 +59,7 @@ describe('Journal()', () => {
             async () => {
                 let updated = await pj.Journal.update(
                     {journalValue: 90},
-                    {filter: {journalId: 2}});
+                    {where: {journalId: 2}});
 
                 updated.should.deepEqual([2]);
 
@@ -77,7 +77,7 @@ describe('Journal()', () => {
             async() => {
                 let updated = await pj.Journal.update(
                     {journalValue: 90},
-                    {filter: {journalType: {$like: '%sensor%'}}});
+                    {where: {journalType: {$like: '%sensor%'}}});
 
                 updated.should.deepEqual([1, 2, 3]);
 
