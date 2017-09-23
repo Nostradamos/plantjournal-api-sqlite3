@@ -43,6 +43,7 @@ class GenericUpdate {
         // First we pick attributes to update. If nothing is to update,
         // we will return right away.
         this.pickFieldsToUpdate(context, update, criteria);
+
         if (_.isEmpty(context.attributesToUpdate)) {
             logger.debug(this.name, '#update() attributesToUpdate is empty, returning');
             return [];
@@ -60,6 +61,10 @@ class GenericUpdate {
         await this.executeQueryFind(context, update, criteria);
         this.extractIdsRowsFind(context, update, criteria);
 
+        if(_.isEmpty(context.idsToUpdate)) {
+            logger.debug(this.name, '#update() idsToUpdate is empty, nothing to update, returning');
+            return [];
+        }
 
         this.initQueryUpdate(context, update, criteria);
         this.setQueryUpdateFieldValues(context, update, criteria);

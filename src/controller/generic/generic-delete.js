@@ -61,13 +61,16 @@ class GenericDelete {
 
         await this.executeQueryRelated(context, criteria);
 
+        context.haveIdsToDelete = false;
         this.extractIdsToDelete(context, criteria);
 
-        this.initQueryDelete(context, criteria);
-        this.setQueryDeleteWhere(context, criteria);
-        this.stringifyQueryDelete(context, criteria);
+        if(context.haveIdsToDelete === true) {
+            this.initQueryDelete(context, criteria);
+            this.setQueryDeleteWhere(context, criteria);
+            this.stringifyQueryDelete(context, criteria);
 
-        await this.executeQueryDelete(context, criteria);
+            await this.executeQueryDelete(context, criteria);
+        }
 
         let returnObject = {};
 

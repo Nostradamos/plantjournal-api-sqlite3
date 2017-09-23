@@ -47,6 +47,8 @@ class JournalDelete extends GenericDelete {
         context.journalIdsToDelete = Utils
             .filterSetNotNull(context.journalIdsToDelete);
 
+        context.haveIdsToDelete = context.journalIdsToDelete.length > 0;
+
         logger.debug(this.name, '#delete() journalIdsToDelete:',
             context.journalIdsToDelete);
     }

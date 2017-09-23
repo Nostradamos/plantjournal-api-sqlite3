@@ -72,6 +72,8 @@ class MediumDelete extends GenericDelete {
         context.plantIdsToDelete = Utils.filterSetNotNull(
             context.plantIdsToDelete);
 
+        context.haveIdsToDelete = context.mediumIdsToDelete.length > 0;
+
         logger.debug(
             this.name, '#delete() mediumIdsToDelete:',
             context.mediumIdsToDelete);

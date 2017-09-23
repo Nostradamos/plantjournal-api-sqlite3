@@ -5,22 +5,22 @@ const GenericUpdate = require('../generic/generic-update');
 
 /**
  * This class updates environments. To call it manually use
- * EnvironmentUpdate.update().
+ * JournalUpdate.update().
  * @private
  * @extends GenericUpdate
  */
-class EnvironmentUpdate extends GenericUpdate {
+class JournalUpdate extends GenericUpdate {
 }
 
 
-EnvironmentUpdate.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
+JournalUpdate.TABLE = CONSTANTS.TABLE_JOURNAL;
 
-EnvironmentUpdate.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
+JournalUpdate.ATTR_ID = CONSTANTS.ATTR_ID_JOURNAL;
 
-EnvironmentUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_ENVIRONMENT;
+JournalUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_JOURNAL;
 
-EnvironmentUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_ENVIRONMENT;
+JournalUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_JOURNAL;
 
-EnvironmentUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_ENVIRONMENT;
+JournalUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_JOURNAL;
 
-module.exports = EnvironmentUpdate;
+module.exports = JournalUpdate;

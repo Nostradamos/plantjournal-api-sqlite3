@@ -77,6 +77,8 @@ class EnvironmentDelete extends GenericDelete {
         context.plantIdsToDelete = Utils
             .filterSetNotNull(context.plantIdsToDelete);
 
+        context.haveIdsToDelete = context.environmentIdsToDelete.length > 0;
+
         logger.debug(this.name, '#delete() environmentIdsToDelete:',
             context.environmentIdsToDelete);
         logger.debug(this.name, '#delete() mediumIdsToDelete:',

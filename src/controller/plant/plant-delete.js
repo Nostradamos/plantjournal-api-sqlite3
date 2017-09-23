@@ -54,6 +54,8 @@ class PlantDelete extends GenericDelete {
 
         context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
 
+        context.haveIdsToDelete = context.plantIdsToDelete.length > 0;
+
         logger.debug(this.name, '#delete() plantIdsToDelete:', context.plantIdsToDelete);
     }
 

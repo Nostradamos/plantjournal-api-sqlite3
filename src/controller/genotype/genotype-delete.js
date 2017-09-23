@@ -73,6 +73,8 @@ class GenotypeDelete extends GenericDelete {
         context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);
         context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
 
+        context.haveIdsToDelete = context.genotypeIdsToDelete.length > 0;
+
         logger.debug(this.name, '#delete() genotypeIdsToDelete:', context.genotypeIdsToDelete);
         logger.debug(this.name, '#delete() plantIdsToDelete:', context.plantIdsToDelete);
     }

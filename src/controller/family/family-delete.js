@@ -85,6 +85,8 @@ class FamilyDelete extends GenericDelete {
         context.genotypeIdsToDelete = Utils.filterSetNotNull(context.genotypeIdsToDelete);
         context.plantIdsToDelete = Utils.filterSetNotNull(context.plantIdsToDelete);
 
+        context.haveIdsToDelete = context.familyIdsToDelete.length > 0;
+
         logger.debug(this.name, '#delete() familyIdsToDelete:', context.familyIdsToDelete);
         logger.debug(this.name, '#delete() generationIdsToDelete:', context.generationIdsToDelete);
         logger.debug(this.name, '#delete() genotypeIdsToDelete:', context.genotypeIdsToDelete);

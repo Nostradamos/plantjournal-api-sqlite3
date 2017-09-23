@@ -423,7 +423,7 @@ describe('utils/utils', () => {
             if(sqlite.driver !== null) {
                 try {
                     await sqlite.close();
-                catch(err) {
+                } catch(err) {
                     null;
                 }
             }

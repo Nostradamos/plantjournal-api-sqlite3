@@ -65,15 +65,5 @@ describe('Environment()', () => {
                     environmentId: 2, environmentName: 'testEnvironment2'});
             }
         );
-
-        it(
-            `should not update an environment if no one where found`,
-            async() => {
-                let updated = await pj.Environment.update(
-                    {'environmentName': 'NonFoo'},
-                    {filter: {environmentName: 'foobar'}});
-                updated.should.deepEqual([]);
-            }
-        );
     });
 });
