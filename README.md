@@ -13,20 +13,20 @@ API
 ## Connect to sqlite3 database
 
 You can connect to a sql database file with:
-```
+```javascript
 var pj = new plantJournal();
 await pj.connect('./database.sql');
 ```
 
 Or if you want to keep the database in memory, use:
-```
+```javascript
 var pj = new plantJournal();
 await pj.connect(':memory:');
 ```
 
 To catch errors, surround `pj.connect()` with a try/catch block.
 
-```
+```javascript
 var pj = new plantJournal();
 try {
     await pj.connect('./database.sql'): // same for :memory:
@@ -43,14 +43,14 @@ We have a variety of models with different attributes. See "Models/Tables" for d
 To create a new model record, you have to call `pj.{Model}.create({options})`, where `{Model}` is the model name, and `{options}` an object with attributes this new model record should have. Check out "Models/Tables" to get more detailed information which attributes are required (and therefore have to be set if you don't want to get any errors) and which additional/optional attributes you can set.
 
 **Example #1:**
-```
+```javascript
 await pj.Family.create({
     familyName: 'testFamily'
 });
 ```
 
 **Example #2:**
-```
+```javascript
 await pj.Plant.create({
     plantName: 'Some chili plant',
     genotypeId: 3
@@ -60,7 +60,7 @@ await pj.Plant.create({
 If you create a new record, `pj.{Model}.create{)` returns the newly created record as an object.
 
 **Example #1:**
-```
+```javascript
 let family = pj.Family.create({
     familyName: 'testFamily'
 });
