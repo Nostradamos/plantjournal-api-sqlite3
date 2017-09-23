@@ -6,34 +6,38 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../../src/pj');
 
-describe('Environment()', () => {
+describe('Journal()', () => {
     describe('#update()', () => {
         let pj;
 
         before(async () => {
             pj = new plantJournal(':memory:');
             await pj.connect();
-            await pj.Environment.create({'environmentName': 'testEnvronment1'});
-            await pj.Environment.create({'environmentName': 'testEnvronment2'});
-            await pj.Environment.create({'environmentName': 'testEnvronment3'});
+
+            await pj.Environment.create({environmentName: 'Greenhouse #1'});
+
+            await pj.Journal.create({journalTimestamp: 1337, journalType: 'temp-sensor', journalValue: 6.5, environmentId: 1});
+            await pj.Journal.create({journalTimestamp: 1337, journalType: 'rlf-sensor', journalValue: 80, environmentId: 1});
+            await pj.Journal.create({journalTimestamp: 1437, journalType: 'rlf-sensor', journalValue: 78, environmentId: 1});
+
         });
 
 
         it('should throw error if no arguments got passed', async () => {
-            await pj.Environment.update()
+            await pj.Journal.update()
                 .should.be
                 .rejectedWith('No Update and Critera Object got passed');
         });
 
         it('should throw error if no criteria object got passed', async () => {
-            await pj.Environment.update({})
+            await pj.Journal.update({})
                 .should.be.rejectedWith('No Criteria Object got passed');
         });
 
         it(
             'should throw error if first argument is not a assoc array/object',
             async () => {
-                await pj.Environment.update([], {})
+                await pj.Journal.update([], {})
                     .should.be.rejectedWith(
                         'Update Object has to be an associative array');
             }
@@ -43,26 +47,50 @@ describe('Environment()', () => {
             `should throw error if second argument is not an assoc
             array/object`,
             async () => {
-                await pj.Environment.update({'environmentName': 'newEnvName'}, null)
+                await pj.Journal.update({'environmentName': 'newEnvName'}, null)
                     .should.be.rejectedWith(
                         'Criteria Object has to be an associative array');
             }
         );
 
         it(
-            `should update environment in database and return updated
-            environment id`,
+            `should update journal in database and return updated
+            journal id`,
             async () => {
-                let updated = await pj.Environment.update(
-                    {'environmentName': 'testEnvironment2'},
-                    {filter: {environmentId: 2}});
+                let updated = await pj.Journal.update(
+                    {journalValue: 90},
+                    {filter: {journalId: 2}});
+
                 updated.should.deepEqual([2]);
 
                 let rows = await sqlite.all(
-                    `SELECT environmentId, environmentName FROM environments
-                    WHERE environmentId = 2`);
-                rows[0].should.deepEqual({
-                    environmentId: 2, environmentName: 'testEnvironment2'});
+                    `SELECT journalType, journalValue, journalTimestamp FROM journals
+                    WHERE journalId = 2`);
+
+                rows[0].should.deepEqual(
+                    {journalType: 'rlf-sensor', journalValue: 90, journalTimestamp: 1337});
+            }
+        );
+
+        it(
+            `should update multiple journals and return all updated journalIds`,
+            async() => {
+                let updated = await pj.Journal.update(
+                    {journalValue: 90},
+                    {filter: {journalType: {$like: '%sensor%'}}});
+
+                updated.should.deepEqual([1, 2, 3]);
+
+                let rows = await sqlite.all(
+                    `SELECT journalId, journalType, journalValue, journalTimestamp FROM journals`);
+
+                rows.should.deepEqual(
+                    [
+                        {journalId: 1, journalType: 'temp-sensor', journalValue: 90, journalTimestamp: 1337},
+                        {journalId: 2, journalType: 'rlf-sensor', journalValue: 90, journalTimestamp: 1337},
+                        {journalId: 3, journalType: 'rlf-sensor', journalValue: 90, journalTimestamp: 1437},
+                    ]
+                );
             }
         );
     });
