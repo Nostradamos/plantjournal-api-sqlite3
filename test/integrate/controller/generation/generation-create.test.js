@@ -15,6 +15,8 @@ describe('Generation()', () => {
             await pj.Family.create({familyName: 'testName'});
         });
 
+        after(async () => {await pj.disconnect();});
+
         it('should throw error if options.familyId is not an integer', async () => {
             await pj.Generation.create(
                 {'generationName': 'testGeneration2', 'familyId': '1'})
@@ -46,6 +48,27 @@ describe('Generation()', () => {
                  FROM generations WHERE generationName = "testGeneration3"`);
 
             result.should.deepEqual([]);
+        });
+
+        it('should throw error if options is not set or not an associative array', async () => {
+            let tested = 0;
+
+            for (let value in [[1,2],
+                null,
+                'string',
+                1,
+                true,
+                undefined]) {
+                await pj.Generation.create(value)
+                    .should.be.rejectedWith('First argument has to be an associative array');
+                tested++;
+            }
+            tested.should.eql(6);
+        });
+
+        it('should throw Error if options.familyId is not set', async () => {
+            await pj.Generation.create({'generationName': 'testGeneration2'})
+                .should.be.rejectedWith('options.familyId has to be set');
         });
 
         it('should create a new generations entry and return generation object', async () => {
@@ -82,30 +105,26 @@ describe('Generation()', () => {
             generation.generations[1].should.containDeep(rows[0]);
         });
 
-        it('should throw error if options is not set or not an associative array', async () => {
-            let tested = 0;
+        it('should set generationDescription = \'\' if generationDescription is not defined', async () => {
+            let generation = await pj.Generation.create(
+                {
+                    familyId: 1,
+                    generationName: 'testGeneration'
+                }
+            );
 
-            for (let value in [[1,2],
-                null,
-                'string',
-                1,
-                true,
-                undefined]) {
-                await pj.Generation.create(value)
-                    .should.be.rejectedWith('First argument has to be an associative array');
-                tested++;
-            }
-            tested.should.eql(6);
+            generation.generations[2].should.containDeep(
+                {
+                    generationId: 2,
+                    generationDescription: '',
+                }
+            );
+
+            let rows = await sqlite.all(
+                `SELECT generationId, generationDescription FROM generations WHERE generationId = 2`);
+            generation.generations[2].should.containDeep(rows[0]);
         });
 
-        it('should throw Error if options.familyId is not set', async () => {
-            await pj.Generation.create({'generationName': 'testGeneration2'})
-                .should.be.rejectedWith('options.familyId has to be set');
-        });
-
-        after(async () => {
-            await pj.disconnect();
-        });
     });
 
     describe('#create() (with options.generationParents)', () => {

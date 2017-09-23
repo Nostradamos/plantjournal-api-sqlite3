@@ -31,6 +31,10 @@ describe('Plant()', () => {
             await pj.Plant.create({generationId: 4, plantName: 'testPlant5'}); // plantId: 5 genotypeId: 4
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it('should find plants, referenced genotypes, generations and families', async () => {
             let plants = await pj.Plant.find();
 
@@ -323,8 +327,74 @@ describe('Plant()', () => {
             });
         });
 
-        after(async () => {
-            await pj.disconnect();
+        it('should get related medium/environment information if plant.mediumId is not null', async () => {
+            await pj.Environment.create({environmentName: 'Greenhouse #1'});
+            await pj.Medium.create({mediumName: 'TestMedium #1', environmentId: 1});
+            await pj.Plant.create({generationId: 4, plantName: 'testPlant6', mediumId: 1});
+
+            let plant = await pj.Plant.find({where: {plantId: 6}});
+            plant.should.containDeep(
+                {
+                    found: 1,
+                    remaining: 0,
+                    plants: {
+                        6: {
+                            genotypeId: 5,
+                            generationId: 4,
+                            familyId: 2,
+                            mediumId: 1,
+                            environmentId: 1,
+                            plantName: 'testPlant6',
+                            plantClonedFrom: null,
+                            plantSex: null,
+                            plantDescription: '',
+                            plantId: 6,
+                        }
+                    },
+                    genotypes: {
+                        5: {
+                            generationId: 4,
+                            familyId: 2,
+                            genotypeName: '',
+                            genotypeDescription: '',
+                            genotypeId: 5,
+                        }
+                    },
+                    generations: {
+                        4: {
+                            familyId: 2,
+                            generationName: 'S1 #2',
+                            generationParents: [1, 3],
+                            generationDescription: '',
+                            generationId: 4,
+                        }
+                    },
+                    families: {
+                        2: {
+                            familyName: 'testFamily2',
+                            familyDescription: '',
+                            familyId: 2,
+                        }
+                    },
+                    mediums: {
+                        1: {
+                            environmentId: 1,
+                            mediumName: 'TestMedium #1',
+                            mediumDescription: '',
+                            mediumId: 1,
+                        }
+                    },
+                    environments: {
+                        1: {
+                            environmentName: 'Greenhouse #1',
+                            environmentDescription: '',
+                            environmentId: 1
+                        }
+                    }
+                }
+            );
+
         });
+
     });
 });

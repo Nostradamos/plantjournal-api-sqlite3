@@ -52,6 +52,9 @@ class PlantFind extends GenericFind {
         returnObject.genotypes = {};
         returnObject.generations = {};
         returnObject.families = {};
+        returnObject.mediums = {};
+        returnObject.environments = {};
+
         _.each(context.rowsWhere, function(row) {
             Utils.addPlantFromRowToReturnObject(row, returnObject, true);
             Utils.addGenotypeFromRowToReturnObject(row, returnObject);

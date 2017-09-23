@@ -17,6 +17,12 @@ describe('Plant()', () => {
             await pj.Family.create({familyName: 'testFamily1'});
             await pj.Generation.create({familyId: 1, generationName: 'F1'});
             await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
+            await pj.Environment.create({environmentName: 'Greenhouse #1'});
+            await pj.Medium.create({mediumName: 'Medium #1', environmentId: 1});
+        });
+
+        afterEach(async () => {
+            pj.disconnect();
         });
 
         it('should throw error if options is not set or not an associative array', async () => {
@@ -94,7 +100,8 @@ describe('Plant()', () => {
                 {
                     genotypeId: 1,
                     plantName: 'testPlant1',
-                    plantDescription: 'we found this plant in the backyard of our grandma'
+                    plantDescription: 'we found this plant in the backyard of our grandma',
+                    mediumId: 1
                 }
             );
             let [createdAt, modifiedAt] = [plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt];
@@ -110,7 +117,7 @@ describe('Plant()', () => {
                         'plantCreatedAt': createdAt,
                         'plantModifiedAt': modifiedAt,
                         'genotypeId': 1,
-                        'mediumId': null
+                        'mediumId': 1
                     }
                 }
             });
@@ -197,10 +204,6 @@ describe('Plant()', () => {
             let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
             rowsGenotypes.should.containDeep(
                 [{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
-        });
-
-        afterEach(async () => {
-            pj.disconnect();
         });
     });
 });

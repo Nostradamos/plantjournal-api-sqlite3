@@ -51,7 +51,7 @@ class GenerationCreate extends GenericCreate {
         context.query
             .set('generationId', null)
             .set('generationName', options.generationName)
-            .set('generationDescription', options.generationDescription)
+            .set('generationDescription', options.generationDescription || '')
             .set('familyId', options.familyId);
     }
 
