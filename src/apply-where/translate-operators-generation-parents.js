@@ -9,7 +9,28 @@ const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require('./translate-operators-relational');
 
+/**
+ * This class translates criterias for generationParents.
+ * For example if you have a criteria object like this:
+ * ```
+ * {
+ *  generationParents: {
+ *      $eq: [1,2]
+ *  },
+ *  generationName: 'Blubb'
+ * }
+ * ```
+ * Then we would process the "$eq: [1,2]" stuff inside this class.
+ * NOTE: This class only contains static methods, so you can't create
+ * a new instance of this class. To call this class, just call
+ * TranslateOperatorsRelational.translateAndApplyOperators().
+ */
 class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
+    /**
+     * Table will always be generation_parents, hardcode it.
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     */
     static getTable(self) {
         self.table = CONSTANTS.TABLE_GENERATION_PARENT;
     }
@@ -21,6 +42,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      * because we want to build a subquery in the end. We also need another
      * squel expression to handle the having part of the new sub query.
      * @param  {Object} self
+     *         Object containing information about this translation process
      */
     static modifySelf(self) {
         self.attr = CONSTANTS.ATTR_ID_PLANT;
@@ -29,6 +51,22 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
         self.squelExprHaving = squel.expr();
     }
 
+    /**
+     * Operator function handling equals. We can't simply use the method
+     * provided by TranslateOperatorsRelational because of the way we store
+     * the generationParents. Each parent is in a own row which we join to.
+     * So we get a row for every parent, for this row we need to make sure
+     * that the id is in our equals array (operatorOptions), plus we need to
+     * make sure that we selected exactly operatorOptions.length parents by
+     * using a HAVIN expression.
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     * @param  {Integer[]} operatorOptions
+     *         Array of integers which represent the plantIds (parentIds)
+     *         we want to check against
+     * @param  {Object} crit
+     *         Expression object
+     */
     static operatorEquals(self, operatorOptions, crit) {
         this.operatorIn(self, operatorOptions, crit);
 
