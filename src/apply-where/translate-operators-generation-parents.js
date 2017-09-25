@@ -80,20 +80,59 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
     }
 
+    /**
+     * Operator function for equals NOT ($neq)
+     * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals() method
+     * because we need don't really do an not equals, but more an not in. Remind
+     * that we check against an array of plantIds/parentIds.
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     * @param  {Number[]} operatorOptions
+     *         We want to find records, where attribute value is not in
+     *         this array.
+     * @param  {Object} crit
+     *         Object which contains expression and expressionArgs. Modify
+     *         this two properties to create a new expression which gets
+     *         added to self.squelExpr.
+     */
     static operatorNotEquals(self, operatorOptions, crit) {
         this.operatorNotIn(self, operatorOptions, crit);
     }
 
+    /**
+     * This short hand should just does an equals operation, but we need to call
+     * the TranslateOperatorsGenerationParents.operatorEquals() method,
+     * therefore we need to reassign it.
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     * @param  {Object} crit
+     *         Object which contains expression and expressionArgs. Modify
+     *         this two properties to create a new expression which gets
+     *         added to self.squelExpr.
+     */
     static processStringNumberBooleanNullShortHand(self, crit) {
         super.operatorEquals(self, self.attrOptions, crit);
     }
 
+    /**
+     * And this short hand should does an equals operation, but we need to call
+     * the TranslateOperatorsGenerationParents.operatorEquals() method,
+     * therefore we need to reassign it.
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     * @param  {Object} crit
+     *         Object which contains expression and expressionArgs. Modify
+     *         this two properties to create a new expression which gets
+     *         added to self.squelExpr.
+     */
     static processArrayShortHand(self, crit) {
         this.operatorEquals(self, self.attrOptions, crit);
     }
 
     /**
-     * asd
+     * Before we're done, we need to build a sub query which selects all
+     * generationIds where a plantIds/parentIds matches and maybe even
+     * a having clause.
      * @param  {Object} self
      */
     static beforeDone(self) {
@@ -131,8 +170,8 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
 TranslateOperatorsGenerationParents.OPERATORS = _.clone(TranslateOperatorsRelational.OPERATORS);
 
+// Overwrite our equals/not equals operatorFuncs for generationParents
 TranslateOperatorsGenerationParents.OPERATORS.$eq = TranslateOperatorsGenerationParents.operatorEquals;
 TranslateOperatorsGenerationParents.OPERATORS.$neq = TranslateOperatorsGenerationParents.operatorNotEquals;
-
 
 module.exports = TranslateOperatorsGenerationParents;

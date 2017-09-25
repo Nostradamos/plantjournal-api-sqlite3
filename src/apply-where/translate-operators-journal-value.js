@@ -268,16 +268,16 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
     }
 
     /**
-      * This short hand should just do an equals operation, but we need to call
-      * the TranslateOperatorsJournalValue.operatorEquals() method, therefore.
-      * we need to reassign it.
-      * @param  {Object} self
-      *         Object containing information about this translation process
-      * @param  {Object} crit
-      *         Object which contains expression and expressionArgs. Modify
-      *         this two properties to create a new expression which gets
-      *         added to self.squelExpr.
-      */
+     * This short hand should just do an equals operation, but we need to call
+     * the TranslateOperatorsJournalValue.operatorEquals() method, therefore.
+     * we need to reassign it.
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     * @param  {Object} crit
+     *         Object which contains expression and expressionArgs. Modify
+     *         this two properties to create a new expression which gets
+     *         added to self.squelExpr.
+     */
     static processStringNumberBooleanNullShortHand(self, crit) {
         this.operatorEquals(self, self.attrOptions, crit);
     }
@@ -298,6 +298,10 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
 
 }
 
+/**
+ * All relational operators for journalValue
+ * @type {Object<String, Function>}
+ */
 TranslateOperatorsJournalValue.OPERATORS = {
     '$eq': TranslateOperatorsJournalValue.operatorEquals,
     '$neq': TranslateOperatorsJournalValue.operatorNotEquals,
