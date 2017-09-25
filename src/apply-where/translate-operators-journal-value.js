@@ -14,7 +14,6 @@ const TranslateOperatorsRelational = require(
  * `journalValue[0]` or `journalValue.foo.bar[42]`...
  * Full example:
  * {"journalValue.foo.bar[13]": {$eq: 'xyz'}}
- * @type {[type]}
  */
 class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
     /**
