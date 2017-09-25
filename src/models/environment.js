@@ -63,6 +63,7 @@ Environment.create = async function(options) {
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {ReturnFind}
+ *         Object containing found information about found environments
  * @return {ReturnFind.environments}
  *         Found environments
  */

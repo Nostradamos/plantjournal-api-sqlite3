@@ -39,9 +39,7 @@ Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
  * @param {object} returnObject
  *        Object which will find returned from
  *        pj.{Plant|Plant|Generation|...|Famiy}.find. Gets mutated.
- * @param {object} options
- *        options which got passed to the find function. For advanced use.
- * @param {bool}   [forceAdd=false]
+ * @param {bool} [forceAdd=false]
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addFamilyFromRowToReturnObject = (row, returnObject, forceAdd) => {
@@ -68,9 +66,7 @@ Utils.addFamilyFromRowToReturnObject = (row, returnObject, forceAdd) => {
  * @param {object} returnObject
  *        Object which will find returned from pj.{Plant|Plant|...|Family}.find.
  *        Gets mutated.
- * @param {object} options
- *        options which got passed to the find function. For advanced use.
- * @param {bool}   [forceAdd=false]
+ * @param {bool} [forceAdd=false]
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addGenerationFromRowToReturnObject = (row, returnObject, forceAdd) => {
@@ -194,8 +190,6 @@ Utils.addEnvironmentFromRowToReturnObject = (row, returnObject, forceAdd) => {
  *        Row object from sqlite. row.{mediumId} has to be set.
  * @param {object} returnObject
  *        Object which will contain information about found models.
- * @param {object} options
- *        options which got passed to the find function. For advanced use.
  * @param {bool}   [forceAdd=false]
  *        adds to returnObject even if row.generatioName is not set.
  */

@@ -133,6 +133,7 @@ class TranslateOperatorsGeneric {
      * this method calls #unhandledShortHand().
      * @param  {Object} self
      *         Object containing information about this translation process
+     * @returns {undefined}
      */
     static checkForShortHands(self) {
         let crit = {crit: null, args: []};

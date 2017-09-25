@@ -36,7 +36,7 @@ const TranslateOperatorsJournalValue = require(
  * $nin       Non in array of values
  * @param  {squel} query
  *         squel query, needs to be in a state to take .where() calls
- * @param  {string[]} self.allowedAttributes
+ * @param  {string[]} allowedAttributes
  *         An array of allowed attributes
  * @param  {Object} criteria
  *         criteria object which gets passed to update/delete/find functions.
@@ -51,7 +51,7 @@ const TranslateOperatorsJournalValue = require(
  *             {where: {'generationParents': [1,2]}} => generationParents have
  *                                                      to be 1 and 2.
  *             {where: {'plantSex': 'male'}} => only male plants
- * @param {Dict} [self.overwriteTableLookup=null]
+ * @param {Object<String, String>} [overwriteTableLookup=null]
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table.
  */
@@ -74,14 +74,16 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableL
  * values attribute criteria, or keys are boolean operators ($and, $or, $and(),
  * $or()). This function can call itself recursive.
  * Mutates squelExpr.
+ * @param  {Object} self
+ *         Self object from applyCriteriaFiler()
+ * @param  {String[]} self.allowedAttributes
+ *         String array of allowed attributes. It will throw an error if you
+ *         use an attribute which is illegal.
  * @param  {Object} obj
  *         Complete where.where object or an child object of it. Object keys
  *         have to be $and/$or.. boolean operators or valid attributes. Eg:
  *         {'generationParents': [1,2],
  *          'or': {'familyId': 3}}
- * @param  {String[]} self.allowedAttributes
- *         String array of allowed attributes. It will throw an error if you
- *         use an attribute which is illegal.
  * @param  {SquelExpression} squelExpr
  *         An Squel expression instance. You can init one with ```squel.exr()```.
  *         This function hopefully mutate this object (otherwise nothing
@@ -98,9 +100,6 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableL
  *         otherwise 'and'.
  *         and  -> use and operator for attributes
  *         or   -> use or operator for attributes
- * @param {Dict} [self.overwriteTableLookup=null]
- *        If you want to overwrite the used table for specific attributes, set
- *        them here. Key should be the attribute, value the new table.
  */
 function eachFilterObject(self, obj, squelExpr, depth, type=null) {
     logger.silly(
@@ -168,6 +167,7 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
  * This method
  * Mutates squelExpr.
  * @param  {Object} self
+ *         Self object from applyCriteriaFilter()
  * @param  {String} attr
  *         Name of attribute. This has to be checked for validity.
  * @param  {Object|String|Integer|Array} attrOptions
@@ -180,9 +180,6 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
  * @param  {String} type
  *         should be `and` or `or`, decides if we use squelExpr.and() or
  *         squelExpr.or().
- * @param {Dict} [self.overwriteTableLookup=null]
- *        If you want to overwrite the used table for specific attributes, set
- *        them here. Key should be the attribute, value the new table.
  */
 function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
     let translator = null;

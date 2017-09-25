@@ -134,6 +134,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      * generationIds where a plantIds/parentIds matches and maybe even
      * a having clause.
      * @param  {Object} self
+     *         Object containing information about this translation process
      */
     static beforeDone(self) {
         // Make sure we have any expressions to add
