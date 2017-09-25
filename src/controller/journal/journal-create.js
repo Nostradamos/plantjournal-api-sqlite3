@@ -77,8 +77,10 @@ class JournalCreate extends GenericCreate {
     /**
      * Set query fields and do some special stuff for journalValue to always
      * parse json inside sqlite and sometimes quote it.
-     * @param {[type]} context [description]
-     * @param {[type]} options [description]
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
      */
     static setQueryFields(context, options) {
         this.sanitizeOptions(context, options);
