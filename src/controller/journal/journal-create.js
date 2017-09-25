@@ -54,14 +54,32 @@ class JournalCreate extends GenericCreate {
 
     }
 
+    /**
+     * Sometimes we need to cast our options into strings or json_quote() them
+     * if they are invalid json.
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     */
     static sanitizeOptions(context, options) {
         if(_.isBoolean(options.journalValue)) {
             options.journalValue = _.toString(options.journalValue);
         }
+
+        // If journalValue is no validJSON, it means it' neither a JSON object,
+        // nor a number, boolean or null, so it has to be a string which we need
+        // to json_quote() via squel command.
         context.quoteJournalValue = !Utils.isValidJSON(options.journalValue);
         logger.silly(this.name, '#sanitizeOptions() quoteJournalValue:', context.quoteJournalValue);
     }
 
+    /**
+     * Set query fields and do some special stuff for journalValue to always
+     * parse json inside sqlite and sometimes quote it.
+     * @param {[type]} context [description]
+     * @param {[type]} options [description]
+     */
     static setQueryFields(context, options) {
         this.sanitizeOptions(context, options);
 
@@ -83,6 +101,15 @@ class JournalCreate extends GenericCreate {
 
     }
 
+    /**
+     * Build returnObject
+     * @param  {object} returnObject
+     *         Object which will get returned from JournalCreate.create()
+     * @param  {object} context
+     *         internal context object in #create().
+     * @param  {object} options
+     *         options object which got passed to GenericCreate.create().
+     */
     static buildReturnObject(returnObject, context, options) {
         returnObject[this.PLURAL] = {
             [context.insertId]: {
