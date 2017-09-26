@@ -121,17 +121,17 @@ Models/Tables
 
 ## Plant (=plants)
 
-|        Attribute         |    Type    | Required |      Default      | Internal | Description |
-| ------------------------ | ---------- | -------- | ----------------- | -------- | ----------- |
-| plantId                  | int        |          | AUTO_INCREMENT    | *        |             |
-| plantName                | text       | *        |                   |          |             |
-| plantSex                 | text       |          | null              |          |             |
-| plantClonedFrom          | plantId    |          | null              |          |             |
-| plantDescription         | text       |          | ""                |          |             |
-| plantCreatedAt           | datetime   |          | CURRENT_TIMESTAMP | *        |             |
-| plantModifiedAt          | datetime   |          | CURRENT_TIMESTAMP | *        |             |
-| genotypeId               | genotypeId | *        |                   |          |             |
-| mediumId (unimplemented) | mediumId   | *        |                   |          |             |
+| Attribute        | Type       | Required | Default           | Internal | Description |
+| ---------------- | ---------- | -------- | ----------------- | -------- | ----------- |
+| plantId          | int        |          | AUTO_INCREMENT    | *        |             |
+| plantName        | text       | *        |                   |          |             |
+| plantSex         | text       |          | null              |          |             |
+| plantClonedFrom  | plantId    |          | null              |          |             |
+| plantDescription | text       |          | ""                |          |             |
+| plantCreatedAt   | datetime   |          | CURRENT_TIMESTAMP | *        |             |
+| plantModifiedAt  | datetime   |          | CURRENT_TIMESTAMP | *        |             |
+| genotypeId       | genotypeId | *        |                   |          |             |
+| mediumId         | mediumId   | *        |                   |          |             |
 
 ## Medium (=mediums)
 
@@ -144,7 +144,7 @@ Models/Tables
 | mediumModifiedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |             |
 | environmentId     | environmentId | *        |                   |          |             |
 
-## Environment
+## Environment (=environments)
 
 |       Attribute        |   Type   | Required |      Default      | Internal | Description |
 | ---------------------- | -------- | -------- | ----------------- | -------- | ----------- |
@@ -154,7 +154,7 @@ Models/Tables
 | environmentCreatedAt   | datetime |          | CURRENT_TIMESTAMP | *        |             |
 | environmentModifiedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
 
-## Journal (unimplemented)
+## Journal (=journals)
 
 If Required is filled with "\*\*", you can only set/get this attribute if the logFor attribute matches. So for example you can only
 get plantId if logFor is "plant" and you can only get mediumId if logFor is "medium etc.
@@ -213,11 +213,13 @@ NOTE: This excludes the special cases `generationParents` and `journalValue`. Sc
 # Journal Types
 
 ## `log`
+General text logging for markdown
 
+Valid records: plant, medium, environment
 ### Example:
 ```
 {
-    journalType: 'log',
+    journalType: 'log-markdown',
     journalValue: 'Lorem Ipsum
     Asd dasldk'
 }
@@ -225,8 +227,11 @@ NOTE: This excludes the special cases `generationParents` and `journalValue`. Sc
 
 
 ## `water`
+An first prototype on how we could log a watering of a medium (which means
+one or more plants)
 
-### Example:
+Valid records: medium
+### Example #1:
 ```
 {
     journalType: 'water',
@@ -234,14 +239,20 @@ NOTE: This excludes the special cases `generationParents` and `journalValue`. Sc
         amountL: 13.0,
         ec: 0.8
         ph: 6.5
-        fertRatio: {
+        fertRatioTotal: {
             n: 5
             p: 7
         },
-        fertAmountML: {
-            n: 1.0
-        },
-        fertilizers: ['Hakaphos Green', 'Hakaphos Blue']
+        fertilizers: {
+            'Hakaphos Grün': {
+                amountML: 13.1,
+                // storeId: 13939
+            },
+            'Hakaphos Rot': {
+                amountML: 20.1,
+                // storeId: 1293
+            }
+        }
     }
 }
 ```
@@ -268,11 +279,20 @@ NOTE: This excludes the special cases `generationParents` and `journalValue`. Sc
   SQLite can't know which table you mean, so we just use explicit column names
   for everything. Eg: `generations.familyId` references `families.familyId`.
 
-* Try to use CONSTANTS wherever you can, especially for attributes. This makes
+* Try to use `CONSTANTS` wherever you can, especially for attributes. This makes
   it easier to change the attribute or variable names and reduces the risk of
   misspelling any constant, because we throw an error if you try to read an
   undefined property from constants (thanks to es6 proxies and zealot).
 
-* Use lamda expression for all anonymous functions. For named functions (also
-  assigned functions) use `function()` style. If the shorted lamda expression
-  allows you to fit max line length for named functions, feel free to use it.
+* Use lamda expression for all anonymous (and unassigned) functions. For named
+  functions (also assigned functions) use `function()` style. If the shorter
+  lamda expression allows you to fit max line length for named functions, feel
+  free to use it.
+
+* Descriptions of tests should get encapsulated inside of \`\` to not need to
+  escape `"` or `'` and make it possible to easily search the test.
+
+* SQLite3 queries should also be inside of \`\`.
+
+* Try to not use more than 80 characters per line. Only exception are strings
+  encapsulated in an `it()` function for tests.
