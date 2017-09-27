@@ -25,7 +25,7 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "sqlite": "^2.5.0",
-    "sqlite3": "^3.1.11",
+    "sqlite3": "^3.1.12",
     "squel": "^5.8.0",
     "winston": "^2.3.1",
     "zealit": "^2.4.0"

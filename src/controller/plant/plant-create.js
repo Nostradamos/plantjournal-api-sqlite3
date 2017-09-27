@@ -38,15 +38,6 @@ class PlantCreate extends GenericCreate {
         Utils.hasToBeInt(options, 'generationId');
         Utils.hasToBeInt(options, 'environmentId');
 
-        // Either generationId or genotypeId has to be set.
-        if (!_.has(options, 'generationId') &&
-            !_.has(options, 'genotypeId') &&
-            !_.has(options, 'plantClonedFrom')) {
-            throw new Error(
-                'Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set'
-            );
-        }
-
         // plantSex has to be either male, female or hermaphrodite
         if (_.has(options, 'plantSex') &&
             _.indexOf(CONSTANTS.PLANT_SEXES, options.plantSex) === -1) {

@@ -43,12 +43,6 @@ describe('Plant()', () => {
             tested.should.eql(6);
         });
 
-
-        it('should throw error if neither options.generationId nor options.genotypeId is set', async () => {
-            await pj.Plant.create({plantName: 'testPlant'})
-                .should.be.rejectedWith('Either options.generationId, options.genotypeId or options.plantClonedFrom has to be set');
-        });
-
         it('should throw error if options.generationId is not an integer', async () => {
             await pj.Plant.create({plantName: 'testPlant', generationId: 'test'})
                 .should.be.rejectedWith('options.generationId has to be an integer');
@@ -204,6 +198,34 @@ describe('Plant()', () => {
             let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
             rowsGenotypes.should.containDeep(
                 [{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
+        });
+
+        it('should be possible to create a plant without setting genotypeName or genotypeId', async () => {
+            let plant = await pj.Plant.create({plantName: 'motherPlant1'});
+
+            plant.should.containDeep(
+                {
+                    genotypes: {
+                        2: {
+                            genotypeId: 2,
+                            genotypeName: '',
+                            genotypeDescription: '',
+                            generationId: null
+                        }
+                    },
+                    plants: {
+                        1: {
+                            plantId: 1,
+                            plantName: 'motherPlant1',
+                            plantClonedFrom: null,
+                            plantSex: null,
+                            plantDescription: '',
+                            genotypeId: 2,
+                            mediumId: null,
+                        }
+                    }
+                }
+            );
         });
     });
 });
