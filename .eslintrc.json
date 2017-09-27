@@ -12,6 +12,14 @@
             "error",
             4
         ],
+        "max-len": [
+            "warn",
+            {   
+                "code": 80,
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true
+            }
+        ],
         "linebreak-style": [
             "error",
             "unix"
