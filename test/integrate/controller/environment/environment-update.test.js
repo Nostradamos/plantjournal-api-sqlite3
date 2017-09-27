@@ -30,8 +30,7 @@ describe(`Environment()`, () => {
                 .should.be.rejectedWith('No Criteria Object got passed');
         });
 
-        it(
-            'should throw error if first argument is not a assoc array/object',
+        it(`should throw error if first argument is not a assoc array/object`,
             async () => {
                 await pj.Environment.update([], {})
                     .should.be.rejectedWith(
@@ -39,9 +38,7 @@ describe(`Environment()`, () => {
             }
         );
 
-        it(
-            `should throw error if second argument is not an assoc
-            array/object`,
+        it(`should throw error if second argument is not an assoc array/object`,
             async () => {
                 await pj.Environment.update({'environmentName': 'newEnvName'}, null)
                     .should.be.rejectedWith(
@@ -49,31 +46,24 @@ describe(`Environment()`, () => {
             }
         );
 
-        it(
-            `should update environment in database and return updated
-            environment id`,
-            async () => {
-                let updated = await pj.Environment.update(
-                    {'environmentName': 'testEnvironment2'},
-                    {where: {environmentId: 2}});
-                updated.should.deepEqual([2]);
+        it(`should update environment in database and return updated environment id`, async () => {
+            let updated = await pj.Environment.update(
+                {'environmentName': 'testEnvironment2'},
+                {where: {environmentId: 2}});
+            updated.should.deepEqual([2]);
 
-                let rows = await sqlite.all(
-                    `SELECT environmentId, environmentName FROM environments
-                    WHERE environmentId = 2`);
-                rows[0].should.deepEqual({
-                    environmentId: 2, environmentName: 'testEnvironment2'});
-            }
-        );
+            let rows = await sqlite.all(
+                `SELECT environmentId, environmentName FROM environments
+                WHERE environmentId = 2`);
+            rows[0].should.deepEqual({
+                environmentId: 2, environmentName: 'testEnvironment2'});
+        });
 
-        it(
-            `should not update an environment if no one where found`,
-            async() => {
-                let updated = await pj.Environment.update(
-                    {'environmentName': 'NonFoo'},
-                    {where: {environmentName: 'foobar'}});
-                updated.should.deepEqual([]);
-            }
-        );
+        it(`should not update an environment if no one where found`, async () => {
+            let updated = await pj.Environment.update(
+                {'environmentName': 'NonFoo'},
+                {where: {environmentName: 'foobar'}});
+            updated.should.deepEqual([]);
+        });
     });
 });
