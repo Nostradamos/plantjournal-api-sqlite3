@@ -29,7 +29,7 @@ To catch errors, surround `pj.connect()` with a try/catch block.
 ```javascript
 var pj = new plantJournal();
 try {
-    await pj.connect('./database.sql'): // same for :memory:
+    await pj.connect('./database.sql'); // same for :memory:
 } catch(err) {
     // ToDo: handle error here
 }
@@ -156,20 +156,19 @@ Models/Tables
 
 ## Journal (=journals)
 
-If Required is filled with "\*\*", you can only set/get this attribute if the logFor attribute matches. So for example you can only
-get plantId if logFor is "plant" and you can only get mediumId if logFor is "medium etc.
+NOTE: You can only set one of the attributes where required is "\*\*"
 
-| Attribute         | Type          | Required | Default           | Internal | Description                                                             |
-| ----------------- | ------------- | -------- | ----------------- | -------- | ----------------------------------------------------------------------- |
-| journalId         | int           |          | AUTO_INCREMENT    | *        |                                                                         |
-| journalTimestamp  | datetime      | *        |                   |          |                                                                         |
-| journalType       | text          | *        |                   |          |                                                                         |
-| journalValue      | json          | *        |                   |          |                                                                         |
-| journalCreatedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                         |
-| journalModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |                                                                         |
-| plantId           | plantId       | **       |                   |          | Has to reference an existing plant if journalFor = "plant".             |
-| mediumId          | mediumId      | **       |                   |          | Has to reference an existing medium if journalFor = "medium".           |
-| environmentId     | environmentId | **       |                   |          | Has to reference an existing environment if journalFor = "environment". |
+| Attribute         | Type          | Required | Default           | Internal | Description |
+| ----------------- | ------------- | -------- | ----------------- | -------- | ----------- |
+| journalId         | int           |          | AUTO_INCREMENT    | *        |             |
+| journalTimestamp  | datetime      | *        |                   |          |             |
+| journalType       | text          | *        |                   |          |             |
+| journalValue      | json          | *        |                   |          |             |
+| journalCreatedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |             |
+| journalModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |             |
+| plantId           | plantId       | **       |                   |          |             |
+| mediumId          | mediumId      | **       |                   |          |             |
+| environmentId     | environmentId | **       |                   |          |             |
 
 # Query Operators
 
