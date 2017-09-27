@@ -7,8 +7,8 @@ const sqlite = require('sqlite');
 const plantJournal = require('../../../../src/pj');
 const CONSTANTS = require('../../../../src/constants');
 
-describe('Plant()', () => {
-    describe('#delete()', async () => {
+describe(`Plant()`, () => {
+    describe(`#delete()`, async () => {
         let pj;
 
         before(async () => {
@@ -34,12 +34,12 @@ describe('Plant()', () => {
             await pj.Plant.create({generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
         });
 
-        it('should throw error if no criteria object got passed', async () => {
+        it(`should throw error if no criteria object got passed`, async () => {
             await pj.Plant.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete plants specified in criteria.where.plantId', async () => {
+        it(`should delete plants specified in criteria.where.plantId`, async () => {
             let deletedPlants = await pj.Plant.delete(
                 {
                     'where': {

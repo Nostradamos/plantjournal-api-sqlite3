@@ -7,13 +7,13 @@ const squel = require('squel');
 var TranslateOperatorsGeneric = require(
     '../../../src/apply-where/translate-operators-generic');
 
-describe('TranslateOperatorsGeneric', () => {
-    describe('#callOperatorFuncsAndApplyCriterias()', () => {
+describe(`TranslateOperatorsGeneric`, () => {
+    describe(`#callOperatorFuncsAndApplyCriterias()`, () => {
         beforeEach(() => {
             TranslateOperatorsGeneric.OPERATORS = [];
         });
 
-        it('should call operatorFunc with second argument being operatorOptions if operator is defined in attrOptions', () => {
+        it(`should call operatorFunc with second argument being operatorOptions if operator is defined in attrOptions`, () => {
             let gotCalled = false;
 
             TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
@@ -28,7 +28,7 @@ describe('TranslateOperatorsGeneric', () => {
             gotCalled.should.be.true();
         });
 
-        it('should not call operator if operator is not defined in attrOptions', () => {
+        it(`should not call operator if operator is not defined in attrOptions`, () => {
             let gotCalled = false;
 
             TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
@@ -42,7 +42,7 @@ describe('TranslateOperatorsGeneric', () => {
             gotCalled.should.be.false();
         });
 
-        it('should apply critieria from operatorFunc to self.squelExpr', () => {
+        it(`should apply critieria from operatorFunc to self.squelExpr`, () => {
             TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
                 crit.crit = '?.? = ?';
                 crit.args = [1, 2, operatorOptions];
@@ -59,7 +59,7 @@ describe('TranslateOperatorsGeneric', () => {
         });
     });
 
-    describe('#checkForShortHands()', () => {
+    describe(`#checkForShortHands()`, () => {
         let clonedTranslate;
 
         before(() => {
@@ -70,29 +70,31 @@ describe('TranslateOperatorsGeneric', () => {
             TranslateOperatorsGeneric = class extends clonedTranslate {};
         });
 
-        it('should execute #unhandledShortHand() if attrOptions has an unhandled datatype', () => {
+        it(`should execute #unhandledShortHand() if attrOptions has an unhandled datatype`, () => {
             let gotCalled = false;
 
             TranslateOperatorsGeneric.unhandledShortHand = function(self) {
                 gotCalled = true;
             };
 
-            TranslateOperatorsGeneric.checkForShortHands({attrOptions: Function});
+            TranslateOperatorsGeneric.checkForShortHands(
+                {attrOptions: Function});
             should(gotCalled).be.true();
         });
 
-        it('should call #processStringNumberBooleanNullShortHand() if attrOptions is a string', () =>   {
+        it(`should call #processStringNumberBooleanNullShortHand() if attrOptions is a string`, () => {
             let gotCalled = false;
 
-            TranslateOperatorsGeneric.processStringNumberBooleanNullShortHand = function(self) {
-                gotCalled = true;
-            };
+            TranslateOperatorsGeneric.
+                processStringNumberBooleanNullShortHand = self => {
+                    gotCalled = true;
+                };
 
             TranslateOperatorsGeneric.checkForShortHands({attrOptions: 'Test'});
             should(gotCalled).be.true();
         });
 
-        it('should call #processArrayShortHand if attrOptions is an array', () =>   {
+        it(`should call #processArrayShortHand if attrOptions is an array`, () => {
             let gotCalled = false;
 
             TranslateOperatorsGeneric.processArrayShortHand = function(self) {
@@ -103,8 +105,8 @@ describe('TranslateOperatorsGeneric', () => {
             should(gotCalled).be.true();
         });
 
-        it('should apply crits from proccessArrayShortHand function', () => {
-            TranslateOperatorsGeneric.processArrayShortHand = function(self, crit) {
+        it(`should apply crits from proccessArrayShortHand function`, () => {
+            TranslateOperatorsGeneric.processArrayShortHand = (self, crit) => {
                 crit.crit = '?.? IN ?';
                 crit.args = ['foo', 'bar', self.attrOptions];
             };

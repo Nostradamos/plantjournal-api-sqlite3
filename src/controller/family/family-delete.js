@@ -14,7 +14,8 @@ const GenericDelete = require('../generic/generic-delete');
  * If you want to know how delete works internally,
  * see src/controller/generic-delete. If you want to know how to use the
  * Family.delete() API, see src/models/family #delete.
- * If you want to execute FamilyDelete manually, just call FamilyDelete.delete().
+ * If you want to execute FamilyDelete manually, just call
+ * FamilyDelete.delete().
  * @private
  * @extends GenericDelete
  */
@@ -32,7 +33,8 @@ class FamilyDelete extends GenericDelete {
      *         Criteria object passed to delete()
      */
     static setQueryRelatedJoin(context, criteria) {
-        UtilsQuery.joinGenerationsAndGenerationParentsFromFamilies(context.queryRelated);
+        UtilsQuery.joinGenerationsAndGenerationParentsFromFamilies(
+            context.queryRelated);
         UtilsQuery.joinGenotypesFromGenerations(context.queryRelated);
         UtilsQuery.joinPlantsFromGenotypes(context.queryRelated);
     }
@@ -80,10 +82,14 @@ class FamilyDelete extends GenericDelete {
             context.plantIdsToDelete.add(row.plantId);
         });
 
-        context.familyIdsToDelete = Utils.whereSetNotNull(context.familyIdsToDelete);
-        context.generationIdsToDelete = Utils.whereSetNotNull(context.generationIdsToDelete);
-        context.genotypeIdsToDelete = Utils.whereSetNotNull(context.genotypeIdsToDelete);
-        context.plantIdsToDelete = Utils.whereSetNotNull(context.plantIdsToDelete);
+        context.familyIdsToDelete = Utils.whereSetNotNull(
+            context.familyIdsToDelete);
+        context.generationIdsToDelete = Utils.whereSetNotNull(
+            context.generationIdsToDelete);
+        context.genotypeIdsToDelete = Utils.whereSetNotNull(
+            context.genotypeIdsToDelete);
+        context.plantIdsToDelete = Utils.whereSetNotNull(
+            context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.familyIdsToDelete.length > 0;
 
@@ -95,11 +101,10 @@ class FamilyDelete extends GenericDelete {
 
     /**
      * Now set which families we want to delete. This is simply all ids in
-     * context.familyIdsToDelete. generationIdsToDelete, genotypeIdsToDelete etc.
-     * will also get deleted, but automatically from sqlite because of the
-     * foreign key references and the ON DELETE CASCADE instruction in the
-     * table structure. See src/create-tables for more information about table
-     * structure.
+     * context.familyIdsToDelete. generationIdsToDelete etc. will also get
+     * deleted, but automatically from sqlite because of the foreign key
+     * references and the ON DELETE CASCADE instruction in the table structure.
+     * See src/create-tables for more information about table structure.
      * @param  {object} context
      *         Internal context object
      * @param  {object} criteria

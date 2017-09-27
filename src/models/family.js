@@ -25,9 +25,9 @@ const FamilyUpdate = require('../controller/family/family-update');
  *         With offset=2 you would get the next 2 (family 2-4) and 6 would
  *         be remaining.
  * @property {Object<FamilyId, FamilyObject>} [ReturnFind.families]
- *         Found or related families. Key is always the familyId to make it easier
- *         to get a family with a specific key out of the Object. Value will
- *         be also an Object, but filled with information/family attributes
+ *         Found or related families. Key is always the familyId to make it
+ *         easier to get a family with a specific key out of the Object. Value
+ *         will be also an Object, but filled with information/family attributes
  *         about one single family. See jsdoc Family Object description.
  * @property {Object<GenerationId, GenerationObject>} [ReturnFind.generations]
  *         Found or related Generations. Similiar to families, key is
@@ -175,7 +175,8 @@ Family.delete = async function(criteria) {
  *         Should only throw error if something suspicous and unexpected
  *         happend to our sqlite connection.
  * @return {FamilyId[]}
- *         Returns a array of updated {@link FamilyId|FamilyIds}. Empty if none got updated.
+ *         Returns a array of updated {@link FamilyId|FamilyIds}.
+ *         Empty if none got updated.
  */
 Family.update = async function(update, criteria) {
     return await FamilyUpdate.update(update, criteria);

@@ -7,9 +7,9 @@ const squel = require('squel');
 var TranslateOperatorsRelational = require(
     '../../../src/apply-where/translate-operators-relational');
 
-describe('TranslateOperatorsRelational', () => {
-    describe('#translateAndApplyOperators()', () => {
-        it('should apply an TABLE.ATTR = OPEARTOROPTIONS expression for $eq', () => {
+describe(`TranslateOperatorsRelational`, () => {
+    describe(`#translateAndApplyOperators()`, () => {
+        it(`should apply an TABLE.ATTR = OPEARTOROPTIONS expression for $eq`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -21,7 +21,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentName', 'TestEnvironment420']}]);
         });
 
-        it('should apply an TABLE.ATTR != OPEARTOROPTIONS expression for $neq', () => {
+        it(`should apply an TABLE.ATTR != OPEARTOROPTIONS expression for $neq`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -33,7 +33,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentName', 'TestEnvironment420']}]);
         });
 
-        it('should apply an TABLE.ATTR LIKE OPEARTOROPTIONS expression for $like', () => {
+        it(`should apply an TABLE.ATTR LIKE OPEARTOROPTIONS expression for $like`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -45,7 +45,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentName', '_estEnvironment420']}]);
         });
 
-        it('should apply an TABLE.ATTR NOT LIKE OPEARTOROPTIONS expression for $nlike', () => {
+        it(`should apply an TABLE.ATTR NOT LIKE OPEARTOROPTIONS expression for $nlike`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -57,7 +57,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentName', '_estEnvironment420']}]);
         });
 
-        it('should apply an TABLE.ATTR > OPEARTOROPTIONS expression for $gt', () => {
+        it(`should apply an TABLE.ATTR > OPEARTOROPTIONS expression for $gt`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -69,7 +69,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentId', 3]}]);
         });
 
-        it('should apply an TABLE.ATTR >= OPEARTOROPTIONS expression for $gte', () => {
+        it(`should apply an TABLE.ATTR >= OPEARTOROPTIONS expression for $gte`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -81,7 +81,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentId', 3]}]);
         });
 
-        it('should apply an TABLE.ATTR < OPEARTOROPTIONS expression for $lt', () => {
+        it(`should apply an TABLE.ATTR < OPEARTOROPTIONS expression for $lt`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -93,7 +93,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentId', 3]}]);
         });
 
-        it('should apply an TABLE.ATTR <= OPEARTOROPTIONS expression for $lte', () => {
+        it(`should apply an TABLE.ATTR <= OPEARTOROPTIONS expression for $lte`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -105,7 +105,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentId', 3]}]);
         });
 
-        it('should apply an TABLE.ATTR IN OPEARTOROPTIONS expression for $in', () => {
+        it(`should apply an TABLE.ATTR IN OPEARTOROPTIONS expression for $in`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -118,7 +118,7 @@ describe('TranslateOperatorsRelational', () => {
         });
 
 
-        it('should apply an TABLE.ATTR NOT IN OPEARTOROPTIONS expression for $nin', () => {
+        it(`should apply an TABLE.ATTR NOT IN OPEARTOROPTIONS expression for $nin`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -130,7 +130,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentId', [3, 4]]}]);
         });
 
-        it('should apply an TABLE.ATTR = ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is a string (string shorthand)', () => {
+        it(`should apply an TABLE.ATTR = ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is a string (string shorthand)`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(
@@ -142,7 +142,7 @@ describe('TranslateOperatorsRelational', () => {
                     para:['environments', 'environmentName', 'TestEnvironment420']}]);
         });
 
-        it('should apply an TABLE.ATTR IN ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is an array (array shorthand)', () => {
+        it(`should apply an TABLE.ATTR IN ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is an array (array shorthand)`, () => {
             let squelExpr = squel.expr();
 
             TranslateOperatorsRelational.translateAndApplyOperators(

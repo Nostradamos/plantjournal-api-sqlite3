@@ -11,7 +11,7 @@ const _ = require('lodash');
 
 var helpers = module.exports;
 
-helpers.allShouldHaveCreatedAtAndModifiedAt = function(retObj, plural, singular) {
+helpers.allShouldHaveCreatedAtAndModifiedAt = (retObj, plural, singular) => {
     retObj.should.have.property(plural);
     _.each(_.keys(retObj[plural]), function(key) {
         retObj[plural][key]

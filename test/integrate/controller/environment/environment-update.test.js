@@ -6,8 +6,8 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../../src/pj');
 
-describe('Environment()', () => {
-    describe('#update()', () => {
+describe(`Environment()`, () => {
+    describe(`#update()`, () => {
         let pj;
 
         before(async () => {
@@ -19,13 +19,13 @@ describe('Environment()', () => {
         });
 
 
-        it('should throw error if no arguments got passed', async () => {
+        it(`should throw error if no arguments got passed`, async () => {
             await pj.Environment.update()
                 .should.be
                 .rejectedWith('No Update and Critera Object got passed');
         });
 
-        it('should throw error if no criteria object got passed', async () => {
+        it(`should throw error if no criteria object got passed`, async () => {
             await pj.Environment.update({})
                 .should.be.rejectedWith('No Criteria Object got passed');
         });

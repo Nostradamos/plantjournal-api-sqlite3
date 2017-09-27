@@ -6,8 +6,8 @@ const sqlite = require('sqlite');
 
 const Utils = require('../../../src/utils/utils');
 
-describe('utils/utils', () => {
-    describe('#deleteEmptyProperties()', () => {
+describe(`utils/utils`, () => {
+    describe(`#deleteEmptyProperties()`, () => {
         it(
             'should mutate object to only contain non empty properties',
             () => {
@@ -25,7 +25,7 @@ describe('utils/utils', () => {
             });
     });
 
-    describe('#addFamilyFromRowToReturnObject()', () => {
+    describe(`#addFamilyFromRowToReturnObject()`, () => {
         it(
             'should add family object to returnObject.families[familyId]',
             () => {
@@ -80,7 +80,7 @@ describe('utils/utils', () => {
             });
     });
 
-    describe('#addGenerationFromRowToReturnObject()', () => {
+    describe(`#addGenerationFromRowToReturnObject()`, () => {
         it(
             `should add generation object to  returnObject.generations[generationId]`,
             () => {
@@ -179,7 +179,7 @@ describe('utils/utils', () => {
             });
     });
 
-    describe('#addGenotypeFromRowToReturnObject', () => {
+    describe(`#addGenotypeFromRowToReturnObject`, () => {
         it(
             'should add genotype object to returnObject.genotypes[genotypeId]',
             () => {
@@ -248,8 +248,8 @@ describe('utils/utils', () => {
             });
     });
 
-    describe('#addPlantFromRowToReturnObject()', () => {
-        it('should add plant object to returnObject.plants[plantId]', () => {
+    describe(`#addPlantFromRowToReturnObject()`, () => {
+        it(`should add plant object to returnObject.plants[plantId]`, () => {
             let row = {
                 'familyId': 42,
                 'generationId': 13, 'generationName': 'F4',
@@ -363,7 +363,7 @@ describe('utils/utils', () => {
                 );
             });
 
-        it('should set mediumId: null if row.mediumId is not defined', () => {
+        it(`should set mediumId: null if row.mediumId is not defined`, () => {
             let row = {
                 'familyId': 42,
                 'generationId': 13,
@@ -390,7 +390,7 @@ describe('utils/utils', () => {
         });
     });
 
-    describe('#addFoundAndRemainingFromCountToReturnObject()', () => {
+    describe(`#addFoundAndRemainingFromCountToReturnObject()`, () => {
         it(
             `should calculate remaining count and add with found to
             returnObject`,
@@ -418,8 +418,8 @@ describe('utils/utils', () => {
             });
     });
 
-    describe('#throwErrorIfNotConnected()', () => {
-        it('should throw error if sqlite is not connected', async () => {
+    describe(`#throwErrorIfNotConnected()`, () => {
+        it(`should throw error if sqlite is not connected`, async () => {
             if(sqlite.driver !== null) {
                 try {
                     await sqlite.close();
@@ -431,14 +431,14 @@ describe('utils/utils', () => {
                 .throw('plantJournal is not connected to database.');
         });
 
-        it('should not throw error if sqlite is connected', async () => {
+        it(`should not throw error if sqlite is connected`, async () => {
             await sqlite.open(':memory:');
             Utils.throwErrorIfNotConnected();
         });
     });
 
-    describe('#hasToBeIntArray()', () => {
-        it('should throw error if object[property] is not an integer array', () => {
+    describe(`#hasToBeIntArray()`, () => {
+        it(`should throw error if object[property] is not an integer array`, () => {
             let toTest = [
                 {foo: null},
                 {foo: 1},
@@ -451,30 +451,30 @@ describe('utils/utils', () => {
             }
         });
 
-        it('should NOT throw an error if object[property] is an integer array', () => {
+        it(`should NOT throw an error if object[property] is an integer array`, () => {
             Utils.hasToBeIntArray({foo: [-1,4,15]}, 'foo', 'obj');
         });
 
-        it('should NOT throw an error if object[property] is undefined', () => {
+        it(`should NOT throw an error if object[property] is undefined`, () => {
             Utils.hasToBeIntArray({}, 'foo', 'obj');
         });
     });
 
-    describe('#hasToBeIntOrNull()', () => {
-        it('should throw error if object[property] is not an integer', () => {
+    describe(`#hasToBeIntOrNull()`, () => {
+        it(`should throw error if object[property] is not an integer`, () => {
             should(() => Utils.hasToBeIntOrNull({foo: '123'}, 'foo', 'obj'))
                 .throw('obj.foo has to be an integer or null');
         });
 
-        it('should NOT throw error if object[property] is undefined', () => {
+        it(`should NOT throw error if object[property] is undefined`, () => {
             should(() => Utils.hasToBeIntOrNull({}, 'foo', 'obj'));
         });
 
-        it('should NOT throw error if object[property] is null', () => {
+        it(`should NOT throw error if object[property] is null`, () => {
             Utils.hasToBeIntOrNull({foo: null}, 'foo', 'obj');
         });
 
-        it('should NOT throw error if object[property] is integer', () => {
+        it(`should NOT throw error if object[property] is integer`, () => {
             Utils.hasToBeIntOrNull({foo: 42}, 'foo', 'obj');
         });
     });

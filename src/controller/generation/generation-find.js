@@ -52,7 +52,8 @@ class GenerationFind extends GenericFind {
             Utils.addFamilyFromRowToReturnObject(row, returnObject);
         });
 
-        // We could use Utils.deleteEmptyProperties() but this is maybe more performant.
+        // We could use Utils.deleteEmptyProperties() but this is maybe more
+        // performant.
         if (_.isEmpty(returnObject.families)) delete returnObject.families;
     }
 }

@@ -65,8 +65,8 @@ Generation.create = async function(options) {
 };
 
 /**
- * Find generations based on criteria and returns them. You can select the generations
- * to return based on various so called criterias.
+ * Find generations based on criteria and returns them. You can select the
+ * generations to return based on various so called criterias.
  * Queryable Fields: familyId, familyName, familyCreatedAt, familyModifiedAt,
  * generationId, generationIdName, generationCreatedAt, generationModifiedAt
  *

@@ -60,7 +60,8 @@ class GenerationCreate extends GenericCreate {
      * to insert parents into the generation_parents table. Query will be in
      * context.queryInsertParents. We won't execute query, for this see
      * #executeQueryInsertGeneration().
-     * This method is NOT part of GenericCreate but specific to GenerationCreate.
+     * This method is NOT part of GenericCreate but specific to
+     * GenerationCreate.
      * @param  {object} context
      *         internal context object in #create().
      * @param  {object} options
@@ -74,7 +75,13 @@ class GenerationCreate extends GenericCreate {
         let attributesRows = [];
 
         _.each(options.generationParents, function(parentPlantId) {
-            attributesRows.push({parentId: null, generationId: context.insertId, plantId: parentPlantId});
+            attributesRows.push(
+                {
+                    parentId: null,
+                    generationId: context.insertId,
+                    plantId: parentPlantId
+                }
+            );
         });
 
         // build and stringify query
@@ -89,7 +96,8 @@ class GenerationCreate extends GenericCreate {
      * This function will execute the generation insert. This function won't
      * insert any parents, only generation. Basically wraps around
      * GenericCreate.create() to catch foreign key error.
-     * This method is NOT part of GenericCreate but specific to GenerationCreate.
+     * This method is NOT part of GenericCreate but specific to
+     * GenerationCreate.
      * @async
      * @param  {object} context
      *         internal context object in #create().
@@ -104,10 +112,11 @@ class GenerationCreate extends GenericCreate {
             await super.executeQuery(context, options);
         } catch (err) {
             await sqlite.get('ROLLBACK');
-            // We only have one foreign key so we can safely assume, if a foreign key constraint
-            // fails, it's the familyId constraint.
+            // We only have one foreign key so we can safely assume, if a
+            // foreign key constraint fails, it's the familyId constraint.
             if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
-                throw new Error('options.familyId does not reference an existing Family');
+                throw new Error(
+                    'options.familyId does not reference an existing Family');
             }
             throw err;
         }
@@ -117,7 +126,8 @@ class GenerationCreate extends GenericCreate {
      * If needed, this method will execute the query to insert the generation
      * parents. Generation has to be inserted before! Will rollback if this
      * fails.
-     * This method is NOT part of GenericCreate but specific to GenerationCreate.
+     * This method is NOT part of GenericCreate but specific to
+     * GenerationCreate.
      * @async
      * @param  {object} context
      *         internal context object in #create().
@@ -125,9 +135,10 @@ class GenerationCreate extends GenericCreate {
      *         options object which got passed to GenericCreate.create().
      * @throws {Error}
      *         We hope generationId is valid (because we created it before in
-     *         #executeQueryInsertGeneration()) so we can assume if get a foreign
-     *         key error, it's because of familyId. We will throw a custom error
-     *         in this case. Other errors should only be unexpected sqlite errors.
+     *         #executeQueryInsertGeneration()) so we can assume if get a
+     *         foreign key error, it's because of familyId. We will throw a
+     *         custom error in this case. Other errors should only be unexpected
+     *         sqlite errors.
      */
     static async executeQueryInsertParentsIfNeeded(context, options) {
         // If we don't have a query, do nothing

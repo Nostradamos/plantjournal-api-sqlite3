@@ -56,8 +56,8 @@ Genotype.create = async function(options) {
 };
 
 /**
- * Find genotypes based on criteria and returns them. You can select the genotypes
- * to return based on various so called criterias.
+ * Find genotypes based on criteria and returns them. You can select the
+ * genotypes to return based on various so called criterias.
  * @memberof plantJournal.Genotype
  * @async
  * @param {criteria} criteria

@@ -8,8 +8,8 @@ require('should');
 const plantJournal = require('../../../../src/pj');
 const CONSTANTS = require('../../../../src/constants');
 
-describe('Journal()', () => {
-    describe('#delete()', () => {
+describe(`Journal()`, () => {
+    describe(`#delete()`, () => {
         let pj;
 
         before(async () => {
@@ -31,7 +31,7 @@ describe('Journal()', () => {
             await pj.Journal.create({journalTimestamp: 1337, journalType: 'ph-sensor', journalValue: 6.8, mediumId: 2});
         });
 
-        it('should delete journal with matching id', async () => {
+        it(`should delete journal with matching id`, async () => {
             let deleted = await pj.Journal.delete(
                 {where: {journalId: 1}});
             deleted.journals.should.deepEqual([1]);
@@ -42,7 +42,7 @@ describe('Journal()', () => {
             rowsPlant.should.not.containDeep({journalId: 1});
         });
 
-        it('should delete all journals with journalType=log', async () => {
+        it(`should delete all journals with journalType=log`, async () => {
             let deleted = await pj.Journal.delete(
                 {where: {journalType: 'ph-sensor'}});
 
@@ -55,14 +55,14 @@ describe('Journal()', () => {
 
         });
 
-        it('should delete all journals where journalValue contains sensor', async () => {
+        it(`should delete all journals where journalValue contains sensor`, async () => {
             let deleted = await pj.Journal.delete(
                 {where: {journalType: {'$like': '%sensor%'}}});
 
             deleted.journals.should.deepEqual([3, 4]);
         });
 
-        it('should not delete anything if no journals match', async () => {
+        it(`should not delete anything if no journals match`, async () => {
             let deleted = await pj.Journal.delete(
                 {where: {journalType: {'$like': '_sensor_'}}});
 

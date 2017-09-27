@@ -76,7 +76,8 @@ class TranslateOperatorsGeneric {
      * Overwrite this method if you have to alter other self properties and
      * not only self.table.
      * @param  {Object} self
-     *         Object containing information about this translation process     */
+     *         Object containing information about this translation process
+     */
     static modifySelf(self) {}
 
     /**

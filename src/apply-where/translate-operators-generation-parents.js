@@ -82,9 +82,9 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
     /**
      * Operator function for equals NOT ($neq)
-     * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals() method
-     * because we need don't really do an not equals, but more an not in. Remind
-     * that we check against an array of plantIds/parentIds.
+     * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals()
+     * method because we need don't really do an not equals, but more an not in.
+     * Remind that we check against an array of plantIds/parentIds.
      * @param  {Object} self
      *         Object containing information about this translation process
      * @param  {Number[]} operatorOptions
@@ -169,10 +169,13 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
     }
 }
 
-TranslateOperatorsGenerationParents.OPERATORS = _.clone(TranslateOperatorsRelational.OPERATORS);
+TranslateOperatorsGenerationParents.OPERATORS = _.clone(
+    TranslateOperatorsRelational.OPERATORS);
 
 // Overwrite our equals/not equals operatorFuncs for generationParents
-TranslateOperatorsGenerationParents.OPERATORS.$eq = TranslateOperatorsGenerationParents.operatorEquals;
-TranslateOperatorsGenerationParents.OPERATORS.$neq = TranslateOperatorsGenerationParents.operatorNotEquals;
+TranslateOperatorsGenerationParents.OPERATORS.$eq =
+    TranslateOperatorsGenerationParents.operatorEquals;
+TranslateOperatorsGenerationParents.OPERATORS.$neq =
+    TranslateOperatorsGenerationParents.operatorNotEquals;
 
 module.exports = TranslateOperatorsGenerationParents;

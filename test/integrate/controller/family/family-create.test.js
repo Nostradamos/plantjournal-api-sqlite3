@@ -6,9 +6,9 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../../src/pj');
 
-describe('Family()', () => {
+describe(`Family()`, () => {
 
-    describe('#create()', () => {
+    describe(`#create()`, () => {
         let pj;
 
         beforeEach(async () => {
@@ -16,7 +16,7 @@ describe('Family()', () => {
             await pj.connect();
         });
 
-        it('should throw `First argument has to be an associative array` if first argument is not an object with properties/associative array', async () => {
+        it(`should throw 'First argument has to be an associative array' if first argument is not an object with properties/associative array`, async () => {
             let tested = 0;
 
             let toTest = [
@@ -35,19 +35,22 @@ describe('Family()', () => {
             tested.should.eql(6);
         });
 
-        it('should throw `options.familyName has to be set` error if no options.familyName is provided', async () => {
+        it(`should throw 'options.familyName has to be set' error if no options.familyName is provided`, async () => {
             await pj.Family.create({})
                 .should.be.rejectedWith('options.familyName has to be set');
         });
 
-        it('should throw error if options.familyName is not a string', async () => {
+        it(`should throw error if options.familyName is not a string`, async () => {
             await pj.Family.create({'familyName': 1})
                 .should.be.rejectedWith('options.familyName has to be a string');
         });
 
-        it('should create a new Family and return family object', async () => {
+        it(`should create a new Family and return family object`, async () => {
             let family = await pj.Family.create({familyName: 'testName'});
-            let [familyCreatedAt, familyModifiedAt] = [family.families[1].familyCreatedAt, family.families[1].familyModifiedAt];
+            let [familyCreatedAt, familyModifiedAt] = [
+                family.families[1].familyCreatedAt,
+                family.families[1].familyModifiedAt
+            ];
 
             familyCreatedAt.should.eql(familyModifiedAt);
             family.should.deepEqual(
@@ -69,7 +72,7 @@ describe('Family()', () => {
             rows[0].should.deepEqual(family.families[1]);
         });
 
-        it('should set familyDescription on create', async () => {
+        it(`should set familyDescription on create`, async () => {
             let family = await pj.Family.create(
                 {
                     familyName: 'testName3',

@@ -6,18 +6,20 @@ const _ = require('lodash');
 const UtilsExpression = exports;
 
 /**
- * Helper function to apply a expr and exprArgs pairs to squelExpr with
+ * Helper fnction to apply a expr and exprArgs pairs to squelExpr with
  * the wanted type (`and` or `or`).
  * @todo think of a better methodname
- * @param  {squelExpr} squelExpr    - squel expression builder to apply this
- *                                    sql expression with args too.
- * @param  {String|squelQuery} expr - expreria, can be a string
- * @param  {Object[]} exprArgs      - Has be an array of values which can be used
- *                                    as arguments to the sql expression. Pass empty
- *                                    array if you don't want to pass any args.
- * @param  {String} type            - Type of logic operator. Can be `and` or `or`.
+ * @param  {squelExpr} squelExpr
+ *         squel expression builder to apply this sql expression with args too.
+ * @param  {String|squelQuery} expr
+ *         expression, can be a string
+ * @param  {Object[]} exprArgs
+ *         Has be an array of values which can be used as arguments to the sql
+ *         expression. Pass empty array if you don't want to pass any args.
+ * @param  {String} type
+ *         Type of logic operator. Can be `and` or `or`.
  */
-UtilsExpression.applyExpression = function (squelExpr, expr, exprArgs, type) {
+UtilsExpression.applyExpression = (squelExpr, expr, exprArgs, type) => {
     if (type === 'and') {
         squelExpr.and(expr, ...exprArgs);
     } else if (type === 'or') {
@@ -27,19 +29,19 @@ UtilsExpression.applyExpression = function (squelExpr, expr, exprArgs, type) {
     }
 };
 
-UtilsExpression.createGenericExpression = function(table, attr, operator, equal, func=null, funcArgs=null) {
+UtilsExpression.createGenericExpression = (tbl, attr, operator, equal, fnc=null, fncArgs=null) => {
     let expr = '';
-    let exprArgs = [table, attr];
+    let exprArgs = [tbl, attr];
 
-    if(func === null) {
+    if(fnc === null) {
         expr += '?.?';
     } else {
-        expr += func + '(?.?';
-        if(funcArgs !== null) {
+        expr += fnc + '(?.?';
+        if(fncArgs !== null) {
             expr += ', ' + _.chain('?, ')
-                .repeat(funcArgs.length)
+                .repeat(fncArgs.length)
                 .trimEnd(', ').value();
-            exprArgs.push(...funcArgs);
+            exprArgs.push(...fncArgs);
         }
         expr += ')';
     }
@@ -50,58 +52,58 @@ UtilsExpression.createGenericExpression = function(table, attr, operator, equal,
     return [expr, exprArgs];
 };
 
-UtilsExpression.createIsNullExpression = function(table, attr, func=null, funcArgs=null) {
+UtilsExpression.createIsNullExpression = (tbl, attr, fnc=null, fncArgs=null) => {
     return UtilsExpression.createGenericExpression(
-        table, attr, 'IS', null, func, funcArgs);
+        tbl, attr, 'IS', null, fnc, fncArgs);
 };
 
-UtilsExpression.createIsNotNullExpression = function(table, attr, func=null, funcArgs=null) {
+UtilsExpression.createIsNotNullExpression = (tbl, attr, fnc=null, fncArgs=null) => {
     return UtilsExpression.createGenericExpression(
-        table, attr, 'IS NOT', null, func, funcArgs);
+        tbl, attr, 'IS NOT', null, fnc, fncArgs);
 };
 
-UtilsExpression.createEqualsExpression = function(table, attr, toEqual, func=null, funcArgs=null) {
+UtilsExpression.createEqualsExpression = (tbl, attr, toEqual, fnc=null, fncArgs=null) => {
     if(_.isNull(toEqual)) {
-        return UtilsExpression.createIsNullExpression(table, attr);
+        return UtilsExpression.createIsNullExpression(tbl, attr);
     }
-    return UtilsExpression.createGenericExpression(table, attr, '=', toEqual, func, funcArgs);
+    return UtilsExpression.createGenericExpression(tbl, attr, '=', toEqual, fnc, fncArgs);
 };
 
-UtilsExpression.createNotEqualsExpression = function(table, attr, notToEqual, func=null, funcArgs=null) {
+UtilsExpression.createNotEqualsExpression = (tbl, attr, notToEqual, fnc=null, fncArgs=null) => {
     if(_.isNull(notToEqual)) {
-        return UtilsExpression.createIsNotNullExpression(table, attr);
+        return UtilsExpression.createIsNotNullExpression(tbl, attr);
     }
-    return UtilsExpression.createGenericExpression(table, attr, '!=', notToEqual, func, funcArgs);
+    return UtilsExpression.createGenericExpression(tbl, attr, '!=', notToEqual, fnc, fncArgs);
 };
 
-UtilsExpression.createLikeExpression = function(table, attr, like, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, 'LIKE', like, func, funcArgs);
+UtilsExpression.createLikeExpression = (tbl, attr, like, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, 'LIKE', like, fnc, fncArgs);
 };
 
-UtilsExpression.createNotLikeExpression = function(table, attr, notLike, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, 'NOT LIKE', notLike, func, funcArgs);
+UtilsExpression.createNotLikeExpression = (tbl, attr, notLike, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, 'NOT LIKE', notLike, fnc, fncArgs);
 };
 
-UtilsExpression.createGreaterThanExpression = function(table, attr, greaterThan, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, '>', greaterThan, func, funcArgs);
+UtilsExpression.createGreaterThanExpression = (tbl, attr, greaterThan, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, '>', greaterThan, fnc, fncArgs);
 };
 
-UtilsExpression.createGreaterThanEqualExpression = function(table, attr, greaterThanEqual, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, '>=', greaterThanEqual, func, funcArgs);
+UtilsExpression.createGreaterThanEqualExpression = (tbl, attr, greaterThanEqual, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, '>=', greaterThanEqual, fnc, fncArgs);
 };
 
-UtilsExpression.createLowerThanExpression = function(table, attr, lowerThan, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, '<', lowerThan, func, funcArgs);
+UtilsExpression.createLowerThanExpression = (tbl, attr, lowerThan, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, '<', lowerThan, fnc, fncArgs);
 };
 
-UtilsExpression.createLowerThanEqualExpression = function(table, attr, lowerThanEqual, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, '<=', lowerThanEqual, func, funcArgs);
+UtilsExpression.createLowerThanEqualExpression = (tbl, attr, lowerThanEqual, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, '<=', lowerThanEqual, fnc, fncArgs);
 };
 
-UtilsExpression.createInExpression = function(table, attr, inArr, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, 'IN', inArr, func, funcArgs);
+UtilsExpression.createInExpression = (tbl, attr, inArr, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, 'IN', inArr, fnc, fncArgs);
 };
 
-UtilsExpression.createNotInExpression = function (table, attr, notInArr, func=null, funcArgs=null) {
-    return UtilsExpression.createGenericExpression(table, attr, 'NOT IN', notInArr, func, funcArgs);
+UtilsExpression.createNotInExpression = (tbl, attr, notInArr, fnc=null, fncArgs=null) => {
+    return UtilsExpression.createGenericExpression(tbl, attr, 'NOT IN', notInArr, fnc, fncArgs);
 };

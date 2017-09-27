@@ -22,11 +22,13 @@ class GenericUpdate {
      * Don't overwrite this method if possible, but overwrite the
      * different sub methods to get the behaviour you want.
      * Returns an array of updated ids
-     * @param  {object}  update   - Object containing aliases as key to update with
-     *                              new value. Eg: {'familyName': 'newFamName'}
-     * @param  {object}  criteria - Criteria Object describing which entries should
-     *                              get updated.
-     * @return {Promise}          - Returns array of updated ids
+     * @param  {object}  update
+     *         Object containing aliases as key to update with new value.
+     *         Eg: {'familyName': 'newFamName'}
+     * @param  {object}  criteria
+     *         Criteria Object describing which entries should get updated.
+     * @return {Promise}
+     *         Returns array of updated ids
      */
     static async update(update, criteria){
         Utils.throwErrorIfNotConnected();
@@ -297,9 +299,11 @@ GenericUpdate.ATTR_ID; // name of id field
 
 GenericUpdate.ATTR_MODIFIED_AT; // name of modifiedAt Field
 
-GenericUpdate.ATTRIBUTES_SEARCHABLE; // array of aliases which we can search through
+// array of aliases which we can search through
+GenericUpdate.ATTRIBUTES_SEARCHABLE;
 
-GenericUpdate.ATTRIBUTES_UPDATABLE; // array of aliases which we can update, everything else will be ignored
+// array of aliases which we can update, everything else will be ignored
+GenericUpdate.ATTRIBUTES_UPDATABLE;
 
 GenericUpdate.OVERWRITE_TABLE_LOOKUP = null;
 

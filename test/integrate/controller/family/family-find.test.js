@@ -6,8 +6,8 @@ const helpers = require('../../../helper-functions');
 
 require('should');
 
-describe('Family()', () => {
-    describe('#find()', () => {
+describe(`Family()`, () => {
+    describe(`#find()`, () => {
         let pj;
 
         before(async () => {
@@ -19,7 +19,7 @@ describe('Family()', () => {
             await pj.Family.create({familyName: 'testD'});
         });
 
-        it('should return all families', async () => {
+        it(`should return all families`, async () => {
             let families = await pj.Family.find();
 
             families.should.containDeep({
@@ -35,7 +35,7 @@ describe('Family()', () => {
             helpers.allFamiliesShouldHaveCreatedAtAndModifiedAt(families);
         });
 
-        it('should only return the first two families if options.limit=2', async () => {
+        it(`should only return the first two families if options.limit=2`, async () => {
             let families = await pj.Family.find({limit: 2, attributes: ['familyId', 'familyName']});
 
             families.should.deepEqual({
@@ -48,7 +48,7 @@ describe('Family()', () => {
             });
         });
 
-        it('should only return the the last two families if options.offset=2 and options.limit=2', async () => {
+        it(`should only return the the last two families if options.offset=2 and options.limit=2`, async () => {
             let families = await pj.Family.find({offset: 2, limit: 2, attributes: ['familyId', 'familyName']});
 
             families.should.deepEqual({
@@ -61,20 +61,7 @@ describe('Family()', () => {
             });
         });
 
-        // ToDo: Improve attributes, change this test
-        /*it('should only return attributes specified in options.attributes', async () => {
-        let families = await pj.Family.find({attributes: ['familyName']});
-        families.should.deepEqual({
-          families: {
-            '1': { familyName: 'test1' },
-            '2': { familyName: 'testB' },
-            '3': { familyName: 'test3' },
-            '4': { familyName: 'testD' }
-          }
-        })
-      });*/
-
-        it('should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches extactly', async () => {
+        it(`should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches extactly`, async () => {
             let families = await pj.Family.find(
                 {
                     where : {
@@ -93,7 +80,7 @@ describe('Family()', () => {
             });
         });
 
-        it('should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly', async () => {
+        it(`should only return families where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly`, async () => {
             let families = await pj.Family.find(
                 {
                     where : {
@@ -112,7 +99,7 @@ describe('Family()', () => {
             });
         });
 
-        it('should be possible to sort returned families', async () => {
+        it(`should be possible to sort returned families`, async () => {
             let families = await pj.Family.find({sort: 'familyId DESC', limit: 2});
 
             families.families.should.containDeep({

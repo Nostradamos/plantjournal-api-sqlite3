@@ -71,9 +71,12 @@ class GenerationDelete extends GenericDelete {
             context.plantIdsToDelete.add(row.plantId);
         }
 
-        context.generationIdsToDelete = Utils.whereSetNotNull(context.generationIdsToDelete);
-        context.genotypeIdsToDelete = Utils.whereSetNotNull(context.genotypeIdsToDelete);
-        context.plantIdsToDelete = Utils.whereSetNotNull(context.plantIdsToDelete);
+        context.generationIdsToDelete = Utils.whereSetNotNull(
+            context.generationIdsToDelete);
+        context.genotypeIdsToDelete = Utils.whereSetNotNull(
+            context.genotypeIdsToDelete);
+        context.plantIdsToDelete = Utils.whereSetNotNull(
+            context.plantIdsToDelete);
 
         context.haveIdsToDelete = context.generationIdsToDelete.length > 0;
 
@@ -116,6 +119,7 @@ class GenerationDelete extends GenericDelete {
 
 GenerationDelete.TABLE =  CONSTANTS.TABLE_GENERATION;
 
-GenerationDelete.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
+GenerationDelete.ATTRIBUTES_SEARCHABLE =
+    CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 
 module.exports = GenerationDelete;

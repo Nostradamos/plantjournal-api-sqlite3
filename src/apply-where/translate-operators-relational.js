@@ -121,8 +121,9 @@ class TranslateOperatorsRelational extends TranslateOperatorsGeneric {
      *         added to self.squelExpr.
      */
     static operatorGreatherThanEqual(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsExpression.createGreaterThanEqualExpression(
-            self.table, self.attr, operatorOptions);
+        [crit.crit, crit.args] = UtilsExpression.
+            createGreaterThanEqualExpression(
+                self.table, self.attr, operatorOptions);
     }
 
     /**

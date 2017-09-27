@@ -79,19 +79,21 @@ class PlantCreate extends GenericCreate {
      *         Or if sqlite throws an unexpected error.
      */
     static async createGenotypeOrResolveGenotypeIdIfNeeded(context, options) {
-        if (_.isUndefined(context.genotypeId) && _.isUndefined(options.plantClonedFrom)) {
-            // If neither genotypeId nor plantClonedFrom is set, we want to create a new genotypeId
-            // for this plant.
+        if (_.isUndefined(context.genotypeId) &&
+            // If neither genotypeId nor plantClonedFrom is set, we want to
+            // create a new genotypeId for this plant.
+            _.isUndefined(options.plantClonedFrom)) {
             logger.debug(this.name, '#create() We need to create a new genotype for this plant');
 
             context.createdGenotype = await Genotype.create(options);
-            context.genotypeId = _.parseInt(_.keys(context.createdGenotype.genotypes)[0]);
+            context.genotypeId = _.parseInt(
+                _.keys(context.createdGenotype.genotypes)[0]);
 
             logger.debug(this.name, '#create() Created genotypeId:', context.genotypeId);
         } else if (!_.isUndefined(options.plantClonedFrom)) {
-            // plantClonedFrom is defined, but genotypId not, so we wan't to retrieve
-            // the genotypeId from the "mother plant". Mother plant => plant with the
-            // id equaling plantClonedFrom.
+            // plantClonedFrom is defined, but genotypId not, so we wan't to
+            // retrieve the genotypeId from the "mother plant".
+            // Mother plant => plant with the id equaling plantClonedFrom.
             let queryRetrieveGenotypeId =
                 `SELECT plants.genotypeId FROM ` + CONSTANTS.TABLE_PLANT +
                 ` plants WHERE plants.plantId = $plantClonedFrom`;
@@ -120,9 +122,9 @@ class PlantCreate extends GenericCreate {
     /**
      * Executes the inserting of plant and throws custom error if genotypeId
      * reference fails.
-     * We need to execute context.query with a paramater for genotypeId, so can't
-     * use GenericCreate.executeQuery(). Besides this, we want to execute a
-     * rollback command if insertion fails. It's possible that we created a
+     * We need to execute context.query with a paramater for genotypeId, so
+     * can't use GenericCreate.executeQuery(). Besides this, we want to execute
+     * a rollback command if insertion fails. It's possible that we created a
      * genotype before for this plant, so undo that.
      * @async
      * @param  {object} context
@@ -165,9 +167,9 @@ class PlantCreate extends GenericCreate {
     static async executeQuery(context, options) {
         await sqlite.get('BEGIN');
 
-        // we need to make sure we have a genotypeId. Therefore we try to resolve
-        // it from motherPlant or create a new genotype. genotypeId will always
-        // be in context.genotypeId
+        // we need to make sure we have a genotypeId. Therefore we try to
+        // resolve it from motherPlant or create a new genotype. genotypeId will
+        // always be in context.genotypeId
         await this.createGenotypeOrResolveGenotypeIdIfNeeded(context, options);
 
         await this.executeQueryInsertPlant(context, options);

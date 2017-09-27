@@ -7,8 +7,8 @@ const sqlite = require('sqlite');
 
 const plantJournal = require('../../../../src/pj');
 
-describe('Journal()', () => {
-    describe('#create()', () => {
+describe(`Journal()`, () => {
+    describe(`#create()`, () => {
         let pj;
 
         beforeEach(async () => {
@@ -26,46 +26,47 @@ describe('Journal()', () => {
             pj.disconnect();
         });
 
-        it('should throw error if none of options.{plantId|mediumId|environmentId} is set', async () => {
+        it(`should throw error if none of options.{plantId|mediumId|environmentId} is set`, async () => {
             await pj.Journal.create({})
                 .should.be.rejectedWith(
                     'A journal has to be assigned to a plant, medium or environment. Therefore options.plantId,mediumId or environmentId has to be set');
         });
 
-        it('should throw error if more than one of options.{plantId|mediumId|environmentId} is set', async () => {
+        it(`should throw error if more than one of options.{plantId|mediumId|environmentId} is set`, async () => {
             await pj.Journal.create({plantId:1, environmentId: 1})
                 .should.be.rejectedWith(
                     'Journal can only be assigned to a plant OR medium OR environment');
         });
 
-        it('should throw error if options.journalTimestamp is not set', async () => {
+        it(`should throw error if options.journalTimestamp is not set`, async () => {
             await pj.Journal.create({plantId: 1})
                 .should.be.rejectedWith('options.journalTimestamp has to be set');
         });
 
 
-        it('should throw error if options.journalTimestamp is not a integer', async () => {
+        it(`should throw error if options.journalTimestamp is not a integer`, async () => {
             await pj.Journal.create({plantId: 1, journalTimestamp: '123'})
                 .should.be.rejectedWith('options.journalTimestamp has to be an integer');
         });
 
-        it('should throw error if options.journalType is not set', async () => {
+        it(`should throw error if options.journalType is not set`, async () => {
             await pj.Journal.create({plantId: 1, journalTimestamp: 1111})
                 .should.be.rejectedWith('options.journalType has to be set');
         });
 
-        it('should throw error if options.journalType is not a string', async () => {
-            await pj.Journal.create({plantId: 1, journalTimestamp: 1111, journalType: 123})
+        it(`should throw error if options.journalType is not a string`, async () => {
+            await pj.Journal.create(
+                {plantId: 1, journalTimestamp: 1111, journalType: 123})
                 .should.be.rejectedWith('options.journalType has to be a string');
         });
 
 
-        it('should throw error if options.journalValue is not set', async () => {
+        it(`should throw error if options.journalValue is not set`, async () => {
             await pj.Journal.create({plantId: 1, journalTimestamp: 1111, journalType: 'log'})
                 .should.be.rejectedWith('options.journalValue has to be set');
         });
 
-        it('should create new journal record and return the journal object', async () => {
+        it(`should create new journal record and return the journal object`, async () => {
             let journal = await pj.Journal.create(
                 {
                     plantId: 1, journalTimestamp: 1111,
@@ -102,7 +103,7 @@ describe('Journal()', () => {
             should(rowsJournals[0]['environmentId']).be.null();
         });
 
-        it('should be possible to insert a journal where journalValue is a boolean', async () => {
+        it(`should be possible to insert a journal where journalValue is a boolean`, async () => {
             let journal = await pj.Journal.create(
                 {
                     plantId: 1, journalTimestamp: 1111,

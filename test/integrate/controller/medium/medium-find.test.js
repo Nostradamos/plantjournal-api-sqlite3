@@ -7,8 +7,8 @@ const plantJournal = require('../../../../src/pj');
 
 const helperFunctions = require('../../../helper-functions');
 
-describe('Medium()', () => {
-    describe('#find()', () => {
+describe(`Medium()`, () => {
+    describe(`#find()`, () => {
         let pj;
 
         before(async () => {
@@ -32,7 +32,7 @@ describe('Medium()', () => {
             await pj.disconnect();
         });
 
-        it('should find genotypes, referenced generations and families', async () => {
+        it(`should find genotypes, referenced generations and families`, async () => {
             let mediums = await pj.Medium.find();
 
             mediums.should.containDeep(
@@ -75,7 +75,7 @@ describe('Medium()', () => {
                 .allEnvironmentsShouldHaveCreatedAtAndModifiedAt(mediums);
         });
 
-        it('should skip first medium with criteria.offset = 1', async () => {
+        it(`should skip first medium with criteria.offset = 1`, async () => {
             let mediums = await pj.Medium.find({offset: 1});
 
             mediums.should.containDeep(
@@ -100,7 +100,7 @@ describe('Medium()', () => {
             );
         });
 
-        it('should be possible to find mediums based on environment attributes', async () => {
+        it(`should be possible to find mediums based on environment attributes`, async () => {
             let mediums = await pj.Medium.find(
                 {where: {environmentName: 'testEnv1'}});
 
@@ -126,7 +126,7 @@ describe('Medium()', () => {
             );
         });
 
-        it('should be possible to find mediums where environmentId = null and environments should not be set', async () => {
+        it(`should be possible to find mediums where environmentId = null and environments should not be set`, async () => {
             let mediums = await pj.Medium.find(
                 {where: {environmentId: null}});
 

@@ -8,8 +8,8 @@ require('should');
 const plantJournal = require('../../../../src/pj');
 const CONSTANTS = require('../../../../src/constants');
 
-describe('Medium()', () => {
-    describe('#delete()', () => {
+describe(`Medium()`, () => {
+    describe(`#delete()`, () => {
         let pj;
 
         before(async () => {
@@ -26,7 +26,7 @@ describe('Medium()', () => {
             await pj.Plant.create({generationId: 1, plantName: 'plant3', mediumId: 2}); // plantId: 3 genotypeId: 3
         });
 
-        it('should delete environment with matching id and related mediums and plants', async () => {
+        it(`should delete environment with matching id and related mediums and plants`, async () => {
             let deleted = await pj.Medium.delete({where: {mediumId: 1}});
             deleted.should.deepEqual({
                 'mediums': [1],

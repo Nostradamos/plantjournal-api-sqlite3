@@ -9,8 +9,8 @@ const plantJournal = require('../../../../src/pj');
 const Utils = require('../../../../src/utils/utils');
 
 
-describe('Family()', () => {
-    describe('#update()', () => {
+describe(`Family()`, () => {
+    describe(`#update()`, () => {
         let pj;
 
         before(async () => {
@@ -22,27 +22,27 @@ describe('Family()', () => {
 
         });
 
-        it('should throw error if no arguments got passed', async () => {
+        it(`should throw error if no arguments got passed`, async () => {
             await pj.Family.update()
                 .should.be.rejectedWith('No Update and Critera Object got passed');
         });
 
-        it('should throw error if no criteria object got passed', async () => {
+        it(`should throw error if no criteria object got passed`, async () => {
             await pj.Family.update({})
                 .should.be.rejectedWith('No Criteria Object got passed');
         });
 
-        it('should throw error if first argument is not a assoc array/object', async () => {
+        it(`should throw error if first argument is not a assoc array/object`, async () => {
             await pj.Family.update([], {})
                 .should.be.rejectedWith('Update Object has to be an associative array');
         });
 
-        it('should throw error if second argument is not an assoc array/object', async () => {
+        it(`should throw error if second argument is not an assoc array/object`, async () => {
             await pj.Family.update({'familyName': 'newFamName'}, null)
                 .should.be.rejectedWith('Criteria Object has to be an associative array');
         });
 
-        it('should change familyName for testFmily2 in database and return the familyId', async () => {
+        it(`should change familyName for testFmily2 in database and return the familyId`, async () => {
             let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'where': {'familyId': 2}});
 
             updatedFamilies.should.deepEqual([2]);
@@ -59,7 +59,7 @@ describe('Family()', () => {
             );
         });
 
-        it('should update modifiedAt Field in database', async () => {
+        it(`should update modifiedAt Field in database`, async () => {
             let currentTimestamp = Utils.getUnixTimestampUTC();
 
             await pj.Family.update({'familyName': 'testFamily2'}, {'where': {'familyId': 2}});
@@ -70,7 +70,7 @@ describe('Family()', () => {
 
         });
 
-        it('should not be possible to manually change familyModifiedAt', async () => {
+        it(`should not be possible to manually change familyModifiedAt`, async () => {
             let updatedFamilies = await pj.Family.update(
                 {'familyModifiedAt': 1},
                 {'where': {'familyId': 2}}
@@ -83,7 +83,7 @@ describe('Family()', () => {
             rowsFam[0].familyModifiedAt.should.not.eql(1);
         });
 
-        it('should not be possible to manually change familyCreatedAt', async () => {
+        it(`should not be possible to manually change familyCreatedAt`, async () => {
             let updatedFamilies = await pj.Family.update(
                 {'familyCreatedAt': 1},
                 {'where': {'familyId': 2}}
@@ -97,11 +97,11 @@ describe('Family()', () => {
         });
 
 
-        it('should ignore unknown update keys and not throw an error', async () => {
+        it(`should ignore unknown update keys and not throw an error`, async () => {
             await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'where': {'familyId': 2}});
         });
 
-        it('should be possible to update records with criteria.sort and criteria.limit', async () => {
+        it(`should be possible to update records with criteria.sort and criteria.limit`, async () => {
             let updatedFamilies = await pj.Family.update(
                 {'familyName': 'testFooBar'},
                 {'sort': 'familyId DESC', 'limit': 2}

@@ -223,7 +223,8 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
     } else {
     // otherwise we only want attributes which are in both, criteriaAttributes
     // and allowedAttributes.
-        attributesToSelect = _.intersection(allowedAttributes, criteriaAttributes);
+        attributesToSelect = _.intersection(
+            allowedAttributes, criteriaAttributes);
     }
 
     let table;
@@ -336,9 +337,11 @@ UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, over
         }
 
 
-        // Sometimes it's needed to use the current table when we don't join the referenced table.
-        // Eg: we don't join families but still want to sort by familyId. getTableOfField would
-        // return families as table, but we need generations.
+        // Sometimes it's needed to use the current table when we don't join the
+        // referenced table.
+        // Eg: we don't join families but still want to sort by familyId.
+        // #getTableOfField() would return families as table, but we need
+        // generations.
         let table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);
 
         if (sortType === 'ASC') {
@@ -357,8 +360,8 @@ UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, over
  * use a prefix, which should be equivalent to the table name.
  * Eg: familyId => family, plantClonedFrom => plant
  * @param  {String} attr
- *         Attribute name. Eg. familyId, familyName, generationId, generationName,
- *         generationParent, genotypeId...
+ *         Attribute name. Eg. familyId, familyName, generationId,
+ *         generationName, generationParent, genotypeId...
  * @param  {Dict}  [overWriteTableLookup=null]
  *         If you want to overwrite the returned table for specific attributes,
  *         set this to an dict where key is attribute, value is the returned

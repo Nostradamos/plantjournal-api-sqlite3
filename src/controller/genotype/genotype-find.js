@@ -22,8 +22,8 @@ class GenotypeFind extends GenericFind {
 
     /**
      * We need to join both generation and families to make it possible to find
-     * genotypes based on familyName, familyId, generationName etc. This basically
-     * enforces us to query every field of generations or families.
+     * genotypes based on familyName, familyId, generationName etc. This
+     * basically enforces us to query every field of generations or families.
      * @param  {object} context
      *         Internal context object
      * @param  {object} criteria

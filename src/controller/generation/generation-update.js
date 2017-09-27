@@ -21,8 +21,8 @@ const GenericUpdate = require('../generic/generic-update');
 class GenerationUpdate extends GenericUpdate {
 
     /**
-     * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of generation
-     * work.
+     * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of
+     * generation work.
      * @param  {object} context   - Internal context object
      * @param  {object} update    - Updated object passed to update()
      * @param  {object} criteria  - Criteria object passed to update()
@@ -66,7 +66,13 @@ class GenerationUpdate extends GenericUpdate {
 
         _.each(update.generationParents, function(parentPlantId) {
             _.each(context.idsToUpdate, function(generationId) {
-                attributesRows.push({parentId: null, generationId: generationId, plantId: parentPlantId});
+                attributesRows.push(
+                    {
+                        parentId: null,
+                        generationId: generationId,
+                        plantId: parentPlantId
+                    }
+                );
             });
         });
         context.queryInsertNewParents = squel.insert().into(this.TABLE_PARENTS)
@@ -77,7 +83,8 @@ class GenerationUpdate extends GenericUpdate {
     /**
      * Executes context.queryDeleteOldParents and context.queryInsertNewParents
      * in a transaction. If query fails because of foreign key, transaction
-     * will get rolled back (deletes will be undone) and an Error will be thrown.
+     * will get rolled back (deletes will be undone) and an Error will be
+     * thrown.
      * @param  {object} context   - Internal context object
      * @param  {object} update    - Updated object passed to update()
      * @param  {object} criteria  - Criteria object passed to update()
@@ -99,8 +106,8 @@ class GenerationUpdate extends GenericUpdate {
 
     /**
      * We have to modify the behaviour of execution because we have to also
-     * query TABLE_PARENTS if generationParents is in attributesToUpdate. Besides
-     * that we catch foreign key errors and throw our own error.
+     * query TABLE_PARENTS if generationParents is in attributesToUpdate.
+     * Besides that we catch foreign key errors and throw our own error.
      * @param  {object} context   - Internal context object
      * @param  {object} update    - Updated object passed to update()
      * @param  {object} criteria  - Criteria object passed to update()
@@ -130,7 +137,8 @@ GenerationUpdate.ATTR_ID = CONSTANTS.ATTR_ID_GENERATION;
 
 GenerationUpdate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
 
-GenerationUpdate.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
+GenerationUpdate.ATTRIBUTES_SEARCHABLE =
+    CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 
 GenerationUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_GENERATION;
 

@@ -5,8 +5,8 @@ require('should');
 const plantJournal = require('../../../../src/pj');
 const sqlite = require('sqlite');
 
-describe('Medium()', () => {
-    describe('#create()', () => {
+describe(`Medium()`, () => {
+    describe(`#create()`, () => {
         let pj;
 
         before(async () => {
@@ -15,32 +15,32 @@ describe('Medium()', () => {
             await pj.Environment.create({environmentName: 'testEnvironment1'});
         });
 
-        it('should throw error if options.mediumName is not set', async () => {
+        it(`should throw error if options.mediumName is not set`, async () => {
             await pj.Medium.create({'environmentId': 1})
                 .should.be.rejectedWith('options.mediumName has to be set');
         });
 
-        it('should throw error if options.mediumName is not a string', async () => {
+        it(`should throw error if options.mediumName is not a string`, async () => {
             await pj.Medium.create({'environmentId': 1, 'mediumName': null})
                 .should.be.rejectedWith('options.mediumName has to be a string');
         });
 
-        it('should throw error if options.mediumDescription is set but not a string', async () => {
+        it(`should throw error if options.mediumDescription is set but not a string`, async () => {
             await pj.Medium.create({'environmentId': 1, 'mediumName': 'testMedium1', 'mediumDescription': 123})
                 .should.be.rejectedWith('options.mediumDescription has to be a string');
         });
 
-        it('should throw error if options.environmentId is not an int', async () => {
+        it(`should throw error if options.environmentId is not an int`, async () => {
             await pj.Medium.create({'environmentId': '123', 'mediumName': 'testMedium1', 'mediumDescription': '123'})
                 .should.be.rejectedWith('options.environmentId has to be an integer or null');
         });
 
-        it('should throw error if options.environmentId doesn\'t reference existing environment', async () => {
+        it(`should throw error if options.environmentId doesn't reference existing environment`, async () => {
             await pj.Medium.create({'environmentId': 3, 'mediumName': 'testMedium1', 'mediumDescription': '123'})
                 .should.be.rejectedWith('options.environmentId does not reference an existing environment');
         });
 
-        it('should create a new generations entry and return generation object', async () => {
+        it(`should create a new generations entry and return generation object`, async () => {
             let medium = await pj.Medium.create(
                 {'environmentId': 1, 'mediumName': 'testMedium', 'mediumDescription': 'This is a test'});
             let [createdAt, modifiedAt] = [

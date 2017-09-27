@@ -94,11 +94,10 @@ class GenericCreate {
     }
 
     /**
-     * We iterate over all this.ATTRIBUTES and look if we can get the information
-     * from somewhere. We first look if attribute is set in context, next if in
-     * options, next in DEFAULT_VALUES_ATTRIBUTES and if we still didn't find it,
-     * set it to null.
-     * We also set the id field here.
+     * We iterate over all this.ATTRIBUTES and look if we can get the
+     * information from somewhere. We first look if attribute is set in context,
+     * next if in options, next in DEFAULT_VALUES_ATTRIBUTES and if we still
+     * didn't find it, set it to null. We also set the id field here.
      * @param  {object} context
      *         internal context object in #create().
      * @param  {object} options

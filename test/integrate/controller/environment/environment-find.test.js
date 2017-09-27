@@ -6,8 +6,8 @@ const helperFunctions = require('../../../helper-functions');
 
 require('should');
 
-describe('Environment()', () => {
-    describe('#find()', () => {
+describe(`Environment()`, () => {
+    describe(`#find()`, () => {
         let pj;
 
         before(async () => {
@@ -24,7 +24,7 @@ describe('Environment()', () => {
         });
 
 
-        it('should return all environments', async () => {
+        it(`should return all environments`, async () => {
             let environments = await pj.Environment.find();
 
             environments.should.containDeep({

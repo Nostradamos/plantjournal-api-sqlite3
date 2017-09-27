@@ -21,8 +21,8 @@ const GenericFind = require('../generic/generic-find');
 class PlantFind extends GenericFind {
 
     /**
-     * We need to join genotypes, generations and families to make it possible to
-     * find plants based on familyName, familyId, generationName,
+     * We need to join genotypes, generations and families to make it possible
+     * to find plants based on familyName, familyId, generationName,
      * generationParents, genotypeName etc. This basically enforces us to query
      * every field of genotypes, generations and families.
      * @param  {object} context
@@ -35,10 +35,10 @@ class PlantFind extends GenericFind {
     }
 
     /**
-     * Build the returnObject. We want to have all plant attributes (like plantName,
-     * plantSex...) in returnObject.plants, all genotype attributes (like
-     * genotypeName etc) in returnObject.genotypes, all family attributes
-     * (like familyName, familyId) inreturnObject.families and all
+     * Build the returnObject. We want to have all plant attributes
+     * (like plantName, plantSex...) in returnObject.plants, all genotype
+     * attributes (like genotypeName etc) in returnObject.genotypes, all family
+     * attributes (like familyName, familyId) inreturnObject.families and all
      * generation attributes in returnObject.generations.
      * @param  {object} returnObject
      *         object which will get returned later from #find().

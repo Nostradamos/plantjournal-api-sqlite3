@@ -5,9 +5,9 @@ require('should');
 
 const plantJournal = require('../../src/pj');
 
-describe('plantJournal()', () => {
-    describe('#constructor()', function () {
-        it('should share database connection across every require of sqlite', async function () {
+describe(`plantJournal()`, () => {
+    describe(`#constructor()`, () => {
+        it(`should share database connection across every require of sqlite`, async () => {
             let pj = new plantJournal(':memory:');
 
             await pj.connect();

@@ -11,8 +11,8 @@ const ApplyWhere = require('../../apply-where/apply-where');
 
 /**
  * Generic find class which is the skeleton for all *find methods
- * (eg. Plant.find, Genotype.find...). This class holds a lot of default behaviour
- * and can get modified to achieve the wanted find behaviour.
+ * (eg. Plant.find, Genotype.find...). This class holds a lot of default
+ * behaviour and can get modified to achieve the wanted find behaviour.
  * The only function which should get called from outside is the #find()
  * function. The #find() function calls all the different methods this class
  * holds in in series. To change the behaviour of your find, extend this class
@@ -39,9 +39,10 @@ class GenericFind {
      * @throws {Error}
      *         Only throws errors if something unexpected happens with sqlite.
      * @return {Object}
-     *         returnObject which by default only contains how many entries where
-     *         found (count) and how many are left (remaining). You can modify the
-     *         content by overwriting #buildReturnObjectWhere() method.
+     *         returnObject which by default only contains how many entries
+     *         where found (count) and how many are left (remaining). You can
+     *         modify the content by overwriting #buildReturnObjectWhere()
+     *         method.
      *         A returnObject should look like this:
      *         {
      *           count: 42,
@@ -112,11 +113,12 @@ class GenericFind {
      *         Criteria object passed to find()
      */
     static initQueries(context, criteria) {
-    // Init queries, we need two query objects, because we need a subquery which
-    // counts the total rows we could find for this query. Basically the counting
-    // query ignores the limit part and uses the COUNT() function in sqlite.
-    // To make it easier we first set everything which is the same for both queries
-    // to queryWhere and clone it into queryCount. So we have to do things only once.
+        // Init queries, we need two query objects, because we need a subquery
+        // which counts the total rows we could find for this query. Basically
+        // the counting query ignores the limit part and uses the COUNT()
+        // function in sqlite. To make it easier we first set everything which
+        // is the same for both queries to queryWhere and clone it into
+        // queryCount. So we have to do things only once.
         context.queryWhere = squel.select().from(this.TABLE, this.TABLE);
         context.queryCount;
     }
@@ -133,9 +135,9 @@ class GenericFind {
     }
 
     /**
-     * This method just applies {@link ApplyWhere} to the context.queryWhere query.
-     * Normally you shouldn't overwrite this, you can use this.ATTRIBUTES_SEARCHABLE to
-     * adjust the behaviour.
+     * This method just applies {@link ApplyWhere} to the context.queryWhere
+     * query. Normally you shouldn't overwrite this, you can use
+     * this.ATTRIBUTES_SEARCHABLE to adjust the behaviour.
      * @param  {object} context
      *         Internal context object
      * @param  {object} criteria
@@ -164,8 +166,9 @@ class GenericFind {
     }
 
     /**
-     * Sets attributes to select for queryWhere to this.ATTR_ID if this.DEFAULT_FIELDS
-     * is not set. Otherwise all attributes of this.DEFAULT_FIELDS will get selected.
+     * Sets attributes to select for queryWhere to this.ATTR_ID if
+     * this.DEFAULT_FIELDS is not set. Otherwise all attributes of
+     * this.DEFAULT_FIELDS will get selected.
      * @param  {object} context
      *         Internal context object
      * @param  {object} criteria
@@ -190,7 +193,8 @@ class GenericFind {
      *         Criteria object passed to find()
      */
     static setQueryWhereAdditionalFields(context, criteria) {
-    // We only have to set attributes specified if options.attributes, otherwise all.
+        // We only have to set attributes specified if options.attributes,
+        // otherwise all.
         UtilsQuery.applyCriteriaAttributes(
             context.queryWhere,
             this.ATTRIBUTES_SEARCHABLE,
@@ -273,9 +277,9 @@ class GenericFind {
 
     /**
      * Executes queryWhere and queryCount in parallel and puts the results
-     * in context.rowsWhere and context.rowCount (mind the missing s on rowCount).
-     * You shouldn't need to overwrite this method if you don't rename the
-     * queries.
+     * in context.rowsWhere and context.rowCount (mind the missing s on
+     * rowCount). You shouldn't need to overwrite this method if you don't
+     * rename the queries.
      * @async
      * @param  {object} context
      *         Internal context object
@@ -286,8 +290,8 @@ class GenericFind {
      */
     static async executeQueries(context, criteria) {
     // Now we will execute both queries and catch the results
-        [context.rowsWhere, context.rowCount] = await Promise
-            .all([sqlite.all(context.queryWhere), sqlite.get(context.queryCount)]);
+        [context.rowsWhere, context.rowCount] = await Promise.all(
+            [sqlite.all(context.queryWhere), sqlite.get(context.queryCount)]);
 
         logger.debug(this.name, '#find() rowsWhere:', context.rowsWhere);
         logger.debug(this.name, '#find() rowCount:', context.rowCount);
@@ -338,10 +342,10 @@ GenericFind.ATTRIBUTES_SEARCHABLE;
 // Alias for id field. Eg. familyId
 GenericFind.ATTR_ID;
 
-// Overwrite inner value of count. If this is not set, we will just use count(ATTR_ID).
-// It can make sense to set this to distinct(ATTR_ID) so that we do count(distinct...)
-// in case your find query results multiple rows with the same id and you only want
-// to count them once.
+// Overwrite inner value of count. If this is not set, we will just use
+// count(ATTR_ID). It can make sense to set this to distinct(ATTR_ID) so that
+// we do count(distinct...) in case your find query results multiple rows with
+// the same id and you only want to count them once.
 GenericFind.COUNT;
 
 // You want to select more default attributes than just ATTR_ID? Set them here.

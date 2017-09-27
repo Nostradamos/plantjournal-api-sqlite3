@@ -81,9 +81,9 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
 
     /**
      * Operator function for equals NOT ($neq)
-     * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals() method
-     * because we need to relate to an json_exctrat() sqlite function and not
-     * only the attribute
+     * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals()
+     * method because we need to relate to an json_exctrat() sqlite function and
+     * not only the attribute.
      * @param  {Object} self
      *         Object containing information about this translation process
      * @param  {String|Number|Boolean|Null} operatorOptions
@@ -178,8 +178,9 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      *         added to self.squelExpr.
      */
     static operatorGreatherThanEqual(self, operatorOptions, crit) {
-        [crit.crit, crit.args] = UtilsExpression.createGreaterThanEqualExpression(
-            self.table, self.attr, operatorOptions, self.func, self.funcArgs);
+        [crit.crit, crit.args] = UtilsExpression.
+            createGreaterThanEqualExpression(self.table, self.attr,
+                operatorOptions, self.func, self.funcArgs);
     }
 
     /**

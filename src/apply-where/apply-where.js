@@ -17,7 +17,7 @@ const TranslateOperatorsJournalValue = require(
 /**
  * This function sets the where parts for our queries and handles
  * many special cases. Mutates query.
- * You can use following operators (for generationParents only $and...$or() ftm):
+ * You can use following operators (for generationParents only $and...$or()):
  * Logical Operators:
  * $and       Logical AND operator
  * $or        Logical OR operator
@@ -85,7 +85,7 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableL
  *         {'generationParents': [1,2],
  *          'or': {'familyId': 3}}
  * @param  {SquelExpression} squelExpr
- *         An Squel expression instance. You can init one with ```squel.exr()```.
+ *         An Squel expression instance. You can init one with `squel.exr()`.
  *         This function hopefully mutate this object (otherwise nothing
  *         productive happend).
  * @param  {Number} depth
@@ -96,7 +96,8 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableL
  *         you shouldn't pass any value to this, this function takes care of
  *         this by it's own. This get's modified for boolean operators.
  *         Valid types are null,'and','or'.
- *         null -> determine based on object type, if object is an array => 'or',
+ *         null -> determine based on object type, if object is an
+ *         array => 'or',
  *         otherwise 'and'.
  *         and  -> use and operator for attributes
  *         or   -> use or operator for attributes
@@ -172,9 +173,10 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
  *         Name of attribute. This has to be checked for validity.
  * @param  {Object|String|Integer|Array} attrOptions
  *         Attribute Options. Can be a lot. If it's an String/Integer we will
- *         understand it as an equals instruction. If it's an array, we understand
- *         it as "attribute has to be any of them" (except if attr is generationParents,
- *         this is a special case, see #translateAndApplyGenerationParentsOperators()).
+ *         understand it as an equals instruction. If it's an array, we
+ *         understand it as "attribute has to be any of them" (except if attr is
+ *         generationParents, this is a special case, see
+ *         #translateAndApplyGenerationParentsOperators()).
  * @param  {squelExpr} squelExpr
  *         squelExpr to apply where stuff to
  * @param  {String} type

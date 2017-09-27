@@ -5,8 +5,8 @@ const plantJournal = require('../../../../src/pj');
 
 require('should');
 
-describe('Journal()', () => {
-    describe('#find()', () => {
+describe(`Journal()`, () => {
+    describe(`#find()`, () => {
         let pj;
 
         before(async () => {
@@ -32,7 +32,7 @@ describe('Journal()', () => {
         });
 
 
-        it('should return all journals', async () => {
+        it(`should return all journals`, async () => {
             let journals = await pj.Journal.find();
             journals.should.containDeep(
                 {
@@ -92,7 +92,7 @@ describe('Journal()', () => {
             );
         });
 
-        it('should be possible to find journals for a specific medium', async () => {
+        it(`should be possible to find journals for a specific medium`, async () => {
             let journals = await pj.Journal.find({where: {mediumId: {'$neq': null}}});
             journals.should.containDeep(
                 {

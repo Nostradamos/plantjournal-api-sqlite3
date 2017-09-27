@@ -7,8 +7,8 @@ const plantJournal = require('../../../../src/pj');
 
 const helpers = require('../../../helper-functions');
 
-describe('Generation()', () => {
-    describe('#find()', () => {
+describe(`Generation()`, () => {
+    describe(`#find()`, () => {
         let pj;
 
         before(async () => {
@@ -24,7 +24,7 @@ describe('Generation()', () => {
             await pj.Generation.create({familyId: 2, generationName: 'S2', generationParents: [1,2]});
         });
 
-        it('should find and return generations and related families', async () => {
+        it(`should find and return generations and related families`, async () => {
             let generations = await pj.Generation.find();
 
             generations.should.containDeep({
@@ -74,7 +74,7 @@ describe('Generation()', () => {
 
         });
 
-        it('should not have an family property if familyName is not in options.attributes', async () => {
+        it(`should not have an family property if familyName is not in options.attributes`, async () => {
             let generations = await pj.Generation.find(
                 {
                     'attributes': ['familyId',
@@ -87,7 +87,7 @@ describe('Generation()', () => {
 
         });
 
-        it('should skip x generations specified with options.offset and limit the count of results to option.limit', async () => {
+        it(`should skip x generations specified with options.offset and limit the count of results to option.limit`, async () => {
             let generations = await pj.Generation
                 .find(
                     {
@@ -126,7 +126,7 @@ describe('Generation()', () => {
             });
         });
 
-        it('should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly', async () => {
+        it(`should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly`, async () => {
             let generations = await pj.Generation.find({
                 'where': {
                     'familyId': 1
@@ -159,7 +159,7 @@ describe('Generation()', () => {
             });
         });
 
-        it('should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly', async () => {
+        it(`should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly`, async () => {
             let generations = await pj.Generation.find({
                 'where': {
                     'familyName': 'testFamily1'
@@ -192,7 +192,7 @@ describe('Generation()', () => {
             });
         });
 
-        it('should only return generations where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]', async () => {
+        it(`should only return generations where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]`, async () => {
             let generations = await pj.Generation.find({'attributes': ['generationParents', 'generationName'], 'where': {'generationParents': [1,2]}});
 
             generations.should.deepEqual({

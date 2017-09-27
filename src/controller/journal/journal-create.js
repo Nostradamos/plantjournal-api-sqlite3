@@ -29,7 +29,13 @@ class JournalCreate extends GenericCreate {
     static validateOptions(context, options) {
         // Figure out for which model this journal is for
         context.journalFor = null;
-        for(let attr of [CONSTANTS.ATTR_ID_PLANT, CONSTANTS.ATTR_ID_MEDIUM, CONSTANTS.ATTR_ID_ENVIRONMENT]) {
+        let models = [
+            CONSTANTS.ATTR_ID_PLANT,
+            CONSTANTS.ATTR_ID_MEDIUM,
+            CONSTANTS.ATTR_ID_ENVIRONMENT
+        ];
+
+        for(let attr of models) {
             if(_.has(options, attr)) {
                 Utils.hasToBeInt(options, attr);
                 if(context.journalFor === null) {

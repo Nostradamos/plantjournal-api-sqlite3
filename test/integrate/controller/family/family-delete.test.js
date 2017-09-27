@@ -8,8 +8,8 @@ require('should');
 const plantJournal = require('../../../../src/pj');
 const CONSTANTS = require('../../../../src/constants');
 
-describe('Family()', () => {
-    describe('#delete()', () => {
+describe(`Family()`, () => {
+    describe(`#delete()`, () => {
         let pj;
 
         before(async () => {
@@ -34,12 +34,12 @@ describe('Family()', () => {
             await pj.Family.create({familyName: 'testD'}); // id:4
         });
 
-        it('should throw error if no criteria object got passed', async () => {
+        it(`should throw error if no criteria object got passed`, async () => {
             await pj.Family.delete()
                 .should.be.rejectedWith('No criteria object passed');
         });
 
-        it('should delete specified family in criteria.where.familyId and return the id', async () => {
+        it(`should delete specified family in criteria.where.familyId and return the id`, async () => {
             let deletedFam = await pj.Family.delete({where: {familyId: 1}});
 
             deletedFam.should.deepEqual({
@@ -75,7 +75,7 @@ describe('Family()', () => {
             rowsPlant.should.deepEqual([{plantId: 3}]);
         });
 
-        it('should be possibe to delete families with criteria.sort and criteria.limit instruction', async () => {
+        it(`should be possibe to delete families with criteria.sort and criteria.limit instruction`, async () => {
             let deletedFam = await pj.Family.delete(
                 {
                     'limit': 2,
