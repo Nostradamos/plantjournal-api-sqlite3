@@ -31,6 +31,10 @@ describe(`Plant()`, () => {
             await pj.Plant.create({'plantName': 'F2Geno1Plant1', 'genotypeId': 3}); //plantId: 4
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw error if no arguments got passed`, async () => {
             await pj.Plant.update()
                 .should.be.rejectedWith('No Update and Critera Object got passed');

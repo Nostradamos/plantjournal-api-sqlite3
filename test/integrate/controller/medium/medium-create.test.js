@@ -15,6 +15,10 @@ describe(`Medium()`, () => {
             await pj.Environment.create({environmentName: 'testEnvironment1'});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw error if options.mediumName is not set`, async () => {
             await pj.Medium.create({'environmentId': 1})
                 .should.be.rejectedWith('options.mediumName has to be set');

@@ -24,6 +24,10 @@ describe(`Generation()`, () => {
             await pj.Generation.create({familyId: 2, generationName: 'S2', generationParents: [1,2]});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should find and return generations and related families`, async () => {
             let generations = await pj.Generation.find();
 
@@ -209,8 +213,8 @@ describe(`Generation()`, () => {
             });
         });
 
-        after(async () => {
-            await pj.disconnect();
+        it(`should only find generations where generation has only the one generationParent if options.where.generationParents = plantIdA`, async () => {
+
         });
     });
 });

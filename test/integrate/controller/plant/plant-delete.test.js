@@ -34,6 +34,10 @@ describe(`Plant()`, () => {
             await pj.Plant.create({generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw error if no criteria object got passed`, async () => {
             await pj.Plant.delete()
                 .should.be.rejectedWith('No criteria object passed');

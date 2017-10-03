@@ -17,6 +17,10 @@ describe(`Genotype()`, () => {
             await pj.Generation.create({familyId: 1, generationName: 'F1'});
         });
 
+        afterEach(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw error if options is not set or not an associative array`, async () => {
             let tested = 0;
             let toTest = [
@@ -102,8 +106,6 @@ describe(`Genotype()`, () => {
             rows[0].should.deepEqual(genotype.genotypes[1]);
         });
 
-        afterEach(async () => {
-            await pj.disconnect();
-        });
+
     });
 });

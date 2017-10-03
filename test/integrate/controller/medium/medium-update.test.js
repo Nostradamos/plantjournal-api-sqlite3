@@ -17,6 +17,10 @@ describe(`Medium()`, () => {
             await pj.Medium.create({'mediumName': 'testMdium2'});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
 
         it(`should throw error if no arguments got passed`, async () => {
             await pj.Medium.update()

@@ -27,6 +27,10 @@ describe(`Genotype()`, () => {
             await pj.Genotype.create({'genotypeName': 'S2Geno1', 'generationId': 4}); //genotypeId: 5
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw error if no arguments got passed`, async () => {
             await pj.Genotype.update()
                 .should.be.rejectedWith('No Update and Critera Object got passed');

@@ -13,6 +13,10 @@ describe(`Parallel`, () => {
         await pj.connect();
     });
 
+    after(async () => {
+        await pj.disconnect();
+    });
+
     it(`should be possible to create 50 families at once without getting race conditions`, async () => {
         await Promise.all(
             [

@@ -33,6 +33,10 @@ describe(`Generation()`, () => {
             await pj.Family.create({familyName: 'testD'}); // id:4
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw error if no criteria object got passed`, async () => {
             await pj.Generation.delete()
                 .should.be.rejectedWith('No criteria object passed');

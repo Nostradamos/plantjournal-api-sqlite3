@@ -22,6 +22,10 @@ describe(`Family()`, () => {
 
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw error if no arguments got passed`, async () => {
             await pj.Family.update()
                 .should.be.rejectedWith('No Update and Critera Object got passed');

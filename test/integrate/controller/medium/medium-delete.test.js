@@ -26,6 +26,10 @@ describe(`Medium()`, () => {
             await pj.Plant.create({generationId: 1, plantName: 'plant3', mediumId: 2}); // plantId: 3 genotypeId: 3
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should delete environment with matching id and related mediums and plants`, async () => {
             let deleted = await pj.Medium.delete({where: {mediumId: 1}});
             deleted.should.deepEqual({

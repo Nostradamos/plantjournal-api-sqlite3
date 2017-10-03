@@ -28,6 +28,10 @@ describe(`Genotype()`, () => {
             await pj.Genotype.create({generationId: 4, genotypeName: 'testGenotype4'});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should find genotypes, referenced generations and families`, async () => {
             let genotypes = await pj.Genotype.find();
 
@@ -264,8 +268,6 @@ describe(`Genotype()`, () => {
             );
         });
 
-        after(async () => {
-            await pj.disconnect();
-        });
+
     });
 });

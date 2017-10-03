@@ -22,7 +22,10 @@ describe(`Generation()`, () => {
             await pj.Plant.create({'plantName': 'testPlant1', 'generationId': 1}); //plantId: 1
             await pj.Plant.create({'plantName': 'testPlant2', 'generationId': 2}); //plantId: 2
             await pj.Generation.create({'generationName': 'S2', 'familyId': 2, 'generationParents': [1,2]}); //generationId: 4
+        });
 
+        after(async () => {
+            await pj.disconnect();
         });
 
         it(`should throw error if no arguments got passed`, async () => {

@@ -100,6 +100,36 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
     }
 
     /**
+     * [operatorHas description]
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     * @param  {Number[]} operatorOptions
+     *         We want to find records, where attribute value is not in
+     *         this array.
+     * @param  {Object} crit
+     *         Object which contains expression and expressionArgs. Modify
+     *         this two properties to create a new expression which gets
+     *         added to self.squelExpr.
+     */
+    static operatorHas(self, operatorOptions, crit) {
+        this.operatorIn(self, operatorOptions, crit);
+
+        let [critHaving, critHavingArgs] = UtilsExpression.
+            createGreaterThanEqualsExpression(
+                self.table, self.attr, operatorOptions.length, 'count'
+            );
+
+        logger.silly(this.name, '#operatorHas()', critHaving, critHavingArgs);
+
+        UtilsExpression.applyExpression(
+            self.squelExprHaving, critHaving, critHavingArgs, self.type);
+    }
+
+    static operatorNotHas(self, operatorOptions, crit) {
+        this.operatorNotIn(self, operatorOptions, crit);
+    }
+
+    /**
      * This short hand should just does an equals operation, but we need to call
      * the TranslateOperatorsGenerationParents.operatorEquals() method,
      * therefore we need to reassign it.
@@ -177,5 +207,9 @@ TranslateOperatorsGenerationParents.OPERATORS.$eq =
     TranslateOperatorsGenerationParents.operatorEquals;
 TranslateOperatorsGenerationParents.OPERATORS.$neq =
     TranslateOperatorsGenerationParents.operatorNotEquals;
+TranslateOperatorsGenerationParents.OPERATORS.$has =
+    TranslateOperatorsGenerationParents.operatorHas;
+TranslateOperatorsGenerationParents.OPERATORS.$nhas =
+    TranslateOperatorsGenerationParents.operatorNotHas;
 
 module.exports = TranslateOperatorsGenerationParents;

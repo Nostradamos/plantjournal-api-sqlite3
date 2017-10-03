@@ -188,10 +188,17 @@ NOTE: This excludes the special cases `generationParents` and `journalValue`. Sc
 
 ## Operators for `generationParents`
 ### $eq
+Only find generation records which have exactly this parents. If operator value is a single integer, we will
+only find generations which only have this parent. Otherwise operator value should be an array of plant ids.
 ### $neq
+Only find generation records which have NOT this parents.
+If operator value is a single integer, we will only find generations which don't have this parent.
+Otherwise operator value should be an array of plant ids.
 ### $has
+Only find generation records where this plantId(s) are parents of the generation. The generation can have also other parents. If operator value is a single integer, we will only find generations which have at least this plantId as a parent. Otherwise operator value should be an array of plantIds which a generation all should have.
 ### $nhas
-### $len
+Same as $neq.
+### $count
 
 ## Operators for `journalValue`
 ### $eq (equals)

@@ -16,6 +16,10 @@ describe(`Family()`, () => {
             await pj.connect();
         });
 
+        afterEach(async () => {
+            await pj.disconnect();
+        });
+
         it(`should throw 'First argument has to be an associative array' if first argument is not an object with properties/associative array`, async () => {
             let tested = 0;
 
@@ -90,10 +94,6 @@ describe(`Family()`, () => {
             let rows = await sqlite.all('SELECT * FROM families');
 
             rows[0].should.containDeep(family.families[1]);
-        });
-
-        afterEach(async () => {
-            await pj.disconnect();
         });
     });
 });

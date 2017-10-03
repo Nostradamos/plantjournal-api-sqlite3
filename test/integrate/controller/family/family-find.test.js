@@ -19,6 +19,10 @@ describe(`Family()`, () => {
             await pj.Family.create({familyName: 'testD'});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should return all families`, async () => {
             let families = await pj.Family.find();
 
@@ -106,10 +110,6 @@ describe(`Family()`, () => {
                 '4': { familyId: 4, familyName: 'testD' },
                 '3': { familyId: 3, familyName: 'test3' },
             });
-        });
-
-        after(async () => {
-            await pj.disconnect();
         });
     });
 });

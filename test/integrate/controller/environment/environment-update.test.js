@@ -18,6 +18,9 @@ describe(`Environment()`, () => {
             await pj.Environment.create({'environmentName': 'testEnvronment3'});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
 
         it(`should throw error if no arguments got passed`, async () => {
             await pj.Environment.update()

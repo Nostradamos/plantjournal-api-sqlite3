@@ -36,6 +36,10 @@ describe(`Environment()`, () => {
                 {generationId: 1, plantName: 'plant2', mediumId: null});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should delete environment with matching id and related mediums and plants`, async () => {
             let deleted = await pj.Environment.delete(
                 {where: {environmentId: 1}});

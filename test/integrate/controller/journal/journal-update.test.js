@@ -22,6 +22,10 @@ describe(`Journal()`, () => {
 
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
 
         it(`should throw error if no arguments got passed`, async () => {
             await pj.Journal.update()

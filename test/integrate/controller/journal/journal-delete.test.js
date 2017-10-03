@@ -31,6 +31,10 @@ describe(`Journal()`, () => {
             await pj.Journal.create({journalTimestamp: 1337, journalType: 'ph-sensor', journalValue: 6.8, mediumId: 2});
         });
 
+        after(async () => {
+            await pj.disconnect();
+        });
+
         it(`should delete journal with matching id`, async () => {
             let deleted = await pj.Journal.delete(
                 {where: {journalId: 1}});
