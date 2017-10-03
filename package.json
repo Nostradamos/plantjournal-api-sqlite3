@@ -15,19 +15,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "coveralls": "^2.13.1",
-    "eslint": "^4.6.1",
+    "coveralls": "^2.13.3",
+    "eslint": "^4.8.0",
     "jsdoc": "^3.5.5",
-    "mocha": "^3.5.3",
+    "mocha": "^4.0.0",
     "nyc": "^11.2.1",
-    "should": "^13.0.1"
+    "should": "^13.1.0"
   },
   "dependencies": {
     "lodash": "^4.17.4",
     "sqlite": "^2.5.0",
-    "sqlite3": "3.1.11",
-    "squel": "^5.8.0",
-    "winston": "^2.3.1",
+    "sqlite3": "^3.1.13",
+    "squel": "^5.12.0",
+    "winston": "^2.4.0",
     "zealit": "^2.4.0"
   }
 }
