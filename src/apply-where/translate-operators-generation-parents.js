@@ -1,10 +1,11 @@
 'use strict';
 
 const _ = require('lodash');
-const squel = require('squel').useFlavour();
+const squel = require('squel');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
+const Utils = require('../utils/utils');
 const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require('./translate-operators-relational');
@@ -113,17 +114,26 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
         // have a different amount of parents. We can't to this in one query,
         // so we need to build a subquery.
 
+        let [exprCountNotEqual, exprCountNotEqualArgs] = UtilsExpression
+            .createNotEqualsExpression(
+                CONSTANTS.TABLE_GENERATION_PARENT,
+                CONSTANTS.ATTR_ID_PLANT,
+                operatorOptions.length || 1,
+                'count'
+            );
+
+        // queryCountUnequal will find all generationIds which have a different
+        // amount of parents
         let queryCountUnequal = squel.select()
             .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
             .field('generation_parents.generationId')
             .group('generation_parents.generationId')
             .having(
-                'count(?) != ?',
-                squel.rstr(CONSTANTS.TABLE_GENERATION_PARENT + '.' + CONSTANTS.ATTR_ID_PLANT),
-                operatorOptions.length || 1
-            );
+                exprCountNotEqual,
+                ...exprCountNotEqualArgs
+            ).toString();
 
-        logger.silly(this.name, '#operatorNotEquals() queryCountUnequal', queryCountUnequal.toString());
+        logger.silly(this.name, '#operatorNotEquals() queryCountUnequal', queryCountUnequal);
 
         let [exprNotIn, exprNotInArgs] = UtilsExpression
             .createNotInExpression(
@@ -132,19 +142,21 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
                 operatorOptions
             );
 
+        // queryNotIn will find all generationIds which have a different
+        // parentId
         let queryNotIn = squel.select()
             .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
             .field('generation_parents.generationId')
-            .where(exprNotIn, ...exprNotInArgs);
+            .where(exprNotIn, ...exprNotInArgs).toString();
 
-        logger.silly(this.name, '#operatorNotEquals() queryNotIn', queryNotIn.toString());
+        logger.silly(this.name, '#operatorNotEquals() queryNotIn', queryNotIn);
 
-        crit.crit = '?.? IN (? UNION ?)';
+        crit.crit = '? IN (? UNION ?)';
         crit.args = [
-            CONSTANTS.TABLE_GENERATION,
-            CONSTANTS.ATTR_ID_GENERATION,
+            Utils.explicitColumnRstr(
+                CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
             squel.rstr(queryCountUnequal.toString()),
-            squel.rstr(queryNotIn.toString())
+            squel.rstr(queryNotIn)
         ];
     }
 
@@ -261,10 +273,10 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
         UtilsExpression.applyExpression(
             self.squelExprOld,
-            '?.? IN ?',
+            '? IN ?',
             [
-                CONSTANTS.TABLE_GENERATION,
-                CONSTANTS.ATTR_ID_GENERATION,
+                Utils.explicitColumnRstr(
+                    CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
                 subQuery
             ],
             self.type

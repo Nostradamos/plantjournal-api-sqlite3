@@ -1,7 +1,9 @@
 'use strict';
 
 const _ = require('lodash');
+const squel = require('squel');
 
+const Utils = require('./utils');
 
 const UtilsExpression = exports;
 
@@ -59,12 +61,14 @@ UtilsExpression.applyExpression = (squelExpr, expr, exprArgs, type) => {
  */
 UtilsExpression.createGenericExpression = (tbl, attr, operator, equal, fnc=null, fncArgs=null) => {
     let expr = '';
-    let exprArgs = [tbl, attr];
+    let exprArgs = [];
 
     if(fnc === null) {
-        expr += '?.?';
+        expr += '?';
+        exprArgs[0] = Utils.explicitColumnRstr(tbl, attr);
     } else {
-        expr += fnc + '(?.?';
+        expr += fnc + '(?';
+        exprArgs[0] = Utils.explicitColumn(tbl, attr);
         if(fncArgs !== null) {
             expr += ', ' + _.chain('?, ')
                 .repeat(fncArgs.length)

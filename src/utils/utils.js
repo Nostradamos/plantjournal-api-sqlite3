@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const squel = require('squel');
 const sqlite = require('sqlite');
 
 const CONSTANTS = require('../constants');
@@ -397,6 +398,10 @@ Utils.isValidJSON = function(str) {
     return true;
 };
 
-/*Utils.explicitColum = function(table, column) {
-    return table + '.' + 'column';
-}*/
+Utils.explicitColumn = function(table, column) {
+    return table + '.' + column;
+}
+
+Utils.explicitColumnRstr = function(table, column) {
+    return squel.rstr(Utils.explicitColumn(table, column))
+}

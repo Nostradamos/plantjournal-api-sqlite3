@@ -3,12 +3,17 @@
 
 require('should');
 
+const squel = require('squel');
+
 var TranslateOperatorsJournalValue = require(
     '../../../src/apply-where/translate-operators-journal-value');
 
 describe(`TranslateOperatorsJournalValue`, () => {
     describe(`Operators`, () => {
         let crit, self;
+        let TABLE_DOT_ATTR = 'journals.journalValue';
+        let TABLE_DOT_ATTR_RSTR = squel.rstr(TABLE_DOT_ATTR);
+
         beforeEach(() => {
             crit = {crit:null, args:[]};
             self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null};
@@ -17,7 +22,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
             it(`should do TABLE.ATTR = OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
                 TranslateOperatorsJournalValue.operatorEquals(self, 'bar', crit);
                 crit.should.eql(
-                    {crit: '?.? = ?', args: [self.table, self.attr, 'bar']});
+                    {crit: '? = ?', args: [TABLE_DOT_ATTR_RSTR, 'bar']});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) = OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -26,8 +31,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorEquals(self, 'bar', crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) = ?',
-                        args: [self.table, self.attr, ...self.funcArgs, 'bar']
+                        crit: 'json_extract(?, ?) = ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 'bar']
                     });
             });
 
@@ -37,7 +42,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
             it(`should do TABLE.ATTR != OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
                 TranslateOperatorsJournalValue.operatorNotEquals(self, 'bar', crit);
                 crit.should.eql(
-                    {crit: '?.? != ?', args: [self.table, self.attr, 'bar']});
+                    {crit: '? != ?', args: [TABLE_DOT_ATTR_RSTR, 'bar']});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) != OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -46,8 +51,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorNotEquals(self, 'bar', crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) != ?',
-                        args: [self.table, self.attr, ...self.funcArgs, 'bar']
+                        crit: 'json_extract(?, ?) != ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 'bar']
                     });
             });
         });
@@ -57,7 +62,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorGreatherThan(
                     self, 13, crit);
                 crit.should.eql(
-                    {crit: '?.? > ?', args: [self.table, self.attr, 13]});
+                    {crit: '? > ?', args: [TABLE_DOT_ATTR_RSTR, 13]});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) > OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -67,8 +72,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                     self, 13, crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) > ?',
-                        args: [self.table, self.attr, ...self.funcArgs, 13]
+                        crit: 'json_extract(?, ?) > ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -78,7 +83,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorGreatherThanEqual(
                     self, 13, crit);
                 crit.should.eql(
-                    {crit: '?.? >= ?', args: [self.table, self.attr, 13]});
+                    {crit: '? >= ?', args: [TABLE_DOT_ATTR_RSTR, 13]});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) >= OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -88,8 +93,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                     self, 13, crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) >= ?',
-                        args: [self.table, self.attr, ...self.funcArgs, 13]
+                        crit: 'json_extract(?, ?) >= ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -99,7 +104,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorLowerThan(
                     self, 13, crit);
                 crit.should.eql(
-                    {crit: '?.? < ?', args: [self.table, self.attr, 13]});
+                    {crit: '? < ?', args: [TABLE_DOT_ATTR_RSTR, 13]});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) < OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -109,8 +114,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                     self, 13, crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) < ?',
-                        args: [self.table, self.attr, ...self.funcArgs, 13]
+                        crit: 'json_extract(?, ?) < ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -120,7 +125,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorLowerThanEqual(
                     self, 13, crit);
                 crit.should.eql(
-                    {crit: '?.? <= ?', args: [self.table, self.attr, 13]});
+                    {crit: '? <= ?', args: [TABLE_DOT_ATTR_RSTR, 13]});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) <= OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -130,8 +135,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                     self, 13, crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) <= ?',
-                        args: [self.table, self.attr, ...self.funcArgs, 13]
+                        crit: 'json_extract(?, ?) <= ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -141,7 +146,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorLike(
                     self, '_est', crit);
                 crit.should.eql(
-                    {crit: '?.? LIKE ?', args: [self.table, self.attr, '_est']});
+                    {crit: '? LIKE ?', args: [TABLE_DOT_ATTR_RSTR, '_est']});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) LIKE OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -151,8 +156,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                     self, '_est', crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) LIKE ?',
-                        args: [self.table, self.attr, ...self.funcArgs, '_est']
+                        crit: 'json_extract(?, ?) LIKE ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, '_est']
                     });
             });
         });
@@ -161,7 +166,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
             it(`should do TABLE.ATTR NOT LIKE OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
                 TranslateOperatorsJournalValue.operatorNotLike(self, '_est', crit);
                 crit.should.eql(
-                    {crit: '?.? NOT LIKE ?', args: [self.table, self.attr, '_est']});
+                    {crit: '? NOT LIKE ?', args: [TABLE_DOT_ATTR_RSTR, '_est']});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) NOT LIKE OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -170,8 +175,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorNotLike(self, '_est', crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) NOT LIKE ?',
-                        args: [self.table, self.attr, ...self.funcArgs, '_est']
+                        crit: 'json_extract(?, ?) NOT LIKE ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, '_est']
                     });
             });
         });
@@ -180,7 +185,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
             it(`should do TABLE.ATTR IN OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
                 TranslateOperatorsJournalValue.operatorIn(self, ['foo', 'bar'], crit);
                 crit.should.eql(
-                    {crit: '?.? IN ?', args: [self.table, self.attr, ['foo', 'bar']]});
+                    {crit: '? IN ?', args: [TABLE_DOT_ATTR_RSTR, ['foo', 'bar']]});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) IN OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -189,8 +194,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorIn(self, ['foo', 'bar'], crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) IN ?',
-                        args: [self.table, self.attr, ...self.funcArgs, ['foo', 'bar']]
+                        crit: 'json_extract(?, ?) IN ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, ['foo', 'bar']]
                     });
             });
         });
@@ -199,7 +204,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
             it(`should do TABLE.ATTR NOT IN OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
                 TranslateOperatorsJournalValue.operatorNotIn(self, ['foo', 'bar'], crit);
                 crit.should.eql(
-                    {crit: '?.? NOT IN ?', args: [self.table, self.attr, ['foo', 'bar']]});
+                    {crit: '? NOT IN ?', args: [TABLE_DOT_ATTR_RSTR, ['foo', 'bar']]});
             });
 
             it(`should do json_extract(TABLE.ATTR, PATH) NOT IN OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -208,8 +213,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 TranslateOperatorsJournalValue.operatorNotIn(self, ['foo', 'bar'], crit);
                 crit.should.eql(
                     {
-                        crit: 'json_extract(?.?, ?) NOT IN ?',
-                        args: [self.table, self.attr, ...self.funcArgs, ['foo', 'bar']]
+                        crit: 'json_extract(?, ?) NOT IN ?',
+                        args: [TABLE_DOT_ATTR, ...self.funcArgs, ['foo', 'bar']]
                     });
             });
         });

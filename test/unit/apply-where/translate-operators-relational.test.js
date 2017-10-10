@@ -9,125 +9,102 @@ var TranslateOperatorsRelational = require(
 
 describe(`TranslateOperatorsRelational`, () => {
     describe(`#translateAndApplyOperators()`, () => {
-        it(`should apply an TABLE.ATTR = OPEARTOROPTIONS expression for $eq`, () => {
-            let squelExpr = squel.expr();
+        let query, squelExpr;
 
+        beforeEach(() => {
+            squelExpr = squel.expr();
+            query = squel.select().from('test');
+        });
+
+        it(`should apply an TABLE.ATTR = OPEARTOROPTIONS expression for $eq`, () => {
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentName', {'$eq': 'TestEnvironment420'},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? = ?',
-                    para:['environments', 'environmentName', 'TestEnvironment420']}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentName = 'TestEnvironment420')`);
         });
 
         it(`should apply an TABLE.ATTR != OPEARTOROPTIONS expression for $neq`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentName', {'$neq': 'TestEnvironment420'},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? != ?',
-                    para:['environments', 'environmentName', 'TestEnvironment420']}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentName != 'TestEnvironment420')`);
         });
 
         it(`should apply an TABLE.ATTR LIKE OPEARTOROPTIONS expression for $like`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentName', {'$like': '_estEnvironment420'},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? LIKE ?',
-                    para:['environments', 'environmentName', '_estEnvironment420']}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentName LIKE '_estEnvironment420')`);
         });
 
         it(`should apply an TABLE.ATTR NOT LIKE OPEARTOROPTIONS expression for $nlike`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentName', {'$nlike': '_estEnvironment420'},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? NOT LIKE ?',
-                    para:['environments', 'environmentName', '_estEnvironment420']}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentName NOT LIKE '_estEnvironment420')`);
         });
 
         it(`should apply an TABLE.ATTR > OPEARTOROPTIONS expression for $gt`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentId', {'$gt': 3},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? > ?',
-                    para:['environments', 'environmentId', 3]}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentId > 3)`);
         });
 
         it(`should apply an TABLE.ATTR >= OPEARTOROPTIONS expression for $gte`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentId', {'$gte': 3},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? >= ?',
-                    para:['environments', 'environmentId', 3]}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentId >= 3)`);
         });
 
         it(`should apply an TABLE.ATTR < OPEARTOROPTIONS expression for $lt`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentId', {'$lt': 3},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? < ?',
-                    para:['environments', 'environmentId', 3]}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentId < 3)`);
         });
 
         it(`should apply an TABLE.ATTR <= OPEARTOROPTIONS expression for $lte`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentId', {'$lte': 3},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? <= ?',
-                    para:['environments', 'environmentId', 3]}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentId <= 3)`);
         });
 
         it(`should apply an TABLE.ATTR IN OPEARTOROPTIONS expression for $in`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentId', {'$in': [3, 4]},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? IN ?',
-                    para:['environments', 'environmentId', [3, 4]]}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentId IN (3, 4))`);
         });
 
 
         it(`should apply an TABLE.ATTR NOT IN OPEARTOROPTIONS expression for $nin`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentId', {'$nin': [3, 4]},
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? NOT IN ?',
-                    para:['environments', 'environmentId', [3, 4]]}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentId NOT IN (3, 4))`);
         });
 
         it(`should apply an TABLE.ATTR = ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is a string (string shorthand)`, () => {
@@ -137,21 +114,17 @@ describe(`TranslateOperatorsRelational`, () => {
                 {}, 'environmentName', 'TestEnvironment420',
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? = ?',
-                    para:['environments', 'environmentName', 'TestEnvironment420']}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentName = 'TestEnvironment420')`);
         });
 
         it(`should apply an TABLE.ATTR IN ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is an array (array shorthand)`, () => {
-            let squelExpr = squel.expr();
-
             TranslateOperatorsRelational.translateAndApplyOperators(
                 {}, 'environmentName', ['TestEnvironment420', 'TestEnv2'],
                 squelExpr, 'and');
 
-            squelExpr._nodes.should.eql(
-                [{type:'AND',expr:'?.? IN ?',
-                    para:['environments', 'environmentName', ['TestEnvironment420', 'TestEnv2']]}]);
+            query.where(squelExpr).toString().should.eql(
+                `SELECT * FROM test WHERE (environments.environmentName IN ('TestEnvironment420', 'TestEnv2'))`);
         });
     });
 });
