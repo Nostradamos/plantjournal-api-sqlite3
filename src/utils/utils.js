@@ -400,8 +400,8 @@ Utils.isValidJSON = function(str) {
 
 Utils.explicitColumn = function(table, column) {
     return table + '.' + column;
-}
+};
 
 Utils.explicitColumnRstr = function(table, column) {
-    return squel.rstr(Utils.explicitColumn(table, column))
-}
+    return squel.rstr(Utils.explicitColumn(table, column));
+};

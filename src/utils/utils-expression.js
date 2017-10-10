@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const squel = require('squel');
 
 const Utils = require('./utils');
 
