@@ -1,19 +1,27 @@
 {
-  "name": "plantjournal",
+  "name": "plantjournal-api-sqlite3",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "repository" : {
+      "type" : "git",
+      "url" : "https://github.com/npm/npm.git"
+  },
+  "main": "src/pj",
   "scripts": {
     "test": "mocha --recursive",
+    "test-unit": "mocha ./test/unit --recursive",
+    "test-integrate": "mocha ./test/integrate --recursive",
     "coverage": "nyc npm test && nyc report --reporter=html --reporter=text",
+    "coverage-unit": "nyc npm run test-unit && nyc report --reporter=html --reporter=text",
+    "coverage-integrate": "nyc npm run test-integrate && nyc report --reporter=html --reporter=text",
     "generate-docs": "rm -rf ./docs && jsdoc -r src -d docs",
     "lint": "eslint \"src/**/*\" \"test/**/*\"",
     "lint-fix": "eslint \"src/**/*\" \"test/**/*\" --fix",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "build": "npm run lint && npm run generate-docs && npm test"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "coveralls": "^3.0.0",
     "eslint": "^4.8.0",
