@@ -19,6 +19,15 @@ const GenericUpdate = require('../generic/generic-update');
  * @extends GenericUpdate
  */
 class GenerationUpdate extends GenericUpdate {
+    /**
+    * We need to do an group by.
+    * @param  {object} context   - Internal context object
+    * @param  {object} update    - Updated object passed to update()
+    * @param  {object} criteria  - Criteria object passed to update()
+     */
+    static setQueryFindGroup(context, update, criteria) {
+        context.queryFind.group(this.TABLE + '.' + this.ATTR_ID);
+    }
 
     /**
      * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of
@@ -141,5 +150,7 @@ GenerationUpdate.ATTRIBUTES_SEARCHABLE =
     CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 
 GenerationUpdate.ATTRIBUTES_UPDATABLE = CONSTANTS.ATTRIBUTES_GENERATION;
+
+GenerationUpdate.GROUP_BY = 'generations.generationId';
 
 module.exports = GenerationUpdate;

@@ -74,7 +74,7 @@ class GenericFind {
     static async find(criteria) {
         Utils.throwErrorIfNotConnected();
         if (_.isNil(criteria)) criteria = {};
-        logger.debug(this.name, ' #find() criteria:', criteria);
+        logger.debug(this.name, ' #find() criteria:', JSON.stringify(criteria));
         let context = {};
 
         context.attributes = criteria.attributes || false;
@@ -98,7 +98,7 @@ class GenericFind {
         this.buildReturnObjectWhere(returnObject, context, criteria);
         this.buildReturnObjectCount(returnObject, context, criteria);
 
-        logger.debug(this.name, '#find() returnObject:', returnObject);
+        logger.debug(this.name, '#find() returnObject:', JSON.stringify(returnObject));
         return returnObject;
 
     }

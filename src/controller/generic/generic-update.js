@@ -168,13 +168,12 @@ class GenericUpdate {
     }
 
     /**
-     * Set groupBy for queryFind.
+     * Overwrite this method if you need to do an GROUP BY on queryFind.
      * @param  {object} context   - Internal context object
      * @param  {object} update    - Updated object passed to update()
      * @param  {object} criteria  - Criteria object passed to update()
      */
     static setQueryFindGroup(context, update, criteria) {
-        context.queryFind.group(this.TABLE + '.' + this.ATTR_ID);
     }
     /**
      * Stringifies queryFind and logs the query

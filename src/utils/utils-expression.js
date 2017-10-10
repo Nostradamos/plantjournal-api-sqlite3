@@ -29,6 +29,34 @@ UtilsExpression.applyExpression = (squelExpr, expr, exprArgs, type) => {
     }
 };
 
+/**
+ * Expression Builder
+ * Let's you build complex expressions. An expression is the part of a sqlite3
+ * query where you compare a table attribute with a value using a specific
+ * operator.
+ * @param  {String} tbl
+ *         Table name Eg: 'generations', 'families'...
+ * @param  {String} attr
+ *         Name of the attribute/field Eg: 'generationId', 'generationName'..
+ * @param  {String} operator
+ *         Any valid sqlite3 operator Eg: 'LIKE', '!=', '>'...
+ * @param  {String|Number|Array|Null} equal
+ *         Value the operator on the attribute should be true for
+ * @param  {String} [fnc=null]
+ *         If you want to wrap table and attribute in a function use this.
+ *         Eg: 'count', 'json_extract'...
+ * @param  {Array} [fncArgs=null]
+ *         If you need further args to the function, like a path to the
+ *         json_extract function, set this to an array of args.
+ * @return {Array} return
+ *         Returns an array with two elements containing the expression
+ *         and its args.
+ * @return {String} return[0]
+ *         The expression with placeholders for the args
+ * @return {Array} return[1]
+ *         The arguments for the various placeholders for the expression
+ *
+ */
 UtilsExpression.createGenericExpression = (tbl, attr, operator, equal, fnc=null, fncArgs=null) => {
     let expr = '';
     let exprArgs = [tbl, attr];
@@ -101,9 +129,11 @@ UtilsExpression.createLowerThanEqualExpression = (tbl, attr, lowerThanEqual, fnc
 };
 
 UtilsExpression.createInExpression = (tbl, attr, inArr, fnc=null, fncArgs=null) => {
+    if(_.isInteger(inArr)) inArr = [inArr];
     return UtilsExpression.createGenericExpression(tbl, attr, 'IN', inArr, fnc, fncArgs);
 };
 
 UtilsExpression.createNotInExpression = (tbl, attr, notInArr, fnc=null, fncArgs=null) => {
+    if(_.isInteger(notInArr)) notInArr = [notInArr];
     return UtilsExpression.createGenericExpression(tbl, attr, 'NOT IN', notInArr, fnc, fncArgs);
 };

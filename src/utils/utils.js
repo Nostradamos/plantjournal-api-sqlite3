@@ -396,3 +396,7 @@ Utils.isValidJSON = function(str) {
     }
     return true;
 };
+
+/*Utils.explicitColum = function(table, column) {
+    return table + '.' + 'column';
+}*/

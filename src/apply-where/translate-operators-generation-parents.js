@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const squel = require('squel');
+const squel = require('squel').useFlavour();
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
@@ -52,8 +52,10 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
     }
 
     /**
-     * Operator function handling equals. We can't simply use the method
-     * provided by TranslateOperatorsRelational because of the way we store
+     * Operator function handling equals. generationParents are equal if they
+     * contain the exact same parentIds and don't have any other parents in it.
+     * NOTE: We can't simply use the method provided by
+     * TranslateOperatorsRelational because of the way we store
      * the generationParents. Each parent is in a own row which we join to.
      * So we get a row for every parent, for this row we need to make sure
      * that the id is in our equals array (operatorOptions), plus we need to
@@ -61,7 +63,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      * using a HAVIN expression.
      * @param  {Object} self
      *         Object containing information about this translation process
-     * @param  {Integer[]} operatorOptions
+     * @param  {Integer|Integer[]} operatorOptions
      *         Array of integers which represent the plantIds (parentIds)
      *         we want to check against
      * @param  {Object} crit
@@ -71,7 +73,15 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
         this.operatorIn(self, operatorOptions, crit);
 
         let [critHaving, critHavingArgs] = UtilsExpression.
-            createEqualsExpression(self.table, self.attr, operatorOptions.length, 'count');
+            createEqualsExpression(
+                self.table,
+                self.attr,
+                // In case operatorOptions.length is undefined, we most likely
+                // have a single integer, so we only want to find generations
+                // with exactly one parent.
+                operatorOptions.length || 1,
+                'count'
+            );
 
         logger.silly(this.name, '#operatorEquals()', critHaving, critHavingArgs);
 
@@ -81,13 +91,16 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
     }
 
     /**
-     * Operator function for equals NOT ($neq)
+     * Operator function for equals NOT ($neq). This operator lets you find
+     * generations where generationParent doesn't equal a set of plantIds.
+     * The are not equal if they contain more/other plantIds or parentIds or if
+     * they just don't consist of those parentIds.
      * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals()
      * method because we need don't really do an not equals, but more an not in.
      * Remind that we check against an array of plantIds/parentIds.
      * @param  {Object} self
      *         Object containing information about this translation process
-     * @param  {Number[]} operatorOptions
+     * @param  {Integer|Integer[]} operatorOptions
      *         We want to find records, where attribute value is not in
      *         this array.
      * @param  {Object} crit
@@ -96,14 +109,51 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      *         added to self.squelExpr.
      */
     static operatorNotEquals(self, operatorOptions, crit) {
-        this.operatorNotIn(self, operatorOptions, crit);
+        // To get all generations not equaling, we also need to find those who
+        // have a different amount of parents. We can't to this in one query,
+        // so we need to build a subquery.
+
+        let queryCountUnequal = squel.select()
+            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
+            .field('generation_parents.generationId')
+            .group('generation_parents.generationId')
+            .having(
+                'count(?) != ?',
+                squel.rstr(CONSTANTS.TABLE_GENERATION_PARENT + '.' + CONSTANTS.ATTR_ID_PLANT),
+                operatorOptions.length || 1
+            );
+
+        logger.silly(this.name, '#operatorNotEquals() queryCountUnequal', queryCountUnequal.toString());
+
+        let [exprNotIn, exprNotInArgs] = UtilsExpression
+            .createNotInExpression(
+                CONSTANTS.TABLE_GENERATION,
+                CONSTANTS.ATTR_ID_GENERATION,
+                operatorOptions
+            );
+
+        let queryNotIn = squel.select()
+            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
+            .field('generation_parents.generationId')
+            .where(exprNotIn, ...exprNotInArgs);
+
+        logger.silly(this.name, '#operatorNotEquals() queryNotIn', queryNotIn.toString());
+
+        crit.crit = '?.? IN (? UNION ?)';
+        crit.args = [
+            CONSTANTS.TABLE_GENERATION,
+            CONSTANTS.ATTR_ID_GENERATION,
+            squel.rstr(queryCountUnequal.toString()),
+            squel.rstr(queryNotIn.toString())
+        ];
     }
 
     /**
-     * [operatorHas description]
+     * This operator lets you check for generation which have AT LEAST this
+     * parents, but can have more and others too.
      * @param  {Object} self
      *         Object containing information about this translation process
-     * @param  {Number[]} operatorOptions
+     * @param  {Integer|Integer[]} operatorOptions
      *         We want to find records, where attribute value is not in
      *         this array.
      * @param  {Object} crit
@@ -115,8 +165,14 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
         this.operatorIn(self, operatorOptions, crit);
 
         let [critHaving, critHavingArgs] = UtilsExpression.
-            createGreaterThanEqualsExpression(
-                self.table, self.attr, operatorOptions.length, 'count'
+            createGreaterThanEqualExpression(
+                self.table,
+                self.attr,
+                // In case operatorOptions.length is undefined, we most likely
+                // have a single integer, so we only want to find generations
+                // with exactly one parent
+                operatorOptions.length || 1,
+                'count'
             );
 
         logger.silly(this.name, '#operatorHas()', critHaving, critHavingArgs);
@@ -125,6 +181,19 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
             self.squelExprHaving, critHaving, critHavingArgs, self.type);
     }
 
+    /**
+     * This operator lets you select generations which don't have a set of
+     * parents.
+     * @param  {Object} self
+     *         Object containing information about this translation process
+     * @param  {Integer|Integer[]} operatorOptions
+     *         We want to find records, where attribute value is not in
+     *         this array.
+     * @param  {Object} crit
+     *         Object which contains expression and expressionArgs. Modify
+     *         this two properties to create a new expression which gets
+     *         added to self.squelExpr.
+     */
     static operatorNotHas(self, operatorOptions, crit) {
         this.operatorNotIn(self, operatorOptions, crit);
     }
@@ -175,12 +244,16 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
         let subQuery = squel.select()
             .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
-            .field('generation_parents.generationId')
-            .group('generation_parents.generationId');
+            .field('generation_parents.generationId');
+
 
         if(!emptySquelExpr) subQuery.where(self.squelExpr);
 
-        if(!emptySquelExprHaving) subQuery.having(self.squelExprHaving);
+        if(!emptySquelExprHaving) {
+            subQuery
+                .group('generation_parents.generationId')
+                .having(self.squelExprHaving);
+        }
 
         logger.silly(
             '#applyCriteriaFilter #translateAndApplyGenerationParentsOperators() ' +

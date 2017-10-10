@@ -217,4 +217,100 @@ describe(`Generation()`, () => {
 
         });
     });
+
+    describe(`#find() (more tests for generationParents)`, () => {
+        let pj;
+
+        before(async () => {
+            pj = new plantJournal(':memory:');
+            await pj.connect();
+            await pj.Family.create({familyName: 'testFamily1'});
+            await pj.Family.create({familyName: 'testFamily2'});
+
+            await pj.Plant.create({plantName: 'testPlant1'});
+            await pj.Plant.create({plantName: 'testPlant2'});
+            await pj.Plant.create({plantName: 'testPlant3'});
+            await pj.Plant.create({plantName: 'testPlant4'});
+
+            await pj.Generation.create({familyId: 2, generationName: 'S2', generationParents: [1,2]});
+            await pj.Generation.create({familyId: 2, generationName: 'GenerationWithOnlyOneParent1', generationParents: [1]});
+            await pj.Generation.create({familyId: 2, generationName: 'GenerationWithOnlyOneParent2', generationParents: [2]});
+            await pj.Generation.create({familyId: 2, generationName: 'S2 (open pollination)', generationParents: [1,2,3,4]});
+        });
+
+        after(async () => {
+            await pj.disconnect();
+        });
+
+        it(`should only find generations with one parent if we do an equals operation where operator value is an integer'`, async () => {
+            let generations = await pj.Generation.find(
+                {where: {generationParents: {$eq: 2}}});
+            generations.generations.should.containDeep(
+                {
+                    3: {
+                        generationName: 'GenerationWithOnlyOneParent2',
+                        generationParents: [2]
+                    }
+                }
+            );
+        });
+
+        it(`should only find generations with one parent if we do an equals operation where operator value is an integer'`, async () => {
+            let generations = await pj.Generation.find(
+                {where: {generationParents: {$eq: 2}}});
+            generations.generations.should.containDeep(
+                {
+                    3: {
+                        generationName: 'GenerationWithOnlyOneParent2',
+                        generationParents: [2]
+                    }
+                }
+            );
+        });
+
+        it(`should find with $neq all generations which don't have a specific set of parents but every other combination including them`, async () => {
+            let generations = await pj.Generation.find(
+                {attributes: ['generationName', 'generationParents'], where: {generationParents: {$neq: [1,2]}}});
+            generations.generations.should.containDeep(
+                {
+                    2: {
+                        generationName: 'GenerationWithOnlyOneParent1',
+                        generationParents: [1]
+                    },
+                    3: {
+                        generationName: 'GenerationWithOnlyOneParent2',
+                        generationParents: [2]
+                    },
+                    4: {
+                        generationName: 'S2 (open pollination)',
+                        generationParents: [1,2,3,4]
+                    }
+                }
+            );
+            generations.found.should.equal(3);
+        });
+
+        it('should find all generations which have at least some parents with the $has operator', async () => {
+            let generations = await pj.Generation.find(
+                {attributes: ['generationName', 'generationParents'], where: {generationParents: {$has: 2}}});
+            generations.generations.should.containDeep(
+                {
+                    1: {
+                        generationName: 'S2',
+                        generationParents: [1,2]
+                    },
+                    3: {
+                        generationName: 'GenerationWithOnlyOneParent2',
+                        generationParents: [2]
+                    },
+                    4: {
+                        generationName: 'S2 (open pollination)',
+                        generationParents: [1,2,3,4]
+                    }
+                }
+            );
+            generations.found.should.equal(3);
+
+        });
+    });
 });
