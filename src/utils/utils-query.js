@@ -264,6 +264,11 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
                 attrConcat = CONSTANTS.ATTR_ID_MEDIUM;
                 tableWhere = CONSTANTS.TABLE_ENVIRONMENT;
                 attrWhere = CONSTANTS.ATTR_ID_ENVIRONMENT;
+            } else if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
+                tableConcat = CONSTANTS.TABLE_PLANT;
+                attrConcat = CONSTANTS.ATTR_ID_PLANT;
+                tableWhere = CONSTANTS.TABLE_MEDIUM;
+                attrWhere = CONSTANTS.ATTR_ID_MEDIUM;
             } else {
                 throw new Error('Unimplemented childAttribute');
             }

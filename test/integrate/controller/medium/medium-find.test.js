@@ -25,7 +25,6 @@ describe(`Medium()`, () => {
                 mediumDescription: 'another test'});
             await pj.Medium.create({
                 environmentId: null, mediumName: 'testMed3'});
-
         });
 
         after(async () => {
@@ -146,6 +145,41 @@ describe(`Medium()`, () => {
             );
 
             should(mediums.environments).be.undefined();
+        });
+    });
+
+    describe(`mediumPlants attribute`, () => {
+        let pj;
+
+        before(async () => {
+            pj = new plantJournal(':memory:');
+            await pj.connect();
+            await pj.Medium.create({mediumName: 'med1'});
+            await pj.Plant.create({plantName: 'plant1', mediumId: 1});
+            await pj.Plant.create({plantName: 'plant2', mediumId: 1});
+            await pj.Medium.create({mediumName: 'med2'});
+        });
+
+        after(async () => {
+            await pj.disconnect();
+        });
+
+        it(`should find all mediums and mediumPlants should contain all plants associated to that medium`, async () => {
+            let mediums = await pj.Medium.find();
+            mediums.should.containDeep(
+                {
+                    mediums: {
+                        1: {
+                            mediumName: 'med1',
+                            mediumPlants: [1, 2]
+                        },
+                        2: {
+                            mediumName: 'med2',
+                            mediumPlants: []
+                        }
+                    }
+                }
+            );
         });
     });
 });

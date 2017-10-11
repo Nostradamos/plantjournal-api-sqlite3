@@ -58,4 +58,46 @@ describe(`Environment()`, () => {
                 .allEnvironmentsShouldHaveCreatedAtAndModifiedAt(environments);
         });
     });
+
+    describe(`environmentMediums attribute`, () => {
+        let pj;
+        before(async () => {
+            pj = new plantJournal(':memory:');
+            await pj.connect();
+            await pj.Environment.create({environmentName: 'env1'});
+            await pj.Medium.create({mediumName: 'med1', environmentId: 1});
+            await pj.Medium.create({mediumName: 'med2', environmentId: 1});
+            await pj.Environment.create({environmentName: 'env2'});
+            await pj.Medium.create({mediumName: 'med3', environmentId: 2});
+            await pj.Environment.create({environmentName: 'env3'});
+        });
+
+        after(async () => {
+            await pj.disconnect();
+        });
+
+        it(`should find all environments and environmentMediums should contain all mediums related to that environment`, async () => {
+            let environments = await pj.Environment.find();
+            environments.should.containDeep(
+                {
+                    found: 3,
+                    remaining: 0,
+                    environments: {
+                        1: {
+                            environmentName: 'env1',
+                            environmentMediums: [1, 2]
+                        },
+                        2: {
+                            environmentName: 'env2',
+                            environmentMediums: [3]
+                        },
+                        3: {
+                            environmentName: 'env3',
+                            environmentMediums: []
+                        }
+                    }
+                }
+            );
+        });
+    });
 });

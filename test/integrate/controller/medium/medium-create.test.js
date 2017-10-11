@@ -59,6 +59,7 @@ describe(`Medium()`, () => {
                         'mediumId': 1,
                         'mediumDescription': 'This is a test',
                         'mediumName': 'testMedium',
+                        'mediumPlants': [],
                         'environmentId': 1,
                         'mediumCreatedAt': createdAt,
                         'mediumModifiedAt': modifiedAt

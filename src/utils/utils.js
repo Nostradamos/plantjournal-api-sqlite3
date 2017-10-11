@@ -227,6 +227,12 @@ Utils.addMediumFromRowToReturnObject = (row, returnObject, forceAdd) => {
     for(let attr of CONSTANTS.ALL_ATTRIBUTES_MEDIUM) {
         if (!_.has(row, attr)) continue;
         value = row[attr];
+
+        if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
+            value = Utils.splitToInt(value);
+        }
+
+        medium[attr] = value;
     }
 
     if (forceAdd === true || _.size(medium) > 2)
@@ -247,7 +253,7 @@ Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
                 CONSTANTS.ATTR_ID_MEDIUM,
                 CONSTANTS.ATTR_ID_PLANT
             ], attr);
-        if (value === null && isForeignAttr !== -1) return;
+        if (value === null && isForeignAttr !== -1) continue;
         journal[attr] = value;
     }
 
@@ -435,7 +441,8 @@ Utils.isChildAttribute = function(attr) {
         CONSTANTS.ATTR_GENOTYPES_GENERATION,
         CONSTANTS.ATTR_PLANTS_GENOTYPE,
         CONSTANTS.ATTR_CLONES_PLANT,
-        CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT
+        CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT,
+        CONSTANTS.ATTR_PLANTS_MEDIUM
     ];
     return _.indexOf(childAttributes, attr) !== -1;
 };

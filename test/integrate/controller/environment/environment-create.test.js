@@ -49,6 +49,7 @@ describe(`Environment()`, () => {
                         'environmentId': 1,
                         'environmentName': 'Greenhouse #1',
                         'environmentDescription': 'Greenhouse in my garden.',
+                        'environmentMediums': [],
                         'environmentCreatedAt': createdAt,
                         'environmentModifiedAt': modifiedAt,
                     }
@@ -59,7 +60,8 @@ describe(`Environment()`, () => {
                 `SELECT * FROM environments`
             );
 
-            rowsEnvironments[0].should.deepEqual(environment.environments[1]);
+            environment.environments[1].should
+                .containDeep(rowsEnvironments[0]);
         });
     });
 });

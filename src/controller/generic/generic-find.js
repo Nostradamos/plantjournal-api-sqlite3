@@ -293,7 +293,7 @@ class GenericFind {
         [context.rowsWhere, context.rowCount] = await Promise.all(
             [sqlite.all(context.queryWhere), sqlite.get(context.queryCount)]);
 
-        logger.debug(this.name, '#find() rowsWhere:', context.rowsWhere);
+        logger.debug(this.name, '#find() rowsWhere:', JSON.stringify(context.rowsWhere));
         logger.debug(this.name, '#find() rowCount:', context.rowCount);
     }
 
