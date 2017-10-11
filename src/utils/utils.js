@@ -193,9 +193,16 @@ Utils.addEnvironmentFromRowToReturnObject = (row, returnObject, forceAdd) => {
 
     let environment = {};
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_ENVIRONMENT, function(attr) {
-        if (_.has(row, attr)) environment[attr] = row[attr];
-    });
+    let value;
+    for(let attr of CONSTANTS.ALL_ATTRIBUTES_ENVIRONMENT) {
+        if (!_.has(row, attr)) continue;
+        value = row[attr];
+
+        if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
+            value = Utils.splitToInt(value);
+        }
+        environment[attr] = value;
+    }
 
     returnObject.environments[environmentId] = environment;
 };
@@ -216,9 +223,11 @@ Utils.addMediumFromRowToReturnObject = (row, returnObject, forceAdd) => {
         'environmentId': row.environmentId
     };
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_MEDIUM, function(attr) {
-        if (_.has(row, attr)) medium[attr] = row[attr];
-    });
+    let value;
+    for(let attr of CONSTANTS.ALL_ATTRIBUTES_MEDIUM) {
+        if (!_.has(row, attr)) continue;
+        value = row[attr];
+    }
 
     if (forceAdd === true || _.size(medium) > 2)
         returnObject.mediums[mediumId] = medium;
@@ -226,22 +235,21 @@ Utils.addMediumFromRowToReturnObject = (row, returnObject, forceAdd) => {
 
 Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let journalId = row.journalId;
-    let journal = {
-    };
+    let journal = {};
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_JOURNAL, function(attr) {
-        if (_.has(row, attr)) {
-            let value = row[attr];
-            let isForeignAttr = _.indexOf(
-                [
-                    CONSTANTS.ATTR_ID_ENVIRONMENT,
-                    CONSTANTS.ATTR_ID_MEDIUM,
-                    CONSTANTS.ATTR_ID_PLANT
-                ], attr);
-            if (value === null && isForeignAttr !== -1) return;
-            journal[attr] = value;
-        }
-    });
+    let value;
+    for (let attr of CONSTANTS.ALL_ATTRIBUTES_JOURNAL) {
+        if (!_.has(row, attr)) continue;
+        value = row[attr];
+        let isForeignAttr = _.indexOf(
+            [
+                CONSTANTS.ATTR_ID_ENVIRONMENT,
+                CONSTANTS.ATTR_ID_MEDIUM,
+                CONSTANTS.ATTR_ID_PLANT
+            ], attr);
+        if (value === null && isForeignAttr !== -1) return;
+        journal[attr] = value;
+    }
 
     if (forceAdd === true || _.size(journal) > 4)
         returnObject.journals[journalId] = journal;
@@ -426,7 +434,8 @@ Utils.isChildAttribute = function(attr) {
         CONSTANTS.ATTR_PARENTS_GENERATION,
         CONSTANTS.ATTR_GENOTYPES_GENERATION,
         CONSTANTS.ATTR_PLANTS_GENOTYPE,
-        CONSTANTS.ATTR_CLONES_PLANT
+        CONSTANTS.ATTR_CLONES_PLANT,
+        CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT
     ];
     return _.indexOf(childAttributes, attr) !== -1;
 };

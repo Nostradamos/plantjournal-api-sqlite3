@@ -259,6 +259,11 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
                 attrConcat = CONSTANTS.ATTR_ID_PLANT;
                 tableWhere = CONSTANTS.TABLE_PLANT;
                 attrWhere = CONSTANTS.ATTR_CLONED_FROM_PLANT;
+            } else if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
+                tableConcat = CONSTANTS.TABLE_MEDIUM;
+                attrConcat = CONSTANTS.ATTR_ID_MEDIUM;
+                tableWhere = CONSTANTS.TABLE_ENVIRONMENT;
+                attrWhere = CONSTANTS.ATTR_ID_ENVIRONMENT;
             } else {
                 throw new Error('Unimplemented childAttribute');
             }
