@@ -105,7 +105,9 @@ class GenericCreate {
      */
     static setQueryFields(context, options) {
         _.each(this.ATTRIBUTES, function(attr) {
-            if (!_.isUndefined(context[attr])) {
+            if (_.indexOf(this.SKIP_ATTRIBUTES, attr) !== -1) {
+                return;
+            } else if (!_.isUndefined(context[attr])) {
                 context.query.set(attr, context[attr]);
             } else if (!_.isUndefined(options[attr])) {
                 context.query.set(attr, options[attr]);
@@ -219,6 +221,8 @@ GenericCreate.ATTR_CREATED_AT;
 GenericCreate.ATTR_MODIFIED_AT;
 
 GenericCreate.ATTRIBUTES = [];
+
+GenericCreate.SKIP_ATTRIBUTES = [];
 
 GenericCreate.DEFAULT_VALUES_ATTRIBUTES = [];
 

@@ -64,6 +64,7 @@ describe(`Family()`, () => {
                             familyId: 1,
                             familyName: 'testName',
                             familyDescription: '',
+                            familyGenerations: [],
                             familyCreatedAt: familyCreatedAt,
                             familyModifiedAt: familyModifiedAt
                         }
@@ -72,8 +73,7 @@ describe(`Family()`, () => {
             );
 
             let rows = await sqlite.all('SELECT * FROM families');
-
-            rows[0].should.deepEqual(family.families[1]);
+            family.families[1].should.containDeep(rows[0]);
         });
 
         it(`should set familyDescription on create`, async () => {
@@ -89,11 +89,11 @@ describe(`Family()`, () => {
                     familyId: 1,
                     familyName: 'testName3',
                     familyDescription: 'This is a test family',
+                    familyGenerations: []
                 }
             );
             let rows = await sqlite.all('SELECT * FROM families');
-
-            rows[0].should.containDeep(family.families[1]);
+            family.families[1].should.containDeep(rows[0]);
         });
     });
 });

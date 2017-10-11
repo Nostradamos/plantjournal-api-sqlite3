@@ -1,8 +1,11 @@
 'use strict';
 
 const _ = require('lodash');
+const squel = require('squel');
 
+const Utils = require('./utils');
 const CONSTANTS = require('../constants');
+
 
 /**
  * Set of utils mainly used for query building.
@@ -229,12 +232,50 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
 
     let table;
     _.each(attributesToSelect, function(attr) {
-        if (attr === 'generationParents') {
+        if (attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
             // special case, generationParents is no real column, but a concat
             // of all plantIds
             query.field(
                 'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENT +'.plantId) as generationParents'
             );
+        } else if (
+            _.indexOf(
+                [
+                    CONSTANTS.ATTR_GENERATIONS_FAMILY,
+                    CONSTANTS.ATTR_GENOTYPES_GENERATION
+                ],
+                attr
+            ) !== -1) {
+            let tableConcat;
+            let attrConcat;
+            let tableWhere;
+            let attrWhere;
+
+            if(attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
+                tableConcat = CONSTANTS.TABLE_GENERATION;
+                attrConcat = CONSTANTS.ATTR_ID_GENERATION;
+                tableWhere = CONSTANTS.TABLE_FAMILY;
+                attrWhere = CONSTANTS.ATTR_ID_FAMILY;
+            } else if(attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
+                tableConcat = CONSTANTS.TABLE_GENOTYPE;
+                attrConcat = CONSTANTS.ATTR_ID_GENOTYPE;
+                tableWhere = CONSTANTS.TABLE_GENERATION;
+                attrWhere = CONSTANTS.ATTR_ID_GENERATION;
+            }
+
+            let subQuery = squel.select()
+                .from(tableConcat)
+                .field(
+                    'GROUP_CONCAT(?)',
+                    Utils.explicitColumn(tableConcat, attrConcat))
+                .where(
+                    '? = ?',
+                    Utils.explicitColumn(tableConcat, attrWhere),
+                    Utils.explicitColumn(tableWhere, attrWhere));
+
+            query.field(subQuery, attr);
+        } else if (attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
+
         } else {
             // translate attribute to explicit column name (tablename.attr)
             table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);

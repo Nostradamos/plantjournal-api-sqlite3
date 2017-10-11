@@ -16,7 +16,6 @@ const GenericCreate = require('../generic/generic-create');
  * @extends GenericCreate
  */
 class FamilyCreate extends GenericCreate {
-
     /**
      * We need to validate the options.familyName property and throw
      * Error if we don't accept the input.
@@ -44,8 +43,13 @@ FamilyCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_FAMILY;
 FamilyCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_FAMILY;
 
 FamilyCreate.DEFAULT_VALUES_ATTRIBUTES = {
-    [CONSTANTS.ATTR_DESCRIPTION_FAMILY]: ''
+    [CONSTANTS.ATTR_DESCRIPTION_FAMILY]: '',
+    [CONSTANTS.ATTR_GENERATIONS_FAMILY]: []
 };
+
+FamilyCreate.SKIP_ATTRIBUTES = [
+    CONSTANTS.ATTR_GENERATIONS_FAMILY
+];
 
 FamilyCreate.PLURAL = CONSTANTS.PLURAL_FAMILY;
 

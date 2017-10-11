@@ -6,7 +6,7 @@ var logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)(), new (winston.transports.File)({ filename: 'plantjournal.log' })
     ],
-    level: 'debug',
+    level: 'silly',
 });
 
 module.exports = logger;
