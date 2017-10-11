@@ -68,6 +68,4 @@ GenerationFind.COUNT = 'DISTINCT ' +  CONSTANTS.TABLE_GENERATION + '.' + CONSTAN
 
 GenerationFind.DEFAULT_FIELDS = ['generations.generationId', 'families.familyId'];
 
-GenerationFind.GROUP_BY =  CONSTANTS.TABLE_GENERATION + '.' + CONSTANTS.ATTR_ID_GENERATION;
-
 module.exports = GenerationFind;

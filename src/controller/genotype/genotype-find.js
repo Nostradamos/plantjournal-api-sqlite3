@@ -70,7 +70,4 @@ GenotypeFind.DEFAULT_FIELDS = ['genotypes.genotypeId',
 
 GenotypeFind.COUNT = 'DISTINCT ' +  CONSTANTS.TABLE_GENOTYPE + '.' + CONSTANTS.ATTR_ID_GENOTYPE;
 
-GenotypeFind.GROUP_BY = Utils.explicitColumn(
-    CONSTANTS.TABLE_GENOTYPE, CONSTANTS.ATTR_ID_GENOTYPE);
-
 module.exports = GenotypeFind;
