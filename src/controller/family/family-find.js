@@ -19,7 +19,6 @@ const GenericFind = require('../generic/generic-find');
  * @extends GenericFind
  */
 class FamilyFind extends GenericFind {
-
     /**
      * We need to overwrite this method to, yeah,
      * build the returnObject. We basically iterate over

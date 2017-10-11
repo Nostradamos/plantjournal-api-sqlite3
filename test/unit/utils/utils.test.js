@@ -4,6 +4,7 @@
 const should = require('should');
 const sqlite = require('sqlite');
 
+const CONSTANTS = require('../../../src/constants');
 const Utils = require('../../../src/utils/utils');
 
 describe(`utils/utils`, () => {
@@ -440,5 +441,28 @@ describe(`utils/utils`, () => {
         it(`should NOT throw error if object[property] is integer`, () => {
             Utils.hasToBeIntOrNull({foo: 42}, 'foo', 'obj');
         });
+    });
+
+    describe(`#splitToInt()`, () => {
+        it(`should split str by "," and cast every element to an integer`, () => {
+            Utils.splitToInt('42,13').should.eql([42, 13]);
+        });
+
+        it(`should return empty array if str is null`, () => {
+            Utils.splitToInt(null).should.eql([]);
+        });
+    });
+
+    describe('#isChildAttribute()', () => {
+        it(`should return true for familyGenerations`, () => {
+            Utils.isChildAttribute(CONSTANTS.ATTR_GENERATIONS_FAMILY)
+                .should.be.true();
+        });
+
+        it(`should return false for familyId`, () => {
+            Utils.isChildAttribute(CONSTANTS.ATTR_ID_FAMILY)
+                .should.be.false();
+        });
+
     });
 });

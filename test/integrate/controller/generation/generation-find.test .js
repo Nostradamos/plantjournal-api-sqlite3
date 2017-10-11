@@ -313,4 +313,59 @@ describe(`Generation()`, () => {
 
         });
     });
+
+    describe(`generationGenotypes attribute`, () => {
+        let pj;
+
+        before(async () => {
+            pj = new plantJournal(':memory:');
+            await pj.connect();
+            await pj.Family.create({familyName: 'Family1'});
+            await pj.Generation.create({generationName: 'Gen1', familyId: 1});
+            await pj.Genotype.create({generationId: 1});
+            await pj.Genotype.create({generationId: 1});
+            await pj.Generation.create({generationName: 'Gen2', familyId: 1});
+            await pj.Genotype.create({generationId: 2});
+            await pj.Family.create({familyName: 'Family2'});
+            await pj.Generation.create({generationName: 'Gen3', familyId: 2});
+        });
+
+        after(async () => {
+            await pj.disconnect();
+        });
+
+        it(`should find all generations and the generationGenotypes attribute should contain an array of genotypeIds related to the generation.`, async () => {
+            let generations = await pj.Generation.find();
+            generations.should.containDeep(
+                {
+                    found: 3,
+                    remaining: 0,
+                    generations: {
+                        1: {
+                            generationName: 'Gen1',
+                            generationGenotypes: [1, 2]
+                        },
+                        2: {
+                            generationName: 'Gen2',
+                            generationGenotypes: [3]
+                        },
+                        3: {
+                            generationName: 'Gen3',
+                            generationGenotypes: []
+                        }
+                    },
+                    families: {
+                        1: {
+                            familyName: 'Family1',
+                            familyGenerations: [1, 2]
+                        },
+                        2: {
+                            familyName: 'Family2',
+                            familyGenerations: [3]
+                        }
+                    }
+                }
+            );
+        });
+    });
 });

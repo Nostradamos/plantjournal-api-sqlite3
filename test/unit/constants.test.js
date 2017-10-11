@@ -14,20 +14,12 @@ describe(`CONSTANTS`, () => {
     describe(`All *ATTRIBUTES* of Family`, () => {
         it(`ATTRIBUTES_FAMILY should contain all non-internal family attributes`, () => {
             CONSTANTS.ATTRIBUTES_FAMILY.should.deepEqual(
-                [
-                    'familyName', 'familyDescription'
-                ]
-            );
+                ['familyName', 'familyDescription', 'familyGenerations']);
         });
 
         it(`INTERNAL_ATTRIBUTES_FAMILY should all internal family attributes`, () => {
             CONSTANTS.INTERNAL_ATTRIBUTES_FAMILY.should.deepEqual(
-                [
-                    'familyId',
-                    'familyCreatedAt',
-                    'familyModifiedAt'
-                ]
-            );
+                ['familyId', 'familyCreatedAt', 'familyModifiedAt']);
         });
     });
 
@@ -38,6 +30,7 @@ describe(`CONSTANTS`, () => {
                     'generationName',
                     'generationParents',
                     'generationDescription',
+                    'generationGenotypes',
                     'familyId'
                 ]
             );

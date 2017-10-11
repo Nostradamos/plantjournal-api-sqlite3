@@ -112,4 +112,48 @@ describe(`Family()`, () => {
             });
         });
     });
+
+    describe(`familyGenerations attribute`, () => {
+        let pj;
+
+        before(async () => {
+            pj = new plantJournal(':memory:');
+            await pj.connect();
+            await pj.Family.create({familyName: 'Family1'});
+            await pj.Generation.create({generationName: 'Gen1', familyId: 1});
+            await pj.Generation.create({generationName: 'Gen2', familyId: 1});
+            await pj.Family.create({familyName: 'Family2'});
+            await pj.Generation.create({generationName: 'Gen3', familyId: 2});
+            await pj.Generation.create({generationName: 'Gen4', familyId: 2});
+            await pj.Family.create({familyName: 'Family3'});
+        });
+
+        after(async () => {
+            await pj.disconnect();
+        });
+
+        it(`should find all families and the familyGenerations attribute should be an array containing all related generation ids`, async () => {
+            let families = await pj.Family.find();
+            families.should.containDeep(
+                {
+                    found: 3,
+                    remaining: 0,
+                    families: {
+                        1: {
+                            familyName: 'Family1',
+                            familyGenerations: [1, 2]
+                        },
+                        2: {
+                            familyName: 'Family2',
+                            familyGenerations: [3, 4]
+                        },
+                        3: {
+                            familyName: 'Family3',
+                            familyGenerations: []
+                        }
+                    }
+                }
+            );
+        });
+    });
 });

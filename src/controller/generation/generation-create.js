@@ -41,21 +41,6 @@ class GenerationCreate extends GenericCreate {
     }
 
     /**
-     * We need to set some attributes for query.
-     * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
-     */
-    static setQueryFields(context, options) {
-        context.query
-            .set('generationId', null)
-            .set('generationName', options.generationName)
-            .set('generationDescription', options.generationDescription || '')
-            .set('familyId', options.familyId);
-    }
-
-    /**
      * If we have generationParents in options, we need to  build a second query
      * to insert parents into the generation_parents table. Query will be in
      * context.queryInsertParents. We won't execute query, for this see
@@ -200,11 +185,17 @@ GenerationCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
 
 GenerationCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENERATION;
 
+GenerationCreate.SKIP_ATTRIBUTES = [
+    CONSTANTS.ATTR_PARENTS_GENERATION,
+    CONSTANTS.ATTR_GENOTYPES_GENERATION
+]
+
 GenerationCreate.PLURAL = CONSTANTS.PLURAL_GENERATION;
 
 GenerationCreate.DEFAULT_VALUES_ATTRIBUTES = {
-    'generationParents': [],
-    'generationDescription': ''
+    [CONSTANTS.ATTR_DESCRIPTION_GENERATION]: '',
+    [CONSTANTS.ATTR_PARENTS_GENERATION]: [],
+    [CONSTANTS.ATTR_GENOTYPES_GENERATION]: []
 };
 
 module.exports = GenerationCreate;

@@ -47,9 +47,15 @@ Utils.addFamilyFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let familyId = row.familyId;
     let family = {};
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_FAMILY, function(attr) {
-        if (_.has(row, attr)) family[attr] = row[attr];
-    });
+    let value;
+    for (let attr of CONSTANTS.ALL_ATTRIBUTES_FAMILY) {
+        if (!_.has(row, attr)) continue;
+        value = row[attr];
+        if (attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
+            value = Utils.splitToInt(value);
+        }
+        family[attr] = value;
+    }
 
     // Make sure we have at least two attrs, or forceAdd = true
     if (forceAdd === true || _.size(family) > 1)
@@ -76,23 +82,17 @@ Utils.addGenerationFromRowToReturnObject = (row, returnObject, forceAdd) => {
         'familyId': row.familyId
     };
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_GENERATION, function(attr) {
-        if (_.has(row, attr)) {
-            let rowattr = row[attr];
-            // if we have row.generationParents and it's null, set an empty
-            // array [], else split it into an array and cast every element to
-            // an integer
+    for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENERATION) {
+        if (!_.has(row, attr)) continue;
 
-            if (attr === 'generationParents') {
-                if(rowattr === null) {
-                    rowattr = [];
-                } else {
-                    rowattr =  _(rowattr).split(',').map(_.toInteger).value();
-                }
-            }
-            generation[attr] = rowattr;
+        let value = row[attr];
+        if (attr === CONSTANTS.ATTR_PARENTS_GENERATION ||
+            attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
+            value = Utils.splitToInt(value);
         }
-    });
+        generation[attr] = value;
+
+    }
     // Make sure that we only add it returnObject if we not only have
     // generationId and familyId set.
     if (forceAdd === true || _.size(generation) > 2)
@@ -229,32 +229,6 @@ Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
 
     if (forceAdd === true || _.size(journal) > 4)
         returnObject.journals[journalId] = journal;
-};
-
-Utils.addNeededFromRowToLogReturnObject = function(row, returnObject,
-    attrLogTimestamp, attrLogId,
-    allAttributes, plural,
-    criteria) {
-    let attributesToSelect;
-    if(_.isEmpty(criteria.attributes)) {
-        attributesToSelect = allAttributes;
-    } else {
-        attributesToSelect = _.intersection(
-            criteria.attributes,
-            allAttributes
-        );
-    }
-
-    let logObject = {};
-    for (let attr of attributesToSelect) {
-        logObject[attr] = row[attr];
-    }
-
-    if(!_.has(returnObject[plural], row[attrLogTimestamp])) {
-        returnObject[plural][row[attrLogTimestamp]] = {};
-    }
-
-    returnObject[plural][row[attrLogTimestamp]][row[attrLogId]] = logObject;
 };
 
 /**
@@ -405,3 +379,35 @@ Utils.explicitColumn = function(table, column) {
 Utils.explicitColumnRstr = function(table, column) {
     return squel.rstr(Utils.explicitColumn(table, column));
 };
+
+/**
+ * Split a string of numbers seperated by "," (or any other seperator) into
+ * an array of integers.
+ * @param  {String|null} str
+ *         A string with numbers (which can get casted to integer) seperated by
+ *         a comma. Or null.
+ * @param  {String} [sep=',']
+ *         Seperator
+ * @return {Integer[]}
+ *         Integer array, if string is empty or null, array will be emtpy too.
+ */
+Utils.splitToInt = function(str, sep = ',') {
+    return str === null ? [] : _(str).split(sep).map(_.toInteger).value();
+}
+
+/**
+ * Check if attribute is an attribute containing information of a child model.
+ * Eg: family is the parent, generation the child model. familyGenerations would
+ * be a child attribute.
+ * @param  {String} attr
+ *         Attribute to check.
+ * @return {Boolean}
+ *         True if it's a child attribute.
+ */
+Utils.isChildAttribute = function(attr) {
+    let childAttributes = [
+        CONSTANTS.ATTR_GENERATIONS_FAMILY,
+        CONSTANTS.ATTR_GENOTYPES_GENERATION
+    ];
+    return _.indexOf(childAttributes, attr) !== -1;
+}

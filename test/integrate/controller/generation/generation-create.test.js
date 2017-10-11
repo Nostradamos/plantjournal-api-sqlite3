@@ -1,4 +1,4 @@
-/* eslint-env node, mocha */
+ /* eslint-env node, mocha */
 'use strict';
 
 require('should');
@@ -92,6 +92,7 @@ describe(`Generation()`, () => {
                         'generationDescription': 'test description',
                         'generationName': 'testGeneration',
                         'generationParents': [],
+                        'generationGenotypes': [],
                         'familyId': 1,
                         'generationCreatedAt': createdAt,
                         'generationModifiedAt': modifiedAt
@@ -162,6 +163,7 @@ describe(`Generation()`, () => {
                         'generationDescription': '',
                         'generationName': 'testWithParents',
                         'generationParents': [1,2],
+                        'generationGenotypes': [],
                         'generationCreatedAt': createdAt,
                         'generationModifiedAt': modifiedAt,
                         'familyId': 1
