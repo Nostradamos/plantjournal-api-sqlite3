@@ -58,6 +58,12 @@
                     "ArrowFunctionExpression": true
                 }
             }
+        ],
+        "valid-jsdoc": [
+            "error",
+            {
+                "requireReturn": false
+            }
         ]
     }
 }
