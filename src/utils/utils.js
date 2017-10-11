@@ -159,9 +159,17 @@ Utils.addPlantFromRowToReturnObject = (row, returnObject, forceAdd) => {
         'environmentId': row.environmentId || null
     };
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_PLANT, function(attr) {
-        if (_.has(row, attr)) plant[attr] = row[attr];
-    });
+    let value;
+    for (let attr of CONSTANTS.ALL_ATTRIBUTES_PLANT) {
+        if (!_.has(row, attr)) continue;
+        value = row[attr];
+
+        if(attr === CONSTANTS.ATTR_CLONES_PLANT) {
+            value = Utils.splitToInt(value);
+        }
+
+        plant[attr] = value;
+    }
 
     if (forceAdd === true || _.size(plant) > 6)
         returnObject.plants[plantId] = plant;
@@ -417,7 +425,8 @@ Utils.isChildAttribute = function(attr) {
         CONSTANTS.ATTR_GENERATIONS_FAMILY,
         CONSTANTS.ATTR_PARENTS_GENERATION,
         CONSTANTS.ATTR_GENOTYPES_GENERATION,
-        CONSTANTS.ATTR_PLANTS_GENOTYPE
+        CONSTANTS.ATTR_PLANTS_GENOTYPE,
+        CONSTANTS.ATTR_CLONES_PLANT
     ];
     return _.indexOf(childAttributes, attr) !== -1;
 };

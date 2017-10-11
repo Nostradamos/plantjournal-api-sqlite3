@@ -78,6 +78,7 @@ describe(`CONSTANTS`, () => {
                     'plantClonedFrom',
                     'plantSex',
                     'plantDescription',
+                    'plantClones',
                     'genotypeId',
                     'mediumId'
                 ]

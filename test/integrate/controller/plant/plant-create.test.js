@@ -111,6 +111,7 @@ describe(`Plant()`, () => {
                         'plantId': 1,
                         'plantName': 'testPlant1',
                         'plantClonedFrom': null,
+                        'plantClones': [],
                         'plantSex': null,
                         'plantDescription': 'we found this plant in the backyard of our grandma',
                         'plantCreatedAt': createdAt,
@@ -122,7 +123,7 @@ describe(`Plant()`, () => {
             });
 
             let rowsPlants = await sqlite.all(`SELECT * FROM plants`);
-            rowsPlants[0].should.deepEqual(plant.plants[1]);
+            plant.plants[1].should.containDeep(rowsPlants[0]);
 
             let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
             rowsGenotypes[0].should.containDeep(
@@ -169,6 +170,7 @@ describe(`Plant()`, () => {
                         'plantId': 1,
                         'plantName': 'testPlant1',
                         'plantClonedFrom': null,
+                        'plantClones': [],
                         'plantSex': null,
                         'plantDescription': '',
                         'plantCreatedAt': createdAtPlant,
@@ -195,6 +197,7 @@ describe(`Plant()`, () => {
                         'plantId': 2,
                         'plantName': 'clonePlant2',
                         'plantClonedFrom': 1,
+                        'plantClones': [],
                         'plantSex': null,
                         'plantDescription': '',
                         'plantCreatedAt': createdAtClone,
@@ -205,7 +208,7 @@ describe(`Plant()`, () => {
                 }
             });
             let rowsPlants = await sqlite.all(`SELECT * FROM plants`);
-            rowsPlants[1].should.deepEqual(plantClone.plants[2]);
+            plantClone.plants[2].should.containDeep(rowsPlants[1]);
 
             let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
             rowsGenotypes.should.containDeep(
