@@ -26,7 +26,7 @@ describe(`UtilsQuery`, () => {
         it(`should do group_concat... for generationParents`, () => {
             UtilsQuery.applyCriteriaAttributes(q, ['generationId', 'generationParents'], ['generationParents', 'generationId']);
             q.toString().should.equal(
-                'SELECT generations.generationId, group_concat(' + CONSTANTS.TABLE_GENERATION_PARENT +'.plantId) as generationParents FROM test'
+                'SELECT generations.generationId, (SELECT GROUP_CONCAT(generation_parents.plantId) FROM generation_parents WHERE (generation_parents.generationId = generations.generationId)) AS "generationParents" FROM test'
             );
 
         });
@@ -144,7 +144,7 @@ describe(`UtilsQuery`, () => {
             let q = squel.select().from(CONSTANTS.TABLE_GENOTYPE, 'genotypes');
 
             UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes(q);
-            q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_GENOTYPE +' `genotypes` LEFT JOIN ' +  CONSTANTS.TABLE_GENERATION + ' `generations` ON (genotypes.generationId = generations.generationId) LEFT JOIN ' + CONSTANTS.TABLE_GENERATION_PARENT +' `generation_parents` ON (generations.generationId = generation_parents.generationId)');
+            q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_GENOTYPE +' `genotypes` LEFT JOIN ' +  CONSTANTS.TABLE_GENERATION + ' `generations` ON (genotypes.generationId = generations.generationId)');
         });
     });
 

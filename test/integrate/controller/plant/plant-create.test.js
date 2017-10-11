@@ -158,6 +158,7 @@ describe(`Plant()`, () => {
                         'genotypeId': 2,
                         'genotypeName': 'testGeno2',
                         'genotypeDescription': 'foobar',
+                        'genotypePlants': [1],
                         'generationId': 1,
                         'genotypeCreatedAt': createdAtGenotype,
                         'genotypeModifiedAt': modifiedAtGenotype

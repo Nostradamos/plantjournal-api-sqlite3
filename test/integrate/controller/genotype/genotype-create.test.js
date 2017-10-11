@@ -75,13 +75,14 @@ describe(`Genotype()`, () => {
                 'genotypeId': 1,
                 'genotypeName': 'testGenotype1',
                 'genotypeDescription': 'this is a very special genotype',
+                'genotypePlants': [],
                 'generationId': 1,
                 'genotypeCreatedAt': createdAt,
                 'genotypeModifiedAt': modifiedAt
             });
 
             let rows = await sqlite.all(`SELECT * FROM genotypes`);
-            rows[0].should.deepEqual(genotype.genotypes[1]);
+            genotype.genotypes[1].should.containDeep(rows[0]);
         });
 
         it(`should be possible to create a new genotype with genotypeName not set`, async () => {
@@ -99,11 +100,11 @@ describe(`Genotype()`, () => {
 
             genotype.genotypes[1].should.containDeep({
                 'genotypeName': 'genoTest42',
-                'generationId': null
+                'generationId': null,
             });
 
             let rows = await sqlite.all(`SELECT * FROM genotypes`);
-            rows[0].should.deepEqual(genotype.genotypes[1]);
+            genotype.genotypes[1].should.containDeep(rows[0]);
         });
 
 

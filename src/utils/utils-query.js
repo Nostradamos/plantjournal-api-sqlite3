@@ -165,10 +165,10 @@ UtilsQuery.joinGenerationsFromGenotypes = function(query) {
  *         Squel query which can take an .left_join()
  */
 UtilsQuery.joinGenerationParentsFromGenerations = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENERATION_PARENT,
-        'generation_parents',
-        'generations.generationId = generation_parents.generationId'
-    );
+    //query.left_join(CONSTANTS.TABLE_GENERATION_PARENT,
+    //    'generation_parents',
+    //    'generations.generationId = generation_parents.generationId'
+    //);
 };
 
 /**
@@ -231,13 +231,7 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
     }
 
     for (let attr of attributesToSelect) {
-        if (attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
-            // special case, generationParents is no real column, but a concat
-            // of all plantIds
-            query.field(
-                'group_concat(' + CONSTANTS.TABLE_GENERATION_PARENT +'.plantId) as generationParents'
-            );
-        } else if (Utils.isChildAttribute(attr)) {
+        if (Utils.isChildAttribute(attr)) {
             let tableConcat, attrConcat, tableWhere, attrWhere;
 
             if(attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
@@ -250,9 +244,18 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
                 attrConcat = CONSTANTS.ATTR_ID_GENOTYPE;
                 tableWhere = CONSTANTS.TABLE_GENERATION;
                 attrWhere = CONSTANTS.ATTR_ID_GENERATION;
+            } else if(attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
+                tableConcat = CONSTANTS.TABLE_GENERATION_PARENT;
+                attrConcat = CONSTANTS.ATTR_ID_PLANT;
+                tableWhere = CONSTANTS.TABLE_GENERATION;
+                attrWhere = CONSTANTS.ATTR_ID_GENERATION;
+            } else if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
+                tableConcat = CONSTANTS.TABLE_PLANT;
+                attrConcat = CONSTANTS.ATTR_ID_PLANT;
+                tableWhere = CONSTANTS.TABLE_GENOTYPE;
+                attrWhere = CONSTANTS.ATTR_ID_GENOTYPE;
             } else {
-                throw Error(
-                    'Unimplemented childAttribute ', attr, '. Please contact developer');
+                throw new Error('Unimplemented childAttribute');
             }
 
             let subQuery = squel.select().from(tableConcat)

@@ -267,7 +267,42 @@ describe(`Genotype()`, () => {
                 }
             );
         });
+    });
 
+    describe(`genotypePlants attribute`, () => {
+        let pj;
 
+        before(async () => {
+            pj = new plantJournal(':memory:');
+            await pj.connect();
+            await pj.Genotype.create({genotypeName: 'genotype1'});
+            await pj.Plant.create({plantName: 'plant1', genotypeId: 1});
+            await pj.Plant.create({plantName: 'plant2', genotypeId: 1});
+            await pj.Genotype.create({genotypeName: 'genotype2'});
+        });
+
+        after(async () => {
+            await pj.disconnect();
+        });
+
+        it(`should find all genotypes and the genotypePlants attribute should be an array containing all plantIds with this genotypeId`, async () => {
+            let genotypes = await pj.Genotype.find({attributes: ['genotypeName', 'genotypePlants']});
+            genotypes.should.containDeep(
+                {
+                    found: 2,
+                    remaining: 0,
+                    genotypes: {
+                        1: {
+                            genotypeName: 'genotype1',
+                            genotypePlants: [1, 2]
+                        },
+                        2: {
+                            genotypeName: 'genotype2',
+                            genotypePlants: []
+                        },
+                    }
+                }
+            );
+        });
     });
 });

@@ -188,8 +188,7 @@ class GenericCreate {
      */
     static buildReturnObject(returnObject, context, options) {
         let recordObject = {};
-
-        _.each(this.ATTRIBUTES, function(attr) {
+        for (let attr of this.ATTRIBUTES) {
             if (!_.isUndefined(context[attr])) {
                 recordObject[attr] = context[attr];
             } else if (!_.isUndefined(options[attr])) {
@@ -199,7 +198,7 @@ class GenericCreate {
             } else {
                 recordObject[attr] = null;
             }
-        }.bind(this));
+        }
 
         recordObject[this.ATTR_ID] = context.insertId;
         recordObject[this.ATTR_CREATED_AT] = context.createdAt;

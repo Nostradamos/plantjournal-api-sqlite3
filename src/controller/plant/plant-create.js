@@ -195,6 +195,10 @@ class PlantCreate extends GenericCreate {
         // plant object.
         if (context.createdGenotype !== false) {
             returnObject.genotypes = context.createdGenotype.genotypes;
+
+            // Also add the plantId to genotypes[genotypeId]['genotypePlants']
+            returnObject.genotypes[context.genotypeId]
+                [CONSTANTS.ATTR_PLANTS_GENOTYPE] = [context.insertId];
         }
     }
 }

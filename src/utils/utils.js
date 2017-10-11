@@ -116,13 +116,21 @@ Utils.addGenerationFromRowToReturnObject = (row, returnObject, forceAdd) => {
 Utils.addGenotypeFromRowToReturnObject = (row, returnObject, forceAdd) => {
     let genotypeId = row.genotypeId;
     let genotype = {
-        'generationId': row.generationId,
-        'familyId': row.familyId
+        [CONSTANTS.ATTR_ID_GENOTYPE]: row.generationId,
+        [CONSTANTS.ATTR_ID_FAMILY]: row.familyId
     };
 
-    _.each(CONSTANTS.ALL_ATTRIBUTES_GENOTYPE, function(attr) {
-        if (_.has(row, attr)) genotype[attr] = row[attr];
-    });
+    let value;
+    for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENOTYPE) {
+        if (!_.has(row, attr)) continue;
+        value = row[attr];
+
+        if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
+            value = Utils.splitToInt(value);
+        }
+
+        genotype[attr] = value;
+    }
     if (forceAdd === true || _.size(genotype) > 3)
         returnObject.genotypes[genotypeId] = genotype;
 };
@@ -393,7 +401,7 @@ Utils.explicitColumnRstr = function(table, column) {
  */
 Utils.splitToInt = function(str, sep = ',') {
     return str === null ? [] : _(str).split(sep).map(_.toInteger).value();
-}
+};
 
 /**
  * Check if attribute is an attribute containing information of a child model.
@@ -407,7 +415,9 @@ Utils.splitToInt = function(str, sep = ',') {
 Utils.isChildAttribute = function(attr) {
     let childAttributes = [
         CONSTANTS.ATTR_GENERATIONS_FAMILY,
-        CONSTANTS.ATTR_GENOTYPES_GENERATION
+        CONSTANTS.ATTR_PARENTS_GENERATION,
+        CONSTANTS.ATTR_GENOTYPES_GENERATION,
+        CONSTANTS.ATTR_PLANTS_GENOTYPE
     ];
     return _.indexOf(childAttributes, attr) !== -1;
-}
+};

@@ -53,6 +53,7 @@ describe(`CONSTANTS`, () => {
                 [
                     'genotypeName',
                     'genotypeDescription',
+                    'genotypePlants',
                     'generationId'
                 ]
             );
