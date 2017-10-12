@@ -440,23 +440,23 @@ Utils.isChildAttribute = function(attr) {
 
 Utils.getTableOfChildAttribute = function(attr) {
     return Utils._getTableSrcTableSrcAttrOfChildAttribute(attr, 0);
-}
+};
 
 Utils.getDestTableOfChildAttribute = function(attr) {
     return Utils._getTableSrcTableSrcAttrOfChildAttribute(attr, 0);
-}
+};
 
 Utils.getDestAttrOfChildAttribute = function(attr) {
     return Utils._getTableSrcTableSrcAttrOfChildAttribute(attr, 1);
-}
+};
 
 Utils.getSourceTableOfChildAttribute = function(attr) {
     return Utils._getTableSrcTableSrcAttrOfChildAttribute(attr, 2);
-}
+};
 
 Utils.getForeignAttrOfChildAttribute = function(attr) {
     return Utils._getTableSrcTableSrcAttrOfChildAttribute(attr, 3);
-}
+};
 
 Utils._getTableSrcTableSrcAttrOfChildAttribute = function(attr, i=null) {
     const childAttrMap = {
@@ -505,5 +505,5 @@ Utils._getTableSrcTableSrcAttrOfChildAttribute = function(attr, i=null) {
     };
     let attrMapValue = childAttrMap[attr];
     if(attrMapValue === undefined) return null;
-    return i !== null ? attrMapValue[i] : attrMapValue
-}
+    return i !== null ? attrMapValue[i] : attrMapValue;
+};
