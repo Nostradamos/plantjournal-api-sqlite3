@@ -26,17 +26,7 @@ const TranslateOperatorsRelational = require('./translate-operators-relational')
  * a new instance of this class. To call this class, just call
  * TranslateOperatorsRelational.translateAndApplyOperators().
  */
-class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
-    /**
-     * Table will always be generation_parents, hardcode it.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     */
-    static getTable(self) {
-        self.table = CONSTANTS.TABLE_GENERATION_PARENT;
-        self.srcTable = CONSTANTS.TABLE_GENERATION;
-        self.srcAttr = CONSTANTS.ATTR_ID_GENERATION;
-    }
+class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
     /**
      * We can force set attribute (self.attr) to plantId, because we will only
      * query this attribute. Also the the table we will query will always be
@@ -48,7 +38,6 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      *         Object containing information about this translation process
      */
     static modifySelf(self) {
-        self.attr = CONSTANTS.ATTR_ID_PLANT;
         self.squelExprOld = self.squelExpr;
         self.squelExpr = squel.expr();
         self.squelExprHaving = squel.expr();
@@ -90,7 +79,6 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
         UtilsExpression.applyExpression(
             self.squelExprHaving, critHaving, critHavingArgs, self.type);
-
     }
 
     /**
@@ -118,8 +106,8 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
         let [exprCountNotEqual, exprCountNotEqualArgs] = UtilsExpression
             .createNotEqualsExpression(
-                self.table,
-                self.attr,
+                CONSTANTS.TABLE_GENERATION_PARENT,
+                CONSTANTS.ATTR_ID_PLANT,
                 operatorOptions.length || 1,
                 'count'
             );
@@ -127,13 +115,9 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
         // queryCountUnequal will find all generationIds which have a different
         // amount of parents
         let queryCountUnequal = squel.select()
-            .from(self.table)
-            .field(
-                Utils.explicitColumnRstr(
-                    self.table, self.srcAttr))
-            .group(
-                Utils.explicitColumnRstr(
-                    self.table, self.srcAttr))
+            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
+            .field('generation_parents.generationId')
+            .group('generation_parents.generationId')
             .having(
                 exprCountNotEqual,
                 ...exprCountNotEqualArgs
@@ -143,18 +127,16 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
         let [exprNotIn, exprNotInArgs] = UtilsExpression
             .createNotInExpression(
-                self.srcTable,
-                self.srcAttr,
+                CONSTANTS.TABLE_GENERATION,
+                CONSTANTS.ATTR_ID_GENERATION,
                 operatorOptions
             );
 
         // queryNotIn will find all generationIds which have a different
         // parentId
         let queryNotIn = squel.select()
-            .from(self.table)
-            .field(
-                Utils.explicitColumnRstr(
-                    self.table, self.srcAttr))
+            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
+            .field('generation_parents.generationId')
             .where(exprNotIn, ...exprNotInArgs).toString();
 
         logger.silly(this.name, '#operatorNotEquals() queryNotIn', queryNotIn);
@@ -162,7 +144,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
         crit.crit = '? IN (? UNION ?)';
         crit.args = [
             Utils.explicitColumnRstr(
-                self.srcTable, self.srcAttr),
+                CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
             squel.rstr(queryCountUnequal.toString()),
             squel.rstr(queryNotIn)
         ];
@@ -215,36 +197,12 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
      *         added to self.squelExpr.
      */
     static operatorNotHas(self, operatorOptions, crit) {
-        if(!_.isArray(operatorOptions)) operatorOptions = [operatorOptions];
-
-        // This query will first select all generations which have any parent
-        // of operatorOptions and then select based on that all generations
-        // which are not in that set of previously selected generations.
-
-        let fieldParentGenerationIdRstr = Utils.explicitColumnRstr(
-            self.table, self.srcAttr);
-
-        let subQuery = squel.select()
-            .from(self.table)
-            .field(fieldParentGenerationIdRstr)
-            .where(
-                '? IN ?',
-                Utils.explicitColumnRstr(
-                    self.table,
-                    self.attr),
-                operatorOptions)
-            .group(fieldParentGenerationIdRstr);
-
-        crit.crit = '? NOT IN ?';
-        crit.args = [
-            fieldParentGenerationIdRstr,
-            subQuery
-        ];
+        this.operatorNotIn(self, operatorOptions, crit);
     }
 
     /**
      * This short hand should just does an equals operation, but we need to call
-     * the TranslateOperatorsGenerationParents.operatorEquals() method,
+     * the TranslateOperatorsChildAttributes.operatorEquals() method,
      * therefore we need to reassign it.
      * @param  {Object} self
      *         Object containing information about this translation process
@@ -259,7 +217,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
 
     /**
      * And this short hand should does an equals operation, but we need to call
-     * the TranslateOperatorsGenerationParents.operatorEquals() method,
+     * the TranslateOperatorsChildAttributes.operatorEquals() method,
      * therefore we need to reassign it.
      * @param  {Object} self
      *         Object containing information about this translation process
@@ -287,19 +245,15 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
         if(emptySquelExpr && emptySquelExprHaving) return;
 
         let subQuery = squel.select()
-            .from(self.table)
-            .field(
-                Utils.explicitColumnRstr(
-                    self.table, self.srcAttr));
+            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
+            .field('generation_parents.generationId');
 
 
         if(!emptySquelExpr) subQuery.where(self.squelExpr);
 
         if(!emptySquelExprHaving) {
             subQuery
-                .group(
-                    Utils.explicitColumnRstr(
-                        self.table, self.srcAttr))
+                .group('generation_parents.generationId')
                 .having(self.squelExprHaving);
         }
 
@@ -312,7 +266,7 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
             '? IN ?',
             [
                 Utils.explicitColumnRstr(
-                    self.srcTable, self.srcAttr),
+                    CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
                 subQuery
             ],
             self.type
@@ -320,17 +274,17 @@ class TranslateOperatorsGenerationParents extends TranslateOperatorsRelational {
     }
 }
 
-TranslateOperatorsGenerationParents.OPERATORS = _.clone(
+TranslateOperatorsChildAttributes.OPERATORS = _.clone(
     TranslateOperatorsRelational.OPERATORS);
 
 // Overwrite our equals/not equals operatorFuncs for generationParents
-TranslateOperatorsGenerationParents.OPERATORS.$eq =
-    TranslateOperatorsGenerationParents.operatorEquals;
-TranslateOperatorsGenerationParents.OPERATORS.$neq =
-    TranslateOperatorsGenerationParents.operatorNotEquals;
-TranslateOperatorsGenerationParents.OPERATORS.$has =
-    TranslateOperatorsGenerationParents.operatorHas;
-TranslateOperatorsGenerationParents.OPERATORS.$nhas =
-    TranslateOperatorsGenerationParents.operatorNotHas;
+TranslateOperatorsChildAttributes.OPERATORS.$eq =
+    TranslateOperatorsChildAttributes.operatorEquals;
+TranslateOperatorsChildAttributes.OPERATORS.$neq =
+    TranslateOperatorsChildAttributes.operatorNotEquals;
+TranslateOperatorsChildAttributes.OPERATORS.$has =
+    TranslateOperatorsChildAttributes.operatorHas;
+TranslateOperatorsChildAttributes.OPERATORS.$nhas =
+    TranslateOperatorsChildAttributes.operatorNotHas;
 
-module.exports = TranslateOperatorsGenerationParents;
+module.exports = TranslateOperatorsChildAttributes;

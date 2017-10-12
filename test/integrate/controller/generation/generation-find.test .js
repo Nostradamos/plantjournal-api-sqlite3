@@ -290,7 +290,7 @@ describe(`Generation()`, () => {
             generations.found.should.equal(3);
         });
 
-        it('should find all generations which have at least some parents with the $has operator', async () => {
+        it(`should find all generations which have at least some parents with the $has operator`, async () => {
             let generations = await pj.Generation.find(
                 {attributes: ['generationName', 'generationParents'], where: {generationParents: {$has: 2}}});
             generations.generations.should.containDeep(
@@ -311,6 +311,20 @@ describe(`Generation()`, () => {
             );
             generations.found.should.equal(3);
 
+        });
+
+        it(`should find generations which don't have a specif parent with $nhas operator`, async () => {
+            let generations = await pj.Generation.find(
+                {attributes: ['generationName', 'generationParents'], where: {generationParents: {$nhas: 2}}});
+            generations.generations.should.containDeep(
+                {
+                    2: {
+                        generationName: 'GenerationWithOnlyOneParent1',
+                        generationParents: [1]
+                    }
+                }
+            );
+            generations.found.should.equal(1);
         });
     });
 

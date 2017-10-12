@@ -5,6 +5,7 @@ const squel = require('squel');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
+const Utils = require('../utils/utils');
 const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require(
@@ -13,6 +14,8 @@ const TranslateOperatorsGenerationParents = require(
     './translate-operators-generation-parents');
 const TranslateOperatorsJournalValue = require(
     './translate-operators-journal-value');
+const TranslateOperatorsChildAttributes = require(
+    './translate-operators-child-attributes');
 
 /**
  * This function sets the where parts for our queries and handles
@@ -191,7 +194,10 @@ function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
     } else if (_.startsWith(attr, CONSTANTS.ATTR_VALUE_JOURNAL)) {
     // This is something starting with journalValue, special case
         translator = TranslateOperatorsJournalValue;
-    } else if (_.indexOf(self.allowedAttributes, attr) !== -1){
+    } else if (Utils.isChildAttribute(attr)) {
+        translator = TranslateOperatorsChildAttributes;
+    } else if(_.indexOf(self.allowedAttributes, attr) !== -1) {
+    // All "not special" attributes
         translator = TranslateOperatorsRelational;
     } else {
         throw new Error(

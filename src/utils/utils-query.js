@@ -232,42 +232,31 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
 
     for (let attr of attributesToSelect) {
         if (Utils.isChildAttribute(attr)) {
-            let tableConcat, attrConcat, tableWhere, attrWhere;
+            let tableConcat = Utils.getTableOfChildAttribute(attr);
+            let tableWhere = UtilsQuery.getTableOfField(attr);
+            let attrConcat, attrWhere;
 
             if(attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
-                tableConcat = CONSTANTS.TABLE_GENERATION;
                 attrConcat = CONSTANTS.ATTR_ID_GENERATION;
-                tableWhere = CONSTANTS.TABLE_FAMILY;
                 attrWhere = CONSTANTS.ATTR_ID_FAMILY;
             } else if(attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
-                tableConcat = CONSTANTS.TABLE_GENOTYPE;
                 attrConcat = CONSTANTS.ATTR_ID_GENOTYPE;
-                tableWhere = CONSTANTS.TABLE_GENERATION;
                 attrWhere = CONSTANTS.ATTR_ID_GENERATION;
             } else if(attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
-                tableConcat = CONSTANTS.TABLE_GENERATION_PARENT;
-                attrConcat = CONSTANTS.ATTR_ID_PLANT;
                 tableWhere = CONSTANTS.TABLE_GENERATION;
+                attrConcat = CONSTANTS.ATTR_ID_PLANT;
                 attrWhere = CONSTANTS.ATTR_ID_GENERATION;
             } else if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
-                tableConcat = CONSTANTS.TABLE_PLANT;
                 attrConcat = CONSTANTS.ATTR_ID_PLANT;
-                tableWhere = CONSTANTS.TABLE_GENOTYPE;
                 attrWhere = CONSTANTS.ATTR_ID_GENOTYPE;
             } else if(attr === CONSTANTS.ATTR_CLONES_PLANT) {
-                tableConcat = CONSTANTS.TABLE_PLANT;
                 attrConcat = CONSTANTS.ATTR_ID_PLANT;
-                tableWhere = CONSTANTS.TABLE_PLANT;
                 attrWhere = CONSTANTS.ATTR_CLONED_FROM_PLANT;
             } else if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
-                tableConcat = CONSTANTS.TABLE_MEDIUM;
                 attrConcat = CONSTANTS.ATTR_ID_MEDIUM;
-                tableWhere = CONSTANTS.TABLE_ENVIRONMENT;
                 attrWhere = CONSTANTS.ATTR_ID_ENVIRONMENT;
             } else if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
-                tableConcat = CONSTANTS.TABLE_PLANT;
                 attrConcat = CONSTANTS.ATTR_ID_PLANT;
-                tableWhere = CONSTANTS.TABLE_MEDIUM;
                 attrWhere = CONSTANTS.ATTR_ID_MEDIUM;
             } else {
                 throw new Error('Unimplemented childAttribute');
