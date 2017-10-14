@@ -64,11 +64,11 @@ class EnvironmentDelete extends GenericDelete {
         context.mediumIdsToDelete = new Set();
         context.plantIdsToDelete = new Set();
 
-        _.each(context.rowsRelated, function(row) {
+        for(let row of context.rowsRelated) {
             context.environmentIdsToDelete.add(row.environmentId);
             context.mediumIdsToDelete.add(row.mediumId);
             context.plantIdsToDelete.add(row.plantId);
-        });
+        }
 
         context.environmentIdsToDelete = Utils
             .whereSetNotNull(context.environmentIdsToDelete);

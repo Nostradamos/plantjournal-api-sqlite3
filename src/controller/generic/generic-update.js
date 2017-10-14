@@ -209,9 +209,10 @@ class GenericUpdate {
      */
     static extractIdsRowsFind(context, update, criteria) {
         context.idsToUpdate = [];
-        _.each(context.rowsFind, function(row) {
+
+        for(let row of context.rowsFind) {
             context.idsToUpdate.push(row[this.ATTR_ID]);
-        }.bind(this));
+        }
 
         logger.debug(this.name, '#update() context.idsToUpdate:', context.idsToUpdate);
     }

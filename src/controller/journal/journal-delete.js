@@ -40,9 +40,10 @@ class JournalDelete extends GenericDelete {
      */
     static extractIdsToDelete(context, criteria) {
         context.journalIdsToDelete = new Set();
-        _.each(context.rowsRelated, function(row) {
+
+        for(let row of context.rowsRelated) {
             context.journalIdsToDelete.add(row.journalId);
-        });
+        }
 
         context.journalIdsToDelete = Utils
             .whereSetNotNull(context.journalIdsToDelete);

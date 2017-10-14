@@ -104,9 +104,9 @@ class GenericCreate {
      *         options object which got passed to GenericCreate.create().
      */
     static setQueryFields(context, options) {
-        _.each(this.ATTRIBUTES, function(attr) {
+        for(let attr of this.ATTRIBUTES) {
             if (_.indexOf(this.SKIP_ATTRIBUTES, attr) !== -1) {
-                return;
+                continue;
             } else if (!_.isUndefined(context[attr])) {
                 context.query.set(attr, context[attr]);
             } else if (!_.isUndefined(options[attr])) {
@@ -116,7 +116,7 @@ class GenericCreate {
             } else {
                 context.query.set(attr, null);
             }
-        }.bind(this));
+        }
 
         // set id field
         context.query.set(this.ATTR_ID, null);

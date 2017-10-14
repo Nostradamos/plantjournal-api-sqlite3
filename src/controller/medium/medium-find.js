@@ -48,10 +48,11 @@ class MediumFind extends GenericFind {
         // build families object
         returnObject.environments =  {};
         returnObject.mediums = {};
-        _.each(context.rowsWhere, function(row) {
+
+        for(let row of context.rowsWhere) {
             Utils.addMediumFromRowToReturnObject(row, returnObject);
             Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
-        });
+        }
 
         Utils.deleteEmptyProperties(returnObject, ['environments']);
     }

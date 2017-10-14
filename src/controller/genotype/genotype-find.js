@@ -49,11 +49,13 @@ class GenotypeFind extends GenericFind {
         returnObject.genotypes = {};
         returnObject.generations = {};
         returnObject.families = {};
-        _.each(context.rowsWhere, function(row) {
+
+        for(let row of context.rowsWhere) {
             Utils.addGenotypeFromRowToReturnObject(row, returnObject, true);
             Utils.addGenerationFromRowToReturnObject(row, returnObject);
             Utils.addFamilyFromRowToReturnObject(row, returnObject);
-        });
+        }
+
         Utils.deleteEmptyProperties(returnObject, ['families', 'generations']);
     }
 }

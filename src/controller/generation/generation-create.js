@@ -59,7 +59,7 @@ class GenerationCreate extends GenericCreate {
         // for every plant we have to insert a own row.
         let attributesRows = [];
 
-        _.each(options.generationParents, function(parentPlantId) {
+        for(let parentPlantId of options.generationParents) {
             attributesRows.push(
                 {
                     parentId: null,
@@ -67,7 +67,7 @@ class GenerationCreate extends GenericCreate {
                     plantId: parentPlantId
                 }
             );
-        });
+        }
 
         // build and stringify query
         context.queryInsertParents = squel.insert().into(this.TABLE_PARENTS)

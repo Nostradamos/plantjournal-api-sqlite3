@@ -350,7 +350,7 @@ UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, over
     if (_.isEmpty(criteria.sort)) return;
     if (!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
 
-    _.each(criteria.sort, function(sortStr) {
+    for(let sortStr of criteria.sort) {
         // Check if this is a valid format
         let attr, sortType;
 
@@ -386,7 +386,7 @@ UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, over
             // Split it again to get un-uppercased sort type
             throw new Error('Illegal sort type: ' + _.split(sortStr, ' ')[1]);
         }
-    });
+    }
 };
 
 /**

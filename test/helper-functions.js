@@ -13,12 +13,13 @@ var helpers = module.exports;
 
 helpers.allShouldHaveCreatedAtAndModifiedAt = (retObj, plural, singular) => {
     retObj.should.have.property(plural);
-    _.each(_.keys(retObj[plural]), function(key) {
+
+    for(let key of _.keys(retObj[plural])) {
         retObj[plural][key]
             .should.have.property(singular + 'CreatedAt');
         retObj[plural][key]
             .should.have.property(singular + 'ModifiedAt');
-    });
+    }
 };
 
 helpers.allFamiliesShouldHaveCreatedAtAndModifiedAt = function(retObj) {

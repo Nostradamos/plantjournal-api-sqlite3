@@ -73,8 +73,8 @@ class GenerationUpdate extends GenericUpdate {
         // Wa have to insert new parents, build query for this
         let attributesRows = [];
 
-        _.each(update.generationParents, function(parentPlantId) {
-            _.each(context.idsToUpdate, function(generationId) {
+        for(let parentPlantId of update.generationParents) {
+            for(let generationId of context.idsToUpdate) {
                 attributesRows.push(
                     {
                         parentId: null,
@@ -82,8 +82,9 @@ class GenerationUpdate extends GenericUpdate {
                         plantId: parentPlantId
                     }
                 );
-            });
-        });
+            }
+        }
+
         context.queryInsertNewParents = squel.insert().into(this.TABLE_PARENTS)
             .setFieldsRows(attributesRows)
             .toString();

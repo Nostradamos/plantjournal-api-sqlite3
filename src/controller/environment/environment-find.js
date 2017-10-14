@@ -33,9 +33,9 @@ class EnvironmentFind extends GenericFind {
     static buildReturnObjectWhere(returnObject, context, criteria) {
         // build families object
         returnObject.environments =  {};
-        _.each(context.rowsWhere, function(row) {
+        for(let row of context.rowsWhere) {
             Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
-        });
+        }
     }
 }
 

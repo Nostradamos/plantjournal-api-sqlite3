@@ -62,10 +62,10 @@ class MediumDelete extends GenericDelete {
         context.mediumIdsToDelete = new Set();
         context.plantIdsToDelete = new Set();
 
-        _.each(context.rowsRelated, function(row) {
+        for(let row of context.rowsRelated) {
             context.mediumIdsToDelete.add(row.mediumId);
             context.plantIdsToDelete.add(row.plantId);
-        });
+        }
 
         context.mediumIdsToDelete = Utils.whereSetNotNull(
             context.mediumIdsToDelete);

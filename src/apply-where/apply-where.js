@@ -126,7 +126,7 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
 
     // iterate over every element, if obj is array, key will be index and
     // value the element. Otherwise normal key/value pair
-    _.each(obj, function(value, key) {
+    _.each(obj, (value, key) => {
         // If we have an array, value/element has to be an object. Just use
         // this function again on it
         if (isArray === true) {

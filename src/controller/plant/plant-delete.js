@@ -45,12 +45,12 @@ class PlantDelete extends GenericDelete {
     // id is only once present in our datastructure.
         context.plantIdsToDelete = new Set();
 
-        _.each(context.rowsRelated, function(row) {
+        for(let row of context.rowsRelated) {
             //   now we iterate over each row and add all ids to the matching
             // context.xyzIdsToDelete. It's possible that we also add a null
             // field, but we will take care of that later
             context.plantIdsToDelete.add(row.plantId);
-        });
+        }
 
         context.plantIdsToDelete = Utils.whereSetNotNull(
             context.plantIdsToDelete);

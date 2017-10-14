@@ -55,14 +55,14 @@ class PlantFind extends GenericFind {
         returnObject.mediums = {};
         returnObject.environments = {};
 
-        _.each(context.rowsWhere, function(row) {
+        for(let row of context.rowsWhere) {
             Utils.addPlantFromRowToReturnObject(row, returnObject, true);
             Utils.addGenotypeFromRowToReturnObject(row, returnObject);
             Utils.addGenerationFromRowToReturnObject(row, returnObject);
             Utils.addFamilyFromRowToReturnObject(row, returnObject);
             Utils.addMediumFromRowToReturnObject(row, returnObject);
             Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
-        });
+        }
 
         Utils.deleteEmptyProperties(
             returnObject, ['families',
