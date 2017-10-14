@@ -119,7 +119,7 @@ class GenericFind {
         // function in sqlite. To make it easier we first set everything which
         // is the same for both queries to queryWhere and clone it into
         // queryCount. So we have to do things only once.
-        context.queryWhere = squel.select().from(this.TABLE, this.TABLE);
+        context.queryWhere = squel.select().from(this.TABLE);
         context.queryCount;
     }
 

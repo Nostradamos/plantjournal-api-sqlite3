@@ -3,9 +3,9 @@
 const _ = require('lodash');
 const squel = require('squel');
 
-const CONSTANTS = require('../constants');
 const logger = require('../logger');
 const Utils = require('../utils/utils');
+const UtilsChildAttributes = require('../utils/utils-child-attributes');
 const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require('./translate-operators-relational');
@@ -38,6 +38,9 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
      *         Object containing information about this translation process
      */
     static modifySelf(self) {
+        [self.table, self.attr, self.srcTable, self.srcAttr] =
+            UtilsChildAttributes._getTableSrcTableSrcAttrOfChildAttribute(
+                self.attr);
         self.squelExprOld = self.squelExpr;
         self.squelExpr = squel.expr();
         self.squelExprHaving = squel.expr();
@@ -79,6 +82,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
 
         UtilsExpression.applyExpression(
             self.squelExprHaving, critHaving, critHavingArgs, self.type);
+
     }
 
     /**
@@ -106,8 +110,8 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
 
         let [exprCountNotEqual, exprCountNotEqualArgs] = UtilsExpression
             .createNotEqualsExpression(
-                CONSTANTS.TABLE_GENERATION_PARENT,
-                CONSTANTS.ATTR_ID_PLANT,
+                self.table,
+                self.attr,
                 operatorOptions.length || 1,
                 'count'
             );
@@ -115,9 +119,13 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         // queryCountUnequal will find all generationIds which have a different
         // amount of parents
         let queryCountUnequal = squel.select()
-            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
-            .field('generation_parents.generationId')
-            .group('generation_parents.generationId')
+            .from(self.table)
+            .field(
+                Utils.explicitColumnRstr(
+                    self.table, self.srcAttr))
+            .group(
+                Utils.explicitColumnRstr(
+                    self.table, self.srcAttr))
             .having(
                 exprCountNotEqual,
                 ...exprCountNotEqualArgs
@@ -127,16 +135,18 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
 
         let [exprNotIn, exprNotInArgs] = UtilsExpression
             .createNotInExpression(
-                CONSTANTS.TABLE_GENERATION,
-                CONSTANTS.ATTR_ID_GENERATION,
+                self.srcTable,
+                self.srcAttr,
                 operatorOptions
             );
 
         // queryNotIn will find all generationIds which have a different
         // parentId
         let queryNotIn = squel.select()
-            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
-            .field('generation_parents.generationId')
+            .from(self.table)
+            .field(
+                Utils.explicitColumnRstr(
+                    self.table, self.srcAttr))
             .where(exprNotIn, ...exprNotInArgs).toString();
 
         logger.silly(this.name, '#operatorNotEquals() queryNotIn', queryNotIn);
@@ -144,7 +154,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         crit.crit = '? IN (? UNION ?)';
         crit.args = [
             Utils.explicitColumnRstr(
-                CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
+                self.srcTable, self.srcAttr),
             squel.rstr(queryCountUnequal.toString()),
             squel.rstr(queryNotIn)
         ];
@@ -197,7 +207,31 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
      *         added to self.squelExpr.
      */
     static operatorNotHas(self, operatorOptions, crit) {
-        this.operatorNotIn(self, operatorOptions, crit);
+        if(!_.isArray(operatorOptions)) operatorOptions = [operatorOptions];
+
+        // This query will first select all generations which have any parent
+        // of operatorOptions and then select based on that all generations
+        // which are not in that set of previously selected generations.
+
+        let fieldParentGenerationIdRstr = Utils.explicitColumnRstr(
+            self.table, self.srcAttr);
+
+        let subQuery = squel.select()
+            .from(self.table)
+            .field(fieldParentGenerationIdRstr)
+            .where(
+                '? IN ?',
+                Utils.explicitColumnRstr(
+                    self.table,
+                    self.attr),
+                operatorOptions)
+            .group(fieldParentGenerationIdRstr);
+
+        crit.crit = '? NOT IN ?';
+        crit.args = [
+            fieldParentGenerationIdRstr,
+            subQuery
+        ];
     }
 
     /**
@@ -245,15 +279,19 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         if(emptySquelExpr && emptySquelExprHaving) return;
 
         let subQuery = squel.select()
-            .from(CONSTANTS.TABLE_GENERATION_PARENT, 'generation_parents')
-            .field('generation_parents.generationId');
+            .from(self.table)
+            .field(
+                Utils.explicitColumnRstr(
+                    self.table, self.srcAttr));
 
 
         if(!emptySquelExpr) subQuery.where(self.squelExpr);
 
         if(!emptySquelExprHaving) {
             subQuery
-                .group('generation_parents.generationId')
+                .group(
+                    Utils.explicitColumnRstr(
+                        self.table, self.srcAttr))
                 .having(self.squelExprHaving);
         }
 
@@ -266,7 +304,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
             '? IN ?',
             [
                 Utils.explicitColumnRstr(
-                    CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
+                    self.srcTable, self.srcAttr),
                 subQuery
             ],
             self.type

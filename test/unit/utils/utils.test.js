@@ -4,7 +4,6 @@
 const should = require('should');
 const sqlite = require('sqlite');
 
-const CONSTANTS = require('../../../src/constants');
 const Utils = require('../../../src/utils/utils');
 
 describe(`utils/utils`, () => {
@@ -451,18 +450,5 @@ describe(`utils/utils`, () => {
         it(`should return empty array if str is null`, () => {
             Utils.splitToInt(null).should.eql([]);
         });
-    });
-
-    describe('#isChildAttribute()', () => {
-        it(`should return true for familyGenerations`, () => {
-            Utils.isChildAttribute(CONSTANTS.ATTR_GENERATIONS_FAMILY)
-                .should.be.true();
-        });
-
-        it(`should return false for familyId`, () => {
-            Utils.isChildAttribute(CONSTANTS.ATTR_ID_FAMILY)
-                .should.be.false();
-        });
-
     });
 });

@@ -4,6 +4,7 @@ const _ = require('lodash');
 const squel = require('squel');
 
 const Utils = require('./utils');
+const UtilsChildAttributes = require('./utils-child-attributes');
 const CONSTANTS = require('../constants');
 
 
@@ -231,8 +232,9 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
     }
 
     for (let attr of attributesToSelect) {
-        if (Utils.isChildAttribute(attr)) {
-            let tableConcat = Utils.getTableOfChildAttribute(attr);
+        if (UtilsChildAttributes.isChildAttribute(attr)) {
+            let tableConcat = UtilsChildAttributes
+                .getTableOfChildAttribute(attr);
             let tableWhere = UtilsQuery.getTableOfField(attr);
             let attrConcat, attrWhere;
 

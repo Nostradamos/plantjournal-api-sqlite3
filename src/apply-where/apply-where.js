@@ -5,17 +5,15 @@ const squel = require('squel');
 
 const CONSTANTS = require('../constants');
 const logger = require('../logger');
-const Utils = require('../utils/utils');
+const UtilsChildAttributes = require('../utils/utils-child-attributes');
 const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require(
     './translate-operators-relational');
-const TranslateOperatorsGenerationParents = require(
-    './translate-operators-generation-parents');
-const TranslateOperatorsJournalValue = require(
-    './translate-operators-journal-value');
 const TranslateOperatorsChildAttributes = require(
     './translate-operators-child-attributes');
+const TranslateOperatorsJournalValue = require(
+    './translate-operators-journal-value');
 
 /**
  * This function sets the where parts for our queries and handles
@@ -189,12 +187,10 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
 function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
     let translator = null;
     // Check if we have special cases
-    if (attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
-        translator = TranslateOperatorsGenerationParents;
-    } else if (_.startsWith(attr, CONSTANTS.ATTR_VALUE_JOURNAL)) {
+    if (_.startsWith(attr, CONSTANTS.ATTR_VALUE_JOURNAL)) {
     // This is something starting with journalValue, special case
         translator = TranslateOperatorsJournalValue;
-    } else if (Utils.isChildAttribute(attr)) {
+    } else if (UtilsChildAttributes.isChildAttribute(attr)) {
         translator = TranslateOperatorsChildAttributes;
     } else if(_.indexOf(self.allowedAttributes, attr) !== -1) {
     // All "not special" attributes

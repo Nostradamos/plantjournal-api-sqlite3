@@ -155,5 +155,22 @@ describe(`Family()`, () => {
                 }
             );
         });
+
+        it(`should only find families which have a specific generation if we set {where:{familyGenerations:{$has:3}}}`, async () => {
+            let families = await pj.Family.find(
+                {where:{familyGenerations:{$has:3}}});
+            families.should.containDeep(
+                {
+                    found: 1,
+                    remaining: 0,
+                    families: {
+                        2: {
+                            familyName: 'Family2',
+                            familyGenerations: [3, 4]
+                        }
+                    }
+                }
+            );
+        });
     });
 });
