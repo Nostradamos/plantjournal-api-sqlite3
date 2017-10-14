@@ -27,26 +27,6 @@ UtilsChildAttributes.getTableOfChildAttribute = function(attr) {
         ._getTableSrcTableSrcAttrOfChildAttribute(attr, 0);
 };
 
-UtilsChildAttributes.getDestTableOfChildAttribute = function(attr) {
-    return UtilsChildAttributes
-        ._getTableSrcTableSrcAttrOfChildAttribute(attr, 0);
-};
-
-UtilsChildAttributes.getDestAttrOfChildAttribute = function(attr) {
-    return UtilsChildAttributes
-        ._getTableSrcTableSrcAttrOfChildAttribute(attr, 1);
-};
-
-UtilsChildAttributes.getSourceTableOfChildAttribute = function(attr) {
-    return UtilsChildAttributes
-        ._getTableSrcTableSrcAttrOfChildAttribute(attr, 2);
-};
-
-UtilsChildAttributes.getForeignAttrOfChildAttribute = function(attr) {
-    return UtilsChildAttributes.
-        _getTableSrcTableSrcAttrOfChildAttribute(attr, 3);
-};
-
 UtilsChildAttributes._getTableSrcTableSrcAttrOfChildAttribute =
 (attr, i=null) => {
     const childAttrMap = {
