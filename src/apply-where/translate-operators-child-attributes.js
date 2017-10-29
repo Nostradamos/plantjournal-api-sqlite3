@@ -77,7 +77,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         // previously selected values equals our operatorOptions.length.
         let [critHaving, critHavingArgs] = UtilsExpression.
             createEqualsExpression(
-                self.table, self.attr, operatorOptions.length || 1, 'count');
+                self.table, self.attr, operatorOptions.length || 1, 'COUNT');
 
         logger.silly(this.name, '#operatorEquals()', critHaving, critHavingArgs);
 
@@ -113,7 +113,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         // subquery with an own expression.
         let [exprCountNotEqual, exprCountNotEqualArgs] = UtilsExpression
             .createNotEqualsExpression(
-                self.table, self.attr, operatorOptions.length || 1, 'count');
+                self.table, self.attr, operatorOptions.length || 1, 'COUNT');
 
         let queryCountUnequal = squel.select()
             .from(self.table)
@@ -181,7 +181,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
 
         let [critHaving, critHavingArgs] = UtilsExpression.
             createGreaterThanEqualExpression(
-                self.table, self.attr, operatorOptions.length || 1, 'count');
+                self.table, self.attr, operatorOptions.length || 1, 'COUNT');
 
         logger.silly(this.name, '#operatorHas()', critHaving, critHavingArgs);
 

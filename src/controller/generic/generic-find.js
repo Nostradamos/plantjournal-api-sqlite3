@@ -214,7 +214,7 @@ class GenericFind {
      */
     static setQueryCountFields(context, criteria) {
         context.queryCount.field(
-            'count(' + (_.isEmpty(this.COUNT) ? this.TABLE + '.' + this.ATTR_ID : this.COUNT) + ')',
+            'COUNT(' + (_.isEmpty(this.COUNT) ? this.TABLE + '.' + this.ATTR_ID : this.COUNT) + ')',
             'count'
         );
     }

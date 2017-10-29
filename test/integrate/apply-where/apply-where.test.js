@@ -387,28 +387,28 @@ describe(`src/apply-where/apply-where`, () => {
             it(`should do 'IN $opValue' and 'HAVING COUNT(..) = $opValue.length' for generationParents $eq`, () => {
                 applyWhere(q, ['generationParents'], {where: {generationParents: {'$eq': [13, 37, 42]}}});
                 q.toString().should.eql(
-                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generation_parents.plantId IN (13, 37, 42)) GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) = 3)))`
+                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generation_parents.plantId IN (13, 37, 42)) GROUP BY generation_parents.generationId HAVING (COUNT(generation_parents.plantId) = 3)))`
                 );
             });
 
             it(`should do an $eq for generationParents array short hand`, () => {
                 applyWhere(q, ['generationParents'], {where: {'generationParents': [42,43]}});
                 q.toString().should.eql(
-                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generation_parents.plantId IN (42, 43)) GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) = 2)))`
+                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generation_parents.plantId IN (42, 43)) GROUP BY generation_parents.generationId HAVING (COUNT(generation_parents.plantId) = 2)))`
                 );
             });
 
             it(`should do 'NOT IN' and 'HAVINC COUNT(..) >= $opValue.length' for generationParents $neq`, () => {
                 applyWhere(q, ['generationParents'], {where: {generationParents: {'$neq': [13, 37, 42]}}});
                 q.toString().should.eql(
-                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) != 3) UNION SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId NOT IN (13, 37, 42))))))`
+                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents GROUP BY generation_parents.generationId HAVING (COUNT(generation_parents.plantId) != 3) UNION SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId NOT IN (13, 37, 42))))))`
                 );
             });
 
             it(`should do 'NOT IN' for generationParents $neq when operator value is a single integer`, () => {
                 applyWhere(q, ['generationParents'], {where: {generationParents: {'$neq': 42}}});
                 q.toString().should.eql(
-                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) != 1) UNION SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId NOT IN (42))))))`
+                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents GROUP BY generation_parents.generationId HAVING (COUNT(generation_parents.plantId) != 1) UNION SELECT generation_parents.generationId FROM generation_parents WHERE (generations.generationId NOT IN (42))))))`
                 );
             });
 
@@ -478,7 +478,7 @@ describe(`src/apply-where/apply-where`, () => {
             it(`should do 'IN $opV' and 'HAVING COUNT >= $opV.length' for $has operator`, () => {
                 applyWhere(q, ['generationParents'], {where: {generationParents: {'$has': [13, 37, 42]}}});
                 q.toString().should.eql(
-                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generation_parents.plantId IN (13, 37, 42)) GROUP BY generation_parents.generationId HAVING (count(generation_parents.plantId) >= 3)))`
+                    `SELECT * FROM test WHERE (generations.generationId IN (SELECT generation_parents.generationId FROM generation_parents WHERE (generation_parents.plantId IN (13, 37, 42)) GROUP BY generation_parents.generationId HAVING (COUNT(generation_parents.plantId) >= 3)))`
                 );
             });
 
