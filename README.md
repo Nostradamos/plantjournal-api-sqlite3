@@ -2,10 +2,10 @@
 [![dependencies Status](https://david-dm.org/Nostradamos/plantjournal-api-sqlite3/status.svg)](https://david-dm.org/Nostradamos/plantjournal-api-sqlite3) [![devDependencies Status](https://david-dm.org/Nostradamos/plantjournal-api-sqlite3/dev-status.svg)](https://david-dm.org/Nostradamos/plantjournal-api-sqlite3?type=dev)
 [![Coverage Status](https://coveralls.io/repos/github/Nostradamos/plantjournal-api-sqlite3/badge.svg?branch=master)](https://coveralls.io/github/Nostradamos/plantjournal-api-sqlite3?branch=master)
 
-plantjournal-api-sqlite
+plantjournal-api-sqlite3
 =======================
 
-This repo contains a plantJournal API implementation using sqlite3 as the database engine.
+This repo contains a plantJournal API connector implementation using sqlite3 as the database engine.
 
 API
 ======
