@@ -52,11 +52,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
             // We need to access the attribute path value with a function, so
             // we want sqlite expressions like this:
             // `json_extract($TABLE.$ATTR, $PATH)`
-            self.func = 'json_extract';
+            self.func = 'JSON_EXTRACT';
 
             // JSON paths for sqlite have to start with an `$`
             self.funcArgs = ['$' + self.attr.substr(lengthAttrValue)];
-            self.attr = 'journalValue';
+            self.attr = CONSTANTS.ATTR_VALUE_JOURNAL;
         }
     }
 

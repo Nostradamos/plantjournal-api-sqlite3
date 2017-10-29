@@ -11,8 +11,7 @@ var TranslateOperatorsJournalValue = require(
 describe(`TranslateOperatorsJournalValue`, () => {
     describe(`Operators`, () => {
         let crit, self;
-        let TABLE_DOT_ATTR = 'journals.journalValue';
-        let TABLE_DOT_ATTR_RSTR = squel.rstr(TABLE_DOT_ATTR);
+        let TABLE_DOT_ATTR_RSTR = squel.rstr('journals.journalValue');
 
         beforeEach(() => {
             crit = {crit:null, args:[]};
@@ -32,7 +31,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) = ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 'bar']
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 'bar']
                     });
             });
 
@@ -52,7 +51,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) != ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 'bar']
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 'bar']
                     });
             });
         });
@@ -73,7 +72,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) > ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -94,7 +93,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) >= ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -115,7 +114,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) < ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -136,7 +135,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) <= ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, 13]
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 13]
                     });
             });
         });
@@ -157,7 +156,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) LIKE ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, '_est']
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '_est']
                     });
             });
         });
@@ -176,7 +175,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) NOT LIKE ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, '_est']
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '_est']
                     });
             });
         });
@@ -195,7 +194,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) IN ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, ['foo', 'bar']]
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, ['foo', 'bar']]
                     });
             });
         });
@@ -214,7 +213,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
                 crit.should.eql(
                     {
                         crit: 'json_extract(?, ?) NOT IN ?',
-                        args: [TABLE_DOT_ATTR, ...self.funcArgs, ['foo', 'bar']]
+                        args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, ['foo', 'bar']]
                     });
             });
         });

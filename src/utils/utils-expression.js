@@ -60,14 +60,12 @@ UtilsExpression.applyExpression = (squelExpr, expr, exprArgs, type) => {
  */
 UtilsExpression.createGenericExpression = (tbl, attr, operator, equal, fnc=null, fncArgs=null) => {
     let expr = '';
-    let exprArgs = [];
+    let exprArgs = [Utils.explicitColumnRstr(tbl, attr)];
 
     if(fnc === null) {
         expr += '?';
-        exprArgs[0] = Utils.explicitColumnRstr(tbl, attr);
     } else {
         expr += fnc + '(?';
-        exprArgs[0] = Utils.explicitColumn(tbl, attr);
         if(fncArgs !== null) {
             expr += ', ' + _.chain('?, ')
                 .repeat(fncArgs.length)
