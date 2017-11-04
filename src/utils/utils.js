@@ -24,7 +24,7 @@ let Utils = exports;
  * @return {object}
  *         returns obj again (also mutates obj)
  */
-Utils.deleteEmptyProperties = function deleteEmptyProperties(obj, limitTo) {
+Utils.deleteEmptyProperties = function(obj, limitTo) {
     if (_.isEmpty(limitTo)) limitTo = _.keys(obj);
     _(limitTo).filter(o => _.isEmpty(obj[o])).each(u => {
         _.unset(obj, u);
@@ -310,7 +310,7 @@ Utils.hasToBeAssocArray = function (obj, prefix = 'First argument') {
  * @param  {String}  [name='options'] - In case of an error, how to name the
  *                                      Object? Defaults to options.
  */
-Utils.hasToBeString = function hasToBeString(obj, property, name = 'options') {
+Utils.hasToBeString = function(obj, property, name = 'options') {
     if (_.has(obj, property) && !_.isString(obj[property])) {
         throw new Error(name + '.' + property + ' has to be a string');
     }
@@ -324,13 +324,13 @@ Utils.hasToBeString = function hasToBeString(obj, property, name = 'options') {
  * @param  {String}  [name='options'] - In case of an error, how to name the
  *                                      Object? Defaults to options.
  */
-Utils.hasToBeInt = function hasToBeInt(obj, property, name = 'options') {
+Utils.hasToBeInt = function(obj, property, name = 'options') {
     if (_.has(obj, property) && !_.isInteger(obj[property])) {
         throw new Error(name + '.' + property + ' has to be an integer');
     }
 };
 
-Utils.hasToBeIntOrNull = function hasToBeInt(obj, property, name = 'options') {
+Utils.hasToBeIntOrNull = function(obj, property, name = 'options') {
     let value = obj[property];
     if (!_.isUndefined(value) && !_.isInteger(value) && !_.isNull(value)) {
         throw new Error(
@@ -347,7 +347,7 @@ Utils.hasToBeIntOrNull = function hasToBeInt(obj, property, name = 'options') {
  * @param  {String}  [name='options'] - In case of an error, how to name the
  *                                      Object? Defaults to options.
  */
-Utils.hasToBeIntArray = function (obj, property, name = 'options') {
+Utils.hasToBeIntArray = function(obj, property, name = 'options') {
     let value = obj[property];
     if(_.isUndefined(value)) return;
     if (!_.isArray(value) || !_.every(value, _.isInteger)) {
@@ -363,7 +363,7 @@ Utils.hasToBeIntArray = function (obj, property, name = 'options') {
  * @param  {String}  [name='options'] - In case of an error, how to name the
  *                                      Object? Defaults to options.
  */
-Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
+Utils.hasToBeSet = function(obj, property, name = 'options') {
     if (!_.has(obj, property)) {
         throw new Error(name + '.' + property + ' has to be set');
     }
@@ -373,16 +373,16 @@ Utils.hasToBeSet = function hasToBeSet(obj, property, name = 'options') {
  * Return a unix timestamp (seconds)
  * @return {UnixTimestampUTC} Unix Timestamp
  */
-Utils.getUnixTimestampUTC = function getUnixTimestampUTC() {
+Utils.getUnixTimestampUTC = function() {
     return Math.floor(new Date() / 1000);
 };
 
 /**
- * Converts Set to array and wheres out null. Mutates set.
+ * Converts Set to array and deletes null from it before. Mutates set.
  * @param  {Set} set - Set to where and convert
  * @return {Array}   - Arrayfied set without null elements
  */
-Utils.whereSetNotNull = function whereSetNotNull(set) {
+Utils.whereSetNotNull = function(set) {
     set.delete(null);
     return Array.from(set);
 };
