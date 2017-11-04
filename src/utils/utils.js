@@ -277,10 +277,15 @@ Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
 */
 Utils.addFoundAndRemainingFromCountToReturnObject =
 function (count, lenRows, returnObject, options) {
-    let c = count['count'];
+    let found = count['count'];
+    let offset = options.offset || 0;
+    let remaining = found - offset - lenRows;
 
-    returnObject['found'] = c;
-    returnObject['remaining'] = c - lenRows - (options.offset || 0);
+    // Make sure we don't go negative
+    if(remaining < 0) remaining = 0;
+
+    returnObject['found'] = found;
+    returnObject['remaining'] = remaining;
 };
 
 /**

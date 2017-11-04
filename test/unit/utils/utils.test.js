@@ -379,6 +379,36 @@ describe(`utils/utils`, () => {
                 count, 30, returnObject, options);
             returnObject.should.deepEqual({'found': 42, 'remaining': 12});
         });
+
+        it(`should return 0 if lenRows + offset == count`, () => {
+            let returnObject = {};
+            let options = {offset: 125};
+            let count = {'count': 130};
+
+            Utils.addFoundAndRemainingFromCountToReturnObject(
+                count, 5, returnObject, options);
+            returnObject.should.deepEqual({'found': 130, 'remaining': 0});
+        });
+
+        it(`should return 0 if lenRows + offset >= count`, () => {
+            let returnObject = {};
+            let options = {offset: 127};
+            let count = {'count': 130};
+
+            Utils.addFoundAndRemainingFromCountToReturnObject(
+                count, 5, returnObject, options);
+            returnObject.should.deepEqual({'found': 130, 'remaining': 0});
+        });
+
+        it(`should return 0 if offset > found`, () => {
+            let returnObject = {};
+            let options = {offset: 500};
+            let count = {'count': 130};
+
+            Utils.addFoundAndRemainingFromCountToReturnObject(
+                count, 5, returnObject, options);
+            returnObject.should.deepEqual({'found': 130, 'remaining': 0});
+        });
     });
 
     describe(`#throwErrorIfNotConnected()`, () => {
