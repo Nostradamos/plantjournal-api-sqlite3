@@ -17,7 +17,7 @@ const GenericFind = require('../generic/generic-find');
  * @extends GenericFind
  */
 class JournalFind extends GenericFind {
-    /**
+  /**
      * We need to overwrite this method to, yeah, build the returnObject. We
      * basically iterate over each row we get from database and add all
      * journal related attributes to returnObject.journals.
@@ -28,14 +28,14 @@ class JournalFind extends GenericFind {
      *         Internal context object
      *         Criteria object passed to find()
      */
-    static buildReturnObjectWhere(returnObject, context, criteria) {
-        // build families object
-        returnObject.journals =  {};
+  static buildReturnObjectWhere(returnObject, context, criteria) {
+    // build families object
+    returnObject.journals =  {};
 
-        for(let row of context.rowsWhere) {
-            Utils.addJournalFromRowToReturnObject(row, returnObject);
-        }
+    for(let row of context.rowsWhere) {
+      Utils.addJournalFromRowToReturnObject(row, returnObject);
     }
+  }
 }
 
 JournalFind.TABLE = CONSTANTS.TABLE_JOURNAL;
@@ -45,9 +45,9 @@ JournalFind.ATTR_ID = CONSTANTS.ATTR_ID_JOURNAL;
 JournalFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_JOURNAL;
 
 JournalFind.OVERWRITE_TABLE_LOOKUP = {
-    [CONSTANTS.ATTR_ID_ENVIRONMENT]: CONSTANTS.TABLE_JOURNAL,
-    [CONSTANTS.ATTR_ID_MEDIUM]: CONSTANTS.TABLE_JOURNAL,
-    [CONSTANTS.ATTR_ID_PLANT]: CONSTANTS.TABLE_JOURNAL
+  [CONSTANTS.ATTR_ID_ENVIRONMENT]: CONSTANTS.TABLE_JOURNAL,
+  [CONSTANTS.ATTR_ID_MEDIUM]: CONSTANTS.TABLE_JOURNAL,
+  [CONSTANTS.ATTR_ID_PLANT]: CONSTANTS.TABLE_JOURNAL
 };
 
 module.exports = JournalFind;

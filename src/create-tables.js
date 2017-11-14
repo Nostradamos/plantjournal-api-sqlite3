@@ -7,7 +7,7 @@ const CONSTANTS = require('./constants');
  * This method creates all database tables.
  */
 module.exports =  async function createTables() {
-    await sqlite.run(`
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_ENVIRONMENT + ` (
         environmentId INTEGER,
         environmentName TEXT NOT NULL,
@@ -18,7 +18,7 @@ module.exports =  async function createTables() {
       );
     `);
 
-    await sqlite.run(`
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_MEDIUM + ` (
         mediumId INTEGER,
         mediumName TEXT NOT NULL,
@@ -31,7 +31,7 @@ module.exports =  async function createTables() {
       );
     `);
 
-    await sqlite.run(`
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_FAMILY + ` (
         familyId INTEGER,
         familyName TEXT NOT NULL,
@@ -42,7 +42,7 @@ module.exports =  async function createTables() {
       );
     `);
 
-    await sqlite.run(`
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` +  CONSTANTS.TABLE_GENERATION + ` (
         generationId INTEGER,
         generationName TEXT NOT NULL,
@@ -55,7 +55,7 @@ module.exports =  async function createTables() {
       );
     `);
 
-    await sqlite.run(`
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENOTYPE + ` (
         genotypeId INTEGER,
         genotypeName TEXT NOT NULL DEFAULT '',
@@ -68,7 +68,7 @@ module.exports =  async function createTables() {
       );
     `);
 
-    await sqlite.run(`
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_PLANT + ` (
         plantId INTEGER,
         plantName TEXT NOT NULL,
@@ -86,9 +86,9 @@ module.exports =  async function createTables() {
       );
     `);
 
-    // We have to this after plant & generation creation becaus of the
-    // foreign keys.
-    await sqlite.run(`
+  // We have to this after plant & generation creation becaus of the
+  // foreign keys.
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENERATION_PARENT + ` (
         parentId INTEGER,
         generationId NOT NULL,
@@ -99,7 +99,7 @@ module.exports =  async function createTables() {
       );
     `);
 
-    await sqlite.run(`
+  await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_JOURNAL + ` (
         journalId INTEGER,
         journalTimestamp DATETIME NOT NULL,

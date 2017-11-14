@@ -61,7 +61,7 @@ let Generation = exports;
  *         only be one key, which is the id of the newly created generation.
  */
 Generation.create = async function(options) {
-    return await GenerationCreate.create(options);
+  return await GenerationCreate.create(options);
 };
 
 /**
@@ -81,7 +81,7 @@ Generation.create = async function(options) {
  *         families. Only .generations and maybe .families will be set.
  */
 Generation.find = async function(criteria) {
-    return await GenerationFind.find(criteria);
+  return await GenerationFind.find(criteria);
 };
 
 /**
@@ -109,7 +109,7 @@ Generation.find = async function(criteria) {
  *         Array containing all deleted plant ids.
  */
 Generation.delete = async function(criteria) {
-    return await GenerationDelete.delete(criteria);
+  return await GenerationDelete.delete(criteria);
 };
 
 /**
@@ -143,5 +143,5 @@ Generation.delete = async function(criteria) {
  *         Should only throw error if unexpected sqlite error happend.
  */
 Generation.update = async function(update, criteria) {
-    return await GenerationUpdate.update(update, criteria);
+  return await GenerationUpdate.update(update, criteria);
 };

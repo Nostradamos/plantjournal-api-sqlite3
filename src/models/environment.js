@@ -49,7 +49,7 @@ let Environment = exports;
  * @return {ReturnFind} plantCreate.environments
  */
 Environment.create = async function(options) {
-    return await EnvironmentCreate.create(options);
+  return await EnvironmentCreate.create(options);
 };
 
 /**
@@ -68,7 +68,7 @@ Environment.create = async function(options) {
  *         Found environments
  */
 Environment.find = async function(criteria) {
-    return await EnvironmentFind.find(criteria);
+  return await EnvironmentFind.find(criteria);
 };
 
 /**
@@ -93,7 +93,7 @@ Environment.find = async function(criteria) {
  *         Array containing all deleted plant ids.
  */
 Environment.delete = async function(criteria) {
-    return await EnvironmentDelete.delete(criteria);
+  return await EnvironmentDelete.delete(criteria);
 };
 
 /**
@@ -116,5 +116,5 @@ Environment.delete = async function(criteria) {
  *         Empty if none got updated.
  */
 Environment.update = async function(update, criteria) {
-    return await EnvironmentUpdate.update(update, criteria);
+  return await EnvironmentUpdate.update(update, criteria);
 };

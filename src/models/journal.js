@@ -61,7 +61,7 @@ let Journal = exports;
  *         Object containing all information given
  */
 Journal.create = async function(options) {
-    return await JournalCreate.create(options);
+  return await JournalCreate.create(options);
 };
 
 /**
@@ -79,7 +79,7 @@ Journal.create = async function(options) {
  *         Object containing information about found journals.
  */
 Journal.find = async function(criteria) {
-    return await JournalFind.find(criteria);
+  return await JournalFind.find(criteria);
 };
 
 /**
@@ -100,7 +100,7 @@ Journal.find = async function(criteria) {
  *         Array containing all deleted genotye ids.
  */
 Journal.delete = async function(criteria) {
-    return await JournalDelete.delete(criteria);
+  return await JournalDelete.delete(criteria);
 };
 
 /**
@@ -133,5 +133,5 @@ Journal.delete = async function(criteria) {
  *          Array of updated journalIds. Empty if no journals got updated.
  */
 Journal.update = async function(update, criteria) {
-    return await JournalUpdate.update(update, criteria);
+  return await JournalUpdate.update(update, criteria);
 };

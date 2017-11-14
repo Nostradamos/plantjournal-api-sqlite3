@@ -109,7 +109,7 @@ var Family = {};
  *         only be one key, which is the id of the newly created family.
  */
 Family.create = async function(options) {
-    return await FamilyCreate.create(options);
+  return await FamilyCreate.create(options);
 };
 
 /**
@@ -127,7 +127,7 @@ Family.create = async function(options) {
  * @return {ReturnFindFamily} - Found families
  */
 Family.find = async function(criteria) {
-    return await FamilyFind.find(criteria);
+  return await FamilyFind.find(criteria);
 };
 
 /**
@@ -155,7 +155,7 @@ Family.find = async function(criteria) {
  *         Array containing all deleted plant ids.
  */
 Family.delete = async function(criteria) {
-    return await FamilyDelete.delete(criteria);
+  return await FamilyDelete.delete(criteria);
 };
 
 /**
@@ -179,7 +179,7 @@ Family.delete = async function(criteria) {
  *         Empty if none got updated.
  */
 Family.update = async function(update, criteria) {
-    return await FamilyUpdate.update(update, criteria);
+  return await FamilyUpdate.update(update, criteria);
 };
 
 module.exports = Family;

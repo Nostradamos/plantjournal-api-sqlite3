@@ -6,7 +6,7 @@
  * @type {Error}
  */
 class pjError extends Error {
-    /**
+  /**
      * All pjErrors shall have an error code and an error message.
      * We enfore this by having the error code as a function argument
      * instead of a instance attribute.
@@ -15,11 +15,11 @@ class pjError extends Error {
      *         E. All characters should be uppersized and
      * @param  {String} message [description]
      */
-    constructor(code, message) {
-        super(message);
-        this.code = code;
-        Error.captureStackTrace(this, pjError);
-    }
+  constructor(code, message) {
+    super(message);
+    this.code = code;
+    Error.captureStackTrace(this, pjError);
+  }
 }
 
 module.exports = pjError;

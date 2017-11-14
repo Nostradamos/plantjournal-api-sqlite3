@@ -14,7 +14,7 @@ const GenericCreate = require('../generic/generic-create');
  * @extends GenericCreate
  */
 class EnvironmentCreate extends GenericCreate {
-    /**
+  /**
      * We need to validate the properties for new environment.
      * @param  {object} context
      *         internal context object in #create().
@@ -22,11 +22,11 @@ class EnvironmentCreate extends GenericCreate {
      *         options object which got passed to GenericCreate.create().
      * @throws {Error}
      */
-    static validateOptions(context, options) {
-        Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_ENVIRONMENT);
-        Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_ENVIRONMENT);
-        Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_ENVIRONMENT);
-    }
+  static validateOptions(context, options) {
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_ENVIRONMENT);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_ENVIRONMENT);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_ENVIRONMENT);
+  }
 }
 
 EnvironmentCreate.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
@@ -40,12 +40,12 @@ EnvironmentCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_ENVIRONMENT;
 EnvironmentCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_ENVIRONMENT;
 
 EnvironmentCreate.SKIP_ATTRIBUTES = [
-    CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT
+  CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT
 ];
 
 EnvironmentCreate.DEFAULT_VALUES_ATTRIBUTES = {
-    [CONSTANTS.ATTR_DESCRIPTION_ENVIRONMENT]: '',
-    [CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT]: []
+  [CONSTANTS.ATTR_DESCRIPTION_ENVIRONMENT]: '',
+  [CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT]: []
 };
 
 EnvironmentCreate.PLURAL = CONSTANTS.PLURAL_ENVIRONMENT;

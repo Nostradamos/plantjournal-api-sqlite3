@@ -19,7 +19,7 @@ const GenericFind = require('../generic/generic-find');
  * @extends GenericFind
  */
 class GenerationFind extends GenericFind {
-    /**
+  /**
      * We need to join families table, so that we can for example also find
      * generations based on their family name.
      * @param  {object} context
@@ -27,12 +27,12 @@ class GenerationFind extends GenericFind {
      * @param  {object} criteria
      *         Criteria object passed to find()
      */
-    static setQueryWhereJoin(context, criteria) {
-        // Joins families, and because of the true flag also generation_parents.
-        UtilsQuery.joinRelatedGenerations(context.queryWhere, true);
-    }
+  static setQueryWhereJoin(context, criteria) {
+    // Joins families, and because of the true flag also generation_parents.
+    UtilsQuery.joinRelatedGenerations(context.queryWhere, true);
+  }
 
-    /**
+  /**
      * Build the returnObject. We want to have all family attributes
      * (like familyName, familyId) inreturnObject.families and all
      * generation attributes in returnObject.generations.
@@ -43,19 +43,19 @@ class GenerationFind extends GenericFind {
      * @param  {object} criteria
      *         Criteria object passed to find()
      */
-    static buildReturnObjectWhere(returnObject, context, criteria) {
-        returnObject.families = {};
-        returnObject.generations = {};
+  static buildReturnObjectWhere(returnObject, context, criteria) {
+    returnObject.families = {};
+    returnObject.generations = {};
 
-        for(let row of context.rowsWhere) {
-            Utils.addGenerationFromRowToReturnObject(row, returnObject, true);
-            Utils.addFamilyFromRowToReturnObject(row, returnObject);
-        }
-
-        // We could use Utils.deleteEmptyProperties() but this is maybe more
-        // performant.
-        if (_.isEmpty(returnObject.families)) delete returnObject.families;
+    for(let row of context.rowsWhere) {
+      Utils.addGenerationFromRowToReturnObject(row, returnObject, true);
+      Utils.addFamilyFromRowToReturnObject(row, returnObject);
     }
+
+    // We could use Utils.deleteEmptyProperties() but this is maybe more
+    // performant.
+    if (_.isEmpty(returnObject.families)) delete returnObject.families;
+  }
 }
 
 GenerationFind.TABLE =  CONSTANTS.TABLE_GENERATION;

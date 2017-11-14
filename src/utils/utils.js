@@ -25,11 +25,11 @@ let Utils = exports;
  *         returns obj again (also mutates obj)
  */
 Utils.deleteEmptyProperties = function(obj, limitTo) {
-    if (_.isEmpty(limitTo)) limitTo = _.keys(obj);
-    _(limitTo).filter(o => _.isEmpty(obj[o])).each(u => {
-        _.unset(obj, u);
-    });
-    return obj;
+  if (_.isEmpty(limitTo)) limitTo = _.keys(obj);
+  _(limitTo).filter(o => _.isEmpty(obj[o])).each(u => {
+    _.unset(obj, u);
+  });
+  return obj;
 };
 
 /**
@@ -44,22 +44,22 @@ Utils.deleteEmptyProperties = function(obj, limitTo) {
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addFamilyFromRowToReturnObject = (row, returnObject, forceAdd) => {
-    let familyId = row.familyId;
-    let family = {};
+  let familyId = row.familyId;
+  let family = {};
 
-    let value;
-    for (let attr of CONSTANTS.ALL_ATTRIBUTES_FAMILY) {
-        if (!_.has(row, attr)) continue;
-        value = row[attr];
-        if (attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
-            value = Utils.splitToInt(value);
-        }
-        family[attr] = value;
+  let value;
+  for (let attr of CONSTANTS.ALL_ATTRIBUTES_FAMILY) {
+    if (!_.has(row, attr)) continue;
+    value = row[attr];
+    if (attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
+      value = Utils.splitToInt(value);
     }
+    family[attr] = value;
+  }
 
-    // Make sure we have at least two attrs, or forceAdd = true
-    if (forceAdd === true || _.size(family) > 1)
-        returnObject.families[familyId] = family;
+  // Make sure we have at least two attrs, or forceAdd = true
+  if (forceAdd === true || _.size(family) > 1)
+    returnObject.families[familyId] = family;
 };
 
 /**
@@ -77,26 +77,26 @@ Utils.addFamilyFromRowToReturnObject = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addGenerationFromRowToReturnObject = (row, returnObject, forceAdd) => {
-    let generationId = row.generationId;
-    let generation = {
-        'familyId': row.familyId
-    };
+  let generationId = row.generationId;
+  let generation = {
+    'familyId': row.familyId
+  };
 
-    for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENERATION) {
-        if (!_.has(row, attr)) continue;
+  for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENERATION) {
+    if (!_.has(row, attr)) continue;
 
-        let value = row[attr];
-        if (attr === CONSTANTS.ATTR_PARENTS_GENERATION ||
+    let value = row[attr];
+    if (attr === CONSTANTS.ATTR_PARENTS_GENERATION ||
             attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
-            value = Utils.splitToInt(value);
-        }
-        generation[attr] = value;
-
+      value = Utils.splitToInt(value);
     }
-    // Make sure that we only add it returnObject if we not only have
-    // generationId and familyId set.
-    if (forceAdd === true || _.size(generation) > 2)
-        returnObject.generations[generationId] = generation;
+    generation[attr] = value;
+
+  }
+  // Make sure that we only add it returnObject if we not only have
+  // generationId and familyId set.
+  if (forceAdd === true || _.size(generation) > 2)
+    returnObject.generations[generationId] = generation;
 };
 
 /**
@@ -114,25 +114,25 @@ Utils.addGenerationFromRowToReturnObject = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addGenotypeFromRowToReturnObject = (row, returnObject, forceAdd) => {
-    let genotypeId = row.genotypeId;
-    let genotype = {
-        [CONSTANTS.ATTR_ID_GENOTYPE]: row.generationId,
-        [CONSTANTS.ATTR_ID_FAMILY]: row.familyId
-    };
+  let genotypeId = row.genotypeId;
+  let genotype = {
+    [CONSTANTS.ATTR_ID_GENOTYPE]: row.generationId,
+    [CONSTANTS.ATTR_ID_FAMILY]: row.familyId
+  };
 
-    let value;
-    for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENOTYPE) {
-        if (!_.has(row, attr)) continue;
-        value = row[attr];
+  let value;
+  for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENOTYPE) {
+    if (!_.has(row, attr)) continue;
+    value = row[attr];
 
-        if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
-            value = Utils.splitToInt(value);
-        }
-
-        genotype[attr] = value;
+    if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
+      value = Utils.splitToInt(value);
     }
-    if (forceAdd === true || _.size(genotype) > 3)
-        returnObject.genotypes[genotypeId] = genotype;
+
+    genotype[attr] = value;
+  }
+  if (forceAdd === true || _.size(genotype) > 3)
+    returnObject.genotypes[genotypeId] = genotype;
 };
 
 /**
@@ -149,30 +149,30 @@ Utils.addGenotypeFromRowToReturnObject = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addPlantFromRowToReturnObject = (row, returnObject, forceAdd) => {
-    let plantId = row.plantId;
+  let plantId = row.plantId;
 
-    let plant = {
-        'genotypeId': row.genotypeId,
-        'generationId': row.generationId,
-        'familyId': row.familyId,
-        'mediumId': row.mediumId || null,
-        'environmentId': row.environmentId || null
-    };
+  let plant = {
+    'genotypeId': row.genotypeId,
+    'generationId': row.generationId,
+    'familyId': row.familyId,
+    'mediumId': row.mediumId || null,
+    'environmentId': row.environmentId || null
+  };
 
-    let value;
-    for (let attr of CONSTANTS.ALL_ATTRIBUTES_PLANT) {
-        if (!_.has(row, attr)) continue;
-        value = row[attr];
+  let value;
+  for (let attr of CONSTANTS.ALL_ATTRIBUTES_PLANT) {
+    if (!_.has(row, attr)) continue;
+    value = row[attr];
 
-        if(attr === CONSTANTS.ATTR_CLONES_PLANT) {
-            value = Utils.splitToInt(value);
-        }
-
-        plant[attr] = value;
+    if(attr === CONSTANTS.ATTR_CLONES_PLANT) {
+      value = Utils.splitToInt(value);
     }
 
-    if (forceAdd === true || _.size(plant) > 6)
-        returnObject.plants[plantId] = plant;
+    plant[attr] = value;
+  }
+
+  if (forceAdd === true || _.size(plant) > 6)
+    returnObject.plants[plantId] = plant;
 };
 
 /**
@@ -186,25 +186,25 @@ Utils.addPlantFromRowToReturnObject = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addEnvironmentFromRowToReturnObject = (row, returnObject, forceAdd) => {
-    let environmentId = row.environmentId;
+  let environmentId = row.environmentId;
 
-    if(_.isUndefined(environmentId) || _.isNull(environmentId))
-        return;
+  if(_.isUndefined(environmentId) || _.isNull(environmentId))
+    return;
 
-    let environment = {};
+  let environment = {};
 
-    let value;
-    for(let attr of CONSTANTS.ALL_ATTRIBUTES_ENVIRONMENT) {
-        if (!_.has(row, attr)) continue;
-        value = row[attr];
+  let value;
+  for(let attr of CONSTANTS.ALL_ATTRIBUTES_ENVIRONMENT) {
+    if (!_.has(row, attr)) continue;
+    value = row[attr];
 
-        if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
-            value = Utils.splitToInt(value);
-        }
-        environment[attr] = value;
+    if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
+      value = Utils.splitToInt(value);
     }
+    environment[attr] = value;
+  }
 
-    returnObject.environments[environmentId] = environment;
+  returnObject.environments[environmentId] = environment;
 };
 
 /**
@@ -218,47 +218,47 @@ Utils.addEnvironmentFromRowToReturnObject = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 Utils.addMediumFromRowToReturnObject = (row, returnObject, forceAdd) => {
-    let mediumId = row.mediumId;
-    let medium = {
-        'environmentId': row.environmentId
-    };
+  let mediumId = row.mediumId;
+  let medium = {
+    'environmentId': row.environmentId
+  };
 
-    let value;
-    for(let attr of CONSTANTS.ALL_ATTRIBUTES_MEDIUM) {
-        if (!_.has(row, attr)) continue;
-        value = row[attr];
+  let value;
+  for(let attr of CONSTANTS.ALL_ATTRIBUTES_MEDIUM) {
+    if (!_.has(row, attr)) continue;
+    value = row[attr];
 
-        if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
-            value = Utils.splitToInt(value);
-        }
-
-        medium[attr] = value;
+    if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
+      value = Utils.splitToInt(value);
     }
 
-    if (forceAdd === true || _.size(medium) > 2)
-        returnObject.mediums[mediumId] = medium;
+    medium[attr] = value;
+  }
+
+  if (forceAdd === true || _.size(medium) > 2)
+    returnObject.mediums[mediumId] = medium;
 };
 
 Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
-    let journalId = row.journalId;
-    let journal = {};
+  let journalId = row.journalId;
+  let journal = {};
 
-    let value;
-    for (let attr of CONSTANTS.ALL_ATTRIBUTES_JOURNAL) {
-        if (!_.has(row, attr)) continue;
-        value = row[attr];
-        let isForeignAttr = _.indexOf(
-            [
-                CONSTANTS.ATTR_ID_ENVIRONMENT,
-                CONSTANTS.ATTR_ID_MEDIUM,
-                CONSTANTS.ATTR_ID_PLANT
-            ], attr);
-        if (value === null && isForeignAttr !== -1) continue;
-        journal[attr] = value;
-    }
+  let value;
+  for (let attr of CONSTANTS.ALL_ATTRIBUTES_JOURNAL) {
+    if (!_.has(row, attr)) continue;
+    value = row[attr];
+    let isForeignAttr = _.indexOf(
+      [
+        CONSTANTS.ATTR_ID_ENVIRONMENT,
+        CONSTANTS.ATTR_ID_MEDIUM,
+        CONSTANTS.ATTR_ID_PLANT
+      ], attr);
+    if (value === null && isForeignAttr !== -1) continue;
+    journal[attr] = value;
+  }
 
-    if (forceAdd === true || _.size(journal) > 4)
-        returnObject.journals[journalId] = journal;
+  if (forceAdd === true || _.size(journal) > 4)
+    returnObject.journals[journalId] = journal;
 };
 
 /**
@@ -277,15 +277,15 @@ Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
 */
 Utils.addFoundAndRemainingFromCountToReturnObject =
 function (count, lenRows, returnObject, options) {
-    let found = count['count'];
-    let offset = options.offset || 0;
-    let remaining = found - offset - lenRows;
+  let found = count['count'];
+  let offset = options.offset || 0;
+  let remaining = found - offset - lenRows;
 
-    // Make sure we don't go negative
-    if(remaining < 0) remaining = 0;
+  // Make sure we don't go negative
+  if(remaining < 0) remaining = 0;
 
-    returnObject['found'] = found;
-    returnObject['remaining'] = remaining;
+  returnObject['found'] = found;
+  returnObject['remaining'] = remaining;
 };
 
 /**
@@ -297,9 +297,9 @@ function (count, lenRows, returnObject, options) {
  *         Name of object for error message.
  */
 Utils.hasToBeAssocArray = function (obj, prefix = 'First argument') {
-    if (!_.isObjectLike(obj) || _.isArray(obj)) {
-        throw new Error(prefix + ' has to be an associative array');
-    }
+  if (!_.isObjectLike(obj) || _.isArray(obj)) {
+    throw new Error(prefix + ' has to be an associative array');
+  }
 };
 
 /**
@@ -311,9 +311,9 @@ Utils.hasToBeAssocArray = function (obj, prefix = 'First argument') {
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeString = function(obj, property, name = 'options') {
-    if (_.has(obj, property) && !_.isString(obj[property])) {
-        throw new Error(name + '.' + property + ' has to be a string');
-    }
+  if (_.has(obj, property) && !_.isString(obj[property])) {
+    throw new Error(name + '.' + property + ' has to be a string');
+  }
 };
 
 /**
@@ -325,17 +325,17 @@ Utils.hasToBeString = function(obj, property, name = 'options') {
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeInt = function(obj, property, name = 'options') {
-    if (_.has(obj, property) && !_.isInteger(obj[property])) {
-        throw new Error(name + '.' + property + ' has to be an integer');
-    }
+  if (_.has(obj, property) && !_.isInteger(obj[property])) {
+    throw new Error(name + '.' + property + ' has to be an integer');
+  }
 };
 
 Utils.hasToBeIntOrNull = function(obj, property, name = 'options') {
-    let value = obj[property];
-    if (!_.isUndefined(value) && !_.isInteger(value) && !_.isNull(value)) {
-        throw new Error(
-            name + '.' + property + ' has to be an integer or null');
-    }
+  let value = obj[property];
+  if (!_.isUndefined(value) && !_.isInteger(value) && !_.isNull(value)) {
+    throw new Error(
+      name + '.' + property + ' has to be an integer or null');
+  }
 };
 
 /**
@@ -348,12 +348,12 @@ Utils.hasToBeIntOrNull = function(obj, property, name = 'options') {
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeIntArray = function(obj, property, name = 'options') {
-    let value = obj[property];
-    if(_.isUndefined(value)) return;
-    if (!_.isArray(value) || !_.every(value, _.isInteger)) {
-        throw new Error(
-            name + '.' + property + ' has to be an array of integers');
-    }
+  let value = obj[property];
+  if(_.isUndefined(value)) return;
+  if (!_.isArray(value) || !_.every(value, _.isInteger)) {
+    throw new Error(
+      name + '.' + property + ' has to be an array of integers');
+  }
 };
 
 /**
@@ -364,9 +364,9 @@ Utils.hasToBeIntArray = function(obj, property, name = 'options') {
  *                                      Object? Defaults to options.
  */
 Utils.hasToBeSet = function(obj, property, name = 'options') {
-    if (!_.has(obj, property)) {
-        throw new Error(name + '.' + property + ' has to be set');
-    }
+  if (!_.has(obj, property)) {
+    throw new Error(name + '.' + property + ' has to be set');
+  }
 };
 
 /**
@@ -374,7 +374,7 @@ Utils.hasToBeSet = function(obj, property, name = 'options') {
  * @return {UnixTimestampUTC} Unix Timestamp
  */
 Utils.getUnixTimestampUTC = function() {
-    return Math.floor(new Date() / 1000);
+  return Math.floor(new Date() / 1000);
 };
 
 /**
@@ -383,8 +383,8 @@ Utils.getUnixTimestampUTC = function() {
  * @return {Array}   - Arrayfied set without null elements
  */
 Utils.whereSetNotNull = function(set) {
-    set.delete(null);
-    return Array.from(set);
+  set.delete(null);
+  return Array.from(set);
 };
 
 /**
@@ -392,27 +392,18 @@ Utils.whereSetNotNull = function(set) {
  * @throws {Error}
  */
 Utils.throwErrorIfNotConnected = function() {
-    if (sqlite.driver != null && sqlite.driver.open === true) {
-        return;
-    }
-    throw Error('plantJournal is not connected to database.');
-};
-
-Utils.isValidJSON = function(str) {
-    try {
-        JSON.parse(str);
-    } catch(err) {
-        return false;
-    }
-    return true;
+  if (sqlite.driver != null && sqlite.driver.open === true) {
+    return;
+  }
+  throw Error('plantJournal is not connected to database.');
 };
 
 Utils.explicitColumn = function(table, column) {
-    return table + '.' + column;
+  return table + '.' + column;
 };
 
 Utils.explicitColumnRstr = function(table, column) {
-    return squel.rstr(Utils.explicitColumn(table, column));
+  return squel.rstr(Utils.explicitColumn(table, column));
 };
 
 /**
@@ -427,5 +418,5 @@ Utils.explicitColumnRstr = function(table, column) {
  *         Integer array, if string is empty or null, array will be emtpy too.
  */
 Utils.splitToInt = function(str, sep = ',') {
-    return str === null ? [] : _(str).split(sep).map(_.toInteger).value();
+  return str === null ? [] : _(str).split(sep).map(_.toInteger).value();
 };

@@ -51,7 +51,7 @@ let Medium = exports;
  *         which is the id of the newly created plant.
  */
 Medium.create = async function(options) {
-    return await MediumCreate.create(options);
+  return await MediumCreate.create(options);
 };
 
 /**
@@ -68,7 +68,7 @@ Medium.create = async function(options) {
  *         Found Mediums
  */
 Medium.find = async function(criteria) {
-    return await MediumFind.find(criteria);
+  return await MediumFind.find(criteria);
 };
 
 /**
@@ -91,7 +91,7 @@ Medium.find = async function(criteria) {
  *         Array containing all deleted plant ids.
  */
 Medium.delete = async function(criteria) {
-    return await MediumDelete.delete(criteria);
+  return await MediumDelete.delete(criteria);
 };
 
 /**
@@ -115,5 +115,5 @@ Medium.delete = async function(criteria) {
  *         Empty if none got updated.
  */
 Medium.update = async function(update, criteria) {
-    return await MediumUpdate.update(update, criteria);
+  return await MediumUpdate.update(update, criteria);
 };

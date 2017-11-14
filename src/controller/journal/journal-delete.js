@@ -16,19 +16,19 @@ const GenericDelete = require('../generic/generic-delete');
  * @extends GenericDelete
  */
 class JournalDelete extends GenericDelete {
-    /**
+  /**
      * We need to know journalId (obviously)
      * @param  {object} context
      *         Internal context object
      * @param  {object} criteria
      *         Criteria object passed to delete()
      */
-    static setQueryRelatedFields(context, criteria) {
-        context.queryRelated
-            .field('journals.journalId');
-    }
+  static setQueryRelatedFields(context, criteria) {
+    context.queryRelated
+      .field('journals.journalId');
+  }
 
-    /**
+  /**
      * We want to extract all the ids which we queried before and which will
      * get deleted later when we fire the DELETE command.
      * @param  {object} context
@@ -36,23 +36,23 @@ class JournalDelete extends GenericDelete {
      * @param  {object} criteria
      *         Criteria object passed to delete()
      */
-    static extractIdsToDelete(context, criteria) {
-        context.journalIdsToDelete = new Set();
+  static extractIdsToDelete(context, criteria) {
+    context.journalIdsToDelete = new Set();
 
-        for(let row of context.rowsRelated) {
-            context.journalIdsToDelete.add(row.journalId);
-        }
-
-        context.journalIdsToDelete = Utils
-            .whereSetNotNull(context.journalIdsToDelete);
-
-        context.haveIdsToDelete = context.journalIdsToDelete.length > 0;
-
-        logger.debug(this.name, '#delete() journalIdsToDelete:',
-            context.journalIdsToDelete);
+    for(let row of context.rowsRelated) {
+      context.journalIdsToDelete.add(row.journalId);
     }
 
-    /**
+    context.journalIdsToDelete = Utils
+      .whereSetNotNull(context.journalIdsToDelete);
+
+    context.haveIdsToDelete = context.journalIdsToDelete.length > 0;
+
+    logger.debug(this.name, '#delete() journalIdsToDelete:',
+      context.journalIdsToDelete);
+  }
+
+  /**
      * We need to apply the journalId's to delete to the queryDelete.
      * Mediums and plants will get deleted automatically by sqlite because
      * of the foreign key and ON DELETE CASCADE. See create-tables.js
@@ -62,12 +62,12 @@ class JournalDelete extends GenericDelete {
      * @param  {object} criteria
      *         Criteria object passed to delete()
      */
-    static setQueryDeleteWhere(context, criteria) {
-        context.queryDelete
-            .where('journals.journalId IN ?', context.journalIdsToDelete);
-    }
+  static setQueryDeleteWhere(context, criteria) {
+    context.queryDelete
+      .where('journals.journalId IN ?', context.journalIdsToDelete);
+  }
 
-    /**
+  /**
      * Build returnObject. It should contain all deleted ids for the various
      * models.
      * @param  {object} returnObject
@@ -78,9 +78,9 @@ class JournalDelete extends GenericDelete {
      * @param  {object} criteria
      *         Criteria object passed to delete()
      */
-    static buildReturnObject(returnObject, context, criteria) {
-        returnObject['journals'] = context.journalIdsToDelete;
-    }
+  static buildReturnObject(returnObject, context, criteria) {
+    returnObject['journals'] = context.journalIdsToDelete;
+  }
 }
 
 JournalDelete.TABLE = CONSTANTS.TABLE_JOURNAL;

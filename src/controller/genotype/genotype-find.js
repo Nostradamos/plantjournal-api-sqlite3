@@ -18,7 +18,7 @@ const GenericFind = require('../generic/generic-find');
  */
 class GenotypeFind extends GenericFind {
 
-    /**
+  /**
      * We need to join both generation and families to make it possible to find
      * genotypes based on familyName, familyId, generationName etc. This
      * basically enforces us to query every field of generations or families.
@@ -27,11 +27,11 @@ class GenotypeFind extends GenericFind {
      * @param  {object} criteria
      *         Criteria object passed to find()
      */
-    static setQueryWhereJoin(context, criteria) {
-        UtilsQuery.joinRelatedGenotypes(context.queryWhere);
-    }
+  static setQueryWhereJoin(context, criteria) {
+    UtilsQuery.joinRelatedGenotypes(context.queryWhere);
+  }
 
-    /**
+  /**
      * Build the returnObject. We want to have all genotype attributes (like
      * genotypeName etc) in returnObject.genotypes, all family attributes
      * (like familyName, familyId) inreturnObject.families and all
@@ -43,19 +43,19 @@ class GenotypeFind extends GenericFind {
      * @param  {object} criteria
      *         Criteria object passed to find()
      */
-    static buildReturnObjectWhere(returnObject, context, criteria) {
-        returnObject.genotypes = {};
-        returnObject.generations = {};
-        returnObject.families = {};
+  static buildReturnObjectWhere(returnObject, context, criteria) {
+    returnObject.genotypes = {};
+    returnObject.generations = {};
+    returnObject.families = {};
 
-        for(let row of context.rowsWhere) {
-            Utils.addGenotypeFromRowToReturnObject(row, returnObject, true);
-            Utils.addGenerationFromRowToReturnObject(row, returnObject);
-            Utils.addFamilyFromRowToReturnObject(row, returnObject);
-        }
-
-        Utils.deleteEmptyProperties(returnObject, ['families', 'generations']);
+    for(let row of context.rowsWhere) {
+      Utils.addGenotypeFromRowToReturnObject(row, returnObject, true);
+      Utils.addGenerationFromRowToReturnObject(row, returnObject);
+      Utils.addFamilyFromRowToReturnObject(row, returnObject);
     }
+
+    Utils.deleteEmptyProperties(returnObject, ['families', 'generations']);
+  }
 }
 
 GenotypeFind.TABLE = CONSTANTS.TABLE_GENOTYPE;
@@ -65,8 +65,8 @@ GenotypeFind.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 GenotypeFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENOTYPE;
 
 GenotypeFind.DEFAULT_FIELDS = ['genotypes.genotypeId',
-    'generations.generationId',
-    'families.familyId'];
+  'generations.generationId',
+  'families.familyId'];
 
 GenotypeFind.COUNT = 'DISTINCT ' +  CONSTANTS.TABLE_GENOTYPE + '.' + CONSTANTS.ATTR_ID_GENOTYPE;
 

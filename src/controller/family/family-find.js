@@ -17,7 +17,7 @@ const GenericFind = require('../generic/generic-find');
  * @extends GenericFind
  */
 class FamilyFind extends GenericFind {
-    /**
+  /**
      * We need to overwrite this method to, yeah,
      * build the returnObject. We basically iterate over
      * each row we get from database and add all family related
@@ -29,13 +29,13 @@ class FamilyFind extends GenericFind {
      *         Internal context object
      *         Criteria object passed to find()
      */
-    static buildReturnObjectWhere(returnObject, context, criteria) {
-        // build families object
-        returnObject.families =  {};
-        for(let row of context.rowsWhere) {
-            Utils.addFamilyFromRowToReturnObject(row, returnObject, true);
-        }
+  static buildReturnObjectWhere(returnObject, context, criteria) {
+    // build families object
+    returnObject.families =  {};
+    for(let row of context.rowsWhere) {
+      Utils.addFamilyFromRowToReturnObject(row, returnObject, true);
     }
+  }
 }
 
 FamilyFind.TABLE = CONSTANTS.TABLE_FAMILY;

@@ -19,7 +19,7 @@ const UtilsExpression = require('../utils/utils-expression');
  * TranslateOperatorsRelational.
  */
 class TranslateOperatorsGeneric {
-    /**
+  /**
      * This method will do the whole translation process by calling the
      * different  sub methods in order and apply the created squel expressions
      * to squelExpr.
@@ -37,50 +37,55 @@ class TranslateOperatorsGeneric {
      * @param  {String} type
      *         Has to be 'and' or 'or'.
      */
-    static translateAndApplyOperators(selfSelf, attr, attrOptions, squelExpr, type) {
-        logger.silly(
-            this.name, '#translateAndApplyOperators() selfSelf',
-            JSON.stringify(selfSelf), 'attr:', attr, 'attrOptions:', attrOptions,
-            'squelExpr:', squelExpr, 'type:', type);
+  static translateAndApplyOperators(selfSelf, attr, attrOptions, squelExpr, type) {
+    logger.silly(
+      this.name, '#translateAndApplyOperators() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
 
-        // This object will get passed to every method of this class we will
-        // call. If you need to store anything across the different methods,
-        // store it in self.
-        let self = {selfSelf, attr, attrOptions, squelExpr, type};
+    // This object will get passed to every method of this class we will
+    // call. If you need to store anything across the different methods,
+    // store it in self.
+    let self = {
+      selfSelf,
+      attr,
+      attrOptions,
+      squelExpr,
+      type
+    };
 
-        this.getTable(self);
-        this.modifySelf(self);
 
-        logger.silly(this.name, '#translateAndApplyOperators() self.table:', self.table);
+    this.getTable(self);
+    this.modifySelf(self);
 
-        if(_.isPlainObject(attrOptions)) {
-            this.callOperatorFuncsAndApplyCriterias(self);
-        } else {
-            this.checkForShortHands(self);
-        }
+    logger.silly(this.name, '#translateAndApplyOperators() self.table:', self.table);
 
-        this.beforeDone(self);
+    if(_.isPlainObject(attrOptions)) {
+      this.callOperatorFuncsAndApplyCriterias(self);
+    } else {
+      this.checkForShortHands(self);
     }
 
-    /**
+    this.beforeDone(self);
+  }
+
+  /**
      * Overwrite this method to set the correct table for this attribute.
      * The name of the table should be stored inside self.table.
      * @param  {Object} self
      *         Object containing information about this translation process
      */
-    static getTable(self) {
-        self.table = undefined;
-    }
+  static getTable(self) {
+    self.table = undefined;
+  }
 
-    /**
+  /**
      * Overwrite this method if you have to alter other self properties and
      * not only self.table.
      * @param  {Object} self
      *         Object containing information about this translation process
      */
-    static modifySelf(self) {}
+  static modifySelf(self) {}
 
-    /**
+  /**
      * Checks if any matching operator is defined inside attrOptions
      * and if so call the related operator function. The operator function
      * can alter the crit object to create a new squel expression
@@ -90,76 +95,78 @@ class TranslateOperatorsGeneric {
      * @param  {Object} self
      *         Object containing information about this translation process
      */
-    static callOperatorFuncsAndApplyCriterias(self) {
-        let handledOperators = 0;
-        let lengthAttrOptions = _.keys(self.attrOptions);
+  static callOperatorFuncsAndApplyCriterias(self) {
+    let handledOperators = 0;
+    let lengthAttrOptions = _.keys(self.attrOptions);
 
-        let crit = {};
-        for(let operator in this.OPERATORS) {
-            let operatorFunc = this.OPERATORS[operator];
-            let operatorOptions = self.attrOptions[operator];
+    let crit = {};
+    for(let operator in this.OPERATORS) {
+      let operatorFunc = this.OPERATORS[operator];
+      let operatorOptions = self.attrOptions[operator];
 
-            if(!_.isUndefined(operatorOptions)) {
-                logger.silly(
-                    this.name, '#callOperatorFuncsAndApplyCriterias() operator:',
-                    operator, 'is defined operatorOptions:', operatorOptions);
+      // If we have no operatorOptions, no such operator got defined for this
+      // operation.
+      if(_.isUndefined(operatorOptions)) continue;
 
-                [crit.crit, crit.args]  = [null, []];
-                operatorFunc.call(this, self, operatorOptions, crit);
+      logger.silly(
+        this.name, '#callOperatorFuncsAndApplyCriterias() operator:',
+        operator, 'is defined operatorOptions:', operatorOptions);
 
-                logger.silly(
-                    this.name, '#callOperatorFuncsAndApplyCriterias()', crit);
+      [crit.crit, crit.args]  = [null, []];
+      operatorFunc.call(this, self, operatorOptions, crit);
 
-                this._applycrit(self, crit);
-                handledOperators++;
-            }
+      logger.silly(
+        this.name, '#callOperatorFuncsAndApplyCriterias()', crit);
 
-            // If we checked for more operators then the object has attributes,
-            // break the loop.
-            if(handledOperators >= lengthAttrOptions) {
-                break;
-            }
-        }
-        if(handledOperators < lengthAttrOptions) {
-            logger.warn('Looks like we have unhandled operators');
-        }
+      this._applycrit(self, crit);
+      handledOperators++;
+
+      // If we checked for more operators then the object has attributes,
+      // break the loop.
+      if(handledOperators >= lengthAttrOptions) {
+        break;
+      }
     }
+    if(handledOperators < lengthAttrOptions) {
+      logger.warn('Looks like we have unhandled operators');
+    }
+  }
 
-    /**
-     * Checks for short hands. A short hand is any attrOptions which hasn't
-     * the type of an plain object. By default we can handle strings, numbers
-     * booleans and null (which are grouped together to the
-     * #processStringNumberBooleanNullShortHand() shorthand) and arrays
-     * (#processArrayShortHand()). If attrOptions is neither one of those,
-     * this method calls #unhandledShortHand().
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @returns {undefined}
-     */
-    static checkForShortHands(self) {
-        let crit = {crit: null, args: []};
+  /**
+   * Checks for short hands. A short hand is any attrOptions which hasn't
+   * the type of an plain object. By default we can handle strings, numbers
+   * booleans and null (which are grouped together to the
+   * #processStringNumberBooleanNullShortHand() shorthand) and arrays
+   * (#processArrayShortHand()). If attrOptions is neither one of those,
+   * this method calls #unhandledShortHand().
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   */
+  static checkForShortHands(self) {
+    let crit = {crit: null, args: []};
 
-        if (_.isString(self.attrOptions) ||
+    if (_.isString(self.attrOptions) ||
             _.isNumber(self.attrOptions) ||
             _.isBoolean(self.attrOptions) ||
             _.isNull(self.attrOptions)) {
-            logger.silly(
-                this.name, '#checkForShortHands() looks like String or Number/Boolean/Null short hand');
-            this.processStringNumberBooleanNullShortHand(self, crit);
-        } else if (_.isArray(self.attrOptions)) {
-            logger.silly(
-                this.name, '#checkForShortHands() looks like Array short hand');
-            this.processArrayShortHand(self, crit);
-        } else {
-            return this.unhandledShortHand(self);
-        }
-
-        logger.silly(this.name, '#checkForShortHands()', crit);
-
-        this._applycrit(self, crit);
+      logger.silly(
+        this.name, '#checkForShortHands() looks like String or Number/Boolean/Null short hand');
+      this.processStringNumberBooleanNullShortHand(self, crit);
+    } else if (_.isArray(self.attrOptions)) {
+      logger.silly(
+        this.name, '#checkForShortHands() looks like Array short hand');
+      this.processArrayShortHand(self, crit);
+    } else {
+      this.unhandledShortHand(self);
+      return;
     }
 
-    /**
+    logger.silly(this.name, '#checkForShortHands()', crit);
+
+    this._applycrit(self, crit);
+  }
+
+  /**
      * This method gets called if attrOptions is a Number (Integer or Float),
      * String, Boolean or null. Based on this you can create a new squel
      * expression inside crit or just leave crit.crit null to not do anything.
@@ -175,9 +182,9 @@ class TranslateOperatorsGeneric {
      * @param  {Array} crit.args
      *         Apply any arguments for crit to this array.
      */
-    static processStringNumberBooleanNullShortHand(self, crit) {}
+  static processStringNumberBooleanNullShortHand(self, crit) {}
 
-    /**
+  /**
      * This method gets called if attrOptions is an array.
      * @param  {Object} self
      *         Object containing information about this translation process
@@ -191,29 +198,29 @@ class TranslateOperatorsGeneric {
      * @param  {Array} crit.args
      *         Apply any arguments for crit to this array.
      */
-    static processArrayShortHand(self, crit) {}
+  static processArrayShortHand(self, crit) {}
 
-    /**
+  /**
      * This method gets called if the type of attrOptions is neither
      * Number, String, Boolean, Null or Array.
      * @param  {Object} self
      *         Object containing information about this translation process
      */
-    static unhandledShortHand(self) {
-        logger.warn('Unhandled short hand:', typeof self.attrOptions);
+  static unhandledShortHand(self) {
+    logger.warn('Unhandled short hand:', typeof self.attrOptions);
 
-    }
+  }
 
 
-    /**
+  /**
      * Method gets called at the end, overwrite in case you need to do
      * something at the end.
      * @param  {Object} self
      *         Object containing information about this translation process
      */
-    static beforeDone(self) {}
+  static beforeDone(self) {}
 
-    /**
+  /**
      * Helper function to apply crit to self.squelExpr.
      * @param  {Object} self
      *         Object containing information about this translation process
@@ -228,14 +235,14 @@ class TranslateOperatorsGeneric {
      * @param  {Array} crit.args
      *         Arguments for placeholders inside crit.crit
      */
-    static _applycrit(self, crit) {
-        if(crit.crit !== null) {
-            UtilsExpression.applyExpression(
-                self.squelExpr, crit.crit, crit.args, self.type);
-        } else {
-            logger.warn('crit.crit is null');
-        }
+  static _applycrit(self, crit) {
+    if(crit.crit !== null) {
+      UtilsExpression.applyExpression(
+        self.squelExpr, crit.crit, crit.args, self.type);
+    } else {
+      logger.warn('crit.crit is null');
     }
+  }
 
 }
 

@@ -27,10 +27,10 @@ let UtilsQuery = exports;
  *        True if we want to join generationParents
  */
 UtilsQuery.joinRelatedGenerations = (queryObj, joinGenerationParents=true) => {
-    if (joinGenerationParents === true) {
-        UtilsQuery.joinGenerationParentsFromGenerations(queryObj);
-    }
-    UtilsQuery.joinFamiliesFromGenerations(queryObj);
+  if (joinGenerationParents === true) {
+    UtilsQuery.joinGenerationParentsFromGenerations(queryObj);
+  }
+  UtilsQuery.joinFamiliesFromGenerations(queryObj);
 };
 
 
@@ -44,12 +44,12 @@ UtilsQuery.joinRelatedGenerations = (queryObj, joinGenerationParents=true) => {
  * @returns {undefined}
  */
 UtilsQuery.joinRelatedGenotypes = function(queryObj) {
-    UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes(queryObj);
+  UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes(queryObj);
 
-    // Because with UtilsQuery.joinGenerations we already join
-    // generation_parents and generations, we don't have to join
-    // generation_parents again, therefore set false
-    UtilsQuery.joinRelatedGenerations(queryObj, false);
+  // Because with UtilsQuery.joinGenerations we already join
+  // generation_parents and generations, we don't have to join
+  // generation_parents again, therefore set false
+  UtilsQuery.joinRelatedGenerations(queryObj, false);
 };
 
 
@@ -65,15 +65,15 @@ UtilsQuery.joinRelatedGenotypes = function(queryObj) {
  * @returns {undefined}
  */
 UtilsQuery.joinRelatedPlants = function(queryObj) {
-    UtilsQuery.joinGenotypesFromPlants(queryObj);
-    UtilsQuery.joinRelatedGenotypes(queryObj);
-    UtilsQuery.joinMediumsFromPlants(queryObj);
-    UtilsQuery.joinRelatedMediums(queryObj);
+  UtilsQuery.joinGenotypesFromPlants(queryObj);
+  UtilsQuery.joinRelatedGenotypes(queryObj);
+  UtilsQuery.joinMediumsFromPlants(queryObj);
+  UtilsQuery.joinRelatedMediums(queryObj);
 };
 
 
 UtilsQuery.joinRelatedMediums = function(queryObj) {
-    UtilsQuery.joinEnvironmentsFromMediums(queryObj);
+  UtilsQuery.joinEnvironmentsFromMediums(queryObj);
 };
 
 /**
@@ -81,16 +81,16 @@ UtilsQuery.joinRelatedMediums = function(queryObj) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 UtilsQuery.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
-    UtilsQuery.joinGenerationsFromFamilies(query);
+  UtilsQuery.joinGenerationsFromFamilies(query);
 
-    UtilsQuery.joinGenerationParentsFromGenerations(query);
+  UtilsQuery.joinGenerationParentsFromGenerations(query);
 };
 
 UtilsQuery.joinGenerationsFromFamilies = function(query) {
-    query.left_join( CONSTANTS.TABLE_GENERATION,
-        'generations',
-        'families.familyId = generations.familyId'
-    );
+  query.left_join( CONSTANTS.TABLE_GENERATION,
+    'generations',
+    'families.familyId = generations.familyId'
+  );
 };
 
 /**
@@ -98,10 +98,10 @@ UtilsQuery.joinGenerationsFromFamilies = function(query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 UtilsQuery.joinGenotypesFromGenerations = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENOTYPE,
-        'genotypes',
-        'generations.generationId = genotypes.generationId'
-    );
+  query.left_join(CONSTANTS.TABLE_GENOTYPE,
+    'genotypes',
+    'generations.generationId = genotypes.generationId'
+  );
 };
 
 /**
@@ -109,24 +109,24 @@ UtilsQuery.joinGenotypesFromGenerations = function(query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 UtilsQuery.joinPlantsFromGenotypes = function(query) {
-    query.left_join(CONSTANTS.TABLE_PLANT,
-        'plants',
-        'genotypes.genotypeId = plants.genotypeId'
-    );
+  query.left_join(CONSTANTS.TABLE_PLANT,
+    'plants',
+    'genotypes.genotypeId = plants.genotypeId'
+  );
 };
 
 UtilsQuery.joinMediumsFromPlants = function(query) {
-    query.left_join(CONSTANTS.TABLE_MEDIUM,
-        'mediums',
-        'plants.mediumId = mediums.mediumId'
-    );
+  query.left_join(CONSTANTS.TABLE_MEDIUM,
+    'mediums',
+    'plants.mediumId = mediums.mediumId'
+  );
 };
 
 UtilsQuery.joinEnvironmentsFromMediums = function(query) {
-    query.left_join(CONSTANTS.TABLE_ENVIRONMENT,
-        'environments',
-        'mediums.environmentId = environments.environmentId'
-    );
+  query.left_join(CONSTANTS.TABLE_ENVIRONMENT,
+    'environments',
+    'mediums.environmentId = environments.environmentId'
+  );
 };
 
 /**
@@ -135,9 +135,9 @@ UtilsQuery.joinEnvironmentsFromMediums = function(query) {
  *         Squel query capable of an .left_join()
  */
 UtilsQuery.joinFamiliesFromGenerations = function(query) {
-    query.left_join(CONSTANTS.TABLE_FAMILY,
-        'families',
-        'generations.familyId = families.familyId');
+  query.left_join(CONSTANTS.TABLE_FAMILY,
+    'families',
+    'generations.familyId = families.familyId');
 };
 
 /**
@@ -147,17 +147,17 @@ UtilsQuery.joinFamiliesFromGenerations = function(query) {
  *         Squel query capable of an .left_join()
  */
 UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
-    // First join generations
-    UtilsQuery.joinGenerationsFromGenotypes(query);
-    // Now we can also join generation parents
-    UtilsQuery.joinGenerationParentsFromGenerations(query);
+  // First join generations
+  UtilsQuery.joinGenerationsFromGenotypes(query);
+  // Now we can also join generation parents
+  UtilsQuery.joinGenerationParentsFromGenerations(query);
 };
 
 UtilsQuery.joinGenerationsFromGenotypes = function(query) {
-    query.left_join( CONSTANTS.TABLE_GENERATION,
-        'generations',
-        'genotypes.generationId = generations.generationId'
-    );
+  query.left_join( CONSTANTS.TABLE_GENERATION,
+    'generations',
+    'genotypes.generationId = generations.generationId'
+  );
 };
 
 /**
@@ -166,10 +166,10 @@ UtilsQuery.joinGenerationsFromGenotypes = function(query) {
  *         Squel query which can take an .left_join()
  */
 UtilsQuery.joinGenerationParentsFromGenerations = function(query) {
-    //query.left_join(CONSTANTS.TABLE_GENERATION_PARENT,
-    //    'generation_parents',
-    //    'generations.generationId = generation_parents.generationId'
-    //);
+  //query.left_join(CONSTANTS.TABLE_GENERATION_PARENT,
+  //    'generation_parents',
+  //    'generations.generationId = generation_parents.generationId'
+  //);
 };
 
 /**
@@ -178,24 +178,24 @@ UtilsQuery.joinGenerationParentsFromGenerations = function(query) {
  *         Squel query capable of an .left_join()
  */
 UtilsQuery.joinGenotypesFromPlants = function(query) {
-    query.left_join(CONSTANTS.TABLE_GENOTYPE,
-        'genotypes',
-        'plants.genotypeId = genotypes.genotypeId'
-    );
+  query.left_join(CONSTANTS.TABLE_GENOTYPE,
+    'genotypes',
+    'plants.genotypeId = genotypes.genotypeId'
+  );
 };
 
 UtilsQuery.joinPlantsFromMediums = function(query) {
-    query.left_join(CONSTANTS.TABLE_PLANT,
-        'plants',
-        'mediums.mediumId = plants.mediumId'
-    );
+  query.left_join(CONSTANTS.TABLE_PLANT,
+    'plants',
+    'mediums.mediumId = plants.mediumId'
+  );
 };
 
 UtilsQuery.joinMediumsFromEnvironments = function(query) {
-    query.left_join(CONSTANTS.TABLE_MEDIUM,
-        'mediums',
-        'environments.environmentId = mediums.environmentId'
-    );
+  query.left_join(CONSTANTS.TABLE_MEDIUM,
+    'mediums',
+    'environments.environmentId = mediums.environmentId'
+  );
 };
 
 
@@ -219,66 +219,66 @@ UtilsQuery.joinMediumsFromEnvironments = function(query) {
  *        them here. Key should be the attribute, value the new table. .
  */
 UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes, overWriteTableLookup = null) {
-    let attributesToSelect;
+  let attributesToSelect;
 
-    if (_.isEmpty(criteriaAttributes)) {
+  if (_.isEmpty(criteriaAttributes)) {
     // if criteriaAttributes is empty, just select all allowedAttributes
-        attributesToSelect = allowedAttributes;
-    } else {
+    attributesToSelect = allowedAttributes;
+  } else {
     // otherwise we only want attributes which are in both, criteriaAttributes
     // and allowedAttributes.
-        attributesToSelect = _.intersection(
-            allowedAttributes, criteriaAttributes);
-    }
+    attributesToSelect = _.intersection(
+      allowedAttributes, criteriaAttributes);
+  }
 
-    for (let attr of attributesToSelect) {
-        if (UtilsChildAttributes.isChildAttribute(attr)) {
-            let tableConcat = UtilsChildAttributes
-                .getTableOfChildAttribute(attr);
-            let tableWhere = UtilsQuery.getTableOfField(attr);
-            let attrConcat, attrWhere;
+  for (let attr of attributesToSelect) {
+    if (UtilsChildAttributes.isChildAttribute(attr)) {
+      let tableConcat = UtilsChildAttributes
+        .getTableOfChildAttribute(attr);
+      let tableWhere = UtilsQuery.getTableOfField(attr);
+      let attrConcat, attrWhere;
 
-            if(attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
-                attrConcat = CONSTANTS.ATTR_ID_GENERATION;
-                attrWhere = CONSTANTS.ATTR_ID_FAMILY;
-            } else if(attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
-                attrConcat = CONSTANTS.ATTR_ID_GENOTYPE;
-                attrWhere = CONSTANTS.ATTR_ID_GENERATION;
-            } else if(attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
-                tableWhere = CONSTANTS.TABLE_GENERATION;
-                attrConcat = CONSTANTS.ATTR_ID_PLANT;
-                attrWhere = CONSTANTS.ATTR_ID_GENERATION;
-            } else if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
-                attrConcat = CONSTANTS.ATTR_ID_PLANT;
-                attrWhere = CONSTANTS.ATTR_ID_GENOTYPE;
-            } else if(attr === CONSTANTS.ATTR_CLONES_PLANT) {
-                attrConcat = CONSTANTS.ATTR_ID_PLANT;
-                attrWhere = CONSTANTS.ATTR_CLONED_FROM_PLANT;
-            } else if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
-                attrConcat = CONSTANTS.ATTR_ID_MEDIUM;
-                attrWhere = CONSTANTS.ATTR_ID_ENVIRONMENT;
-            } else if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
-                attrConcat = CONSTANTS.ATTR_ID_PLANT;
-                attrWhere = CONSTANTS.ATTR_ID_MEDIUM;
-            } else {
-                throw new Error('Unimplemented childAttribute');
-            }
+      if(attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
+        attrConcat = CONSTANTS.ATTR_ID_GENERATION;
+        attrWhere = CONSTANTS.ATTR_ID_FAMILY;
+      } else if(attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
+        attrConcat = CONSTANTS.ATTR_ID_GENOTYPE;
+        attrWhere = CONSTANTS.ATTR_ID_GENERATION;
+      } else if(attr === CONSTANTS.ATTR_PARENTS_GENERATION) {
+        tableWhere = CONSTANTS.TABLE_GENERATION;
+        attrConcat = CONSTANTS.ATTR_ID_PLANT;
+        attrWhere = CONSTANTS.ATTR_ID_GENERATION;
+      } else if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
+        attrConcat = CONSTANTS.ATTR_ID_PLANT;
+        attrWhere = CONSTANTS.ATTR_ID_GENOTYPE;
+      } else if(attr === CONSTANTS.ATTR_CLONES_PLANT) {
+        attrConcat = CONSTANTS.ATTR_ID_PLANT;
+        attrWhere = CONSTANTS.ATTR_CLONED_FROM_PLANT;
+      } else if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
+        attrConcat = CONSTANTS.ATTR_ID_MEDIUM;
+        attrWhere = CONSTANTS.ATTR_ID_ENVIRONMENT;
+      } else if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
+        attrConcat = CONSTANTS.ATTR_ID_PLANT;
+        attrWhere = CONSTANTS.ATTR_ID_MEDIUM;
+      } else {
+        throw new Error('Unimplemented childAttribute');
+      }
 
-            let subQuery = squel.select().from(tableConcat)
-                .field(
-                    'GROUP_CONCAT(' +
+      let subQuery = squel.select().from(tableConcat)
+        .field(
+          'GROUP_CONCAT(' +
                     Utils.explicitColumn(tableConcat, attrConcat) +')')
-                .where(
-                    '? = ?',
-                    Utils.explicitColumnRstr(tableConcat, attrWhere),
-                    Utils.explicitColumnRstr(tableWhere, attrWhere));
+        .where(
+          '? = ?',
+          Utils.explicitColumnRstr(tableConcat, attrWhere),
+          Utils.explicitColumnRstr(tableWhere, attrWhere));
 
-            query.field(subQuery, attr);
-        } else {
-            let table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);
-            query.field(Utils.explicitColumn(table, attr));
-        }
+      query.field(subQuery, attr);
+    } else {
+      let table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);
+      query.field(Utils.explicitColumn(table, attr));
     }
+  }
 };
 
 /**
@@ -296,10 +296,10 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
  *        Offset to set. If empty, will set to 0.
  */
 UtilsQuery.applyCriteriaLimitAndOffset = function (query, criteria) {
-    let limit = criteria.limit || 10;
-    let offset = criteria.offset || 0;
+  let limit = criteria.limit || 10;
+  let offset = criteria.offset || 0;
 
-    query.limit(limit).offset(offset);
+  query.limit(limit).offset(offset);
 };
 
 /**
@@ -347,46 +347,46 @@ UtilsQuery.applyCriteriaLimitAndOffset = function (query, criteria) {
  *         is unknown (not ASC or DESC).
  */
 UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, overWriteTableLookup = null) {
-    if (_.isEmpty(criteria.sort)) return;
-    if (!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
+  if (_.isEmpty(criteria.sort)) return;
+  if (!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
 
-    for(let sortStr of criteria.sort) {
-        // Check if this is a valid format
-        let attr, sortType;
+  for(let sortStr of criteria.sort) {
+    // Check if this is a valid format
+    let attr, sortType;
 
-        if (_.indexOf(sortStr, ' ') === -1) {
-        // No whitespace means, attribute is the whole string
-        // and we use ASC as the default sort type.
-            attr = sortStr;
-            sortType = 'ASC';
-        } else {
-            [attr, sortType] = _.split(sortStr, ' ');
-            // upperCase sortType to be a bit more fault tollerant
-            sortType = _.upperCase(sortType);
-        }
-
-        if (_.indexOf(allowedAttributes, attr) === -1) {
-        // attr not in allowedAttributes array
-            throw new Error('Illegal attribute: ' + attr);
-        }
-
-
-        // Sometimes it's needed to use the current table when we don't join the
-        // referenced table.
-        // Eg: we don't join families but still want to sort by familyId.
-        // #getTableOfField() would return families as table, but we need
-        // generations.
-        let table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);
-
-        if (sortType === 'ASC') {
-            query.order('?.?', true, table, attr);
-        } else if (sortType === 'DESC') {
-            query.order('?.?', false, table, attr);
-        } else {
-            // Split it again to get un-uppercased sort type
-            throw new Error('Illegal sort type: ' + _.split(sortStr, ' ')[1]);
-        }
+    if (_.indexOf(sortStr, ' ') === -1) {
+      // No whitespace means, attribute is the whole string
+      // and we use ASC as the default sort type.
+      attr = sortStr;
+      sortType = 'ASC';
+    } else {
+      [attr, sortType] = _.split(sortStr, ' ');
+      // upperCase sortType to be a bit more fault tollerant
+      sortType = _.upperCase(sortType);
     }
+
+    if (_.indexOf(allowedAttributes, attr) === -1) {
+      // attr not in allowedAttributes array
+      throw new Error('Illegal attribute: ' + attr);
+    }
+
+
+    // Sometimes it's needed to use the current table when we don't join the
+    // referenced table.
+    // Eg: we don't join families but still want to sort by familyId.
+    // #getTableOfField() would return families as table, but we need
+    // generations.
+    let table = UtilsQuery.getTableOfField(attr, overWriteTableLookup);
+
+    if (sortType === 'ASC') {
+      query.order('?.?', true, table, attr);
+    } else if (sortType === 'DESC') {
+      query.order('?.?', false, table, attr);
+    } else {
+      // Split it again to get un-uppercased sort type
+      throw new Error('Illegal sort type: ' + _.split(sortStr, ' ')[1]);
+    }
+  }
 };
 
 /**
@@ -404,31 +404,31 @@ UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, over
  *         Determined Table name
  */
 UtilsQuery.getTableOfField = function (attr, overWriteTableLookup = null) {
-    // determine which table we need
-    let table;
+  // determine which table we need
+  let table;
 
-    if (overWriteTableLookup !== null && _.has(overWriteTableLookup, attr)) {
-        return overWriteTableLookup[attr];
-    } else if (_.startsWith(attr, 'plantLog')) {
-        table = CONSTANTS.TABLE_PLANT_LOG;
-    } else if (_.startsWith(attr, 'plant')) {
-        table = CONSTANTS.TABLE_PLANT;
-    } else if (_.startsWith(attr, 'genotype')) {
-        table = CONSTANTS.TABLE_GENOTYPE;
-    } else if (attr === 'generationParents') {
-        table = CONSTANTS.TABLE_GENERATION_PARENT;
-    } else if (_.startsWith(attr, 'generation')) {
-        table =  CONSTANTS.TABLE_GENERATION;
-    } else if (_.startsWith(attr, 'family')) {
-        table = CONSTANTS.TABLE_FAMILY;
-    } else if (_.startsWith(attr, 'environment')) {
-        table = CONSTANTS.TABLE_ENVIRONMENT;
-    } else if (_.startsWith(attr, 'medium')) {
-        table = CONSTANTS.TABLE_MEDIUM;
-    } else if (_.startsWith(attr, 'journal')) {
-        table = CONSTANTS.TABLE_JOURNAL;
-    } else {
-        throw new Error('cannot associate attribute with a table');
-    }
-    return table;
+  if (overWriteTableLookup !== null && _.has(overWriteTableLookup, attr)) {
+    return overWriteTableLookup[attr];
+  } else if (_.startsWith(attr, 'plantLog')) {
+    table = CONSTANTS.TABLE_PLANT_LOG;
+  } else if (_.startsWith(attr, 'plant')) {
+    table = CONSTANTS.TABLE_PLANT;
+  } else if (_.startsWith(attr, 'genotype')) {
+    table = CONSTANTS.TABLE_GENOTYPE;
+  } else if (attr === 'generationParents') {
+    table = CONSTANTS.TABLE_GENERATION_PARENT;
+  } else if (_.startsWith(attr, 'generation')) {
+    table =  CONSTANTS.TABLE_GENERATION;
+  } else if (_.startsWith(attr, 'family')) {
+    table = CONSTANTS.TABLE_FAMILY;
+  } else if (_.startsWith(attr, 'environment')) {
+    table = CONSTANTS.TABLE_ENVIRONMENT;
+  } else if (_.startsWith(attr, 'medium')) {
+    table = CONSTANTS.TABLE_MEDIUM;
+  } else if (_.startsWith(attr, 'journal')) {
+    table = CONSTANTS.TABLE_JOURNAL;
+  } else {
+    throw new Error('cannot associate attribute with a table');
+  }
+  return table;
 };

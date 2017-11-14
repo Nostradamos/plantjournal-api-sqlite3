@@ -9,11 +9,11 @@ const UtilsChildAttributes = require('../utils/utils-child-attributes');
 const UtilsExpression = require('../utils/utils-expression');
 
 const TranslateOperatorsRelational = require(
-    './translate-operators-relational');
+  './translate-operators-relational');
 const TranslateOperatorsChildAttributes = require(
-    './translate-operators-child-attributes');
+  './translate-operators-child-attributes');
 const TranslateOperatorsJournalValue = require(
-    './translate-operators-journal-value');
+  './translate-operators-journal-value');
 
 /**
  * This function sets the where parts for our queries and handles
@@ -57,17 +57,17 @@ const TranslateOperatorsJournalValue = require(
  *        them here. Key should be the attribute, value the new table.
  */
 function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableLookup = null) {
-    let self = {
-        query: query,
-        allowedAttributes: allowedAttributes,
-        overwriteTableLookup: overwriteTableLookup,
-        tablesToJoin: new Set()
-    };
+  let self = {
+    query: query,
+    allowedAttributes: allowedAttributes,
+    overwriteTableLookup: overwriteTableLookup,
+    tablesToJoin: new Set()
+  };
 
-    let squelExpr = squel.expr();
-    eachFilterObject(self, criteria.where, squelExpr, 1, null);
+  let squelExpr = squel.expr();
+  eachFilterObject(self, criteria.where, squelExpr, 1, null);
 
-    query.where(squelExpr);
+  query.where(squelExpr);
 }
 
 /**
@@ -104,64 +104,64 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableL
  *         or   -> use or operator for attributes
  */
 function eachFilterObject(self, obj, squelExpr, depth, type=null) {
-    logger.silly(
-        '#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth,
-        'type:', type);
+  logger.silly(
+    '#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth,
+    'type:', type);
 
-    let isArray = _.isArray(obj);
+  let isArray = _.isArray(obj);
 
-    // Check if obj is array or dict
-    if (_.isPlainObject(obj) === false && isArray === false) {
-        logger.warn(
-            '#applyCriteriaFilter() #eachFilterObject() Returning, illegal ' +
+  // Check if obj is array or dict
+  if (_.isPlainObject(obj) === false && isArray === false) {
+    logger.warn(
+      '#applyCriteriaFilter() #eachFilterObject() Returning, illegal ' +
             'object type:', obj);
-        return;
+    return;
+  }
+
+  // No type got specified, determine it based on obj type.
+  // if obj is an array, it's normally an OR, otherwise AND.
+  if (type === null) type = isArray ? 'or' : 'and';
+
+  let attr, attrOptions;
+
+  // iterate over every element, if obj is array, key will be index and
+  // value the element. Otherwise normal key/value pair
+  _.each(obj, (value, key) => {
+    // If we have an array, value/element has to be an object. Just use
+    // this function again on it
+    if (isArray === true) {
+      return eachFilterObject(self, value, squelExpr, depth, type);
     }
 
-    // No type got specified, determine it based on obj type.
-    // if obj is an array, it's normally an OR, otherwise AND.
-    if (type === null) type = isArray ? 'or' : 'and';
+    [attr, attrOptions] = [key, value];
 
-    let attr, attrOptions;
+    // Handle boolean operators
+    if (attr === '$and') {
+      eachFilterObject(self, attrOptions, squelExpr, depth+1, 'and');
+    } else if (attr === '$or') {
+      eachFilterObject(self, attrOptions, squelExpr, depth+1, 'or');
+    } else if (attr === '$and()') {
+      // $and() is a bit different, we want to have child criterias in a
+      // sub expression
+      let subSquelExpr = squel.expr();
 
-    // iterate over every element, if obj is array, key will be index and
-    // value the element. Otherwise normal key/value pair
-    _.each(obj, (value, key) => {
-        // If we have an array, value/element has to be an object. Just use
-        // this function again on it
-        if (isArray === true) {
-            return eachFilterObject(self, value, squelExpr, depth, type);
-        }
+      eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'and');
+      UtilsExpression.applyExpression(
+        squelExpr, subSquelExpr, [], 'and');
+    } else if (attr === '$or()') {
+      // $or() is a bit different, we want to have a child criterias in
+      // a subexpression
+      let subSquelExpr = squel.expr();
 
-        [attr, attrOptions] = [key, value];
-
-        // Handle boolean operators
-        if (attr === '$and') {
-            eachFilterObject(self, attrOptions, squelExpr, depth+1, 'and');
-        } else if (attr === '$or') {
-            eachFilterObject(self, attrOptions, squelExpr, depth+1, 'or');
-        } else if (attr === '$and()') {
-        // $and() is a bit different, we want to have child criterias in a
-        // sub expression
-            let subSquelExpr = squel.expr();
-
-            eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'and');
-            UtilsExpression.applyExpression(
-                squelExpr, subSquelExpr, [], 'and');
-        } else if (attr === '$or()') {
-        // $or() is a bit different, we want to have a child criterias in
-        // a subexpression
-            let subSquelExpr = squel.expr();
-
-            eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'or');
-            UtilsExpression.applyExpression(
-                squelExpr, subSquelExpr, [], 'or');
-        } else {
-        // Handle normal attributes
-            translateAndApplyOperators(
-                self, attr, attrOptions, squelExpr, type);
-        }
-    });
+      eachFilterObject(self, attrOptions, subSquelExpr, depth+1, 'or');
+      UtilsExpression.applyExpression(
+        squelExpr, subSquelExpr, [], 'or');
+    } else {
+      // Handle normal attributes
+      translateAndApplyOperators(
+        self, attr, attrOptions, squelExpr, type);
+    }
+  });
 }
 
 /**
@@ -185,23 +185,23 @@ function eachFilterObject(self, obj, squelExpr, depth, type=null) {
  *         squelExpr.or().
  */
 function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
-    let translator = null;
-    // Check if we have special cases
-    if (_.startsWith(attr, CONSTANTS.ATTR_VALUE_JOURNAL)) {
+  let translator = null;
+  // Check if we have special cases
+  if (_.startsWith(attr, CONSTANTS.ATTR_VALUE_JOURNAL)) {
     // This is something starting with journalValue, special case
-        translator = TranslateOperatorsJournalValue;
-    } else if (UtilsChildAttributes.isChildAttribute(attr)) {
-        translator = TranslateOperatorsChildAttributes;
-    } else if(_.indexOf(self.allowedAttributes, attr) !== -1) {
+    translator = TranslateOperatorsJournalValue;
+  } else if (UtilsChildAttributes.isChildAttribute(attr)) {
+    translator = TranslateOperatorsChildAttributes;
+  } else if(_.indexOf(self.allowedAttributes, attr) !== -1) {
     // All "not special" attributes
-        translator = TranslateOperatorsRelational;
-    } else {
-        throw new Error(
-            'Illegal attribute or unknown logical operator: ' + attr);
-    }
+    translator = TranslateOperatorsRelational;
+  } else {
+    throw new Error(
+      'Illegal attribute or unknown logical operator: ' + attr);
+  }
 
-    translator.translateAndApplyOperators(
-        self, attr, attrOptions, squelExpr, type);
+  translator.translateAndApplyOperators(
+    self, attr, attrOptions, squelExpr, type);
 }
 
 module.exports = applyCriteriaFilter;
