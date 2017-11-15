@@ -1,69 +1,69 @@
 {
-    "parserOptions": {
-  	"ecmaVersion": 8
-    },
-    "env": {
-        "es6": true,
-        "node": true
-    },
-    "extends": "eslint:recommended",
-    "rules": {
-        "indent": [
-            "error",
-            4
-        ],
-        "max-len": [
-            "warn",
-            {   
-                "code": 80,
-                "ignoreStrings": true,
-                "ignoreTemplateLiterals": true
-            }
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single",
-            {
-                "allowTemplateLiterals": true
-            }
-	    ],
-        "semi": [
-            "error",
-            "always"
-        ],
-	    "no-unsafe-finally": [
-            "off"
-	    ],
-	    "no-unused-vars": [
-             "error",
-	         {"args": "none"}
-	    ],
-        "no-trailing-spaces": [
-            "error"
-        ],
-        "no-unexpected-multiline": [
-            "off"
-        ],
-        "require-jsdoc": [
-            "warn",
-            {
-                "require": {
-                    "FunctionDeclaration": true,
-                    "MethodDefinition": true,
-                    "ClassDeclaration": true,
-                    "ArrowFunctionExpression": true
-                }
-            }
-        ],
-        "valid-jsdoc": [
-            "error",
-            {
-                "requireReturn": false
-            }
-        ]
-    }
+  "parserOptions": {
+	"ecmaVersion": 8
+  },
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "indent": [
+      "error",
+      2
+    ],
+    "max-len": [
+      "warn",
+      {
+        "code": 80,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": [
+      "error",
+      "single",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-unsafe-finally": [
+      "off"
+    ],
+    "no-unused-vars": [
+     "error",
+     {"args": "none"}
+    ],
+    "no-trailing-spaces": [
+      "error"
+    ],
+    "no-unexpected-multiline": [
+      "off"
+    ],
+    "require-jsdoc": [
+      "warn",
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": true
+        }
+      }
+    ],
+    "valid-jsdoc": [
+      "error",
+      {
+        "requireReturn": false
+      }
+    ]
+  }
 }
