@@ -8,6 +8,13 @@ const _ = require('lodash');
  */
 let UtilsJSON = exports;
 
+/**
+ * Checks if a string is valid JSON
+ * @param  {String} str
+ *         String which should get validated
+ * @return {Boolean}
+ *         Returns true if str is json, otherwise false
+ */
 UtilsJSON.isValidJSON = function(str) {
   try {
     JSON.parse(str);
@@ -17,12 +24,24 @@ UtilsJSON.isValidJSON = function(str) {
   return true;
 };
 
+
+/**
+ * Function determining if an object needs to get sanitized before it can
+ * get stringified. We need to sanitize everything except of Numbers.
+ * @param  {Object} obj
+ *         Object to test for sanitization
+ * @return {Boolean}
+ *         Returns true if object needs to get sanitized
+ */
 UtilsJSON.needToSanitize = function(obj) {
-  return _.isArray(obj) ||
-         _.isBoolean(obj) ||
-         _.isPlainObject(obj);
+  return !_.isNumber(obj);
 };
 
+/**
+ * Sanitizes an object if it need's to get sanitized.
+ * @param  {[type]} obj [description]
+ * @return {[type]}     [description]
+ */
 UtilsJSON.sanitize = function (obj) {
   if(UtilsJSON.needToSanitize(obj)) {
     return JSON.stringify(obj);
@@ -37,3 +56,11 @@ UtilsJSON.sanitizeArray = function (arr) {
   }
   return sanitizedArr;
 };
+
+UtilsJSON.parseIfPossible = function(str) {
+  try {
+    return JSON.parse(str);
+  } catch(err) {
+    return str;
+  }
+}

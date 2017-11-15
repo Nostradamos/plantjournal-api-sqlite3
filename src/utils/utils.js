@@ -5,6 +5,7 @@ const squel = require('squel');
 const sqlite = require('sqlite');
 
 const CONSTANTS = require('../constants');
+const UtilsJSON = require('./utils-json');
 
 /**
  * Utils.
@@ -243,17 +244,18 @@ Utils.addJournalFromRowToReturnObject = (row, returnObject, forceAdd) => {
   let journalId = row.journalId;
   let journal = {};
 
-  let value;
+  let foreignAttributes = [
+    CONSTANTS.ATTR_ID_ENVIRONMENT,
+    CONSTANTS.ATTR_ID_MEDIUM,
+    CONSTANTS.ATTR_ID_PLANT
+  ];
   for (let attr of CONSTANTS.ALL_ATTRIBUTES_JOURNAL) {
     if (!_.has(row, attr)) continue;
-    value = row[attr];
-    let isForeignAttr = _.indexOf(
-      [
-        CONSTANTS.ATTR_ID_ENVIRONMENT,
-        CONSTANTS.ATTR_ID_MEDIUM,
-        CONSTANTS.ATTR_ID_PLANT
-      ], attr);
-    if (value === null && isForeignAttr !== -1) continue;
+    let value = row[attr];
+
+    if (value === null && _.indexOf(foreignAttributes, attr) !== -1) continue;
+    if (attr === 'journalValue') value = UtilsJSON.parseIfPossible(value);
+
     journal[attr] = value;
   }
 

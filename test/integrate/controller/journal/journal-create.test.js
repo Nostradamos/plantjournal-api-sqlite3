@@ -127,14 +127,13 @@ describe(`Journal()`, () => {
     });
 
     it(`should be possible to pass journalValue as an object`, async () => {
+      let journalValue = {foo: 'bar'};
       let journal = await pj.Journal.create(
         {
           plantId: 1,
           journalTimestamp: 1111,
           journalType: 'watering',
-          journalValue: {
-            foo: 'bar'
-          }
+          journalValue
         }
       );
 
@@ -147,7 +146,36 @@ describe(`Journal()`, () => {
           },
         }
       });
+      let rowsJournals = await sqlite.all(
+        `SELECT journalValue FROM journals WHERE journalId = 1`
+      );
 
+      rowsJournals[0].journalValue.should.eql(JSON.stringify(journalValue));
+    });
+
+    it(`should quote journalValue if we pass valid JSON as string`, async () => {
+      let journalValue = '{"foo":"bar"}';
+      let journal = await pj.Journal.create(
+        {
+          plantId: 1,
+          journalTimestamp: 1111,
+          journalType: 'test',
+          journalValue
+        }
+      );
+
+      journal.journals.should.containDeep({
+        '1': {
+          'journalId': 1,
+          'journalType': 'test',
+          'journalValue': journalValue,
+        }
+      });
+      let rowsJournals = await sqlite.all(
+        `SELECT journalValue FROM journals WHERE journalId = 1`
+      );
+
+      rowsJournals[0].journalValue.should.eql(JSON.stringify(journalValue));
     });
   });
 });

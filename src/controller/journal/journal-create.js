@@ -76,17 +76,13 @@ class JournalCreate extends GenericCreate {
       .set(CONSTANTS.ATTR_TIMESTAMP_JOURNAL, options.journalTimestamp)
       .set(CONSTANTS.ATTR_TYPE_JOURNAL, options.journalType);
 
+
     let sanitizedJournalValue = UtilsJSON.sanitize(options.journalValue);
     logger.silly(this.name, '#setQueryFields() sanitizedJournalValue:', sanitizedJournalValue);
 
-    // If journalValue is valid JSON we don't need to quote it, otherwise we
-    // have to.
-    let jsonFunc = UtilsJSON.isValidJSON(sanitizedJournalValue) ?
-      'json(?)' : 'json(json_quote(?))';
-
     context.query.set(
       CONSTANTS.ATTR_VALUE_JOURNAL,
-      squel.rstr(jsonFunc, sanitizedJournalValue),
+      squel.rstr('json(?)', sanitizedJournalValue),
       {dontQuote: true}
     );
   }

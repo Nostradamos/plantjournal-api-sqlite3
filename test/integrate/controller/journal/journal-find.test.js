@@ -23,7 +23,7 @@ describe(`Journal()`, () => {
       await pj.Journal.create({journalTimestamp: 1337, journalType: 'ec-sensor', journalValue: 1.3, mediumId: 1});
       await pj.Journal.create({journalTimestamp: 1337, journalType: 'temp-sensor', journalValue: 28.7, environmentId: 1});
       await pj.Journal.create({journalTimestamp: 1555, journalType: 'log', journalValue: 'This is a log', plantId: 1});
-      await pj.Journal.create({journalTimestamp: 1555, journalType: 'watering', journalValue: '{"amount": 1.5, "n": 3, "p": 4, "k": 1.7, "fertilizers": ["Hakaphos Grün", "Hakaphos Blau"]}', mediumId: 1});
+      await pj.Journal.create({journalTimestamp: 1555, journalType: 'watering', journalValue: {amount: 1.5, n: 3, p: 4, k: 1.7, fertilizers: ['Hakaphos Grün', 'Hakaphos Blau']}, mediumId: 1});
       await pj.Journal.create({journalTimestamp: 1337, journalType: 'ph-sensor', journalValue: 6.8, mediumId: 2});
       await pj.Journal.create({journalTimestamp: 4220, journalType: 'test-bool', journalValue: true, plantId: 1});
       await pj.Journal.create({journalTimestamp: 4221, journalType: 'test-bool', journalValue: false, plantId: 1});
@@ -45,7 +45,7 @@ describe(`Journal()`, () => {
               journalId: 1,
               journalTimestamp: 1337,
               journalType: 'log',
-              journalValue: '"This is a log"',
+              journalValue: 'This is a log',
               plantId: 1
             },
             '2': {
@@ -73,14 +73,20 @@ describe(`Journal()`, () => {
               journalId: 5,
               journalTimestamp: 1555,
               journalType: 'log',
-              journalValue: '"This is a log"',
+              journalValue: 'This is a log',
               plantId: 1
             },
             '6': {
               journalId: 6,
               journalTimestamp: 1555,
               journalType: 'watering',
-              journalValue: '{"amount":1.5,"n":3,"p":4,"k":1.7,"fertilizers":["Hakaphos Grün","Hakaphos Blau"]}',
+              journalValue: {
+                amount:1.5,
+                n:3,
+                p:4,
+                k:1.7,
+                fertilizers: ['Hakaphos Grün','Hakaphos Blau']
+              },
               mediumId: 1
             },
             '7': {
@@ -93,14 +99,14 @@ describe(`Journal()`, () => {
               journalId: 8,
               journalTimestamp: 4220,
               journalType: 'test-bool',
-              journalValue: 'true',
+              journalValue: true,
               plantId: 1,
             },
             '9': {
               journalId: 9,
               journalTimestamp: 4221,
               journalType: 'test-bool',
-              journalValue: 'false',
+              journalValue: false,
               plantId: 1,
             }
           }
@@ -133,7 +139,13 @@ describe(`Journal()`, () => {
               journalId: 6,
               journalTimestamp: 1555,
               journalType: 'watering',
-              journalValue: '{"amount":1.5,"n":3,"p":4,"k":1.7,"fertilizers":["Hakaphos Grün","Hakaphos Blau"]}',
+              journalValue: {
+                amount:1.5,
+                n:3,
+                p:4,
+                k:1.7,
+                fertilizers: ['Hakaphos Grün','Hakaphos Blau']
+              },
               mediumId: 1
             },
             '7': {
@@ -159,7 +171,13 @@ describe(`Journal()`, () => {
               journalId: 6,
               journalTimestamp: 1555,
               journalType: 'watering',
-              journalValue: '{"amount":1.5,"n":3,"p":4,"k":1.7,"fertilizers":["Hakaphos Grün","Hakaphos Blau"]}',
+              journalValue: {
+                amount: 1.5,
+                n:3,
+                p:4,
+                k:1.7,
+                fertilizers: ['Hakaphos Grün','Hakaphos Blau']
+              },
               mediumId: 1
             }
           }
@@ -179,7 +197,7 @@ describe(`Journal()`, () => {
               journalId: 8,
               journalTimestamp: 4220,
               journalType: 'test-bool',
-              journalValue: 'true',
+              journalValue: true,
               plantId: 1,
             },
           }
@@ -199,12 +217,73 @@ describe(`Journal()`, () => {
               journalId: 6,
               journalTimestamp: 1555,
               journalType: 'watering',
-              journalValue: '{"amount":1.5,"n":3,"p":4,"k":1.7,"fertilizers":["Hakaphos Grün","Hakaphos Blau"]}',
+              journalValue: {
+                amount:1.5,
+                n:3,
+                p:4,
+                k:1.7,
+                fertilizers: ['Hakaphos Grün','Hakaphos Blau']
+              },
               mediumId: 1
             }
           }
         }
       );
     });
+
+    it(`should find boolean where they are true or false with $in: [true, false]`, async () => {
+      let journals = await pj.Journal.find(
+        {where: {'journalValue': {'$in': [true, false]}}});
+      journals.should.containDeep(
+        {
+          found: 2,
+          remaining: 0,
+          journals:  {
+            '8': {
+              journalId: 8,
+              journalTimestamp: 4220,
+              journalType: 'test-bool',
+              journalValue: true,
+              plantId: 1,
+            },
+            '9': {
+              journalId: 9,
+              journalTimestamp: 4221,
+              journalType: 'test-bool',
+              journalValue: false,
+              plantId: 1,
+            }
+          }
+        }
+      );
+    });
+
+    it(`should find equal strings for journalValue`, async () => {
+      let journals = await pj.Journal.find(
+        {where: {'journalValue': 'This is a log'}});
+      journals.should.containDeep(
+        {
+          found: 2,
+          remaining: 0,
+          journals:  {
+            '1': {
+              journalId: 1,
+              journalTimestamp: 1337,
+              journalType: 'log',
+              journalValue: 'This is a log',
+              plantId: 1
+            },
+            '5': {
+              journalId: 5,
+              journalTimestamp: 1555,
+              journalType: 'log',
+              journalValue: 'This is a log',
+              plantId: 1
+            },
+          }
+        }
+      );
+    });
+
   });
 });

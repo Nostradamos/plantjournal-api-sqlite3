@@ -493,13 +493,13 @@ describe(`src/apply-where/apply-where`, () => {
     describe(`journalValue`, () => {
       it(`should set WHERE journals.journalValue = "foo" if attr is just journalValue`, () => {
         applyWhere(q, ['journalValue'], {where: {'journalValue': 'foo'}});
-        q.toString().should.eql(`SELECT * FROM test WHERE (journals.journalValue = 'foo')`);
+        q.toString().should.eql(`SELECT * FROM test WHERE (journals.journalValue = '"foo"')`);
       });
 
       it(`should set WHERE JSON_EXTRACT(journals.journalValue, "$.foo.bar[2]") = "foo" if attr is journalValue.foo.bar[2]`, () => {
         applyWhere(q, ['journalValue'], {where: {'journalValue.foo.bar[2]': 'foo'}});
         q.toString().should.eql(
-          `SELECT * FROM test WHERE (JSON_EXTRACT(journals.journalValue, '$.foo.bar[2]') = 'foo')`);
+          `SELECT * FROM test WHERE (JSON_EXTRACT(journals.journalValue, '$.foo.bar[2]') = '"foo"')`);
       });
     });
 
