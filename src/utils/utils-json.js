@@ -53,7 +53,8 @@ UtilsJSON.needToSanitize = function(obj, onExtract=false) {
  * @param  {Boolean} onExtract=false
  *         For JSON_EXTRACT functions we don't have to quote JSON strings,
  *         so we have this flag for those cases.
- * @return {[type]}     [description]
+ * @return {String|Number}
+ *         Returns sanitized string or a number
  */
 UtilsJSON.sanitize = function (obj, onExtract=false) {
   if(UtilsJSON.needToSanitize(obj, onExtract)) {
@@ -76,4 +77,4 @@ UtilsJSON.parseIfPossible = function(str) {
   } catch(err) {
     return str;
   }
-}
+};
