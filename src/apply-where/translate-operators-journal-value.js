@@ -42,6 +42,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
 
     let lengthAttrValue = CONSTANTS.ATTR_VALUE_JOURNAL.length;
 
+    self.isPath = false;
     if(self.attr.length > lengthAttrValue) {
       let charAfterAttr = self.attr[lengthAttrValue];
 
@@ -63,6 +64,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
       // JSON paths for sqlite have to start with an `$`
       self.funcArgs = ['$' + self.attr.substr(lengthAttrValue)];
       self.attr = CONSTANTS.ATTR_VALUE_JOURNAL;
+      self.isPath = true;
     }
   }
 
@@ -84,7 +86,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
     [crit.crit, crit.args] = UtilsExpression.createEqualsExpression(
       self.table,
       self.attr,
-      UtilsJSON.sanitize(operatorOptions),
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
       self.func,
       self.funcArgs
     );
@@ -106,7 +108,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorNotEquals(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createNotEqualsExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -131,7 +133,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorLike(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLikeExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -150,7 +152,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorNotLike(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createNotLikeExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -169,7 +171,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorGreatherThan(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createGreaterThanExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -191,7 +193,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   static operatorGreatherThanEqual(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.
       createGreaterThanEqualExpression(self.table, self.attr,
-        UtilsJSON.sanitize(operatorOptions), self.func, self.funcArgs);
+        UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -212,7 +214,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorLowerThan(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLowerThanExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -233,7 +235,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorLowerThanEqual(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLowerThanEqualExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -259,7 +261,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
       return;
     }
     [crit.crit, crit.args] = UtilsExpression.createInExpression(
-      self.table, self.attr, UtilsJSON.sanitizeArray(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitizeArray(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**
@@ -285,7 +287,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
       return;
     }
     [crit.crit, crit.args] = UtilsExpression.createNotInExpression(
-      self.table, self.attr, UtilsJSON.sanitizeArray(operatorOptions), self.func, self.funcArgs);
+      self.table, self.attr, UtilsJSON.sanitizeArray(operatorOptions, self.isPath), self.func, self.funcArgs);
   }
 
   /**

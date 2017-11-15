@@ -15,17 +15,43 @@ describe(`TranslateOperatorsJournalValue`, () => {
 
     beforeEach(() => {
       crit = {crit:null, args:[]};
-      self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null};
+      self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: true};
     });
 
     describe('general operator tests', () => {
       it(`all operators should sanitize`, () => {
+        let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: false};
         for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
           let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
           operatorFunc(self, true, crit);
           crit.args[1].should.eql('true');
           operatorFunc(self, {foo: 'bar'}, crit);
           crit.args[1].should.eql('{"foo":"bar"}');
+          operatorFunc(self, '{"foo":"bar"}', crit);
+          crit.args[1].should.eql('"{\\"foo\\":\\"bar\\"}"');
+
+
+          // $in and $nin only sanitized array elements, not the array itself.
+          if(operator !== '$in' && operator !== '$nin') {
+            operatorFunc(self, ['foo', 'bar'], crit);
+            crit.args[1].should.eql('["foo","bar"]');
+          } else {
+            operatorFunc(self, [['foo', 'bar'], true, {foo: 'bar'}], crit);
+            crit.args[1].should.eql(['["foo","bar"]', 'true', '{"foo":"bar"}']);
+          }
+        }
+      });
+
+      it(`all operators should sanitize if self.isPath is true and operatorOptions is not an invalid JSON`, () => {
+        let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: true};
+        for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
+          let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
+          operatorFunc(self, true, crit);
+          crit.args[1].should.eql('true');
+          operatorFunc(self, {foo: 'bar'}, crit);
+          crit.args[1].should.eql('{"foo":"bar"}');
+          operatorFunc(self, '{"foo":"bar"}', crit);
+          crit.args[1].should.eql('"{\\"foo\\":\\"bar\\"}"');
 
           // $in and $nin only sanitized array elements, not the array itself.
           if(operator !== '$in' && operator !== '$nin') {
@@ -43,7 +69,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`should do TABLE.ATTR = OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
         TranslateOperatorsJournalValue.operatorEquals(self, 'bar', crit);
         crit.should.eql(
-          {crit: '? = ?', args: [TABLE_DOT_ATTR_RSTR, '"bar"']});
+          {crit: '? = ?', args: [TABLE_DOT_ATTR_RSTR, 'bar']});
       });
 
       it(`should do json_extract(TABLE.ATTR, PATH) = OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -53,7 +79,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         crit.should.eql(
           {
             crit: 'json_extract(?, ?) = ?',
-            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '"bar"']
+            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 'bar']
           });
       });
     });
@@ -62,7 +88,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`should do TABLE.ATTR != OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
         TranslateOperatorsJournalValue.operatorNotEquals(self, 'bar', crit);
         crit.should.eql(
-          {crit: '? != ?', args: [TABLE_DOT_ATTR_RSTR, '"bar"']});
+          {crit: '? != ?', args: [TABLE_DOT_ATTR_RSTR, 'bar']});
       });
 
       it(`should do json_extract(TABLE.ATTR, PATH) != OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -72,7 +98,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         crit.should.eql(
           {
             crit: 'json_extract(?, ?) != ?',
-            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '"bar"']
+            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, 'bar']
           });
       });
     });
@@ -166,7 +192,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         TranslateOperatorsJournalValue.operatorLike(
           self, '_est', crit);
         crit.should.eql(
-          {crit: '? LIKE ?', args: [TABLE_DOT_ATTR_RSTR, '"_est"']});
+          {crit: '? LIKE ?', args: [TABLE_DOT_ATTR_RSTR, '_est']});
       });
 
       it(`should do json_extract(TABLE.ATTR, PATH) LIKE OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -177,7 +203,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         crit.should.eql(
           {
             crit: 'json_extract(?, ?) LIKE ?',
-            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '"_est"']
+            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '_est']
           });
       });
     });
@@ -186,7 +212,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`should do TABLE.ATTR NOT LIKE OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
         TranslateOperatorsJournalValue.operatorNotLike(self, '_est', crit);
         crit.should.eql(
-          {crit: '? NOT LIKE ?', args: [TABLE_DOT_ATTR_RSTR, '"_est"']});
+          {crit: '? NOT LIKE ?', args: [TABLE_DOT_ATTR_RSTR, '_est']});
       });
 
       it(`should do json_extract(TABLE.ATTR, PATH) NOT LIKE OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -196,7 +222,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         crit.should.eql(
           {
             crit: 'json_extract(?, ?) NOT LIKE ?',
-            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '"_est"']
+            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, '_est']
           });
       });
     });
@@ -205,7 +231,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`should do TABLE.ATTR IN OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
         TranslateOperatorsJournalValue.operatorIn(self, ['foo', 'bar'], crit);
         crit.should.eql(
-          {crit: '? IN ?', args: [TABLE_DOT_ATTR_RSTR, ['"foo"', '"bar"']]});
+          {crit: '? IN ?', args: [TABLE_DOT_ATTR_RSTR, ['foo', 'bar']]});
       });
 
       it(`should do json_extract(TABLE.ATTR, PATH) IN OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -215,7 +241,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         crit.should.eql(
           {
             crit: 'json_extract(?, ?) IN ?',
-            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, ['"foo"', '"bar"']]
+            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, ['foo', 'bar']]
           });
       });
     });
@@ -224,7 +250,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`should do TABLE.ATTR NOT IN OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
         TranslateOperatorsJournalValue.operatorNotIn(self, ['foo', 'bar'], crit);
         crit.should.eql(
-          {crit: '? NOT IN ?', args: [TABLE_DOT_ATTR_RSTR, ['"foo"', '"bar"']]});
+          {crit: '? NOT IN ?', args: [TABLE_DOT_ATTR_RSTR, ['foo', 'bar']]});
       });
 
       it(`should do json_extract(TABLE.ATTR, PATH) NOT IN OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
@@ -234,7 +260,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         crit.should.eql(
           {
             crit: 'json_extract(?, ?) NOT IN ?',
-            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, ['"foo"', '"bar"']]
+            args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, ['foo', 'bar']]
           });
       });
     });

@@ -26,33 +26,46 @@ UtilsJSON.isValidJSON = function(str) {
 
 
 /**
- * Function determining if an object needs to get sanitized before it can
- * get stringified. We need to sanitize everything except of Numbers.
+ * Function determining if an object needs to get sanitized before we can pass
+ * it to the squel JSON() function. We need to sanitize everything except of
+ * Numbers and strings which are not valid JSON.
  * @param  {Object} obj
  *         Object to test for sanitization
+ * @param  {Boolean} onExtract=false
+ *         For JSON_EXTRACT functions we don't have to quote JSON strings,
+ *         so we have this flag for those cases.
  * @return {Boolean}
  *         Returns true if object needs to get sanitized
  */
-UtilsJSON.needToSanitize = function(obj) {
+UtilsJSON.needToSanitize = function(obj, onExtract=false) {
+  if(onExtract === true) {
+    return !(_.isString(obj) &&
+           !UtilsJSON.isValidJSON(obj)) &&
+           !_.isNumber(obj);
+  }
   return !_.isNumber(obj);
 };
 
 /**
  * Sanitizes an object if it need's to get sanitized.
- * @param  {[type]} obj [description]
+ * @param  {Object} obj
+ *         Object to sanitize
+ * @param  {Boolean} onExtract=false
+ *         For JSON_EXTRACT functions we don't have to quote JSON strings,
+ *         so we have this flag for those cases.
  * @return {[type]}     [description]
  */
-UtilsJSON.sanitize = function (obj) {
-  if(UtilsJSON.needToSanitize(obj)) {
+UtilsJSON.sanitize = function (obj, onExtract=false) {
+  if(UtilsJSON.needToSanitize(obj, onExtract)) {
     return JSON.stringify(obj);
   }
   return obj;
 };
 
-UtilsJSON.sanitizeArray = function (arr) {
+UtilsJSON.sanitizeArray = function (arr, onExtract=false) {
   let sanitizedArr = arr;
   for(let i=0;i<arr.length;i++) {
-    sanitizedArr[i] = UtilsJSON.sanitize(arr[i]);
+    sanitizedArr[i] = UtilsJSON.sanitize(arr[i], onExtract);
   }
   return sanitizedArr;
 };

@@ -13,11 +13,15 @@ describe(`utils/utils-json`, () => {
   });
 
   describe(`#needToSanitize()`, () => {
-    it(`should return true if obj needs to get sanitized`, () => {
-      let toTest = [true, false, ['foo', 'bar'], '{"foo":"bar"}', 'test', {foo: 'bar'}];
+    it(`should return true if obj is not a number or a string with invalid JSON`, () => {
+      let toTest = [true, false, ['foo', 'bar'], '{"foo":"bar"}', {foo: 'bar'}, 'test'];
       for(let test of toTest) {
         UtilsJSON.needToSanitize(test).should.be.true();
       }
+    });
+
+    it(`should return false if string is not valid json and onExtract is true`, () => {
+      UtilsJSON.needToSanitize('test', true).should.be.false();
     });
 
     it(`should return false for numbers`, () => {
@@ -37,8 +41,19 @@ describe(`utils/utils-json`, () => {
       UtilsJSON.sanitize('{"foo":"bar"}').should.eql('"{\\"foo\\":\\"bar\\"}"');
     });
 
-    it(`should quote JSON if object is string`, () => {
-      UtilsJSON.sanitize('{foo:bar}').should.eql('"{foo:bar}"');
+    it(`should not quote invalid JSON strings if onExtract is true`, () => {
+      UtilsJSON.sanitize('{foo:bar}', true).should.eql('{foo:bar}');
+      UtilsJSON.sanitize('foo', true).should.eql('foo');
+    });
+
+    it(`should quote valid JSON strings if onExtract is true`, () => {
+      UtilsJSON.sanitize('{"foo":"bar"}', true).should.eql('"{\\"foo\\":\\"bar\\"}"');
+    });
+
+
+
+    it(`should quote JSON if object is string and valid JSON`, () => {
+      UtilsJSON.sanitize('{"foo":"bar"}').should.eql('"{\\"foo\\":\\"bar\\"}"');
     });
   });
 
