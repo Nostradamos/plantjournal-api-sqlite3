@@ -3,6 +3,8 @@
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 const UtilsQuery = require('../../utils/utils-query');
+const UtilsReturnObject = require('../../utils/utils-return-object');
+
 
 const GenericFind = require('../generic/generic-find');
 
@@ -49,9 +51,9 @@ class GenotypeFind extends GenericFind {
     returnObject.families = {};
 
     for(let row of context.rowsWhere) {
-      Utils.addGenotypeFromRowToReturnObject(row, returnObject, true);
-      Utils.addGenerationFromRowToReturnObject(row, returnObject);
-      Utils.addFamilyFromRowToReturnObject(row, returnObject);
+      UtilsReturnObject.addGenotype(row, returnObject, true);
+      UtilsReturnObject.addGeneration(row, returnObject);
+      UtilsReturnObject.addFamily(row, returnObject);
     }
 
     Utils.deleteEmptyProperties(returnObject, ['families', 'generations']);

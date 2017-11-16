@@ -1,7 +1,7 @@
 'use strict';
 
 const CONSTANTS = require('../../constants');
-const Utils = require('../../utils/utils');
+const UtilsReturnObject = require('../../utils/utils-return-object');
 
 const GenericFind = require('../generic/generic-find');
 
@@ -32,7 +32,7 @@ class EnvironmentFind extends GenericFind {
     // build families object
     returnObject.environments =  {};
     for(let row of context.rowsWhere) {
-      Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
+      UtilsReturnObject.addEnvironment(row, returnObject);
     }
   }
 }

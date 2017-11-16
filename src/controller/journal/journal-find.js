@@ -1,7 +1,7 @@
 'use strict';
 
 const CONSTANTS = require('../../constants');
-const Utils = require('../../utils/utils');
+const UtilsReturnObject = require('../../utils/utils-return-object');
 
 const GenericFind = require('../generic/generic-find');
 
@@ -33,7 +33,7 @@ class JournalFind extends GenericFind {
     returnObject.journals =  {};
 
     for(let row of context.rowsWhere) {
-      Utils.addJournalFromRowToReturnObject(row, returnObject);
+      UtilsReturnObject.addJournal(row, returnObject);
     }
   }
 }

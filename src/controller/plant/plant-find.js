@@ -3,6 +3,7 @@
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 const UtilsQuery = require('../../utils/utils-query');
+const UtilsReturnObject = require('../../utils/utils-return-object');
 
 const GenericFind = require('../generic/generic-find');
 
@@ -54,12 +55,12 @@ class PlantFind extends GenericFind {
     returnObject.environments = {};
 
     for(let row of context.rowsWhere) {
-      Utils.addPlantFromRowToReturnObject(row, returnObject, true);
-      Utils.addGenotypeFromRowToReturnObject(row, returnObject);
-      Utils.addGenerationFromRowToReturnObject(row, returnObject);
-      Utils.addFamilyFromRowToReturnObject(row, returnObject);
-      Utils.addMediumFromRowToReturnObject(row, returnObject);
-      Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
+      UtilsReturnObject.addPlant(row, returnObject, true);
+      UtilsReturnObject.addGenotype(row, returnObject);
+      UtilsReturnObject.addGeneration(row, returnObject);
+      UtilsReturnObject.addFamily(row, returnObject);
+      UtilsReturnObject.addMedium(row, returnObject);
+      UtilsReturnObject.addEnvironment(row, returnObject);
     }
 
     Utils.deleteEmptyProperties(

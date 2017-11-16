@@ -3,8 +3,9 @@
 const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
-const Utils = require('../../utils/utils');
 const UtilsQuery = require('../../utils/utils-query');
+const UtilsReturnObject = require('../../utils/utils-return-object');
+
 
 const GenericFind = require('../generic/generic-find');
 
@@ -48,8 +49,8 @@ class GenerationFind extends GenericFind {
     returnObject.generations = {};
 
     for(let row of context.rowsWhere) {
-      Utils.addGenerationFromRowToReturnObject(row, returnObject, true);
-      Utils.addFamilyFromRowToReturnObject(row, returnObject);
+      UtilsReturnObject.addGeneration(row, returnObject, true);
+      UtilsReturnObject.addFamily(row, returnObject);
     }
 
     // We could use Utils.deleteEmptyProperties() but this is maybe more

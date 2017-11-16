@@ -7,6 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../../logger');
 const Utils = require('../../utils/utils');
 const UtilsQuery = require('../../utils/utils-query');
+const UtilsReturnObject = require('../../utils/utils-return-object');
 const ApplyWhere = require('../../apply-where/apply-where');
 
 /**
@@ -323,7 +324,7 @@ class GenericFind {
      */
   static buildReturnObjectCount(returnObject, context, criteria) {
     logger.debug(this.name, '#find() length RowsWhere:', context.rowsWhere.length);
-    Utils.addFoundAndRemainingFromCountToReturnObject(
+    UtilsReturnObject.addFoundAndRemaining(
       context.rowCount,
       context.rowsWhere.length,
       returnObject,

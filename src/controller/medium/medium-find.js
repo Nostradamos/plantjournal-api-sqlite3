@@ -3,6 +3,7 @@
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 const UtilsQuery = require('../../utils/utils-query');
+const UtilsReturnObject = require('../../utils/utils-return-object');
 
 const GenericFind = require('../generic/generic-find');
 
@@ -48,8 +49,8 @@ class MediumFind extends GenericFind {
     returnObject.mediums = {};
 
     for(let row of context.rowsWhere) {
-      Utils.addMediumFromRowToReturnObject(row, returnObject);
-      Utils.addEnvironmentFromRowToReturnObject(row, returnObject);
+      UtilsReturnObject.addMedium(row, returnObject);
+      UtilsReturnObject.addEnvironment(row, returnObject);
     }
 
     Utils.deleteEmptyProperties(returnObject, ['environments']);
