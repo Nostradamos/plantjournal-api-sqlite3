@@ -27,17 +27,20 @@ let UtilsReturnObject = exports;
  *        adds to returnObject even if row.generatioName is not set.
  */
 UtilsReturnObject.addFamily = (row, returnObject, forceAdd) => {
-  let familyId = row.familyId;
+  let familyId = row[CONSTANTS.ATTR_ID_FAMILY];
+
+  if(familyId === null) return;
+
   let family = {};
 
-  let value;
   for (let attr of CONSTANTS.ALL_ATTRIBUTES_FAMILY) {
-    if (!_.has(row, attr)) continue;
-    value = row[attr];
-    if (attr === CONSTANTS.ATTR_GENERATIONS_FAMILY) {
+    let value = row[attr];
+    if (_.isUndefined(value))  continue;
+
+    if(attr === CONSTANTS.ATTR_GENERATIONS_FAMILY)
       value = Utils.splitToInt(value);
-    }
-    family[attr] = value;
+
+    family[attr] =  value;
   }
 
   // Make sure we have at least two attrs, or forceAdd = true
@@ -60,19 +63,20 @@ UtilsReturnObject.addFamily = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 UtilsReturnObject.addGeneration = (row, returnObject, forceAdd) => {
-  let generationId = row.generationId;
-  let generation = {
-    'familyId': row.familyId
-  };
+  let generationId = row[CONSTANTS.ATTR_ID_GENERATION];
+
+  if(generationId === null) return;
+
+  let generation = {[CONSTANTS.ATTR_ID_FAMILY]: row[CONSTANTS.ATTR_ID_FAMILY]};
 
   for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENERATION) {
-    if (!_.has(row, attr)) continue;
-
     let value = row[attr];
+    if (_.isUndefined(value)) continue;
+
     if (attr === CONSTANTS.ATTR_PARENTS_GENERATION ||
-            attr === CONSTANTS.ATTR_GENOTYPES_GENERATION) {
+        attr === CONSTANTS.ATTR_GENOTYPES_GENERATION)
       value = Utils.splitToInt(value);
-    }
+
     generation[attr] = value;
 
   }
@@ -97,20 +101,20 @@ UtilsReturnObject.addGeneration = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 UtilsReturnObject.addGenotype = (row, returnObject, forceAdd) => {
-  let genotypeId = row.genotypeId;
+  let genotypeId = row[CONSTANTS.ATTR_ID_GENOTYPE];
+
+  if(genotypeId === null) return;
+
   let genotype = {
-    [CONSTANTS.ATTR_ID_GENOTYPE]: row.generationId,
-    [CONSTANTS.ATTR_ID_FAMILY]: row.familyId
+    [CONSTANTS.ATTR_ID_GENOTYPE]: row[CONSTANTS.ATTR_ID_GENOTYPE],
+    [CONSTANTS.ATTR_ID_FAMILY]: row[CONSTANTS.ATTR_ID_FAMILY]
   };
 
-  let value;
   for(let attr of CONSTANTS.ALL_ATTRIBUTES_GENOTYPE) {
-    if (!_.has(row, attr)) continue;
-    value = row[attr];
+    let value = row[attr];
+    if (_.isUndefined(value)) continue;
 
-    if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) {
-      value = Utils.splitToInt(value);
-    }
+    if(attr === CONSTANTS.ATTR_PLANTS_GENOTYPE) value = Utils.splitToInt(value);
 
     genotype[attr] = value;
   }
@@ -132,25 +136,23 @@ UtilsReturnObject.addGenotype = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 UtilsReturnObject.addPlant = (row, returnObject, forceAdd) => {
-  let plantId = row.plantId;
+  let plantId = row[CONSTANTS.ATTR_ID_PLANT];
+
+  if(plantId === null) return;
 
   let plant = {
-    'genotypeId': row.genotypeId,
-    'generationId': row.generationId,
-    'familyId': row.familyId,
-    'mediumId': row.mediumId || null,
-    'environmentId': row.environmentId || null
+    [CONSTANTS.ATTR_ID_FAMILY]: row[CONSTANTS.ATTR_ID_FAMILY],
+    [CONSTANTS.ATTR_ID_GENERATION]: row[CONSTANTS.ATTR_ID_GENERATION],
+    [CONSTANTS.ATTR_ID_GENOTYPE]: row[CONSTANTS.ATTR_ID_GENOTYPE],
+    [CONSTANTS.ATTR_ID_MEDIUM]: row[CONSTANTS.ATTR_ID_MEDIUM] || null,
+    [CONSTANTS.ATTR_ID_ENVIRONMENT]: row[CONSTANTS.ATTR_ID_ENVIRONMENT] || null
   };
 
-  let value;
   for (let attr of CONSTANTS.ALL_ATTRIBUTES_PLANT) {
-    if (!_.has(row, attr)) continue;
-    value = row[attr];
+    let value = row[attr];
+    if (_.isUndefined(value)) continue;
 
-    if(attr === CONSTANTS.ATTR_CLONES_PLANT) {
-      value = Utils.splitToInt(value);
-    }
-
+    if(attr === CONSTANTS.ATTR_CLONES_PLANT) value = Utils.splitToInt(value);
     plant[attr] = value;
   }
 
@@ -169,21 +171,19 @@ UtilsReturnObject.addPlant = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 UtilsReturnObject.addEnvironment = (row, returnObject, forceAdd) => {
-  let environmentId = row.environmentId;
+  let environmentId = row[CONSTANTS.ATTR_ID_ENVIRONMENT];
 
-  if(_.isUndefined(environmentId) || _.isNull(environmentId))
-    return;
+  if(_.isUndefined(environmentId) || _.isNull(environmentId)) return;
 
   let environment = {};
 
-  let value;
   for(let attr of CONSTANTS.ALL_ATTRIBUTES_ENVIRONMENT) {
-    if (!_.has(row, attr)) continue;
-    value = row[attr];
+    let value = row[attr];
+    if (_.isUndefined(value)) continue;
 
-    if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT) {
+    if(attr === CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT)
       value = Utils.splitToInt(value);
-    }
+
     environment[attr] = value;
   }
 
@@ -201,20 +201,16 @@ UtilsReturnObject.addEnvironment = (row, returnObject, forceAdd) => {
  *        adds to returnObject even if row.generatioName is not set.
  */
 UtilsReturnObject.addMedium = (row, returnObject, forceAdd) => {
-  let mediumId = row.mediumId;
+  let mediumId = row[CONSTANTS.ATTR_ID_MEDIUM];
   let medium = {
-    'environmentId': row.environmentId
+    [CONSTANTS.ATTR_ID_ENVIRONMENT]: row[CONSTANTS.ATTR_ID_ENVIRONMENT]
   };
 
-  let value;
   for(let attr of CONSTANTS.ALL_ATTRIBUTES_MEDIUM) {
-    if (!_.has(row, attr)) continue;
-    value = row[attr];
+    let value = row[attr];
+    if (_.isUndefined(value)) continue;
 
-    if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) {
-      value = Utils.splitToInt(value);
-    }
-
+    if(attr === CONSTANTS.ATTR_PLANTS_MEDIUM) value = Utils.splitToInt(value);
     medium[attr] = value;
   }
 
@@ -223,7 +219,7 @@ UtilsReturnObject.addMedium = (row, returnObject, forceAdd) => {
 };
 
 UtilsReturnObject.addJournal = (row, returnObject, forceAdd) => {
-  let journalId = row.journalId;
+  let journalId = row[CONSTANTS.ATTR_ID_JOURNAL];
   let journal = {};
 
   let foreignAttributes = [
@@ -231,12 +227,15 @@ UtilsReturnObject.addJournal = (row, returnObject, forceAdd) => {
     CONSTANTS.ATTR_ID_MEDIUM,
     CONSTANTS.ATTR_ID_PLANT
   ];
-  for (let attr of CONSTANTS.ALL_ATTRIBUTES_JOURNAL) {
-    if (!_.has(row, attr)) continue;
-    let value = row[attr];
 
-    if (value === null && _.indexOf(foreignAttributes, attr) !== -1) continue;
-    if (attr === 'journalValue') value = UtilsJSON.parseIfPossible(value);
+  for (let attr of CONSTANTS.ALL_ATTRIBUTES_JOURNAL) {
+    let value = row[attr];
+    if (_.isUndefined(value) ||
+        (_.isNull(value) && _.indexOf(foreignAttributes, attr) !== -1))
+      continue;
+
+    if (attr === CONSTANTS.ATTR_VALUE_JOURNAL)
+      value = UtilsJSON.parseIfPossible(value);
 
     journal[attr] = value;
   }
@@ -261,13 +260,13 @@ UtilsReturnObject.addJournal = (row, returnObject, forceAdd) => {
 */
 UtilsReturnObject.addFoundAndRemaining =
 function (count, lenRows, returnObject, options) {
-  let found = count['count'];
+  let found = count.count;
   let offset = options.offset || 0;
   let remaining = found - offset - lenRows;
 
   // Make sure we don't go negative
   if(remaining < 0) remaining = 0;
 
-  returnObject['found'] = found;
-  returnObject['remaining'] = remaining;
+  returnObject.found = found;
+  returnObject.remaining = remaining;
 };
