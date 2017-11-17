@@ -202,8 +202,10 @@ UtilsReturnObject.addEnvironment = (row, returnObject, forceAdd) => {
  */
 UtilsReturnObject.addMedium = (row, returnObject, forceAdd) => {
   let mediumId = row[CONSTANTS.ATTR_ID_MEDIUM];
+
+  if(mediumId === null) return;
+
   let medium = {
-    [CONSTANTS.ATTR_ID_ENVIRONMENT]: row[CONSTANTS.ATTR_ID_ENVIRONMENT]
   };
 
   for(let attr of CONSTANTS.ALL_ATTRIBUTES_MEDIUM) {

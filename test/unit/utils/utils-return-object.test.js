@@ -411,6 +411,150 @@ describe(`utils/utils-return-object`, () => {
     });
   });
 
+  describe(`#addEnvironment()`, () => {
+    let returnObject;
+
+    beforeEach(() => {
+      returnObject = {environments: {}};
+    });
+
+    it(`should add environment to returnObject`, () => {
+      let row = {
+        environmentId: 13,
+        environmentName: 'Testenv'
+      };
+
+      UtilsReturnObject.addEnvironment(row, returnObject);
+      returnObject.should.deepEqual({
+        environments: {
+          13: {
+            environmentId: 13,
+            environmentName: 'Testenv'
+          }
+        }
+      });
+    });
+
+    it(`should not add environment to returnObject if environmentId is null`, () => {
+      let row = {
+        environmentId: null,
+        environmentName: null
+      };
+
+      UtilsReturnObject.addEnvironment(row, returnObject);
+      returnObject.should.deepEqual({
+        environments: {}
+      });
+    });
+
+    it(`should split environmentMediums string into integer array`, () => {
+      let row = {
+        environmentId: 42,
+        environmentName: 'foobar',
+        environmentMediums: '13,12'
+      };
+
+      UtilsReturnObject.addEnvironment(row, returnObject);
+      returnObject.should.deepEqual({
+        environments: {
+          42: {
+            environmentId: 42,
+            environmentName: 'foobar',
+            environmentMediums: [13,12]
+          }
+        }
+      });
+    });
+  });
+
+  describe(`addJournal()`, () => {
+    let returnObject;
+
+    beforeEach(() => {
+      returnObject = {journals: {}};
+    });
+
+    it(`should add journal to returnObject`, () => {
+      let row = {
+        journalId: 14,
+        journalTimestamp: 122223,
+        journalType: 'log',
+        journalValue: '"foobar"',
+        plantId: 4
+      };
+
+      UtilsReturnObject.addJournal(row, returnObject);
+      returnObject.should.deepEqual({
+        journals: {
+          14: {
+            journalId: 14,
+            journalTimestamp: 122223,
+            journalType: 'log',
+            journalValue: 'foobar',
+            plantId: 4
+          }
+        }
+      });
+
+      it(`should not add journal if journalId is null`, () => {
+        let row = {
+          journalId: null,
+          journalTimestamp: null,
+          journalType: null,
+          journalValue: null,
+          plantId: 4
+        };
+
+        UtilsReturnObject.addJournal(row, returnObject);
+        returnObject.should.deepEqual({
+          journals: {}
+        });
+      });
+    });
+  });
+
+  describe(`#addMedium()`, () => {
+    let returnObject;
+
+    beforeEach(() => {
+      returnObject = {environments: {}, mediums: {}};
+    });
+
+    it(`should add medium to returnObject`, () => {
+      let row = {
+        mediumId: 13,
+        mediumName: 'barfoo',
+        environmentId: 17
+      };
+
+      UtilsReturnObject.addMedium(row, returnObject);
+      returnObject.should.deepEqual({
+        environments: {},
+        mediums: {
+          13: {
+            mediumId: 13,
+            mediumName: 'barfoo',
+            environmentId: 17
+          }
+        },
+      });
+    });
+
+    it(`should not add medium if mediumId is null`, () => {
+      let row = {
+        mediumId: null,
+        mediumName: null,
+        environmentId: 17
+      };
+
+      UtilsReturnObject.addMedium(row, returnObject);
+      returnObject.should.deepEqual({
+        environments: {},
+        mediums: {},
+      });
+    });
+  });
+
   describe(`#addFoundAndRemaining()`, () => {
     let returnObject;
 
