@@ -1,8 +1,10 @@
 /* eslint-env node, mocha */
 'use strict';
 
-require('should');
+const should = require('should');
 const _ = require('lodash');
+
+const UtilsQuery = require('../src/utils/utils-query');
 
 /********************
  * HELPER FUNCTIONS
@@ -49,3 +51,14 @@ helpers.allEnvironmentsShouldHaveCreatedAtAndModifiedAt = function(retObj) {
   helpers.allShouldHaveCreatedAtAndModifiedAt(
     retObj, 'environments', 'environment');
 };
+
+/**
+ * Assertion to equal sql strings, even if they have newlines and a different
+ * amount of whitespaces
+ * @param {sqlString} - some sql string
+ */
+should.Assertion.add('sqlEql', function(sqlString) {
+  this.params = {operator:'to be equal sql strings'};
+  UtilsQuery.stripSQL(this.obj).should.eql(
+    UtilsQuery.stripSQL(sqlString));
+});

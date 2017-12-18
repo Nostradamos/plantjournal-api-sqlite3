@@ -136,12 +136,12 @@ describe(`UtilsQuery`, () => {
 
     it(`should do a left join between lTable.lAttr and rTable.lAttr`, () => {
       UtilsQuery.join(q, 'foo', 'bar', 'id');
-      q.toString().should.eql('SELECT * FROM testfoo LEFT JOIN bar `bar` ON (foo.id = bar.id)');
+      q.toString().should.eql('SELECT * FROM testfoo LEFT JOIN bar ON (foo.id = bar.id)');
     });
 
     it(`should do a left join between lTable.lAttr and rTable.rAttr if rAttr is not null`, () => {
       UtilsQuery.join(q, 'foo', 'bar', 'id', 'id2');
-      q.toString().should.eql('SELECT * FROM testfoo LEFT JOIN bar `bar` ON (foo.id = bar.id2)');
+      q.toString().should.eql('SELECT * FROM testfoo LEFT JOIN bar ON (foo.id = bar.id2)');
     });
 
     it(`should set alias for join if alias is not null`, () => {
@@ -156,8 +156,11 @@ describe(`UtilsQuery`, () => {
       let q = squel.select().from( CONSTANTS.TABLE_GENERATION, 'generations');
 
       UtilsQuery.joinFamiliesFromGenerations(q);
-      q.toString().should.eql(
-        `SELECT * FROM ${CONSTANTS.TABLE_GENERATION} \`generations\` LEFT JOIN ${CONSTANTS.TABLE_FAMILY} \`families\` ON (generations.familyId = families.familyId)`);
+      q.toString().should.sqlEql(
+        `SELECT * FROM ${CONSTANTS.TABLE_GENERATION} \`generations\`
+         LEFT JOIN ${CONSTANTS.TABLE_FAMILY}
+          ON (${CONSTANTS.TABLE_GENERATION}.${CONSTANTS.ATTR_ID_FAMILY} =
+         ${CONSTANTS.TABLE_FAMILY}.${CONSTANTS.ATTR_ID_FAMILY})`);
     });
   });
 
@@ -166,8 +169,10 @@ describe(`UtilsQuery`, () => {
       let q = squel.select().from(CONSTANTS.TABLE_GENOTYPE, 'genotypes');
 
       UtilsQuery.joinGenerationsFromGenotypes(q);
-      q.toString().should.eql(
-        `SELECT * FROM ${CONSTANTS.TABLE_GENOTYPE} \`genotypes\` LEFT JOIN ${CONSTANTS.TABLE_GENERATION} \`generations\` ON (genotypes.generationId = generations.generationId)`);
+      q.toString().should.sqlEql(
+        `SELECT * FROM ${CONSTANTS.TABLE_GENOTYPE} \`genotypes\`
+         LEFT JOIN ${CONSTANTS.TABLE_GENERATION}
+           ON (genotypes.generationId = generations.generationId)`);
     });
   });
 
@@ -176,7 +181,31 @@ describe(`UtilsQuery`, () => {
       let q = squel.select().from(CONSTANTS.TABLE_PLANT, 'plants');
 
       UtilsQuery.joinGenotypesFromPlants(q);
-      q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_PLANT +' `plants` LEFT JOIN ' + CONSTANTS.TABLE_GENOTYPE + ' `genotypes` ON (plants.genotypeId = genotypes.genotypeId)');
+      q.toString().should.sqlEql(
+        `SELECT * FROM ${CONSTANTS.TABLE_PLANT} \`plants\`
+         LEFT JOIN ${CONSTANTS.TABLE_GENOTYPE}
+           ON (${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_GENOTYPE} =
+           ${CONSTANTS.TABLE_GENOTYPE}.${CONSTANTS.ATTR_ID_GENOTYPE})`);
+    });
+  });
+  describe(`#stripSQL()`, () => {
+    it('should remove all whitespaces after a whitespace', () => {
+      UtilsQuery.stripSQL(`asd  asd    asd    fo0    bar`)
+        .should.eql('asd asd asd fo0 bar');
+    });
+
+    it('should remove all newlines', () => {
+      UtilsQuery.stripSQL(`asd \nasd\r\n asd\n fo0\n bar`)
+        .should.eql('asd asd asd fo0 bar');
+    });
+
+    it('should single line a multi line sql query', () => {
+      UtilsQuery.stripSQL(
+        `SELECT * FROM TEST
+         WHERE a = 'b' OR x = 'y'
+         LIMIT 1,10`)
+         .should.eql(
+           'SELECT * FROM TEST WHERE a = \'b\' OR x = \'y\' LIMIT 1,10');
     });
   });
 });
