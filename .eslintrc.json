@@ -15,9 +15,7 @@
     "max-len": [
       "warn",
       {
-        "code": 80,
-        "ignoreStrings": true,
-        "ignoreTemplateLiterals": true
+        "code": 80
       }
     ],
     "linebreak-style": [
