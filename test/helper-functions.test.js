@@ -1,9 +1,9 @@
 /* eslint-env node, mocha */
 'use strict';
 
-const should = require('should');
+require('should');
 
-const HelperFunctions = require('./helper-functions');
+require('./helper-functions');
 
 describe(`HelperFunctions`, () => {
   describe(`Assertion: sqlEql`, () => {
@@ -17,6 +17,6 @@ describe(`HelperFunctions`, () => {
       `SELECT * FROM asd
        WHERE foo = 'bar'
        LIMIT 1`.should.not.sqlEql('SELECT * FROM TEST WHERE foo = \'bar\' LIMIT 1');
-    })
+    });
   });
 });
