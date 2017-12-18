@@ -144,8 +144,8 @@ UtilsExpression.createNotInExpression = (tbl, attr, notInArr, fnc=null, fncArgs=
 
 UtilsExpression.createExistsExpression = (subQuery) => {
   return ['EXISTS ?', [subQuery]];
-}
+};
 
 UtilsExpression.createNotExistsExpression = (subQuery) => {
   return ['NOT EXISTS ?', [subQuery]];
-}
+};

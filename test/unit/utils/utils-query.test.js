@@ -6,6 +6,7 @@ const squel = require('squel');
 
 const CONSTANTS = require('../../../src/constants');
 const UtilsQuery = require('../../../src/utils/utils-query');
+require('../../utils-test');
 
 describe(`UtilsQuery`, () => {
   describe(`#setFields()`, () => {
@@ -227,6 +228,15 @@ describe(`UtilsQuery`, () => {
       UtilsQuery.stripSQL(`asd \nasd\r\n asd\n fo0\n bar`)
         .should.eql('asd asd asd fo0 bar');
     });
+
+    it('should remove whitespaces before ), [, ] and (', () => {
+      UtilsQuery.stripSQL(') )  )   [   ] (').should.eql(')))[](');
+    });
+
+    it('should remove whitespaces after ), [, ] and (', () => {
+      UtilsQuery.stripSQL(']   )    (').should.eql('])(');
+    });
+
 
     it('should single line a multi line sql query', () => {
       UtilsQuery.stripSQL(

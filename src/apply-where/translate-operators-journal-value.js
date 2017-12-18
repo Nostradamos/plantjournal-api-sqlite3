@@ -203,11 +203,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorGreatherThanEqual(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createGreaterThanEqualExpression(
-        self.table,
-        self.attr,
-        UtilsJSON.sanitize(operatorOptions, self.isPath),
-        self.func,
-        self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -418,7 +418,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
 
     let subQuery = squel.select()
       .field('value')
-      .from(squel.rstr('json_each(?, ?)', attr, path))
+      .from(squel.rstr('json_each(?, ?)', attr, path));
     if(_.isArray(operatorOptions)) {
       subQuery
         .where('value IN ?', operatorOptions)

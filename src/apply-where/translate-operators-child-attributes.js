@@ -176,14 +176,14 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
      *         this two properties to create a new expression which gets
      *         added to self.squelExpr.
      */
-  static operatorHas(self, operatorOptions, crit) {
+  static operatorContains(self, operatorOptions, crit) {
     this.operatorIn(self, operatorOptions, crit);
 
     let [critHaving, critHavingArgs] = UtilsExpression.
       createGreaterThanEqualExpression(
         self.table, self.attr, operatorOptions.length || 1, 'COUNT');
 
-    logger.silly(`${this.name} #operatorHas()`, critHaving, critHavingArgs);
+    logger.silly(`${this.name} #operatorContains()`, critHaving, critHavingArgs);
 
     UtilsExpression.applyExpression(
       self.squelExprHaving, critHaving, critHavingArgs, self.type);
@@ -205,7 +205,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
      *         this two properties to create a new expression which gets
      *         added to self.squelExpr.
      */
-  static operatorNotHas(self, operatorOptions, crit) {
+  static operatorNotContains(self, operatorOptions, crit) {
     if(!_.isArray(operatorOptions)) operatorOptions = [operatorOptions];
 
     // This query will first select all generations which have any parent
@@ -304,9 +304,9 @@ TranslateOperatorsChildAttributes.OPERATORS.$eq =
     TranslateOperatorsChildAttributes.operatorEquals;
 TranslateOperatorsChildAttributes.OPERATORS.$neq =
     TranslateOperatorsChildAttributes.operatorNotEquals;
-TranslateOperatorsChildAttributes.OPERATORS.$has =
-    TranslateOperatorsChildAttributes.operatorHas;
-TranslateOperatorsChildAttributes.OPERATORS.$nhas =
-    TranslateOperatorsChildAttributes.operatorNotHas;
+TranslateOperatorsChildAttributes.OPERATORS.$contains =
+    TranslateOperatorsChildAttributes.operatorContains;
+TranslateOperatorsChildAttributes.OPERATORS.$ncontains =
+    TranslateOperatorsChildAttributes.operatorNotContains;
 
 module.exports = TranslateOperatorsChildAttributes;

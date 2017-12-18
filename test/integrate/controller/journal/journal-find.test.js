@@ -314,69 +314,69 @@ describe(`Journal()`, () => {
     it(`should find all journals where journalValue has NOT the key 'n'`, async () => {
       let journals = await pj.Journal.find(
         {where: {'journalValue': {'$nhas': 'n'}}});
-        journals.should.containDeep(
-          {
-            found: 8,
-            remaining: 0,
-            journals:  {
-              '1': {
-                journalId: 1,
-                journalTimestamp: 1337,
-                journalType: 'log',
-                journalValue: 'This is a log',
-                plantId: 1
-              },
-              '2': {
-                journalId: 2,
-                journalTimestamp: 1337,
-                journalType: 'ph-sensor',
-                journalValue: 6.5,
-                mediumId: 1
-              },
-              '3': {
-                journalId: 3,
-                journalTimestamp: 1337,
-                journalType: 'ec-sensor',
-                journalValue: 1.3,
-                mediumId: 1
-              },
-              '4': {
-                journalId: 4,
-                journalTimestamp: 1337,
-                journalType: 'temp-sensor',
-                journalValue: 28.7,
-                environmentId: 1
-              },
-              '5': {
-                journalId: 5,
-                journalTimestamp: 1555,
-                journalType: 'log',
-                journalValue: 'This is a log',
-                plantId: 1
-              },
-              '7': {
-                journalId: 7,
-                journalTimestamp: 1337,
-                journalType: 'ph-sensor',
-                journalValue: 6.8
-              },
-              '8': {
-                journalId: 8,
-                journalTimestamp: 4220,
-                journalType: 'test-bool',
-                journalValue: true,
-                plantId: 1,
-              },
-              '9': {
-                journalId: 9,
-                journalTimestamp: 4221,
-                journalType: 'test-bool',
-                journalValue: false,
-                plantId: 1,
-              }
+      journals.should.containDeep(
+        {
+          found: 8,
+          remaining: 0,
+          journals:  {
+            '1': {
+              journalId: 1,
+              journalTimestamp: 1337,
+              journalType: 'log',
+              journalValue: 'This is a log',
+              plantId: 1
+            },
+            '2': {
+              journalId: 2,
+              journalTimestamp: 1337,
+              journalType: 'ph-sensor',
+              journalValue: 6.5,
+              mediumId: 1
+            },
+            '3': {
+              journalId: 3,
+              journalTimestamp: 1337,
+              journalType: 'ec-sensor',
+              journalValue: 1.3,
+              mediumId: 1
+            },
+            '4': {
+              journalId: 4,
+              journalTimestamp: 1337,
+              journalType: 'temp-sensor',
+              journalValue: 28.7,
+              environmentId: 1
+            },
+            '5': {
+              journalId: 5,
+              journalTimestamp: 1555,
+              journalType: 'log',
+              journalValue: 'This is a log',
+              plantId: 1
+            },
+            '7': {
+              journalId: 7,
+              journalTimestamp: 1337,
+              journalType: 'ph-sensor',
+              journalValue: 6.8
+            },
+            '8': {
+              journalId: 8,
+              journalTimestamp: 4220,
+              journalType: 'test-bool',
+              journalValue: true,
+              plantId: 1,
+            },
+            '9': {
+              journalId: 9,
+              journalTimestamp: 4221,
+              journalType: 'test-bool',
+              journalValue: false,
+              plantId: 1,
             }
           }
-        );
+        }
+      );
     });
 
     it(`should find all journals where journalValue has a value with 1.5`, async () => {

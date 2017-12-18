@@ -477,7 +477,14 @@ UtilsQuery.getTableOfField = function (attr, overWriteTableLookup = null) {
  *         Stripped sql string.
  */
 UtilsQuery.stripSQL = function(sql) {
+  // Delete whitespaces after a whitespace
   sql = sql.replace(/\s\s+/g, ' ');
+  // Delete new lines
   sql = sql.replace(/\r?\n/g, '');
+  // Delete whitespaces before ),(,[,]
+  sql = sql.replace(/\s+([),(,[,\]])/g, '$1');
+  // Delete whitespaces after ),(,[,]
+  sql = sql.replace(/([),(,[,\]])\s+/g, '$1');
+
   return sql;
 };

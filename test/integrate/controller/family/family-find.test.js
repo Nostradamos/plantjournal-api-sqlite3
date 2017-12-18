@@ -156,9 +156,9 @@ describe(`Family()`, () => {
       );
     });
 
-    it(`should only find families which have a specific generation if we set {where:{familyGenerations:{$has:3}}}`, async () => {
+    it(`should only find families which have a specific generation if we set {where:{familyGenerations:{$contains:3}}}`, async () => {
       let families = await pj.Family.find(
-        {where:{familyGenerations:{$has:3}}});
+        {where:{familyGenerations:{$contains:3}}});
       families.should.containDeep(
         {
           found: 1,
