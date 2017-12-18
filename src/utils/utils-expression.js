@@ -141,3 +141,11 @@ UtilsExpression.createNotInExpression = (tbl, attr, notInArr, fnc=null, fncArgs=
   if(_.isInteger(notInArr)) notInArr = [notInArr];
   return UtilsExpression.createGenericExpression(tbl, attr, 'NOT IN', notInArr, fnc, fncArgs);
 };
+
+UtilsExpression.createExistsExpression = (subQuery) => {
+  return ['EXISTS ?', [subQuery]];
+}
+
+UtilsExpression.createNotExistsExpression = (subQuery) => {
+  return ['NOT EXISTS ?', [subQuery]];
+}

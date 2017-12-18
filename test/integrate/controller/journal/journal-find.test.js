@@ -378,5 +378,71 @@ describe(`Journal()`, () => {
           }
         );
     });
+
+    it(`should find all journals where journalValue has a value with 1.5`, async () => {
+      let journals = await pj.Journal.find(
+        {where: {'journalValue': {'$contains': 1.5}}});
+      journals.should.containDeep(
+        {
+          found: 1,
+          remaining: 0,
+          journals:  {
+            '6': {
+              journalId: 6,
+              journalTimestamp: 1555,
+              journalType: 'watering',
+              journalValue: {
+                amount:1.5,
+                n:3,
+                p:4,
+                k:1.7,
+                fertilizers: ['Hakaphos Grün','Hakaphos Blau']
+              },
+              mediumId: 1
+            },
+          }
+        }
+      );
+    });
+
+    it(`should find all journals where journalValue.fertilizers has 'Hakaphos Grün' inside`, async () => {
+      let journals = await pj.Journal.find(
+        {where: {'journalValue.fertilizers': {'$contains': 'Hakaphos Grün'}}});
+      journals.should.containDeep(
+        {
+          found: 1,
+          remaining: 0,
+          journals:  {
+            '6': {
+              journalId: 6,
+              journalTimestamp: 1555,
+              journalType: 'watering',
+              journalValue: {
+                amount:1.5,
+                n:3,
+                p:4,
+                k:1.7,
+                fertilizers: ['Hakaphos Grün','Hakaphos Blau']
+              },
+              mediumId: 1
+            },
+          }
+        }
+      );
+    });
+
+    it(`should find all journals where journalValue.fertilizers has 'Hakaphos Lila' inside, and therefore find nothing`, async () => {
+      let journals = await pj.Journal.find(
+        {where: {'journalValue.fertilizers': {'$contains': 'Hakaphos Lila'}}});
+      journals.should.containDeep(
+        {
+          found: 0,
+          remaining: 0,
+          journals:  {}
+        }
+      );
+    });
+
+
   });
 });

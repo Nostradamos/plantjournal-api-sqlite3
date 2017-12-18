@@ -3,8 +3,9 @@
 
 require('should');
 const _ = require('lodash');
-
 const squel = require('squel');
+
+require('../../utils-test');
 
 var TranslateOperatorsJournalValue = require(
   '../../../src/apply-where/translate-operators-journal-value');
@@ -24,7 +25,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: false};
         for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
           // Skip operators which don't allow arguments
-          if(_.indexOf(['$has', '$nhas'], operator) !== -1) continue;
+          if(_.indexOf(['$has', '$nhas', '$contains', '$ncontains'], operator) !== -1) continue;
 
           let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
           operatorFunc(self, true, crit);
@@ -50,7 +51,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
         let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: true};
         for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
           // Skip operators which don't allow arguments
-          if(_.indexOf(['$has', '$nhas'], operator) !== -1) continue;
+          if(_.indexOf(['$has', '$nhas', '$contains', '$ncontains'], operator) !== -1) continue;
 
           let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
           operatorFunc(self, true, crit);
@@ -273,7 +274,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
     });
 
     describe(`#operatorHas()`, () => {
-      it(`should do json_type(..., '$.path') IS NOT NULL `, () => {
+      it(`should do json_type(..., '$.path') IS NOT NULL`, () => {
         self.funcArgs = ['$.foo.bar'];
         TranslateOperatorsJournalValue.operatorHas(
           self, 'key', crit);
@@ -287,7 +288,7 @@ describe(`TranslateOperatorsJournalValue`, () => {
     });
 
     describe(`#operatorNotHas()`, () => {
-      it(`should do json_type(..., '$.path') IS NULL `, () => {
+      it(`should do json_type(..., '$.path') IS NULL`, () => {
         self.funcArgs = ['$.foo.bar'];
         TranslateOperatorsJournalValue.operatorNotHas(
           self, 'key', crit);
@@ -297,6 +298,32 @@ describe(`TranslateOperatorsJournalValue`, () => {
             args: [TABLE_DOT_ATTR_RSTR, '$.foo.bar."key"']
           }
         );
+      });
+    });
+
+    describe(`#operatorContains()`, () => {
+      it(`should do EXISTS (SELECT value FROM journals.journalValue WHERE ...)`, () => {
+        self.funcArgs = ['$.foo.bar'];
+        TranslateOperatorsJournalValue.operatorContains(
+          self, 'someval', crit);
+        crit.crit.should.eql('EXISTS ?');
+        // SELECT value FROM json_each(journals.journalValue,\'$.foo.bar\') WHERE (value = \'someval\')
+        crit.args[0].toString().should.sqlEql(
+          `SELECT value FROM json_each(journals.journalValue, '$.foo.bar')
+           WHERE (value = 'someval')`);
+      });
+    });
+
+    describe(`#operatorNotContains()`, () => {
+      it(`should do EXISTS (SELECT value FROM journals.journalValue WHERE ...)`, () => {
+        self.funcArgs = ['$.foo.bar'];
+        TranslateOperatorsJournalValue.operatorNotContains(
+          self, 'someval', crit);
+        crit.crit.should.eql('NOT EXISTS ?');
+        // SELECT value FROM json_each(journals.journalValue,\'$.foo.bar\') WHERE (value = \'someval\')
+        crit.args[0].toString().should.sqlEql(
+          `SELECT value FROM json_each(journals.journalValue, '$.foo.bar')
+           WHERE (value = 'someval')`);
       });
     });
   });

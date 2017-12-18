@@ -1,9 +1,11 @@
 'use strict';
 
 const _ = require('lodash');
+const squel = require('squel');
 
 const logger = require('../logger');
 const CONSTANTS = require('../constants');
+const Utils = require('../utils/utils');
 const UtilsExpression = require('../utils/utils-expression');
 const UtilsJSON = require('../utils/utils-json');
 
@@ -321,19 +323,21 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-   *
+   * Builds an operatorHas or operatorNotHas expression.
    * NOTE: General Operator for $has and $nhas, as they both work very similiar,
-   * we built one method to cover both of them.
+   * we built one method to cover both of them. DON'T USE THIS METHOD FROM
+   * OUTSIDE, USE #operatorHas() or #operatorNotHas().
    * @param  {Object} self
    *         Object containing information about this translation process
-   * @param  {Number[]|String[]} operatorOptions
-   *         We want to find records, where attribute value is NOT equal to
-   *         one element in the array operatorOptions.
+   * @param  {String} operatorOptions
+   *         operatorOptions should be the name of the key for which we want
+   *         to look for
    * @param  {Object} crit
    *         Object which contains expression and expressionArgs. Modify
    *         this two properties to create a new expression which gets
    *         added to self.squelExpr.
-   * @param  {Boolean} [not=false]     [description]
+   * @param  {Boolean} [not=false]
+   *         Flag to decide if we do the NOT operation or not
    */
   static operatorHasOrNotHas(self, operatorOptions, crit, not=false) {
     // We need to build a path based on the self.funcArgs (or $) path and the
@@ -345,8 +349,6 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
       // This also allows us to have dots in keys.
       path += '.' + JSON.stringify(operatorOptions);
     }
-
-    console.log(path);
 
     let func = not ?
       UtilsExpression.createIsNullExpression :
@@ -360,16 +362,17 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
    * key at a certain path level.
    * @param  {Object} self
    *         Object containing information about this translation process
-   * @param  {Number[]|String[]} operatorOptions
-   *         We want to find records, where attribute value is NOT equal to
-   *         one element in the array operatorOptions.
+   * @param  {String} operatorOptions
+   *         operatorOptions should be the name of the key for which we want
+   *         to look for
    * @param  {Object} crit
    *         Object which contains expression and expressionArgs. Modify
    *         this two properties to create a new expression which gets
    *         added to self.squelExpr.
    */
   static operatorHas(self, operatorOptions, crit) {
-    this.operatorHasOrNotHas(self, operatorOptions, crit);
+    TranslateOperatorsJournalValue.operatorHasOrNotHas(
+      self, operatorOptions, crit);
   }
 
   /**
@@ -377,18 +380,101 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
    * specific key at a certain path level.
    * @param  {Object} self
    *         Object containing information about this translation process
-   * @param  {Number[]|String[]} operatorOptions
-   *         We want to find records, where attribute value is NOT equal to
-   *         one element in the array operatorOptions.
+   * @param  {String} operatorOptions
+   *         operatorOptions should be the name of the key for which we want
+   *         to look for
    * @param  {Object} crit
    *         Object which contains expression and expressionArgs. Modify
    *         this two properties to create a new expression which gets
    *         added to self.squelExpr.
    */
   static operatorNotHas(self, operatorOptions, crit) {
-    this.operatorHasOrNotHas(self, operatorOptions, crit, true);
+    TranslateOperatorsJournalValue.operatorHasOrNotHas(
+      self, operatorOptions, crit, true);
   }
 
+  /**
+   * Builds an operatorContains or operatorNotContains expression.
+   * NOTE: General Operator for $contains and $ncontains, as they both work
+   * very similiar, we built one method to cover both of them.
+   * Prefer to use #operatorContains() or #operatorNotContains().
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]|Number|String|Null|Bool} operatorOptions
+   *         We want to find records, where the JSON Array or Object has a value
+   *         which is equal to operatorOptions or has values which all equal
+   *         any of the elements of operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   * @param  {Boolean} [not=false]
+   *         Flag to decide if we do the NOT operation or not
+   */
+  static operatorContainsOrNotContains(self, operatorOptions, crit, not=false) {
+    let path = (self.isPath ? self.funcArgs : '$');
+    let attr = Utils.explicitColumnRstr(
+      CONSTANTS.TABLE_JOURNAL, CONSTANTS.ATTR_VALUE_JOURNAL);
+
+    let subQuery = squel.select()
+      .field('value')
+      .from(squel.rstr('json_each(?, ?)', attr, path))
+    if(_.isArray(operatorOptions)) {
+      subQuery
+        .where('value IN ?', operatorOptions)
+        .having('COUNT(*) = ?', operatorOptions.length);
+    } else {
+      subQuery.where('value = ?', operatorOptions);
+
+    }
+
+    logger.debug(
+      `${this.name} #operatorContainsOrNotContains subQuery:`,
+      subQuery.toString());
+
+    let func = not ?
+      UtilsExpression.createNotExistsExpression :
+      UtilsExpression.createExistsExpression;
+    [crit.crit, crit.args] = func(subQuery);
+  }
+
+  /**
+   * This operator allows you to check if an JSON Array or Object has NOT a
+   * specific key at a certain path level.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]|Number|String|Null|Bool} operatorOptions
+   *         We want to find records, where the JSON Array or Object has a value
+   *         which is equal to operatorOptions or has values which all equal
+   *         any of the elements of operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
+  static operatorContains(self, operatorOptions, crit) {
+    TranslateOperatorsJournalValue.operatorContainsOrNotContains(
+      self, operatorOptions, crit);
+  }
+
+  /**
+   * This operator allows you to check if an JSON Array or Object has NOT a
+   * specific key at a certain path level.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]|Number|String|Null|Bool} operatorOptions
+   *         We want to find records, where the JSON Array or Object has a value
+   *         which is NOT equal to operatorOptions or has values which all
+   *         DON'T equal any of the elements of operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
+  static operatorNotContains(self, operatorOptions, crit) {
+    TranslateOperatorsJournalValue.operatorContainsOrNotContains(
+      self, operatorOptions, crit, true);
+  }
 
   /**
    * We need to customize the checkForShortHands behaviour on journalValue
@@ -460,8 +546,8 @@ TranslateOperatorsJournalValue.OPERATORS = {
   '$nin': TranslateOperatorsJournalValue.operatorNotIn,
   '$has': TranslateOperatorsJournalValue.operatorHas,
   '$nhas': TranslateOperatorsJournalValue.operatorNotHas,
-  /*'$contains': TranslateOperatorsJournalValue.operatorContains,
-  '$ncontains': TranslateOperatorsJournalValue.operatorNotContains*/
+  '$contains': TranslateOperatorsJournalValue.operatorContains,
+  /*'$ncontains': TranslateOperatorsJournalValue.operatorNotContains*/
 };
 
 module.exports = TranslateOperatorsJournalValue;
