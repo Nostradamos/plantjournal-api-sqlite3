@@ -130,7 +130,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorLike(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLikeExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -149,7 +153,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorNotLike(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createNotLikeExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -168,7 +176,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorGreatherThan(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createGreaterThanExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -188,9 +200,12 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      *         added to self.squelExpr.
      */
   static operatorGreatherThanEqual(self, operatorOptions, crit) {
-    [crit.crit, crit.args] = UtilsExpression.
-      createGreaterThanEqualExpression(self.table, self.attr,
-        UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
+    [crit.crit, crit.args] = UtilsExpression.createGreaterThanEqualExpression(
+        self.table,
+        self.attr,
+        UtilsJSON.sanitize(operatorOptions, self.isPath),
+        self.func,
+        self.funcArgs);
   }
 
   /**
@@ -211,7 +226,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorLowerThan(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLowerThanExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -232,7 +251,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorLowerThanEqual(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLowerThanEqualExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -257,8 +280,13 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
         self, operatorOptions, crit);
       return;
     }
+
     [crit.crit, crit.args] = UtilsExpression.createInExpression(
-      self.table, self.attr, UtilsJSON.sanitizeArray(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitizeArray(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -283,9 +311,84 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
         self, operatorOptions, crit);
       return;
     }
+
     [crit.crit, crit.args] = UtilsExpression.createNotInExpression(
-      self.table, self.attr, UtilsJSON.sanitizeArray(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitizeArray(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
+
+  /**
+   *
+   * NOTE: General Operator for $has and $nhas, as they both work very similiar,
+   * we built one method to cover both of them.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]} operatorOptions
+   *         We want to find records, where attribute value is NOT equal to
+   *         one element in the array operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   * @param  {Boolean} [not=false]     [description]
+   */
+  static operatorHasOrNotHas(self, operatorOptions, crit, not=false) {
+    // We need to build a path based on the self.funcArgs (or $) path and the
+    // operator argument.
+    let path = (self.isPath ? self.funcArgs : '$');
+    if(operatorOptions) {
+      // We stringify operatorOptions to don't allow something like
+      // '$.foo.key1.key2', would get translated into '$.foo."key1.key2"'.
+      // This also allows us to have dots in keys.
+      path += '.' + JSON.stringify(operatorOptions);
+    }
+
+    console.log(path);
+
+    let func = not ?
+      UtilsExpression.createIsNullExpression :
+      UtilsExpression.createIsNotNullExpression;
+
+    [crit.crit, crit.args] = func(self.table, self.attr,'json_type', [path]);
+  }
+
+  /**
+   * This operator allows you to check if an JSON Array or Object has a specific
+   * key at a certain path level.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]} operatorOptions
+   *         We want to find records, where attribute value is NOT equal to
+   *         one element in the array operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
+  static operatorHas(self, operatorOptions, crit) {
+    this.operatorHasOrNotHas(self, operatorOptions, crit);
+  }
+
+  /**
+   * This operator allows you to check if an JSON Array or Object has NOT a
+   * specific key at a certain path level.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]} operatorOptions
+   *         We want to find records, where attribute value is NOT equal to
+   *         one element in the array operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
+  static operatorNotHas(self, operatorOptions, crit) {
+    this.operatorHasOrNotHas(self, operatorOptions, crit, true);
+  }
+
 
   /**
    * We need to customize the checkForShortHands behaviour on journalValue
@@ -354,7 +457,11 @@ TranslateOperatorsJournalValue.OPERATORS = {
   '$lt': TranslateOperatorsJournalValue.operatorLowerThan,
   '$lte': TranslateOperatorsJournalValue.operatorLowerThanEqual,
   '$in': TranslateOperatorsJournalValue.operatorIn,
-  '$nin': TranslateOperatorsJournalValue.operatorNotIn
+  '$nin': TranslateOperatorsJournalValue.operatorNotIn,
+  '$has': TranslateOperatorsJournalValue.operatorHas,
+  '$nhas': TranslateOperatorsJournalValue.operatorNotHas,
+  /*'$contains': TranslateOperatorsJournalValue.operatorContains,
+  '$ncontains': TranslateOperatorsJournalValue.operatorNotContains*/
 };
 
 module.exports = TranslateOperatorsJournalValue;

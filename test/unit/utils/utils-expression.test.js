@@ -29,5 +29,21 @@ describe(`UtilsExpression`, () => {
       expression.should.eql(
         ['FUNC(?, ?, ?) OPERATOR ?', [squel.rstr('TABLE.ATTR'), 'FUNCARG1', 'FUNCARG2', 'EQUAL']]);
     });
+
+    it(`should create a FUNC(TABLE.ATTR) OPERATOR expression if equal is null`, () => {
+      let expression = UtilsExpression.createGenericExpression(
+        'TABLE', 'ATTR', 'OPERATOR', null);
+      expression.should.eql(
+        ['? OPERATOR', [squel.rstr('TABLE.ATTR')]]);
+    });
+  });
+
+  describe(`#createIsNullExpression()`, () => {
+    it(`should create a IS NULL expression`, () => {
+      let expression = UtilsExpression.createIsNullExpression(
+        'TABLE', 'ATTR');
+      expression.should.eql(
+        ['? IS NULL', [squel.rstr('TABLE.ATTR')]]);
+    });
   });
 });

@@ -58,7 +58,7 @@ UtilsExpression.applyExpression = (squelExpr, expr, exprArgs, type) => {
  *         The arguments for the various placeholders for the expression
  *
  */
-UtilsExpression.createGenericExpression = (tbl, attr, operator, equal, fnc=null, fncArgs=null) => {
+UtilsExpression.createGenericExpression = (tbl, attr, operator, equal=null, fnc=null, fncArgs=null) => {
   let expr = '';
   let exprArgs = [Utils.explicitColumnRstr(tbl, attr)];
 
@@ -75,20 +75,23 @@ UtilsExpression.createGenericExpression = (tbl, attr, operator, equal, fnc=null,
     expr += ')';
   }
 
-  expr += ' ' + operator + ' ?';
-  exprArgs.push(equal);
+  expr += ' ' + operator;
+  if(equal !== null) {
+    expr += ' ?';
+    exprArgs.push(equal);
+  }
 
   return [expr, exprArgs];
 };
 
 UtilsExpression.createIsNullExpression = (tbl, attr, fnc=null, fncArgs=null) => {
   return UtilsExpression.createGenericExpression(
-    tbl, attr, 'IS', null, fnc, fncArgs);
+    tbl, attr, 'IS NULL', null, fnc, fncArgs);
 };
 
 UtilsExpression.createIsNotNullExpression = (tbl, attr, fnc=null, fncArgs=null) => {
   return UtilsExpression.createGenericExpression(
-    tbl, attr, 'IS NOT', null, fnc, fncArgs);
+    tbl, attr, 'IS NOT NULL', null, fnc, fncArgs);
 };
 
 UtilsExpression.createEqualsExpression = (tbl, attr, toEqual, fnc=null, fncArgs=null) => {

@@ -2,6 +2,7 @@
 'use strict';
 
 require('should');
+const _ = require('lodash');
 
 const squel = require('squel');
 
@@ -22,6 +23,9 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`all operators should sanitize`, () => {
         let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: false};
         for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
+          // Skip operators which don't allow arguments
+          if(_.indexOf(['$has', '$nhas'], operator) !== -1) continue;
+
           let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
           operatorFunc(self, true, crit);
           crit.args[1].should.eql('true');
@@ -45,6 +49,9 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`all operators should sanitize if self.isPath is true and operatorOptions is not an invalid JSON`, () => {
         let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: true};
         for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
+          // Skip operators which don't allow arguments
+          if(_.indexOf(['$has', '$nhas'], operator) !== -1) continue;
+
           let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
           operatorFunc(self, true, crit);
           crit.args[1].should.eql('true');
@@ -262,6 +269,34 @@ describe(`TranslateOperatorsJournalValue`, () => {
             crit: 'json_extract(?, ?) NOT IN ?',
             args: [TABLE_DOT_ATTR_RSTR, ...self.funcArgs, ['foo', 'bar']]
           });
+      });
+    });
+
+    describe(`#operatorHas()`, () => {
+      it(`should do json_type(..., '$.path') IS NOT NULL `, () => {
+        self.funcArgs = ['$.foo.bar'];
+        TranslateOperatorsJournalValue.operatorHas(
+          self, 'key', crit);
+        crit.should.eql(
+          {
+            crit: 'json_type(?, ?) IS NOT NULL',
+            args: [TABLE_DOT_ATTR_RSTR, '$.foo.bar."key"']
+          }
+        );
+      });
+    });
+
+    describe(`#operatorNotHas()`, () => {
+      it(`should do json_type(..., '$.path') IS NULL `, () => {
+        self.funcArgs = ['$.foo.bar'];
+        TranslateOperatorsJournalValue.operatorNotHas(
+          self, 'key', crit);
+        crit.should.eql(
+          {
+            crit: 'json_type(?, ?) IS NULL',
+            args: [TABLE_DOT_ATTR_RSTR, '$.foo.bar."key"']
+          }
+        );
       });
     });
   });
