@@ -44,8 +44,10 @@ class MediumDelete extends GenericDelete {
      */
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
-      .field('mediums.mediumId')
-      .field('plants.plantId');
+      .field(
+        Utils.explicitColumn(CONSTANTS.TABLE_MEDIUM, CONSTANTS.ATTR_ID_MEDIUM))
+      .field(
+        Utils.explicitColumn(CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
   }
 
   /**

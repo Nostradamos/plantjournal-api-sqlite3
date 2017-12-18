@@ -130,25 +130,48 @@ describe(`UtilsQuery`, () => {
     });
   });
 
-  describe(`#joinFamilies()`, () => {
+  describe(`#join()`, () => {
+    let q;
+    beforeEach(() => q = squel.select().from('testfoo'));
+
+    it(`should do a left join between lTable.lAttr and rTable.lAttr`, () => {
+      UtilsQuery.join(q, 'foo', 'bar', 'id');
+      q.toString().should.eql('SELECT * FROM testfoo LEFT JOIN bar `bar` ON (foo.id = bar.id)');
+    });
+
+    it(`should do a left join between lTable.lAttr and rTable.rAttr if rAttr is not null`, () => {
+      UtilsQuery.join(q, 'foo', 'bar', 'id', 'id2');
+      q.toString().should.eql('SELECT * FROM testfoo LEFT JOIN bar `bar` ON (foo.id = bar.id2)');
+    });
+
+    it(`should set alias for join if alias is not null`, () => {
+      UtilsQuery.join(q, 'foo', 'bar', 'id', 'id2', 'somealias');
+      q.toString().should.eql('SELECT * FROM testfoo LEFT JOIN bar `somealias` ON (foo.id = bar.id2)');
+    });
+
+  });
+
+  describe(`#joinFamiliesFromGenerations()`, () => {
     it(`should join families on familyId`, () => {
       let q = squel.select().from( CONSTANTS.TABLE_GENERATION, 'generations');
 
       UtilsQuery.joinFamiliesFromGenerations(q);
-      q.toString().should.eql('SELECT * FROM ' +  CONSTANTS.TABLE_GENERATION +' `generations` LEFT JOIN ' + CONSTANTS.TABLE_FAMILY + ' `families` ON (generations.familyId = families.familyId)');
+      q.toString().should.eql(
+        `SELECT * FROM ${CONSTANTS.TABLE_GENERATION} \`generations\` LEFT JOIN ${CONSTANTS.TABLE_FAMILY} \`families\` ON (generations.familyId = families.familyId)`);
     });
   });
 
-  describe(`#joinGenerations()`, () => {
+  describe(`#joinGenerationsFromGenotypes()`, () => {
     it(`should join generations and generation_parents on generationId`, () => {
       let q = squel.select().from(CONSTANTS.TABLE_GENOTYPE, 'genotypes');
 
-      UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes(q);
-      q.toString().should.eql('SELECT * FROM ' + CONSTANTS.TABLE_GENOTYPE +' `genotypes` LEFT JOIN ' +  CONSTANTS.TABLE_GENERATION + ' `generations` ON (genotypes.generationId = generations.generationId)');
+      UtilsQuery.joinGenerationsFromGenotypes(q);
+      q.toString().should.eql(
+        `SELECT * FROM ${CONSTANTS.TABLE_GENOTYPE} \`genotypes\` LEFT JOIN ${CONSTANTS.TABLE_GENERATION} \`generations\` ON (genotypes.generationId = generations.generationId)`);
     });
   });
 
-  describe(`#joinGenotypes()`, () => {
+  describe(`#joinGenotypesFromPlants()`, () => {
     it(`should join genotypes`, () => {
       let q = squel.select().from(CONSTANTS.TABLE_PLANT, 'plants');
 

@@ -27,7 +27,7 @@ class PlantDelete extends GenericDelete {
      */
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
-      .field('plants.plantId');
+      .field(Utils.explicitColumn(CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
   }
 
   /**
@@ -66,8 +66,10 @@ class PlantDelete extends GenericDelete {
      *         Criteria object passed to delete()
      */
   static setQueryDeleteWhere(context, criteria) {
+    let attr = Utils.explicitColumn(
+      CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT);
     context.queryDelete
-      .where('plants.plantId IN ?', context.plantIdsToDelete);
+      .where(`${attr} IN ?`, context.plantIdsToDelete);
   }
 
   /**

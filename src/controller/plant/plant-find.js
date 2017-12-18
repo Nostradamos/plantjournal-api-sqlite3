@@ -77,16 +77,18 @@ PlantFind.ATTR_ID = CONSTANTS.ATTR_ID_PLANT;
 
 PlantFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_PLANT;
 
+let explicitPlantId = Utils.explicitColumn(CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT);
+
 PlantFind.DEFAULT_FIELDS = [
-  'plants.plantId',
-  'genotypes.genotypeId',
-  'generations.generationId',
-  'families.familyId',
-  'mediums.mediumId'
+  explicitPlantId,
+  Utils.explicitColumn(CONSTANTS.TABLE_GENOTYPE, CONSTANTS.ATTR_ID_GENOTYPE),
+  Utils.explicitColumn(CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
+  Utils.explicitColumn(CONSTANTS.TABLE_FAMILY, CONSTANTS.ATTR_ID_FAMILY),
+  Utils.explicitColumn(CONSTANTS.TABLE_MEDIUM, CONSTANTS.ATTR_ID_MEDIUM)
 ];
 
-PlantFind.COUNT = 'DISTINCT plants.plantId';
+PlantFind.COUNT = 'DISTINCT ' + explicitPlantId;
 
-PlantFind.GROUP_BY = 'plants.plantId';
+PlantFind.GROUP_BY = explicitPlantId;
 
 module.exports = PlantFind;

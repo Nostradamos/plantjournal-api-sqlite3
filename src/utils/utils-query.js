@@ -86,11 +86,37 @@ UtilsQuery.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
   UtilsQuery.joinGenerationParentsFromGenerations(query);
 };
 
+/**
+ * Helper function to simplify the building of LEFT JOINS.
+ * @param  {[type]} query
+ * Squel query capable of an .left_join()
+ * @param  {[type]} lTable
+ * Name of the left Table, should be an already joined or "selected from" table.
+ * @param  {[type]} rTable
+ * Name of the right table, this should be the table which gets newly joined.
+ * @param  {[type]} lAttr
+ * Name of the attribute on the left side
+ * @param  {[type]} [rAttr=null]
+ * Name of the attribute on the right side, set null to use the same attribute
+ * as for lAttr.
+ * @param  {[type]} [alias=null]
+ * Name of the join alias. Leave null to use rTable
+ */
+UtilsQuery.join = function(query, lTable, rTable, lAttr, rAttr = null, alias = null) {
+  if(rAttr === null) rAttr = lAttr;
+  if(alias === null) alias = rTable;
+
+  let fullLeftAttr = Utils.explicitColumn(lTable, lAttr);
+  let fullRightAttr = Utils.explicitColumn(rTable, rAttr);
+  query.left_join(rTable, alias, `${fullLeftAttr} = ${fullRightAttr}`);
+};
+
 UtilsQuery.joinGenerationsFromFamilies = function(query) {
-  query.left_join( CONSTANTS.TABLE_GENERATION,
-    'generations',
-    'families.familyId = generations.familyId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_FAMILY,
+    CONSTANTS.TABLE_GENERATION,
+    CONSTANTS.ATTR_ID_FAMILY);
 };
 
 /**
@@ -98,10 +124,11 @@ UtilsQuery.joinGenerationsFromFamilies = function(query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 UtilsQuery.joinGenotypesFromGenerations = function(query) {
-  query.left_join(CONSTANTS.TABLE_GENOTYPE,
-    'genotypes',
-    'generations.generationId = genotypes.generationId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_GENERATION,
+    CONSTANTS.TABLE_GENOTYPE,
+    CONSTANTS.ATTR_ID_GENERATION);
 };
 
 /**
@@ -109,24 +136,27 @@ UtilsQuery.joinGenotypesFromGenerations = function(query) {
  * @param  {squel} query - Squel query capable of an .left_join()
  */
 UtilsQuery.joinPlantsFromGenotypes = function(query) {
-  query.left_join(CONSTANTS.TABLE_PLANT,
-    'plants',
-    'genotypes.genotypeId = plants.genotypeId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_GENOTYPE,
+    CONSTANTS.TABLE_PLANT,
+    CONSTANTS.ATTR_ID_GENOTYPE);
 };
 
 UtilsQuery.joinMediumsFromPlants = function(query) {
-  query.left_join(CONSTANTS.TABLE_MEDIUM,
-    'mediums',
-    'plants.mediumId = mediums.mediumId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_PLANT,
+    CONSTANTS.TABLE_MEDIUM,
+    CONSTANTS.ATTR_ID_MEDIUM);
 };
 
 UtilsQuery.joinEnvironmentsFromMediums = function(query) {
-  query.left_join(CONSTANTS.TABLE_ENVIRONMENT,
-    'environments',
-    'mediums.environmentId = environments.environmentId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_MEDIUM,
+    CONSTANTS.TABLE_ENVIRONMENT,
+    CONSTANTS.ATTR_ID_ENVIRONMENT);
 };
 
 /**
@@ -135,9 +165,11 @@ UtilsQuery.joinEnvironmentsFromMediums = function(query) {
  *         Squel query capable of an .left_join()
  */
 UtilsQuery.joinFamiliesFromGenerations = function(query) {
-  query.left_join(CONSTANTS.TABLE_FAMILY,
-    'families',
-    'generations.familyId = families.familyId');
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_GENERATION,
+    CONSTANTS.TABLE_FAMILY,
+    CONSTANTS.ATTR_ID_FAMILY);
 };
 
 /**
@@ -154,10 +186,11 @@ UtilsQuery.joinGenerationsAndGenerationParentsFromGenotypes = function(query) {
 };
 
 UtilsQuery.joinGenerationsFromGenotypes = function(query) {
-  query.left_join( CONSTANTS.TABLE_GENERATION,
-    'generations',
-    'genotypes.generationId = generations.generationId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_GENOTYPE,
+    CONSTANTS.TABLE_GENERATION,
+    CONSTANTS.ATTR_ID_GENERATION);
 };
 
 /**
@@ -166,10 +199,11 @@ UtilsQuery.joinGenerationsFromGenotypes = function(query) {
  *         Squel query which can take an .left_join()
  */
 UtilsQuery.joinGenerationParentsFromGenerations = function(query) {
-  //query.left_join(CONSTANTS.TABLE_GENERATION_PARENT,
-  //    'generation_parents',
-  //    'generations.generationId = generation_parents.generationId'
-  //);
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_GENERATION,
+    CONSTANTS.TABLE_GENERATION_PARENT,
+    CONSTANTS.ATTR_ID_GENERATION);
 };
 
 /**
@@ -178,24 +212,27 @@ UtilsQuery.joinGenerationParentsFromGenerations = function(query) {
  *         Squel query capable of an .left_join()
  */
 UtilsQuery.joinGenotypesFromPlants = function(query) {
-  query.left_join(CONSTANTS.TABLE_GENOTYPE,
-    'genotypes',
-    'plants.genotypeId = genotypes.genotypeId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_PLANT,
+    CONSTANTS.TABLE_GENOTYPE,
+    CONSTANTS.ATTR_ID_GENOTYPE);
 };
 
 UtilsQuery.joinPlantsFromMediums = function(query) {
-  query.left_join(CONSTANTS.TABLE_PLANT,
-    'plants',
-    'mediums.mediumId = plants.mediumId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_MEDIUM,
+    CONSTANTS.TABLE_PLANT,
+    CONSTANTS.ATTR_ID_MEDIUM);
 };
 
 UtilsQuery.joinMediumsFromEnvironments = function(query) {
-  query.left_join(CONSTANTS.TABLE_MEDIUM,
-    'mediums',
-    'environments.environmentId = mediums.environmentId'
-  );
+  UtilsQuery.join(
+    query,
+    CONSTANTS.TABLE_ENVIRONMENT,
+    CONSTANTS.TABLE_MEDIUM,
+    CONSTANTS.ATTR_ID_ENVIRONMENT);
 };
 
 

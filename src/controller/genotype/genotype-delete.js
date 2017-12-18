@@ -42,8 +42,10 @@ class GenotypeDelete extends GenericDelete {
      */
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
-      .field('genotypes.genotypeId')
-      .field('plants.plantId');
+      .field(
+        Utils.explicitColumn(CONSTANTS.TABLE_GENOTYPE, CONSTANTS.ATTR_ID_GENOTYPE))
+      .field(
+        Utils.explicitColumn(CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
   }
 
   /**
