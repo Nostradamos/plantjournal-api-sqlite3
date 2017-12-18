@@ -26,7 +26,7 @@ UtilsExpression.applyExpression = (squelExpr, expr, exprArgs, type) => {
   } else if (type === 'or') {
     squelExpr.or(expr, ...exprArgs);
   } else {
-    throw new Error('Illegal type: '+ type);
+    throw new Error(`Illegal type: ${type}`);
   }
 };
 

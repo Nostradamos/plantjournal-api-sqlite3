@@ -104,17 +104,13 @@ function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableL
  *         or   -> use or operator for attributes
  */
 function eachFilterObject(self, obj, squelExpr, depth, type=null) {
-  logger.silly(
-    '#applyCriteriaFilter() #eachFilterObject() obj:', obj, 'depth:', depth,
-    'type:', type);
+  logger.silly(`#applyCriteriaFilter() #eachFilterObject() obj: ${obj} depth: ${depth} type: ${type}`);
 
   let isArray = _.isArray(obj);
 
   // Check if obj is array or dict
   if (_.isPlainObject(obj) === false && isArray === false) {
-    logger.warn(
-      '#applyCriteriaFilter() #eachFilterObject() Returning, illegal ' +
-            'object type:', obj);
+    logger.warn(`#applyCriteriaFilter() #eachFilterObject() Returning, illegal object type: ${obj}`);
     return;
   }
 
@@ -196,8 +192,7 @@ function translateAndApplyOperators(self, attr, attrOptions, squelExpr, type) {
     // All "not special" attributes
     translator = TranslateOperatorsRelational;
   } else {
-    throw new Error(
-      'Illegal attribute or unknown logical operator: ' + attr);
+    throw new Error(`Illegal attribute or unknown logical operator: ${attr}`);
   }
 
   translator.translateAndApplyOperators(

@@ -39,7 +39,7 @@ Utils.deleteEmptyProperties = function(obj, limitTo) {
  */
 Utils.hasToBeAssocArray = function (obj, prefix = 'First argument') {
   if (!_.isObjectLike(obj) || _.isArray(obj)) {
-    throw new Error(prefix + ' has to be an associative array');
+    throw new Error(`${prefix} has to be an associative array`);
   }
 };
 
@@ -53,7 +53,7 @@ Utils.hasToBeAssocArray = function (obj, prefix = 'First argument') {
  */
 Utils.hasToBeString = function(obj, property, name = 'options') {
   if (_.has(obj, property) && !_.isString(obj[property])) {
-    throw new Error(name + '.' + property + ' has to be a string');
+    throw new Error(`${name}.${property} has to be a string`);
   }
 };
 
@@ -67,15 +67,14 @@ Utils.hasToBeString = function(obj, property, name = 'options') {
  */
 Utils.hasToBeInt = function(obj, property, name = 'options') {
   if (_.has(obj, property) && !_.isInteger(obj[property])) {
-    throw new Error(name + '.' + property + ' has to be an integer');
+    throw new Error(`${name}.${property} has to be an integer`);
   }
 };
 
 Utils.hasToBeIntOrNull = function(obj, property, name = 'options') {
   let value = obj[property];
   if (!_.isUndefined(value) && !_.isInteger(value) && !_.isNull(value)) {
-    throw new Error(
-      name + '.' + property + ' has to be an integer or null');
+    throw new Error(`${name}.${property} has to be an integer or null`);
   }
 };
 
@@ -92,8 +91,7 @@ Utils.hasToBeIntArray = function(obj, property, name = 'options') {
   let value = obj[property];
   if(_.isUndefined(value)) return;
   if (!_.isArray(value) || !_.every(value, _.isInteger)) {
-    throw new Error(
-      name + '.' + property + ' has to be an array of integers');
+    throw new Error(`${name}.${property} has to be an array of integers`);
   }
 };
 
@@ -106,7 +104,7 @@ Utils.hasToBeIntArray = function(obj, property, name = 'options') {
  */
 Utils.hasToBeSet = function(obj, property, name = 'options') {
   if (!_.has(obj, property)) {
-    throw new Error(name + '.' + property + ' has to be set');
+    throw new Error(`${name}.${property} has to be set`);
   }
 };
 

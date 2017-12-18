@@ -90,7 +90,7 @@ CONSTANTS.PLANT_SEXES = ['male',
   'hermaphrodite',
   null];
 
-// *****************************+
+// *****************************
 // * DONT EDIT BELOW THIS LINE *
 // *****************************
 

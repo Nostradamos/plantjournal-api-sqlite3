@@ -114,7 +114,8 @@ class GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
   static setQueryFindIdField(context, update, criteria) {
-    context.queryFind.field(this.TABLE + '.' + this.ATTR_ID, this.ATTR_ID);
+    context.queryFind.field(
+      Utils.explicitColumn(this.TABLE, this.ATTR_ID), this.ATTR_ID);
   }
 
   /**
@@ -263,8 +264,8 @@ class GenericUpdate {
      * @param  {object} criteria  - Criteria object passed to update()
      */
   static setQueryUpdateWhere(context, update, criteria) {
-    context.queryUpdate
-      .where(this.TABLE + '.' + this.ATTR_ID + ' IN ?', context.idsToUpdate);
+    let attr = Utils.explicitColumn(this.TABLE, this.ATTR_ID);
+    context.queryUpdate.where(`${attr} IN ?`, context.idsToUpdate);
   }
 
   /**

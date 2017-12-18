@@ -3,6 +3,7 @@
 const _ = require('lodash');
 
 const CONSTANTS = require('../../constants');
+const Utils = require('../../utils/utils');
 const UtilsQuery = require('../../utils/utils-query');
 const UtilsReturnObject = require('../../utils/utils-return-object');
 
@@ -65,8 +66,12 @@ GenerationFind.ATTR_ID = CONSTANTS.ATTR_ID_GENERATION;
 
 GenerationFind.ATTRIBUTES_SEARCHABLE = CONSTANTS.RELATED_ATTRIBUTES_GENERATION;
 
-GenerationFind.COUNT = 'DISTINCT ' +  CONSTANTS.TABLE_GENERATION + '.' + CONSTANTS.ATTR_ID_GENERATION;
+GenerationFind.COUNT = 'DISTINCT ' +
+  Utils.explicitColumn(CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION);
 
-GenerationFind.DEFAULT_FIELDS = ['generations.generationId', 'families.familyId'];
+GenerationFind.DEFAULT_FIELDS = [
+  Utils.explicitColumn(CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION),
+  Utils.explicitColumn(CONSTANTS.TABLE_FAMILY, CONSTANTS.ATTR_ID_FAMILY)
+];
 
 module.exports = GenerationFind;

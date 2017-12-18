@@ -179,7 +179,8 @@ class GenericFind {
     // For queryWhere we always have to set familyId, because it's needed
     // for the object key.
     if (_.isEmpty(this.DEFAULT_FIELDS)) {
-      context.queryWhere.field(this.TABLE + '.' + this.ATTR_ID);
+      context.queryWhere.field(
+        Utils.explicitColumn(this.TABLE, this.ATTR_ID));
     } else {
       context.queryWhere.fields(this.DEFAULT_FIELDS);
     }
@@ -214,10 +215,12 @@ class GenericFind {
      *         Criteria object passed to find()
      */
   static setQueryCountFields(context, criteria) {
-    context.queryCount.field(
-      'COUNT(' + (_.isEmpty(this.COUNT) ? this.TABLE + '.' + this.ATTR_ID : this.COUNT) + ')',
-      'count'
-    );
+    // Attribute on which we want to perform the count operation
+    let toCount = _.isEmpty(this.COUNT) ?
+      Utils.explicitColumn(this.TABLE, this.ATTR_ID) :
+      this.COUNT;
+
+    context.queryCount.field(`COUNT(${toCount})`, 'count');
   }
 
   /**

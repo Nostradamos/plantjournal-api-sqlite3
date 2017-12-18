@@ -48,12 +48,9 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
 
       // Make sure the first char after journalValue is a `.` (dot) or
       // `[` (bracket). If not, throw an errror.
-      if (charAfterAttr !== '.' &&
-                charAfterAttr !== '[') {
+      if (charAfterAttr !== '.' && charAfterAttr !== '[') {
         throw new Error(
-          'Invalid JSON Path for attr: ' + self.attr + '. JSON ' +
-                    'Paths have to start with "." or "[" but it starts with "' +
-                    charAfterAttr + '"');
+          `Invalid JSON Path for attr: ${self.attr}.JSON PATHS have to start with "." or "[" but it starts with "${charAfterAttr}"`);
       }
 
       // We need to access the attribute path value with a function, so

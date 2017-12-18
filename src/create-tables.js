@@ -8,7 +8,7 @@ const CONSTANTS = require('./constants');
  */
 module.exports =  async function createTables() {
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_ENVIRONMENT + ` (
+      CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_ENVIRONMENT} (
         environmentId INTEGER,
         environmentName TEXT NOT NULL,
         environmentDescription TEXT NOT NULL DEFAULT '',
@@ -19,7 +19,7 @@ module.exports =  async function createTables() {
     `);
 
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_MEDIUM + ` (
+      CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_MEDIUM} (
         mediumId INTEGER,
         mediumName TEXT NOT NULL,
         mediumDescription TEXT NOT NULL DEFAULT '',
@@ -27,12 +27,13 @@ module.exports =  async function createTables() {
         mediumModifiedAt DATETIME NOT NULL,
         environmentId INTEGER DEAULT NULL,
         PRIMARY KEY (mediumId),
-        FOREIGN KEY (environmentId) REFERENCES environments(environmentId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (environmentId) REFERENCES environments(environmentId)
+          ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_FAMILY + ` (
+      CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_FAMILY} (
         familyId INTEGER,
         familyName TEXT NOT NULL,
         familyDescription TEXT NOT NULL DEFAULT '',
@@ -43,7 +44,7 @@ module.exports =  async function createTables() {
     `);
 
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` +  CONSTANTS.TABLE_GENERATION + ` (
+      CREATE TABLE IF NOT EXISTS ${ CONSTANTS.TABLE_GENERATION} (
         generationId INTEGER,
         generationName TEXT NOT NULL,
         generationDescription TEXT NOT NULL DEFAULT '',
@@ -51,12 +52,13 @@ module.exports =  async function createTables() {
         generationModifiedAt DATETIME NOT NULL,
         familyId INTEGER NOT NULL,
         PRIMARY KEY (generationId),
-        FOREIGN KEY(familyId) REFERENCES families(familyId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY(familyId) REFERENCES families(familyId)
+          ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENOTYPE + ` (
+      CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_GENOTYPE} (
         genotypeId INTEGER,
         genotypeName TEXT NOT NULL DEFAULT '',
         genotypeDescription TEXT NOT NULL DEFAULT '',
@@ -64,12 +66,13 @@ module.exports =  async function createTables() {
         genotypeModifiedAt DATETIME NOT NULL,
         generationId INTEGER DEFAULT NULL,
         PRIMARY KEY (genotypeId),
-        FOREIGN KEY(generationId) REFERENCES generations(generationId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY(generationId) REFERENCES generations(generationId)
+          ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_PLANT + ` (
+      CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_PLANT} (
         plantId INTEGER,
         plantName TEXT NOT NULL,
         plantClonedFrom INTEGER DEFAULT NULL,
@@ -80,27 +83,32 @@ module.exports =  async function createTables() {
         genotypeId INTEGER NOT NULL,
         mediumId INTEGER DEFAULT NULL,
         PRIMARY KEY (plantId),
-        FOREIGN KEY (plantClonedFrom) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE SET NULL,
-        FOREIGN KEY(genotypeId) REFERENCES genotypes(genotypeId) ON UPDATE CASCADE ON DELETE CASCADE,
-        FOREIGN KEY(mediumId) REFERENCES mediums(mediumId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (plantClonedFrom) REFERENCES plants(plantId)
+          ON UPDATE CASCADE ON DELETE SET NULL,
+        FOREIGN KEY(genotypeId) REFERENCES genotypes(genotypeId)
+          ON UPDATE CASCADE ON DELETE CASCADE,
+        FOREIGN KEY(mediumId) REFERENCES mediums(mediumId)
+          ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 
   // We have to this after plant & generation creation becaus of the
   // foreign keys.
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_GENERATION_PARENT + ` (
+      CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_GENERATION_PARENT} (
         parentId INTEGER,
         generationId NOT NULL,
         plantId NOT NULL,
         PRIMARY KEY (parentId),
-        FOREIGN KEY (generationId) REFERENCES generations(generationId) ON UPDATE CASCADE ON DELETE CASCADE,
-        FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (generationId) REFERENCES generations(generationId)
+          ON UPDATE CASCADE ON DELETE CASCADE,
+        FOREIGN KEY (plantId) REFERENCES plants(plantId)
+          ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 
   await sqlite.run(`
-      CREATE TABLE IF NOT EXISTS ` + CONSTANTS.TABLE_JOURNAL + ` (
+      CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_JOURNAL} (
         journalId INTEGER,
         journalTimestamp DATETIME NOT NULL,
         journalType TEXT NOT NULL,
@@ -111,9 +119,12 @@ module.exports =  async function createTables() {
         mediumId INTEGER DEFAULT NULL,
         environmentId INTEGER DEFAULT NULL,
         PRIMARY KEY (journalId),
-        FOREIGN KEY (plantId) REFERENCES plants(plantId) ON UPDATE CASCADE ON DELETE CASCADE
-        FOREIGN KEY (mediumId) REFERENCES mediums(mediumId) ON UPDATE CASCADE ON DELETE CASCADE
-        FOREIGN KEY (environmentId) REFERENCES environments(environmentId) ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (plantId) REFERENCES plants(plantId)
+          ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (mediumId) REFERENCES mediums(mediumId)
+          ON UPDATE CASCADE ON DELETE CASCADE
+        FOREIGN KEY (environmentId) REFERENCES environments(environmentId)
+          ON UPDATE CASCADE ON DELETE CASCADE
       );
     `);
 };

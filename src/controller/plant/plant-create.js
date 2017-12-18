@@ -83,23 +83,25 @@ class PlantCreate extends GenericCreate {
             // If neither genotypeId nor plantClonedFrom is set, we want to
             // create a new genotypeId for this plant.
             _.isUndefined(options.plantClonedFrom)) {
-      logger.debug(this.name, '#create() We need to create a new genotype for this plant');
+      logger.debug(
+        `${this.name} #create() We need to create a new genotype for this plant`);
 
       context.createdGenotype = await Genotype.create(options);
       context.genotypeId = _.parseInt(
         _.keys(context.createdGenotype.genotypes)[0]);
 
-      logger.debug(this.name, '#create() Created genotypeId:', context.genotypeId);
+      logger.debug(
+        `${this.name} #create() Created genotypeId: ${context.genotypeId}`);
     } else if (!_.isUndefined(options.plantClonedFrom)) {
       // plantClonedFrom is defined, but genotypId not, so we wan't to
       // retrieve the genotypeId from the "mother plant".
       // Mother plant => plant with the id equaling plantClonedFrom.
       let queryRetrieveGenotypeId =
-                `SELECT plants.genotypeId FROM ` + CONSTANTS.TABLE_PLANT +
-                ` plants WHERE plants.plantId = $plantClonedFrom`;
+        `SELECT plants.genotypeId FROM ${CONSTANTS.TABLE_PLANT} plants
+         WHERE plants.plantId = $plantClonedFrom`;
 
-      logger.debug(this.name, '#create() queryRetrieveGenotypeId:',
-        queryRetrieveGenotypeId, '? = :', options.plantClonedFrom);
+      logger.debug(
+        `${this.name} #create() queryRetrieveGenotypeId: ${queryRetrieveGenotypeId} ? = : ${options.plantClonedFrom}`);
 
       let motherPlantRow = await sqlite.get(
         queryRetrieveGenotypeId,
@@ -109,8 +111,8 @@ class PlantCreate extends GenericCreate {
       if (_.isUndefined(motherPlantRow)) {
         // No row == no such plant
         await sqlite.get('ROLLBACK');
-        throw new Error('options.plantClonedFrom does not reference an existing Plant');
-
+        throw new Error(
+          'options.plantClonedFrom does not reference an existing Plant');
       }
       context.genotypeId = motherPlantRow['genotypeId'];
       logger.debug(this.name, '#create() genotypeId:', context.genotypeId);
@@ -142,7 +144,8 @@ class PlantCreate extends GenericCreate {
       // it's possible that we created a genotype for this, undo it.
       await sqlite.get('ROLLBACK');
       if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
-        throw new Error('options.genotypeId does not reference an existing Genotype');
+        throw new Error(
+          'options.genotypeId does not reference an existing Genotype');
       }
       throw err;
     }
@@ -173,8 +176,6 @@ class PlantCreate extends GenericCreate {
     await this.createGenotypeOrResolveGenotypeIdIfNeeded(context, options);
 
     await this.executeQueryInsertPlant(context, options);
-
-
     await sqlite.get('COMMIT');
   }
 

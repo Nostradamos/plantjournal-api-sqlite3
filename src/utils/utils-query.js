@@ -266,8 +266,7 @@ UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteri
 
       let subQuery = squel.select().from(tableConcat)
         .field(
-          'GROUP_CONCAT(' +
-                    Utils.explicitColumn(tableConcat, attrConcat) +')')
+          `GROUP_CONCAT(${Utils.explicitColumn(tableConcat, attrConcat)})`)
         .where(
           '? = ?',
           Utils.explicitColumnRstr(tableConcat, attrWhere),
@@ -367,7 +366,7 @@ UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, over
 
     if (_.indexOf(allowedAttributes, attr) === -1) {
       // attr not in allowedAttributes array
-      throw new Error('Illegal attribute: ' + attr);
+      throw new Error(`Illegal attribute: ${attr}`);
     }
 
 
@@ -384,7 +383,7 @@ UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, over
       query.order('?.?', false, table, attr);
     } else {
       // Split it again to get un-uppercased sort type
-      throw new Error('Illegal sort type: ' + _.split(sortStr, ' ')[1]);
+      throw new Error(`Illegal sort type: ${_.split(sortStr, ' ')[1]}`);
     }
   }
 };

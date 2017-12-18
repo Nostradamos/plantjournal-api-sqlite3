@@ -79,7 +79,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
       createEqualsExpression(
         self.table, self.attr, operatorOptions.length || 1, 'COUNT');
 
-    logger.silly(this.name, '#operatorEquals()', critHaving, critHavingArgs);
+    logger.silly(`${this.name} #operatorEquals()`, critHaving, critHavingArgs);
 
     UtilsExpression.applyExpression(
       self.squelExprHaving, critHaving, critHavingArgs, self.type);
@@ -128,7 +128,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         ...exprCountNotEqualArgs
       ).toString();
 
-    logger.silly(this.name, '#operatorNotEquals() queryCountUnequal', queryCountUnequal);
+    logger.silly(`${this.name} #operatorNotEquals() queryCountUnequal`, queryCountUnequal);
 
     // Next we have to find all rows where we have values different to any
     // of operatorOptions. For the generationParents child attribute this
@@ -143,7 +143,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
       .field(Utils.explicitColumnRstr(self.table, self.srcAttr))
       .where(exprNotIn, ...exprNotInArgs).toString();
 
-    logger.silly(this.name, '#operatorNotEquals() queryNotIn', queryNotIn);
+    logger.silly(`${this.name} #operatorNotEquals() queryNotIn`, queryNotIn);
 
     // Now combine both queries with an UNION and build the final
     // expression.
@@ -183,7 +183,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
       createGreaterThanEqualExpression(
         self.table, self.attr, operatorOptions.length || 1, 'COUNT');
 
-    logger.silly(this.name, '#operatorHas()', critHaving, critHavingArgs);
+    logger.silly(`${this.name} #operatorHas()`, critHaving, critHavingArgs);
 
     UtilsExpression.applyExpression(
       self.squelExprHaving, critHaving, critHavingArgs, self.type);
