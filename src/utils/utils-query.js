@@ -88,23 +88,22 @@ UtilsQuery.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
 
 /**
  * Helper function to simplify the building of LEFT JOINS.
- * @param  {[type]} query
+ * @param  {squel} query
  * Squel query capable of an .left_join()
- * @param  {[type]} lTable
+ * @param  {String} lTable
  * Name of the left Table, should be an already joined or "selected from" table.
- * @param  {[type]} rTable
+ * @param  {String} rTable
  * Name of the right table, this should be the table which gets newly joined.
- * @param  {[type]} lAttr
+ * @param  {String} lAttr
  * Name of the attribute on the left side
- * @param  {[type]} [rAttr=null]
+ * @param  {String|null} [rAttr=null]
  * Name of the attribute on the right side, set null to use the same attribute
  * as for lAttr.
- * @param  {[type]} [alias=null]
+ * @param  {String|null} [alias=null]
  * Name of the join alias. Leave null to use rTable
  */
 UtilsQuery.join = function(query, lTable, rTable, lAttr, rAttr = null, alias = null) {
   if(rAttr === null) rAttr = lAttr;
-  if(alias === null) alias = rTable;
 
   let fullLeftAttr = Utils.explicitColumn(lTable, lAttr);
   let fullRightAttr = Utils.explicitColumn(rTable, rAttr);
@@ -467,4 +466,18 @@ UtilsQuery.getTableOfField = function (attr, overWriteTableLookup = null) {
     throw new Error('cannot associate attribute with a table');
   }
   return table;
+};
+
+/**
+ * This method removes newline characters and multiple whitespaces from sql
+ * string.
+ * @param  {String} sql
+ *         SQL String which should get stripped.
+ * @return {String}
+ *         Stripped sql string.
+ */
+UtilsQuery.stripSQL = function(sql) {
+  sql = sql.replace(/\s\s+/g, ' ');
+  sql = sql.replace(/\r?\n/g, '');
+  return sql;
 };

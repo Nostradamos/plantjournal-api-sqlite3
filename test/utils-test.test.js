@@ -3,7 +3,7 @@
 
 require('should');
 
-require('./helper-functions');
+require('./utils-test');
 
 describe(`HelperFunctions`, () => {
   describe(`Assertion: sqlEql`, () => {

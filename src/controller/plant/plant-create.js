@@ -97,8 +97,10 @@ class PlantCreate extends GenericCreate {
       // retrieve the genotypeId from the "mother plant".
       // Mother plant => plant with the id equaling plantClonedFrom.
       let queryRetrieveGenotypeId =
-        `SELECT ${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_GENOTYPE} FROM ${CONSTANTS.TABLE_PLANT} plants
-         WHERE ${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_PLANT} = $plantClonedFrom`;
+        `SELECT ${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_GENOTYPE}
+         FROM ${CONSTANTS.TABLE_PLANT} plants
+         WHERE
+           ${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_PLANT} = $plantClonedFrom`;
 
       logger.debug(
         `${this.name} #create() queryRetrieveGenotypeId: ${queryRetrieveGenotypeId} ? = : ${options.plantClonedFrom}`);

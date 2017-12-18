@@ -2,7 +2,7 @@
 'use strict';
 
 const plantJournal = require('../../../../src/pj');
-const helpers = require('../../../helper-functions');
+const UtilsTest = require('../../../utils-test');
 
 require('should');
 
@@ -36,7 +36,7 @@ describe(`Family()`, () => {
           '4': { familyId: 4, familyName: 'testD' }
         }
       });
-      helpers.allFamiliesShouldHaveCreatedAtAndModifiedAt(families);
+      UtilsTest.allFamiliesShouldHaveCreatedAtAndModifiedAt(families);
     });
 
     it(`should only return the first two families if options.limit=2`, async () => {

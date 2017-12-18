@@ -27,7 +27,8 @@ class PlantDelete extends GenericDelete {
      */
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
-      .field(Utils.explicitColumn(CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
+      .field(Utils.explicitColumn(
+        CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
   }
 
   /**
@@ -55,7 +56,8 @@ class PlantDelete extends GenericDelete {
 
     context.haveIdsToDelete = context.plantIdsToDelete.length > 0;
 
-    logger.debug(this.name, '#delete() plantIdsToDelete:', context.plantIdsToDelete);
+    logger.debug(
+      `${this.name} #delete() plantIdsToDelete:`, context.plantIdsToDelete);
   }
 
   /**

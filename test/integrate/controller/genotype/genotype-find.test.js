@@ -5,7 +5,7 @@ const should = require('should');
 
 const plantJournal = require('../../../../src/pj');
 
-const helperFunctions = require('../../../helper-functions');
+const UtilsTest = require('../../../utils-test');
 
 describe(`Genotype()`, () => {
   describe(`#find()`, () => {
@@ -103,11 +103,11 @@ describe(`Genotype()`, () => {
           }
         }
       );
-      helperFunctions
+      UtilsTest
         .allGenotypesShouldHaveCreatedAtAndModifiedAt(genotypes);
-      helperFunctions
+      UtilsTest
         .allGenerationsShouldHaveCreatedAtAndModifiedAt(genotypes);
-      helperFunctions
+      UtilsTest
         .allFamiliesShouldHaveCreatedAtAndModifiedAt(genotypes);
     });
 

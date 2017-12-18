@@ -5,7 +5,7 @@ const should = require('should');
 
 const plantJournal = require('../../../../src/pj');
 
-const helpers = require('../../../helper-functions');
+const UtilsTest = require('../../../utils-test');
 
 describe(`Generation()`, () => {
   describe(`#find()`, () => {
@@ -71,9 +71,9 @@ describe(`Generation()`, () => {
           }
         }
       });
-      helpers
+      UtilsTest
         .allGenerationsShouldHaveCreatedAtAndModifiedAt(generations);
-      helpers
+      UtilsTest
         .allFamiliesShouldHaveCreatedAtAndModifiedAt(generations);
 
     });

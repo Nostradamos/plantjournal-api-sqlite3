@@ -5,7 +5,7 @@ const should = require('should');
 
 const plantJournal = require('../../../../src/pj');
 
-const helperFunctions = require('../../../helper-functions');
+const UtilsTest = require('../../../utils-test');
 
 describe(`Medium()`, () => {
   describe(`#find()`, () => {
@@ -68,9 +68,9 @@ describe(`Medium()`, () => {
         }
       );
 
-      helperFunctions
+      UtilsTest
         .allMediumsShouldHaveCreatedAtAndModifiedAt(mediums);
-      helperFunctions
+      UtilsTest
         .allEnvironmentsShouldHaveCreatedAtAndModifiedAt(mediums);
     });
 
