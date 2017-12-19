@@ -16,7 +16,8 @@ describe(`HelperFunctions`, () => {
     it(`should fail if sql strings aren't equl`, () => {
       `SELECT * FROM asd
        WHERE foo = 'bar'
-       LIMIT 1`.should.not.sqlEql('SELECT * FROM TEST WHERE foo = \'bar\' LIMIT 1');
+       LIMIT 1`.should.not.sqlEql(
+          'SELECT * FROM TEST WHERE foo = \'bar\' LIMIT 1');
     });
   });
 });

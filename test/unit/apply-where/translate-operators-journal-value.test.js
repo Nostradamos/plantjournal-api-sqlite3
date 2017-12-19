@@ -17,15 +17,30 @@ describe(`TranslateOperatorsJournalValue`, () => {
 
     beforeEach(() => {
       crit = {crit:null, args:[]};
-      self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: true};
+      self = {
+        table: 'journals',
+        attr: 'journalValue',
+        func: null,
+        funcArgs: null,
+        isPath: true
+      };
     });
 
     describe('general operator tests', () => {
       it(`all operators should sanitize`, () => {
-        let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: false};
+        let self = {
+          table: 'journals',
+          attr: 'journalValue',
+          func: null,
+          funcArgs: null,
+          isPath: false
+        };
+
         for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
           // Skip operators which don't allow arguments
-          if(_.indexOf(['$has', '$nhas', '$contains', '$ncontains'], operator) !== -1) continue;
+          if(_.indexOf(
+            ['$has', '$nhas', '$contains', '$ncontains'], operator) !== -1)
+            continue;
 
           let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
           operatorFunc(self, true, crit);
@@ -48,10 +63,19 @@ describe(`TranslateOperatorsJournalValue`, () => {
       });
 
       it(`all operators should sanitize if self.isPath is true and operatorOptions is not an invalid JSON`, () => {
-        let self = {table: 'journals', attr: 'journalValue', func: null, funcArgs: null, isPath: true};
+        let self = {
+          table: 'journals',
+          attr: 'journalValue',
+          func: null,
+          funcArgs: null,
+          isPath: true
+        };
+
         for(let operator in TranslateOperatorsJournalValue.OPERATORS) {
           // Skip operators which don't allow arguments
-          if(_.indexOf(['$has', '$nhas', '$contains', '$ncontains'], operator) !== -1) continue;
+          if(_.indexOf(
+            ['$has', '$nhas', '$contains', '$ncontains'], operator) !== -1)
+            continue;
 
           let operatorFunc = TranslateOperatorsJournalValue.OPERATORS[operator];
           operatorFunc(self, true, crit);
@@ -256,7 +280,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
 
     describe(`#operatorNotIn()`, () => {
       it(`should do TABLE.ATTR NOT IN OPERATOROPTIONS if self.func and self.funcArgs are null`, () => {
-        TranslateOperatorsJournalValue.operatorNotIn(self, ['foo', 'bar'], crit);
+        TranslateOperatorsJournalValue.operatorNotIn(
+          self, ['foo', 'bar'], crit);
         crit.should.eql(
           {crit: '? NOT IN ?', args: [TABLE_DOT_ATTR_RSTR, ['foo', 'bar']]});
       });
@@ -264,7 +289,8 @@ describe(`TranslateOperatorsJournalValue`, () => {
       it(`should do json_extract(TABLE.ATTR, PATH) NOT IN OPERATOROPTIONS if self.func is json_extract and self.funcArgs is PATH`, () => {
         self.func = 'json_extract';
         self.funcArgs = ['$.foo.bar[1]'];
-        TranslateOperatorsJournalValue.operatorNotIn(self, ['foo', 'bar'], crit);
+        TranslateOperatorsJournalValue.operatorNotIn(
+          self, ['foo', 'bar'], crit);
         crit.should.eql(
           {
             crit: 'json_extract(?, ?) NOT IN ?',
@@ -307,7 +333,6 @@ describe(`TranslateOperatorsJournalValue`, () => {
         TranslateOperatorsJournalValue.operatorContains(
           self, 'someval', crit);
         crit.crit.should.eql('EXISTS ?');
-        // SELECT value FROM json_each(journals.journalValue,\'$.foo.bar\') WHERE (value = \'someval\')
         crit.args[0].toString().should.sqlEql(
           `SELECT value FROM json_each(journals.journalValue, '$.foo.bar')
            WHERE (value = 'someval')`);
@@ -320,7 +345,6 @@ describe(`TranslateOperatorsJournalValue`, () => {
         TranslateOperatorsJournalValue.operatorNotContains(
           self, 'someval', crit);
         crit.crit.should.eql('NOT EXISTS ?');
-        // SELECT value FROM json_each(journals.journalValue,\'$.foo.bar\') WHERE (value = \'someval\')
         crit.args[0].toString().should.sqlEql(
           `SELECT value FROM json_each(journals.journalValue, '$.foo.bar')
            WHERE (value = 'someval')`);

@@ -13,22 +13,43 @@ describe(`Plant()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'}); // familyId: 1
-      await pj.Family.create({familyName: 'testFamily2'}); // familyId: 2
-      await pj.Generation.create({familyId: 1, generationName: 'F1'}); // generationId: 1
-      await pj.Generation.create({familyId: 1, generationName: 'F2'}); // generationId: 2
-      await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'}); // genotypeId: 1
-      await pj.Genotype.create({generationId: 2, genotypeName: 'testGenotype2'}); // genotypeId: 2
-      await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'}); // plantId: 1
-      await pj.Plant.create({genotypeId: 2, plantName: 'testPlant2', plantSex: 'male'}); // plantId: 2
-
-      await pj.Generation.create({familyId: 2, generationName: 'S1', generationParents: [1,2]}); // generationId: 3
-      await pj.Genotype.create({generationId: 3, genotypeName: 'testGenotype3'}); // genotypeId: 3
-      await pj.Plant.create({genotypeId: 3, plantName: 'testPlant3', plantSex: 'male'}); // plantId: 3
-      await pj.Plant.create({plantName: 'testPlant4', plantClonedFrom: 3, plantSex: 'female'}); // plantId: 4
-
-      await pj.Generation.create({familyId: 2, generationName: 'S1 #2', generationParents: [1,3]}); // generationId: 4
-      await pj.Plant.create({generationId: 4, plantName: 'testPlant5'}); // plantId: 5 genotypeId: 4
+      // familyId: 1
+      await pj.Family.create({familyName: 'testFamily1'});
+      // familyId: 2
+      await pj.Family.create({familyName: 'testFamily2'});
+      // generationId: 1
+      await pj.Generation.create({familyId: 1, generationName: 'F1'});
+      // generationId: 2
+      await pj.Generation.create({familyId: 1, generationName: 'F2'});
+      // genotypeId: 1
+      await pj.Genotype.create(
+        {generationId: 1, genotypeName: 'testGenotype1'});
+      // genotypeId: 2
+      await pj.Genotype.create(
+        {generationId: 2, genotypeName: 'testGenotype2'});
+      // plantId: 1
+      await pj.Plant.create(
+        {genotypeId: 1, plantName: 'testPlant1'});
+      // plantId: 2
+      await pj.Plant.create(
+        {genotypeId: 2, plantName: 'testPlant2', plantSex: 'male'});
+      // generationId: 3
+      await pj.Generation.create(
+        {familyId: 2, generationName: 'S1', generationParents: [1,2]});
+      // genotypeId: 3
+      await pj.Genotype.create(
+        {generationId: 3, genotypeName: 'testGenotype3'});
+      // plantId: 3
+      await pj.Plant.create(
+        {genotypeId: 3, plantName: 'testPlant3', plantSex: 'male'});
+      // plantId: 4
+      await pj.Plant.create(
+        {plantName: 'testPlant4', plantClonedFrom: 3, plantSex: 'female'});
+      // generationId: 4
+      await pj.Generation.create(
+        {familyId: 2, generationName: 'S1 #2', generationParents: [1,3]});
+      // plantId: 5 genotypeId: 4
+      await pj.Plant.create({generationId: 4, plantName: 'testPlant5'});
     });
 
     after(async () => {
@@ -200,13 +221,20 @@ describe(`Plant()`, () => {
     });
 
     it(`should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1`, async () => {
-      let plants = await pj.Plant.find({'offset': 2, 'limit': 1, 'attributes': ['plantName']});
+      let plants = await pj.Plant.find(
+        {'offset': 2, 'limit': 1, 'attributes': ['plantName']});
 
       plants.should.containDeep({
         'found': 5,
         'remaining': 2,
         'plants': {
-          '3': { 'plantId': 3, 'plantName': 'testPlant3', 'genotypeId': 3, 'generationId': 3, 'familyId': 2 }
+          '3': {
+            'plantId': 3,
+            'plantName': 'testPlant3',
+            'genotypeId': 3,
+            'generationId': 3,
+            'familyId': 2
+          }
         }
       });
     });

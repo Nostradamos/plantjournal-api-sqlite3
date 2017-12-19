@@ -21,8 +21,9 @@ describe(`TranslateOperatorsRelational`, () => {
         {}, 'environmentName', {'$eq': 'TestEnvironment420'},
         squelExpr, 'and');
 
-      query.where(squelExpr).toString().should.eql(
-        `SELECT * FROM test WHERE (environments.environmentName = 'TestEnvironment420')`);
+      query.where(squelExpr).toString().should.sqlEql(
+        `SELECT * FROM test
+         WHERE (environments.environmentName = 'TestEnvironment420')`);
     });
 
     it(`should apply an TABLE.ATTR != OPEARTOROPTIONS expression for $neq`, () => {
@@ -30,8 +31,9 @@ describe(`TranslateOperatorsRelational`, () => {
         {}, 'environmentName', {'$neq': 'TestEnvironment420'},
         squelExpr, 'and');
 
-      query.where(squelExpr).toString().should.eql(
-        `SELECT * FROM test WHERE (environments.environmentName != 'TestEnvironment420')`);
+      query.where(squelExpr).toString().should.sqlEql(
+        `SELECT * FROM test
+         WHERE (environments.environmentName != 'TestEnvironment420')`);
     });
 
     it(`should apply an TABLE.ATTR LIKE OPEARTOROPTIONS expression for $like`, () => {
@@ -39,8 +41,9 @@ describe(`TranslateOperatorsRelational`, () => {
         {}, 'environmentName', {'$like': '_estEnvironment420'},
         squelExpr, 'and');
 
-      query.where(squelExpr).toString().should.eql(
-        `SELECT * FROM test WHERE (environments.environmentName LIKE '_estEnvironment420')`);
+      query.where(squelExpr).toString().should.sqlEql(
+        `SELECT * FROM test
+         WHERE (environments.environmentName LIKE '_estEnvironment420')`);
     });
 
     it(`should apply an TABLE.ATTR NOT LIKE OPEARTOROPTIONS expression for $nlike`, () => {
@@ -48,8 +51,9 @@ describe(`TranslateOperatorsRelational`, () => {
         {}, 'environmentName', {'$nlike': '_estEnvironment420'},
         squelExpr, 'and');
 
-      query.where(squelExpr).toString().should.eql(
-        `SELECT * FROM test WHERE (environments.environmentName NOT LIKE '_estEnvironment420')`);
+      query.where(squelExpr).toString().should.sqlEql(
+        `SELECT * FROM test
+         WHERE (environments.environmentName NOT LIKE '_estEnvironment420')`);
     });
 
     it(`should apply an TABLE.ATTR > OPEARTOROPTIONS expression for $gt`, () => {
@@ -114,8 +118,9 @@ describe(`TranslateOperatorsRelational`, () => {
         {}, 'environmentName', 'TestEnvironment420',
         squelExpr, 'and');
 
-      query.where(squelExpr).toString().should.eql(
-        `SELECT * FROM test WHERE (environments.environmentName = 'TestEnvironment420')`);
+      query.where(squelExpr).toString().should.sqlEql(
+        `SELECT * FROM test
+         WHERE (environments.environmentName = 'TestEnvironment420')`);
     });
 
     it(`should apply an TABLE.ATTR IN ATTROPTIONS for ATTR:ATTROPTIONS if ATTROPTIONS is an array (array shorthand)`, () => {
@@ -123,8 +128,11 @@ describe(`TranslateOperatorsRelational`, () => {
         {}, 'environmentName', ['TestEnvironment420', 'TestEnv2'],
         squelExpr, 'and');
 
-      query.where(squelExpr).toString().should.eql(
-        `SELECT * FROM test WHERE (environments.environmentName IN ('TestEnvironment420', 'TestEnv2'))`);
+      query.where(squelExpr).toString().should.sqlEql(
+        `SELECT * FROM test
+         WHERE (
+           environments.environmentName IN ('TestEnvironment420', 'TestEnv2')
+         )`);
     });
   });
 });

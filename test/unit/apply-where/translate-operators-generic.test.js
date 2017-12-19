@@ -16,7 +16,7 @@ describe(`TranslateOperatorsGeneric`, () => {
     it(`should call operatorFunc with second argument being operatorOptions if operator is defined in attrOptions`, () => {
       let gotCalled = false;
 
-      TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
+      TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions) => {
         operatorOptions.should.eql('test');
         gotCalled = true;
       };
@@ -31,7 +31,7 @@ describe(`TranslateOperatorsGeneric`, () => {
     it(`should not call operator if operator is not defined in attrOptions`, () => {
       let gotCalled = false;
 
-      TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
+      TranslateOperatorsGeneric.OPERATORS['$eq'] = (self) => {
         gotCalled = true;
       };
 
@@ -43,10 +43,11 @@ describe(`TranslateOperatorsGeneric`, () => {
     });
 
     it(`should apply critieria from operatorFunc to self.squelExpr`, () => {
-      TranslateOperatorsGeneric.OPERATORS['$eq'] = (self, operatorOptions, crit) => {
-        crit.crit = '?.? = ?';
-        crit.args = [1, 2, operatorOptions];
-      };
+      TranslateOperatorsGeneric.OPERATORS['$eq'] =
+        (self, operatorOptions, crit) => {
+          crit.crit = '?.? = ?';
+          crit.args = [1, 2, operatorOptions];
+        };
 
       let self = {
         attrOptions: {'$eq': 'test'}, squelExpr: squel.expr(),

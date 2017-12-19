@@ -32,19 +32,23 @@ UtilsTest.allFamiliesShouldHaveCreatedAtAndModifiedAt = function(retObj) {
 UtilsTest.allGenerationsShouldHaveCreatedAtAndModifiedAt = (retObj) => {
   // Make sure every generation has generationCreatedAt and
   // generationModifiedAt attributes.
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(retObj, 'generations', 'generation');
+  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+    retObj, 'generations', 'generation');
 };
 
 UtilsTest.allGenotypesShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(retObj, 'genotypes', 'genotype');
+  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+    retObj, 'genotypes', 'genotype');
 };
 
 UtilsTest.allPlantsShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(retObj, 'plants', 'plant');
+  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+    retObj, 'plants', 'plant');
 };
 
 UtilsTest.allMediumsShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(retObj, 'mediums', 'medium');
+  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+    retObj, 'mediums', 'medium');
 };
 
 UtilsTest.allEnvironmentsShouldHaveCreatedAtAndModifiedAt = function(retObj) {

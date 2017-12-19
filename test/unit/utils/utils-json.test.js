@@ -14,7 +14,15 @@ describe(`utils/utils-json`, () => {
 
   describe(`#needToSanitize()`, () => {
     it(`should return true if obj is not a number or a string with invalid JSON`, () => {
-      let toTest = [true, false, ['foo', 'bar'], '{"foo":"bar"}', {foo: 'bar'}, 'test'];
+      let toTest = [
+        true,
+        false,
+        ['foo', 'bar'],
+        '{"foo":"bar"}',
+        {foo: 'bar'},
+        'test'
+      ];
+
       for(let test of toTest) {
         UtilsJSON.needToSanitize(test).should.be.true();
       }
@@ -47,7 +55,8 @@ describe(`utils/utils-json`, () => {
     });
 
     it(`should quote valid JSON strings if onExtract is true`, () => {
-      UtilsJSON.sanitize('{"foo":"bar"}', true).should.eql('"{\\"foo\\":\\"bar\\"}"');
+      UtilsJSON.sanitize('{"foo":"bar"}', true)
+        .should.eql('"{\\"foo\\":\\"bar\\"}"');
     });
 
 
