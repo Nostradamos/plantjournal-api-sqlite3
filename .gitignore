@@ -68,3 +68,7 @@ docs
 
 # coveralls settings
 .coveralls.yml
+
+# Some test files i frequently use
+test.sqlite
+test.js
