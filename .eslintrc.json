@@ -15,7 +15,9 @@
     "max-len": [
       "warn",
       {
-        "code": 80
+        "code": 80,
+        // Ignore describe and it methods for tests
+        "ignorePattern": "^(\\s*)(describe|it)(\\s*)\\(.*$"
       }
     ],
     "linebreak-style": [
