@@ -72,13 +72,13 @@ describe(`Genotype()`, () => {
         genotype.genotypes[1].genotypeModifiedAt];
 
       genotype.genotypes[1].should.deepEqual({
-        'genotypeId': 1,
-        'genotypeName': 'testGenotype1',
-        'genotypeDescription': 'this is a very special genotype',
-        'genotypePlants': [],
-        'generationId': 1,
-        'genotypeCreatedAt': createdAt,
-        'genotypeModifiedAt': modifiedAt
+        genotypeId: 1,
+        genotypeName: 'testGenotype1',
+        genotypeDescription: 'this is a very special genotype',
+        genotypePlants: [],
+        generationId: 1,
+        genotypeCreatedAt: createdAt,
+        genotypeModifiedAt: modifiedAt
       });
 
       let rows = await sqlite.all(`SELECT * FROM genotypes`);
@@ -89,8 +89,8 @@ describe(`Genotype()`, () => {
       let genotype = await pj.Genotype.create({generationId: 1});
 
       genotype.genotypes[1].should.containDeep({
-        'genotypeId': 1,
-        'genotypeName': '',
+        genotypeId: 1,
+        genotypeName: '',
       });
     });
 
@@ -99,8 +99,8 @@ describe(`Genotype()`, () => {
         {genotypeName: 'genoTest42'});
 
       genotype.genotypes[1].should.containDeep({
-        'genotypeName': 'genoTest42',
-        'generationId': null,
+        genotypeName: 'genoTest42',
+        generationId: null,
       });
 
       let rows = await sqlite.all(`SELECT * FROM genotypes`);

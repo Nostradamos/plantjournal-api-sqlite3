@@ -13,8 +13,8 @@ describe(`Medium()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Medium.create({'mediumName': 'testMdium1'});
-      await pj.Medium.create({'mediumName': 'testMdium2'});
+      await pj.Medium.create({mediumName: 'testMdium1'});
+      await pj.Medium.create({mediumName: 'testMdium2'});
     });
 
     after(async () => {
@@ -40,14 +40,14 @@ describe(`Medium()`, () => {
     });
 
     it(`should throw error if second argument is not an assoc array/object`, async () => {
-      await pj.Medium.update({'mediumName': 'newMediumName'}, null)
+      await pj.Medium.update({mediumName: 'newMediumName'}, null)
         .should.be.rejectedWith(
           'Criteria Object has to be an associative array');
     });
 
     it(`should update environment in database and return updated environment id`, async () => {
       let updated = await pj.Medium.update(
-        {'mediumName': 'updatedMedium2'},
+        {mediumName: 'updatedMedium2'},
         {where: {mediumId: 2}});
       updated.should.deepEqual([2]);
 

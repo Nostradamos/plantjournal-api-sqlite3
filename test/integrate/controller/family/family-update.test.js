@@ -16,9 +16,9 @@ describe(`Family()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({'familyName': 'testFamily1'});
-      await pj.Family.create({'familyName': 'testFmily2'});
-      await pj.Family.create({'familyName': 'testFmily3'});
+      await pj.Family.create({familyName: 'testFamily1'});
+      await pj.Family.create({familyName: 'testFmily2'});
+      await pj.Family.create({familyName: 'testFmily3'});
 
     });
 
@@ -42,12 +42,12 @@ describe(`Family()`, () => {
     });
 
     it(`should throw error if second argument is not an assoc array/object`, async () => {
-      await pj.Family.update({'familyName': 'newFamName'}, null)
+      await pj.Family.update({familyName: 'newFamName'}, null)
         .should.be.rejectedWith('Criteria Object has to be an associative array');
     });
 
     it(`should change familyName for testFmily2 in database and return the familyId`, async () => {
-      let updatedFamilies = await pj.Family.update({'familyName': 'testFamily2'}, {'where': {'familyId': 2}});
+      let updatedFamilies = await pj.Family.update({familyName: 'testFamily2'}, {where: {familyId: 2}});
 
       updatedFamilies.should.deepEqual([2]);
 
@@ -55,9 +55,9 @@ describe(`Family()`, () => {
 
       rowsFam.should.deepEqual(
         [
-          {'familyId': 1, 'familyName': 'testFamily1'},
-          {'familyId': 2, 'familyName': 'testFamily2'},
-          {'familyId': 3, 'familyName': 'testFmily3'},
+          {familyId: 1, familyName: 'testFamily1'},
+          {familyId: 2, familyName: 'testFamily2'},
+          {familyId: 3, familyName: 'testFmily3'},
 
         ]
       );
@@ -66,7 +66,7 @@ describe(`Family()`, () => {
     it(`should update modifiedAt Field in database`, async () => {
       let currentTimestamp = Utils.getUnixTimestampUTC();
 
-      await pj.Family.update({'familyName': 'testFamily2'}, {'where': {'familyId': 2}});
+      await pj.Family.update({familyName: 'testFamily2'}, {where: {familyId: 2}});
 
       let rowsFam = await sqlite.all('SELECT familyId, familyModifiedAt FROM ' + CONSTANTS.TABLE_FAMILY  + ' WHERE familyId = 2');
 
@@ -76,8 +76,8 @@ describe(`Family()`, () => {
 
     it(`should not be possible to manually change familyModifiedAt`, async () => {
       let updatedFamilies = await pj.Family.update(
-        {'familyModifiedAt': 1},
-        {'where': {'familyId': 2}}
+        {familyModifiedAt: 1},
+        {where: {familyId: 2}}
       );
 
       updatedFamilies.length.should.eql(0);
@@ -89,8 +89,8 @@ describe(`Family()`, () => {
 
     it(`should not be possible to manually change familyCreatedAt`, async () => {
       let updatedFamilies = await pj.Family.update(
-        {'familyCreatedAt': 1},
-        {'where': {'familyId': 2}}
+        {familyCreatedAt: 1},
+        {where: {familyId: 2}}
       );
 
       updatedFamilies.length.should.eql(0);
@@ -102,13 +102,13 @@ describe(`Family()`, () => {
 
 
     it(`should ignore unknown update keys and not throw an error`, async () => {
-      await pj.Family.update({'familyName': 'testFamily2', 'unknownField': 'blubb'}, {'where': {'familyId': 2}});
+      await pj.Family.update({familyName: 'testFamily2', unknownField: 'blubb'}, {where: {familyId: 2}});
     });
 
     it(`should be possible to update records with criteria.sort and criteria.limit`, async () => {
       let updatedFamilies = await pj.Family.update(
-        {'familyName': 'testFooBar'},
-        {'sort': 'familyId DESC', 'limit': 2}
+        {familyName: 'testFooBar'},
+        {sort: 'familyId DESC', limit: 2}
       );
 
       updatedFamilies.should.eql([3,2]);

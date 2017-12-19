@@ -60,7 +60,7 @@ class PlantCreate extends GenericCreate {
   static setQueryFields(context, options) {
     super.setQueryFields(context, options);
     context.query
-      .set('genotypeId', '$genotypeId', {'dontQuote': true});
+      .set('genotypeId', '$genotypeId', {dontQuote: true});
   }
 
   /**
@@ -107,7 +107,7 @@ class PlantCreate extends GenericCreate {
 
       let motherPlantRow = await sqlite.get(
         queryRetrieveGenotypeId,
-        {'$plantClonedFrom': options.plantClonedFrom}
+        {$plantClonedFrom: options.plantClonedFrom}
       );
 
       if (_.isUndefined(motherPlantRow)) {
@@ -141,7 +141,7 @@ class PlantCreate extends GenericCreate {
      */
   static async executeQueryInsertPlant(context, options) {
     try {
-      context.result = await sqlite.run(context.query, {'$genotypeId': context.genotypeId});
+      context.result = await sqlite.run(context.query, {$genotypeId: context.genotypeId});
     } catch (err) {
       // it's possible that we created a genotype for this, undo it.
       await sqlite.get('ROLLBACK');

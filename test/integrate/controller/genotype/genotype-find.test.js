@@ -37,68 +37,68 @@ describe(`Genotype()`, () => {
 
       genotypes.should.containDeep(
         {
-          'found': 4,
-          'remaining': 0,
-          'genotypes': {
-            '1': {
-              'genotypeId': 1,
-              'genotypeName': 'testGenotype1',
-              'generationId': 1,
-              'familyId': 1
+          found: 4,
+          remaining: 0,
+          genotypes: {
+            1: {
+              genotypeId: 1,
+              genotypeName: 'testGenotype1',
+              generationId: 1,
+              familyId: 1
             },
-            '2': {
-              'genotypeId': 2,
-              'genotypeName': 'testGenotype2',
-              'generationId': 2,
-              'familyId': 1
+            2: {
+              genotypeId: 2,
+              genotypeName: 'testGenotype2',
+              generationId: 2,
+              familyId: 1
             },
-            '3': {
-              'genotypeId': 3,
-              'genotypeName': 'testGenotype3',
-              'generationId': 3,
-              'familyId': 2
+            3: {
+              genotypeId: 3,
+              genotypeName: 'testGenotype3',
+              generationId: 3,
+              familyId: 2
             },
-            '4': {
-              'genotypeId': 4,
-              'genotypeName': 'testGenotype4',
-              'generationId': 4,
-              'familyId': 2
+            4: {
+              genotypeId: 4,
+              genotypeName: 'testGenotype4',
+              generationId: 4,
+              familyId: 2
             }
           },
-          'generations': {
-            '1': {
-              'generationId': 1,
-              'generationName': 'F1',
-              'generationParents': [],
-              'familyId': 1
+          generations: {
+            1: {
+              generationId: 1,
+              generationName: 'F1',
+              generationParents: [],
+              familyId: 1
             },
-            '2': {
-              'generationId': 2,
-              'generationName': 'F2',
-              'generationParents': [],
-              'familyId': 1
+            2: {
+              generationId: 2,
+              generationName: 'F2',
+              generationParents: [],
+              familyId: 1
             },
-            '3': {
-              'generationId': 3,
-              'generationName': 'S1',
-              'generationParents': [],
-              'familyId': 2
+            3: {
+              generationId: 3,
+              generationName: 'S1',
+              generationParents: [],
+              familyId: 2
             },
-            '4': {
-              'generationId': 4,
-              'generationName': 'generationWithParents',
-              'generationParents': [1, 2],
-              'familyId': 2
+            4: {
+              generationId: 4,
+              generationName: 'generationWithParents',
+              generationParents: [1, 2],
+              familyId: 2
             }
           },
-          'families': {
-            '1': {
-              'familyId': 1,
-              'familyName': 'testFamily1'
+          families: {
+            1: {
+              familyId: 1,
+              familyName: 'testFamily1'
             },
-            '2': {
-              'familyId': 2,
-              'familyName': 'testFamily2'
+            2: {
+              familyId: 2,
+              familyName: 'testFamily2'
             }
           }
         }
@@ -114,7 +114,7 @@ describe(`Genotype()`, () => {
     it(`should not have an empty families property object if familyName is NOT in options.attributes`, async () => {
       let genotypes = await pj.Genotype.find(
         {
-          'attributes': ['familyId', 'generationName']
+          attributes: ['familyId', 'generationName']
         }
       );
 
@@ -124,7 +124,7 @@ describe(`Genotype()`, () => {
     it(`should not have an empty generations property object if not generationName is in options.attributes`, async () => {
       let genotypes = await pj.Genotype.find(
         {
-          'attributes': ['familyId']
+          attributes: ['familyId']
         }
       );
 
@@ -134,27 +134,27 @@ describe(`Genotype()`, () => {
     it(`should skip x genotypes specified with options.offset and limit the count of results to option.limit`, async () => {
       let genotypes = await pj.Genotype.find(
         {
-          'attributes': ['genotypeName'],
-          'limit': 3,
-          'offset': 2
+          attributes: ['genotypeName'],
+          limit: 3,
+          offset: 2
         }
       );
 
       genotypes.should.deepEqual({
-        'found': 4,
-        'remaining': 0,
-        'genotypes': {
-          '3': {
-            'genotypeId': 3,
-            'genotypeName': 'testGenotype3',
-            'generationId': 3,
-            'familyId': 2
+        found: 4,
+        remaining: 0,
+        genotypes: {
+          3: {
+            genotypeId: 3,
+            genotypeName: 'testGenotype3',
+            generationId: 3,
+            familyId: 2
           },
-          '4': {
-            'genotypeId': 4,
-            'genotypeName': 'testGenotype4',
-            'generationId': 4,
-            'familyId': 2
+          4: {
+            genotypeId: 4,
+            genotypeName: 'testGenotype4',
+            generationId: 4,
+            familyId: 2
           }
         }
       });
@@ -163,22 +163,22 @@ describe(`Genotype()`, () => {
     it(`should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly (for genotype attributes)`, async () => {
       let genotypes = await pj.Genotype.find(
         {
-          'attributes': ['genotypeName'],
-          'where': {
-            'genotypeId': 2
+          attributes: ['genotypeName'],
+          where: {
+            genotypeId: 2
           }
         }
       );
 
       genotypes.should.deepEqual({
-        'found': 1,
-        'remaining': 0,
-        'genotypes': {
-          '2': {
-            'genotypeId': 2,
-            'genotypeName': 'testGenotype2',
-            'generationId': 2,
-            'familyId': 1
+        found: 1,
+        remaining: 0,
+        genotypes: {
+          2: {
+            genotypeId: 2,
+            genotypeName: 'testGenotype2',
+            generationId: 2,
+            familyId: 1
           }
         }
       });
@@ -186,21 +186,21 @@ describe(`Genotype()`, () => {
 
     it(`should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)`, async () => {
       let genotypes = await pj.Genotype.find({
-        'attributes': ['genotypeName'],
-        'where': {
-          'genotypeName': 'testGenotype3'
+        attributes: ['genotypeName'],
+        where: {
+          genotypeName: 'testGenotype3'
         }
       });
 
       genotypes.should.deepEqual({
-        'found': 1,
-        'remaining': 0,
-        'genotypes': {
-          '3': {
-            'genotypeId': 3,
-            'genotypeName': 'testGenotype3',
-            'generationId': 3,
-            'familyId': 2
+        found: 1,
+        remaining: 0,
+        genotypes: {
+          3: {
+            genotypeId: 3,
+            genotypeName: 'testGenotype3',
+            generationId: 3,
+            familyId: 2
           }
         }
       });
@@ -208,27 +208,27 @@ describe(`Genotype()`, () => {
 
     it(`should only return genotypes where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches exactly (for family attributes)`, async () => {
       let genotypes = await pj.Genotype.find({
-        'attributes': ['genotypeName'],
-        'where': {
-          'familyName': 'testFamily1'
+        attributes: ['genotypeName'],
+        where: {
+          familyName: 'testFamily1'
         }
       });
 
       genotypes.should.deepEqual({
-        'found': 2,
-        'remaining': 0,
-        'genotypes': {
-          '1': {
-            'genotypeId': 1,
-            'genotypeName': 'testGenotype1',
-            'generationId': 1,
-            'familyId': 1
+        found: 2,
+        remaining: 0,
+        genotypes: {
+          1: {
+            genotypeId: 1,
+            genotypeName: 'testGenotype1',
+            generationId: 1,
+            familyId: 1
           },
-          '2': {
-            'genotypeId': 2,
-            'genotypeName': 'testGenotype2',
-            'generationId': 2,
-            'familyId': 1
+          2: {
+            genotypeId: 2,
+            genotypeName: 'testGenotype2',
+            generationId: 2,
+            familyId: 1
           }
         }
       });
@@ -237,31 +237,31 @@ describe(`Genotype()`, () => {
     it(`should only return genotypes where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]`, async () => {
       let genotypes = await pj.Genotype.find(
         {
-          'attributes': ['generationParents',
+          attributes: ['generationParents',
             'generationName',
             'genotypeName'],
-          'where': {'generationParents': [1,2]}
+          where: {generationParents: [1,2]}
         }
       );
 
       genotypes.should.deepEqual(
         {
-          'found': 1,
-          'remaining': 0,
-          'genotypes': {
-            '4': {
-              'genotypeId': 4,
-              'genotypeName': 'testGenotype4',
-              'generationId': 4,
-              'familyId': 2
+          found: 1,
+          remaining: 0,
+          genotypes: {
+            4: {
+              genotypeId: 4,
+              genotypeName: 'testGenotype4',
+              generationId: 4,
+              familyId: 2
             }
           },
-          'generations': {
-            '4': {
-              'generationId': 4,
-              'generationName': 'generationWithParents',
-              'generationParents': [1, 2],
-              'familyId': 2
+          generations: {
+            4: {
+              generationId: 4,
+              generationName: 'generationWithParents',
+              generationParents: [1, 2],
+              familyId: 2
             }
           }
         }

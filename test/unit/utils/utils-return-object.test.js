@@ -27,14 +27,14 @@ describe(`utils/utils-return-object`, () => {
     });
 
     it(`should not add family object to returnObject.families if  row.familyName is not set`, () => {
-      UtilsReturnObject.addFamily({'familyId': 42}, returnObject);
+      UtilsReturnObject.addFamily({familyId: 42}, returnObject);
       returnObject.should.deepEqual({
         families: {}
       });
     });
 
     it(`should add family object to returnObject.familys[familyId] if  row.familyName is not defined but forceAdd=true`, () => {
-      UtilsReturnObject.addFamily({'familyId': 42}, returnObject, true);
+      UtilsReturnObject.addFamily({familyId: 42}, returnObject, true);
       returnObject.should.deepEqual({
         families: {
           42: {
@@ -45,7 +45,7 @@ describe(`utils/utils-return-object`, () => {
     });
 
     it(`should not add family to returnObject if familyId is null`, () => {
-      UtilsReturnObject.addFamily({'familyId': null}, returnObject, true);
+      UtilsReturnObject.addFamily({familyId: null}, returnObject, true);
       returnObject.should.deepEqual({
         families: {},
       });
@@ -53,7 +53,7 @@ describe(`utils/utils-return-object`, () => {
 
     it(`should split the row.familyGenerations string into an array of integers`, () => {
       UtilsReturnObject.addFamily(
-        {'familyId': 3, 'familyGenerations': '42,43,1'}, returnObject, true);
+        {familyId: 3, familyGenerations: '42,43,1'}, returnObject, true);
       returnObject.should.deepEqual({
         families: {
           3: {

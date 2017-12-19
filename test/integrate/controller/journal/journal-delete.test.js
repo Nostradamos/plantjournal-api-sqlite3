@@ -61,14 +61,14 @@ describe(`Journal()`, () => {
 
     it(`should delete all journals where journalValue contains sensor`, async () => {
       let deleted = await pj.Journal.delete(
-        {where: {journalType: {'$like': '%sensor%'}}});
+        {where: {journalType: {$like: '%sensor%'}}});
 
       deleted.journals.should.deepEqual([3, 4]);
     });
 
     it(`should not delete anything if no journals match`, async () => {
       let deleted = await pj.Journal.delete(
-        {where: {journalType: {'$like': '_sensor_'}}});
+        {where: {journalType: {$like: '_sensor_'}}});
 
       deleted.journals.should.deepEqual([]);
     });

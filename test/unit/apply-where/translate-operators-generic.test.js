@@ -22,7 +22,7 @@ describe(`TranslateOperatorsGeneric`, () => {
       };
 
       TranslateOperatorsGeneric.callOperatorFuncsAndApplyCriterias({
-        attrOptions: {'$eq': 'test'}
+        attrOptions: {$eq: 'test'}
       });
 
       gotCalled.should.be.true();
@@ -36,7 +36,7 @@ describe(`TranslateOperatorsGeneric`, () => {
       };
 
       TranslateOperatorsGeneric.callOperatorFuncsAndApplyCriterias({
-        attrOptions: {'$neq': 'test'}
+        attrOptions: {$neq: 'test'}
       });
 
       gotCalled.should.be.false();
@@ -50,7 +50,7 @@ describe(`TranslateOperatorsGeneric`, () => {
         };
 
       let self = {
-        attrOptions: {'$eq': 'test'}, squelExpr: squel.expr(),
+        attrOptions: {$eq: 'test'}, squelExpr: squel.expr(),
         type: 'and'};
 
       TranslateOperatorsGeneric.callOperatorFuncsAndApplyCriterias(self);

@@ -14,14 +14,14 @@ describe(`Generation()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({'familyName': 'testFamily1'}); //familyId: 1
-      await pj.Generation.create({'generationName': 'F1', 'familyId': 1}); //generationId: 1
-      await pj.Generation.create({'generationName': 'F2', 'familyId': 1}); //generationId: 2
-      await pj.Family.create({'familyName': 'testFamily2'});  //familyId: 2
-      await pj.Generation.create({'generationName': 'S1', 'familyId': 2}); //generationId: 3
-      await pj.Plant.create({'plantName': 'testPlant1', 'generationId': 1}); //plantId: 1
-      await pj.Plant.create({'plantName': 'testPlant2', 'generationId': 2}); //plantId: 2
-      await pj.Generation.create({'generationName': 'S2', 'familyId': 2, 'generationParents': [1,2]}); //generationId: 4
+      await pj.Family.create({familyName: 'testFamily1'}); //familyId: 1
+      await pj.Generation.create({generationName: 'F1', familyId: 1}); //generationId: 1
+      await pj.Generation.create({generationName: 'F2', familyId: 1}); //generationId: 2
+      await pj.Family.create({familyName: 'testFamily2'});  //familyId: 2
+      await pj.Generation.create({generationName: 'S1', familyId: 2}); //generationId: 3
+      await pj.Plant.create({plantName: 'testPlant1', generationId: 1}); //plantId: 1
+      await pj.Plant.create({plantName: 'testPlant2', generationId: 2}); //plantId: 2
+      await pj.Generation.create({generationName: 'S2', familyId: 2, generationParents: [1,2]}); //generationId: 4
     });
 
     after(async () => {
@@ -44,13 +44,13 @@ describe(`Generation()`, () => {
     });
 
     it(`should throw error if second argument is not an assoc array/object`, async () => {
-      await pj.Generation.update({'generationName': 'newGenName'}, null)
+      await pj.Generation.update({generationName: 'newGenName'}, null)
         .should.be.rejectedWith('Criteria Object has to be an associative array');
     });
 
     it(`should update generation in database and return an array containing the updated generationId`, async () => {
       let updatedGen = await pj.Generation
-        .update({'generationName': 'F1Updated'}, {'where': {'generationId': 1}});
+        .update({generationName: 'F1Updated'}, {where: {generationId: 1}});
 
       updatedGen.should.eql([1]);
 
@@ -59,7 +59,7 @@ describe(`Generation()`, () => {
 
       rowsFam.should.deepEqual(
         [
-          {'familyId': 1, 'familyName': 'testFamily1'}, {'familyId': 2, 'familyName': 'testFamily2'}
+          {familyId: 1, familyName: 'testFamily1'}, {familyId: 2, familyName: 'testFamily2'}
         ]
       );
 
@@ -67,10 +67,10 @@ describe(`Generation()`, () => {
 
       rowsGen.should.deepEqual(
         [
-          {'generationId': 1, 'generationName': 'F1Updated'},
-          {'generationId': 2, 'generationName': 'F2'},
-          {'generationId': 3, 'generationName': 'S1'},
-          {'generationId': 4, 'generationName': 'S2'}
+          {generationId: 1, generationName: 'F1Updated'},
+          {generationId: 2, generationName: 'F2'},
+          {generationId: 3, generationName: 'S1'},
+          {generationId: 4, generationName: 'S2'}
 
         ]
       );
@@ -78,22 +78,22 @@ describe(`Generation()`, () => {
 
     it(`should also be possible to find multiple generations to update based on family attributes`, async () => {
       let updatedGen = await pj.Generation
-        .update({'generationName': 'NoGoodGenName'}, {'where': {'familyId': 2}});
+        .update({generationName: 'NoGoodGenName'}, {where: {familyId: 2}});
 
       updatedGen.should.eql([3,4]);
     });
 
     it(`should also be possible to limit/offset generations to update when found multiple`, async () => {
       let updatedGen = await pj.Generation
-        .update({'generationName': 'NoGoodGenName'}, {'where': {'familyId': 1}, 'offset': 1});
+        .update({generationName: 'NoGoodGenName'}, {where: {familyId: 1}, offset: 1});
 
       updatedGen.should.eql([2]);
     });
 
     it(`should not be possible to manually change generationModifiedAt`, async () => {
       let updatedGenerations = await pj.Generation.update(
-        {'generationModifiedAt': 1},
-        {'where': {'generationId': 1}}
+        {generationModifiedAt: 1},
+        {where: {generationId: 1}}
       );
 
       updatedGenerations.length.should.eql(0);
@@ -107,8 +107,8 @@ describe(`Generation()`, () => {
 
     it(`should not be possible to manually change generationCreatedAt`, async () => {
       let updatedGenerations = await pj.Generation.update(
-        {'generationCreatedAt': 1},
-        {'where': {'generationId': 1}}
+        {generationCreatedAt: 1},
+        {where: {generationId: 1}}
       );
 
       updatedGenerations.length.should.eql(0);
@@ -122,15 +122,15 @@ describe(`Generation()`, () => {
 
     it(`should throw error if familyId to update is invalid`, async () => {
       await pj.Generation.update(
-        {'familyId': 42},
-        {'where': {'generationId': 1}}
+        {familyId: 42},
+        {where: {generationId: 1}}
       ).should.be.rejectedWith('update.familyId does not reference an existing Family');
     });
 
     it(`should update familyId if not invalid`, async () => {
       let updatedGenerations = await pj.Generation.update(
-        {'familyId': 2},
-        {'where': {'generationId': 1}}
+        {familyId: 2},
+        {where: {generationId: 1}}
       );
 
       updatedGenerations.should.eql([1]);
@@ -145,8 +145,8 @@ describe(`Generation()`, () => {
 
     it(`should be possible to update generationParents`, async () => {
       let updatedGenerations = await pj.Generation.update(
-        {'generationParents': [1, 2]},
-        {'where': {'generationId': 2}}
+        {generationParents: [1, 2]},
+        {where: {generationId: 2}}
       );
 
       updatedGenerations.should.eql([2]);
@@ -157,15 +157,15 @@ describe(`Generation()`, () => {
 
       rowsParents.should.eql(
         [
-          {'generationId': 2, 'plantId': 1}, {'generationId': 2, 'plantId': 2}
+          {generationId: 2, plantId: 1}, {generationId: 2, plantId: 2}
         ]
       );
     });
 
     it(`should throw error and rollback if generationParents are invalid`, async () => {
       await pj.Generation.update(
-        {'generationParents': [5,6]},
-        {'where': {'generationId': 4}}
+        {generationParents: [5,6]},
+        {where: {generationId: 4}}
       ).should.be.rejectedWith('update.generationParents does not reference to existing Plants. At least one reference is invalid.');
 
       let rowsParents = await sqlite.all(
@@ -174,7 +174,7 @@ describe(`Generation()`, () => {
 
       rowsParents.should.eql(
         [
-          {'generationId': 4, 'plantId': 1}, {'generationId': 4, 'plantId': 2}
+          {generationId: 4, plantId: 1}, {generationId: 4, plantId: 2}
         ]
       );
     });

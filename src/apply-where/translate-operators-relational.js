@@ -228,16 +228,16 @@ class TranslateOperatorsRelational extends TranslateOperatorsGeneric {
  * @type {Object<String, Function>}
  */
 TranslateOperatorsRelational.OPERATORS = {
-  '$eq': TranslateOperatorsRelational.operatorEquals,
-  '$neq': TranslateOperatorsRelational.operatorNotEquals,
-  '$like': TranslateOperatorsRelational.operatorLike,
-  '$nlike': TranslateOperatorsRelational.operatorNotLike,
-  '$gt': TranslateOperatorsRelational.operatorGreatherThan,
-  '$gte': TranslateOperatorsRelational.operatorGreatherThanEqual,
-  '$lt': TranslateOperatorsRelational.operatorLowerThan,
-  '$lte': TranslateOperatorsRelational.operatorLowerThanEqual,
-  '$in': TranslateOperatorsRelational.operatorIn,
-  '$nin': TranslateOperatorsRelational.operatorNotIn
+  $eq: TranslateOperatorsRelational.operatorEquals,
+  $neq: TranslateOperatorsRelational.operatorNotEquals,
+  $like: TranslateOperatorsRelational.operatorLike,
+  $nlike: TranslateOperatorsRelational.operatorNotLike,
+  $gt: TranslateOperatorsRelational.operatorGreatherThan,
+  $gte: TranslateOperatorsRelational.operatorGreatherThanEqual,
+  $lt: TranslateOperatorsRelational.operatorLowerThan,
+  $lte: TranslateOperatorsRelational.operatorLowerThanEqual,
+  $in: TranslateOperatorsRelational.operatorIn,
+  $nin: TranslateOperatorsRelational.operatorNotIn
 };
 
 module.exports = TranslateOperatorsRelational;

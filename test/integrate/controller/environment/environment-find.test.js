@@ -31,22 +31,22 @@ describe(`Environment()`, () => {
         found: 4,
         remaining: 0,
         environments: {
-          '1': {
+          1: {
             environmentId: 1,
             environmentName: 'Greenhouse #1',
             environmentDescription: 'This is the first greenhouse in my garden.'
           },
-          '2': {
+          2: {
             environmentId: 2,
             environmentName: 'Greenhouse #2',
             environmentDescription: 'This is the second greenhouse in my garden.'
           },
-          '3': {
+          3: {
             environmentId: 3,
             environmentName: 'Growbox #1',
             environmentDescription: 'Small growbox to keep mother plants all over the year.'
           },
-          '4': {
+          4: {
             environmentId: 4,
             environmentName: 'Allotment garden #1',
             environmentDescription: 'Allotment garden where i usually plant all food producing plants or test new varities.'

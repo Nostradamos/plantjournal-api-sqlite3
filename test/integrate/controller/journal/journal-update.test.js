@@ -45,7 +45,7 @@ describe(`Journal()`, () => {
     });
 
     it(`should throw error if second argument is not an assoc array/object`, async () => {
-      await pj.Journal.update({'environmentName': 'newEnvName'}, null)
+      await pj.Journal.update({environmentName: 'newEnvName'}, null)
         .should.be.rejectedWith(
           'Criteria Object has to be an associative array');
     });

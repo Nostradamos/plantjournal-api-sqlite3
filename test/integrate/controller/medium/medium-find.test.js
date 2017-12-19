@@ -36,33 +36,33 @@ describe(`Medium()`, () => {
 
       mediums.should.containDeep(
         {
-          'found': 3,
-          'remaining': 0,
-          'mediums': {
-            '1': {
-              'mediumId': 1,
-              'mediumName': 'testMed1',
-              'mediumDescription': 'medium test',
-              'environmentId': 1,
+          found: 3,
+          remaining: 0,
+          mediums: {
+            1: {
+              mediumId: 1,
+              mediumName: 'testMed1',
+              mediumDescription: 'medium test',
+              environmentId: 1,
             },
-            '2': {
-              'mediumId': 2,
-              'mediumName': 'testMed2',
-              'mediumDescription': 'another test',
-              'environmentId': 1,
+            2: {
+              mediumId: 2,
+              mediumName: 'testMed2',
+              mediumDescription: 'another test',
+              environmentId: 1,
             },
-            '3': {
-              'mediumId': 3,
-              'mediumName': 'testMed3',
-              'mediumDescription': '',
-              'environmentId': null
+            3: {
+              mediumId: 3,
+              mediumName: 'testMed3',
+              mediumDescription: '',
+              environmentId: null
             }
           },
-          'environments': {
-            '1': {
-              'environmentId': 1,
-              'environmentName': 'testEnv1',
-              'environmentDescription': 'this is a test',
+          environments: {
+            1: {
+              environmentId: 1,
+              environmentName: 'testEnv1',
+              environmentDescription: 'this is a test',
             },
           }
         }
@@ -79,20 +79,20 @@ describe(`Medium()`, () => {
 
       mediums.should.containDeep(
         {
-          'found': 3,
-          'remaining': 0,
-          'mediums': {
-            '2': {
-              'mediumId': 2,
-              'mediumName': 'testMed2',
-              'mediumDescription': 'another test',
-              'environmentId': 1,
+          found: 3,
+          remaining: 0,
+          mediums: {
+            2: {
+              mediumId: 2,
+              mediumName: 'testMed2',
+              mediumDescription: 'another test',
+              environmentId: 1,
             },
-            '3': {
-              'mediumId': 3,
-              'mediumName': 'testMed3',
-              'mediumDescription': '',
-              'environmentId': null
+            3: {
+              mediumId: 3,
+              mediumName: 'testMed3',
+              mediumDescription: '',
+              environmentId: null
             }
           }
         }
@@ -105,20 +105,20 @@ describe(`Medium()`, () => {
 
       mediums.should.containDeep(
         {
-          'found': 2,
-          'remaining': 0,
-          'mediums': {
-            '1': {
-              'mediumId': 1,
-              'mediumName': 'testMed1',
-              'mediumDescription': 'medium test',
-              'environmentId': 1,
+          found: 2,
+          remaining: 0,
+          mediums: {
+            1: {
+              mediumId: 1,
+              mediumName: 'testMed1',
+              mediumDescription: 'medium test',
+              environmentId: 1,
             },
-            '2': {
-              'mediumId': 2,
-              'mediumName': 'testMed2',
-              'mediumDescription': 'another test',
-              'environmentId': 1,
+            2: {
+              mediumId: 2,
+              mediumName: 'testMed2',
+              mediumDescription: 'another test',
+              environmentId: 1,
             },
           }
         }
@@ -131,14 +131,14 @@ describe(`Medium()`, () => {
 
       mediums.should.containDeep(
         {
-          'found': 1,
-          'remaining': 0,
-          'mediums': {
-            '3': {
-              'mediumId': 3,
-              'mediumName': 'testMed3',
-              'mediumDescription': '',
-              'environmentId': null
+          found: 1,
+          remaining: 0,
+          mediums: {
+            3: {
+              mediumId: 3,
+              mediumName: 'testMed3',
+              mediumDescription: '',
+              environmentId: null
             }
           }
         }

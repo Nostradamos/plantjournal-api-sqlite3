@@ -46,16 +46,16 @@ describe(`Genotype()`, () => {
     it(`should delete genotype specified in criteria.where.generationId referenced plants`, async () => {
       let deletedGeno = await pj.Genotype.delete(
         {
-          'where': {
-            'genotypeId': 1
+          where: {
+            genotypeId: 1
           }
         }
       );
 
       deletedGeno.should.deepEqual(
         {
-          'genotypes': [1],
-          'plants': [1, 4]
+          genotypes: [1],
+          plants: [1, 4]
         }
       );
 
@@ -64,10 +64,10 @@ describe(`Genotype()`, () => {
 
       rowsFam.should.deepEqual(
         [
-          {'familyId': 1, 'familyName': 'test1'},
-          {'familyId': 2, 'familyName': 'testB'},
-          {'familyId': 3, 'familyName': 'test3'},
-          {'familyId': 4, 'familyName': 'testD'}
+          {familyId: 1, familyName: 'test1'},
+          {familyId: 2, familyName: 'testB'},
+          {familyId: 3, familyName: 'test3'},
+          {familyId: 4, familyName: 'testD'}
         ]
       );
 
@@ -75,10 +75,10 @@ describe(`Genotype()`, () => {
 
       rowsGen.should.deepEqual(
         [
-          {'generationId': 1, 'generationName': 'testGen1'},
-          {'generationId': 2, 'generationName': 'testGen2'},
-          {'generationId': 3, 'generationName': 'testGen3'},
-          {'generationId': 4, 'generationName': 'testGen4'}
+          {generationId: 1, generationName: 'testGen1'},
+          {generationId: 2, generationName: 'testGen2'},
+          {generationId: 3, generationName: 'testGen3'},
+          {generationId: 4, generationName: 'testGen4'}
         ]
       );
 
@@ -86,10 +86,10 @@ describe(`Genotype()`, () => {
 
       rowsGeno.should.deepEqual(
         [
-          {'genotypeId': 2, 'genotypeName': ''},
-          {'genotypeId': 3, 'genotypeName': ''},
-          {'genotypeId': 4, 'genotypeName': 'testGeno1'},
-          {'genotypeId': 5, 'genotypeName': 'testGeno2'}
+          {genotypeId: 2, genotypeName: ''},
+          {genotypeId: 3, genotypeName: ''},
+          {genotypeId: 4, genotypeName: 'testGeno1'},
+          {genotypeId: 5, genotypeName: 'testGeno2'}
         ]
       );
 
@@ -97,7 +97,7 @@ describe(`Genotype()`, () => {
 
       rowsPlant.should.deepEqual(
         [
-          {'plantId': 2, 'plantName': 'blubb2'}, {'plantId': 3, 'plantName': 'blubb'}
+          {plantId: 2, plantName: 'blubb2'}, {plantId: 3, plantName: 'blubb'}
         ]
       );
     });

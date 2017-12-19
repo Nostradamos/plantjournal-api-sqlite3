@@ -33,8 +33,8 @@ describe(`Medium()`, () => {
     it(`should delete environment with matching id and related mediums and plants`, async () => {
       let deleted = await pj.Medium.delete({where: {mediumId: 1}});
       deleted.should.deepEqual({
-        'mediums': [1],
-        'plants': [1, 2]
+        mediums: [1],
+        plants: [1, 2]
       });
 
       // Make sure we deleted also from database

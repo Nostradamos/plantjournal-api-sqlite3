@@ -534,19 +534,19 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
  * @type {Object<String, Function>}
  */
 TranslateOperatorsJournalValue.OPERATORS = {
-  '$eq': TranslateOperatorsJournalValue.operatorEquals,
-  '$neq': TranslateOperatorsJournalValue.operatorNotEquals,
-  '$like': TranslateOperatorsJournalValue.operatorLike,
-  '$nlike': TranslateOperatorsJournalValue.operatorNotLike,
-  '$gt': TranslateOperatorsJournalValue.operatorGreatherThan,
-  '$gte': TranslateOperatorsJournalValue.operatorGreatherThanEqual,
-  '$lt': TranslateOperatorsJournalValue.operatorLowerThan,
-  '$lte': TranslateOperatorsJournalValue.operatorLowerThanEqual,
-  '$in': TranslateOperatorsJournalValue.operatorIn,
-  '$nin': TranslateOperatorsJournalValue.operatorNotIn,
-  '$has': TranslateOperatorsJournalValue.operatorHas,
-  '$nhas': TranslateOperatorsJournalValue.operatorNotHas,
-  '$contains': TranslateOperatorsJournalValue.operatorContains,
+  $eq: TranslateOperatorsJournalValue.operatorEquals,
+  $neq: TranslateOperatorsJournalValue.operatorNotEquals,
+  $like: TranslateOperatorsJournalValue.operatorLike,
+  $nlike: TranslateOperatorsJournalValue.operatorNotLike,
+  $gt: TranslateOperatorsJournalValue.operatorGreatherThan,
+  $gte: TranslateOperatorsJournalValue.operatorGreatherThanEqual,
+  $lt: TranslateOperatorsJournalValue.operatorLowerThan,
+  $lte: TranslateOperatorsJournalValue.operatorLowerThanEqual,
+  $in: TranslateOperatorsJournalValue.operatorIn,
+  $nin: TranslateOperatorsJournalValue.operatorNotIn,
+  $has: TranslateOperatorsJournalValue.operatorHas,
+  $nhas: TranslateOperatorsJournalValue.operatorNotHas,
+  $contains: TranslateOperatorsJournalValue.operatorContains,
   /*'$ncontains': TranslateOperatorsJournalValue.operatorNotContains*/
 };
 

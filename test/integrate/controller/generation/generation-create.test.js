@@ -19,28 +19,28 @@ describe(`Generation()`, () => {
 
     it(`should throw error if options.familyId is not an integer`, async () => {
       await pj.Generation.create(
-        {'generationName': 'testGeneration2', 'familyId': '1'})
+        {generationName: 'testGeneration2', familyId: '1'})
         .should.be.rejectedWith('options.familyId has to be an integer');
     });
 
     it(`should throw error if options.generationName is not set`, async () => {
-      await pj.Generation.create({'familyId': 1})
+      await pj.Generation.create({familyId: 1})
         .should.be.rejectedWith('options.generationName has to be set');
     });
 
     it(`should throw error if options.generationName is not a string`, async () => {
-      await pj.Generation.create({'familyId': 1, 'generationName': 1})
+      await pj.Generation.create({familyId: 1, generationName: 1})
         .should.be.rejectedWith('options.generationName has to be a string');
     });
 
     it(`should throw error if generationParents is set but not an array`, async () => {
-      await pj.Generation.create({'familyId': 1, 'generationName': 'test', 'generationParents': {}})
+      await pj.Generation.create({familyId: 1, generationName: 'test', generationParents: {}})
         .should.be.rejectedWith('options.generationParents has to be an array of integers');
     });
 
     it(`should throw Error if familyId does not reference an entry in families`, async () => {
       await pj.Generation.create(
-        {'familyId': 1337, 'generationName': 'testGeneration3'})
+        {familyId: 1337, generationName: 'testGeneration3'})
         .should.be.rejectedWith('options.familyId does not reference an existing Family');
 
       let result = await sqlite.all(
@@ -67,7 +67,7 @@ describe(`Generation()`, () => {
     });
 
     it(`should throw Error if options.familyId is not set`, async () => {
-      await pj.Generation.create({'generationName': 'testGeneration2'})
+      await pj.Generation.create({generationName: 'testGeneration2'})
         .should.be.rejectedWith('options.familyId has to be set');
     });
 
@@ -87,15 +87,15 @@ describe(`Generation()`, () => {
       createdAt.should.eql(modifiedAt);
       generation.should.deepEqual({
         generations: {
-          '1': {
-            'generationId': 1,
-            'generationDescription': 'test description',
-            'generationName': 'testGeneration',
-            'generationParents': [],
-            'generationGenotypes': [],
-            'familyId': 1,
-            'generationCreatedAt': createdAt,
-            'generationModifiedAt': modifiedAt
+          1: {
+            generationId: 1,
+            generationDescription: 'test description',
+            generationName: 'testGeneration',
+            generationParents: [],
+            generationGenotypes: [],
+            familyId: 1,
+            generationCreatedAt: createdAt,
+            generationModifiedAt: modifiedAt
           }
         }
       });
@@ -147,9 +147,9 @@ describe(`Generation()`, () => {
     it(`should also add parents if options.generationParents is specified`, async () => {
       let generation = await pj.Generation.create(
         {
-          'familyId': 1,
-          'generationName': 'testWithParents',
-          'generationParents': [1,2]
+          familyId: 1,
+          generationName: 'testWithParents',
+          generationParents: [1,2]
         }
       );
       let [createdAt, modifiedAt] = [
@@ -157,16 +157,16 @@ describe(`Generation()`, () => {
         generation.generations[2].generationModifiedAt];
 
       generation.should.deepEqual({
-        'generations': {
-          '2': {
-            'generationId': 2,
-            'generationDescription': '',
-            'generationName': 'testWithParents',
-            'generationParents': [1,2],
-            'generationGenotypes': [],
-            'generationCreatedAt': createdAt,
-            'generationModifiedAt': modifiedAt,
-            'familyId': 1
+        generations: {
+          2: {
+            generationId: 2,
+            generationDescription: '',
+            generationName: 'testWithParents',
+            generationParents: [1,2],
+            generationGenotypes: [],
+            generationCreatedAt: createdAt,
+            generationModifiedAt: modifiedAt,
+            familyId: 1
           }
         }
       });
@@ -174,8 +174,8 @@ describe(`Generation()`, () => {
 
       rows.should.deepEqual(
         [
-          {'parentId': 1, 'generationId': 2, 'plantId': 1},
-          {'parentId': 2, 'generationId': 2, 'plantId': 2}
+          {parentId: 1, generationId: 2, plantId: 1},
+          {parentId: 2, generationId: 2, plantId: 2}
         ]
       );
     });
@@ -183,9 +183,9 @@ describe(`Generation()`, () => {
     it(`should throw error if options.generationParents does not reference existing plants and not add generation`, async () => {
       await pj.Generation.create(
         {
-          'familyId': 1,
-          'generationName': 'testWithParents2',
-          'generationParents': [1, 42]
+          familyId: 1,
+          generationName: 'testWithParents2',
+          generationParents: [1, 42]
         }
       ).should.be.rejectedWith(
         'options.generationParents contains at least one plantId which does not reference an existing plant'

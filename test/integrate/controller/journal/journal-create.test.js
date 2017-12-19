@@ -80,14 +80,14 @@ describe(`Journal()`, () => {
       ];
 
       journal.journals.should.deepEqual({
-        '1': {
-          'journalId': 1,
-          'journalTimestamp': 1111,
-          'journalType': 'log',
-          'journalValue': 'test test',
-          'journalCreatedAt': createdAt,
-          'journalModifiedAt': modifiedAt,
-          'plantId': 1
+        1: {
+          journalId: 1,
+          journalTimestamp: 1111,
+          journalType: 'log',
+          journalValue: 'test test',
+          journalCreatedAt: createdAt,
+          journalModifiedAt: modifiedAt,
+          plantId: 1
         }
       });
 
@@ -112,10 +112,10 @@ describe(`Journal()`, () => {
       );
 
       journal.journals.should.containDeep({
-        '1': {
-          'journalId': 1,
-          'journalType': 'log',
-          'journalValue': true,
+        1: {
+          journalId: 1,
+          journalType: 'log',
+          journalValue: true,
         }
       });
 
@@ -138,10 +138,10 @@ describe(`Journal()`, () => {
       );
 
       journal.journals.should.containDeep({
-        '1': {
-          'journalId': 1,
-          'journalType': 'watering',
-          'journalValue': {
+        1: {
+          journalId: 1,
+          journalType: 'watering',
+          journalValue: {
             foo: 'bar'
           },
         }
@@ -165,10 +165,10 @@ describe(`Journal()`, () => {
       );
 
       journal.journals.should.containDeep({
-        '1': {
-          'journalId': 1,
-          'journalType': 'test',
-          'journalValue': journalValue,
+        1: {
+          journalId: 1,
+          journalType: 'test',
+          journalValue: journalValue,
         }
       });
       let rowsJournals = await sqlite.all(

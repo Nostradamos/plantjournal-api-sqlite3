@@ -61,118 +61,118 @@ describe(`Plant()`, () => {
 
       plants.should.containDeep(
         {
-          'found': 5,
-          'remaining': 0,
-          'plants': {
-            '1': {
-              'plantId': 1,
-              'plantName': 'testPlant1',
-              'plantClonedFrom': null,
-              'plantClones': [],
-              'plantSex': null,
-              'genotypeId': 1,
-              'mediumId': null,
-              'generationId': 1,
-              'familyId': 1
+          found: 5,
+          remaining: 0,
+          plants: {
+            1: {
+              plantId: 1,
+              plantName: 'testPlant1',
+              plantClonedFrom: null,
+              plantClones: [],
+              plantSex: null,
+              genotypeId: 1,
+              mediumId: null,
+              generationId: 1,
+              familyId: 1
             },
-            '2': {
-              'plantId': 2,
-              'plantName': 'testPlant2',
-              'plantClonedFrom': null,
-              'plantClones': [],
-              'plantSex': 'male',
-              'genotypeId': 2,
-              'mediumId': null,
-              'generationId': 2,
-              'familyId': 1
+            2: {
+              plantId: 2,
+              plantName: 'testPlant2',
+              plantClonedFrom: null,
+              plantClones: [],
+              plantSex: 'male',
+              genotypeId: 2,
+              mediumId: null,
+              generationId: 2,
+              familyId: 1
             },
-            '3': {
-              'plantId': 3,
-              'plantName': 'testPlant3',
-              'plantClonedFrom': null,
-              'plantClones': [4],
-              'plantSex': 'male',
-              'genotypeId': 3,
-              'mediumId': null,
-              'generationId': 3,
-              'familyId': 2
+            3: {
+              plantId: 3,
+              plantName: 'testPlant3',
+              plantClonedFrom: null,
+              plantClones: [4],
+              plantSex: 'male',
+              genotypeId: 3,
+              mediumId: null,
+              generationId: 3,
+              familyId: 2
             },
-            '4': {
-              'plantId': 4,
-              'plantName': 'testPlant4',
-              'plantClonedFrom': 3,
-              'plantSex': 'female',
-              'genotypeId': 3,
-              'mediumId': null,
-              'generationId': 3,
-              'familyId': 2
+            4: {
+              plantId: 4,
+              plantName: 'testPlant4',
+              plantClonedFrom: 3,
+              plantSex: 'female',
+              genotypeId: 3,
+              mediumId: null,
+              generationId: 3,
+              familyId: 2
             },
-            '5': {
-              'plantId': 5,
-              'plantName': 'testPlant5',
-              'plantClonedFrom': null,
-              'plantClones': [],
-              'plantSex': null,
-              'genotypeId': 4,
-              'mediumId': null,
-              'generationId': 4,
-              'familyId': 2
+            5: {
+              plantId: 5,
+              plantName: 'testPlant5',
+              plantClonedFrom: null,
+              plantClones: [],
+              plantSex: null,
+              genotypeId: 4,
+              mediumId: null,
+              generationId: 4,
+              familyId: 2
             }
           },
-          'genotypes': {
-            '1': {
-              'genotypeId': 1,
-              'genotypeName': 'testGenotype1',
-              'generationId': 1,
-              'familyId': 1
+          genotypes: {
+            1: {
+              genotypeId: 1,
+              genotypeName: 'testGenotype1',
+              generationId: 1,
+              familyId: 1
             },
-            '2': {
-              'genotypeId': 2,
-              'genotypeName': 'testGenotype2',
-              'generationId': 2,
-              'familyId': 1
+            2: {
+              genotypeId: 2,
+              genotypeName: 'testGenotype2',
+              generationId: 2,
+              familyId: 1
             },
-            '3': {
-              'genotypeId': 3,
-              'genotypeName': 'testGenotype3',
-              'generationId': 3,
-              'familyId': 2
+            3: {
+              genotypeId: 3,
+              genotypeName: 'testGenotype3',
+              generationId: 3,
+              familyId: 2
             }
           },
-          'generations': {
-            '1': {
-              'generationId': 1,
-              'generationName': 'F1',
-              'generationParents': [],
-              'familyId': 1
+          generations: {
+            1: {
+              generationId: 1,
+              generationName: 'F1',
+              generationParents: [],
+              familyId: 1
             },
-            '2': {
-              'generationId': 2,
-              'generationName': 'F2',
-              'generationParents': [],
-              'familyId': 1
+            2: {
+              generationId: 2,
+              generationName: 'F2',
+              generationParents: [],
+              familyId: 1
             },
-            '3': {
-              'generationId': 3,
-              'generationName': 'S1',
-              'generationParents': [1, 2],
-              'familyId': 2
+            3: {
+              generationId: 3,
+              generationName: 'S1',
+              generationParents: [1, 2],
+              familyId: 2
             },
-            '4': {
-              'generationId': 4,
-              'generationName': 'S1 #2',
-              'generationParents': [1, 3],
-              'familyId': 2
+            4: {
+              generationId: 4,
+              generationName: 'S1 #2',
+              generationParents: [1, 3],
+              familyId: 2
             }
           },
-          'families': {
-            '1': {
-              'familyId': 1,
-              'familyName': 'testFamily1'
+          families: {
+            1: {
+              familyId: 1,
+              familyName: 'testFamily1'
             },
-            '2': {
-              'familyId': 2,
-              'familyName': 'testFamily2'
+            2: {
+              familyId: 2,
+              familyName: 'testFamily2'
             }
           }
         }
@@ -191,7 +191,7 @@ describe(`Plant()`, () => {
     it(`should not have an empty families property object if familyName is NOT in options.attributes`, async () => {
       let plants = await pj.Plant.find(
         {
-          'attributes': ['familyId',
+          attributes: ['familyId',
             'generationName',
             'genotypeName']
         }
@@ -203,7 +203,7 @@ describe(`Plant()`, () => {
     it(`should not have an empty generations property object if generationName is NOT in options.attributes`, async () => {
       let plants = await pj.Plant.find(
         {
-          'attributes': ['familyId', 'genotypeName']
+          attributes: ['familyId', 'genotypeName']
         }
       );
 
@@ -213,7 +213,7 @@ describe(`Plant()`, () => {
     it(`should not have an empty genotypes object if phenotypeName is NOT in options.attributes`, async () => {
       let plants = await pj.Plant.find(
         {
-          'attributes': ['familyId']
+          attributes: ['familyId']
         }
       );
 
@@ -222,80 +222,79 @@ describe(`Plant()`, () => {
 
     it(`should skip the first 3 plants if options.offset = 3 and limit plants to 1 if options.limit=1`, async () => {
       let plants = await pj.Plant.find(
-        {'offset': 2, 'limit': 1, 'attributes': ['plantName']});
+        {offset: 2, limit: 1, attributes: ['plantName']});
 
       plants.should.containDeep({
-        'found': 5,
-        'remaining': 2,
-        'plants': {
-          '3': {
-            'plantId': 3,
-            'plantName': 'testPlant3',
-            'genotypeId': 3,
-            'generationId': 3,
-            'familyId': 2
+        found: 5,
+        remaining: 2,
+        plants: {
+          3: {
+            plantId: 3,
+            plantName: 'testPlant3',
+            genotypeId: 3,
+            generationId: 3,
+            familyId: 2
           }
         }
       });
     });
 
     it(`should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)`, async () => {
-      let plants = await pj.Plant.find({'where': {'plantName': 'testPlant3'}, 'attributes': ['plantId']});
+      let plants = await pj.Plant.find({where: {plantName: 'testPlant3'}, attributes: ['plantId']});
 
       plants.should.containDeep({
-        'found': 1,
-        'remaining': 0,
-        'plants': {
-          '3': {'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2}
+        found: 1,
+        remaining: 0,
+        plants: {
+          3: {plantId: 3, genotypeId: 3, generationId: 3, familyId: 2}
         }
-
       });
     });
 
     it(`should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)`, async () => {
-      let plants = await pj.Plant.find({'where': {'genotypeName': 'testGenotype3'}, 'attributes': ['plantId']});
+      let plants = await pj.Plant.find({where: {genotypeName: 'testGenotype3'}, attributes: ['plantId']});
 
       plants.should.containDeep({
-        'found': 2,
-        'remaining': 0,
-        'plants': {
-          '3': {'plantId': 3, 'genotypeId': 3, 'generationId': 3, 'familyId': 2},
-          '4': {'plantId': 4, 'genotypeId': 3, 'generationId': 3, 'familyId': 2}
+        found: 2,
+        remaining: 0,
+        plants: {
+          3: {plantId: 3, genotypeId: 3, generationId: 3, familyId: 2},
+          4: {plantId: 4, genotypeId: 3, generationId: 3, familyId: 2}
         }
       });
     });
 
     it(`should only return plants where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]`, async () => {
-      let plants = await pj.Plant.find({'where': {'generationParents': [1,2]}, 'attributes': ['plantId',
+      let plants = await pj.Plant.find({where: {generationParents: [1,2]}, attributes: ['plantId',
         'plantName',
         'generationParents',
         'generationName']});
 
       plants.should.containDeep({
-        'found': 2,
-        'remaining': 0,
-        'plants': {
-          '3': {
-            'plantId': 3,
-            'plantName': 'testPlant3',
-            'genotypeId': 3,
-            'generationId': 3,
-            'familyId': 2
+        found: 2,
+        remaining: 0,
+        plants: {
+          3: {
+            plantId: 3,
+            plantName: 'testPlant3',
+            genotypeId: 3,
+            generationId: 3,
+            familyId: 2
           },
-          '4': {
-            'plantId': 4,
-            'plantName': 'testPlant4',
-            'genotypeId': 3,
-            'generationId': 3,
-            'familyId': 2
+          4: {
+            plantId: 4,
+            plantName: 'testPlant4',
+            genotypeId: 3,
+            generationId: 3,
+            familyId: 2
           }
         },
-        'generations': {
-          '3': {
-            'generationId': 3,
-            'generationName': 'S1',
-            'generationParents': [1, 2],
-            'familyId': 2
+        generations: {
+          3: {
+            generationId: 3,
+            generationName: 'S1',
+            generationParents: [1, 2],
+            familyId: 2
           }
         }
       });
@@ -304,11 +303,11 @@ describe(`Plant()`, () => {
     it(`should be possible to find plants where parents are [1,2] OR [1,3]`, async () => {
       let plants = await pj.Plant.find(
         {
-          'where':
-                        {'generationParents': [1,2],
-                          '$or': {'generationParents': [1,3]}
+          where:
+                        {generationParents: [1,2],
+                          $or: {generationParents: [1,3]}
                         },
-          'attributes': [
+          attributes: [
             'plantName',
             'generationParents',
             'generationName',
@@ -317,43 +316,43 @@ describe(`Plant()`, () => {
       );
 
       plants.should.containDeep({
-        'found': 3,
-        'remaining': 0,
-        'plants': {
-          '3': {
-            'plantId': 3,
-            'plantName': 'testPlant3',
-            'genotypeId': 3,
-            'generationId': 3,
-            'familyId': 2,
+        found: 3,
+        remaining: 0,
+        plants: {
+          3: {
+            plantId: 3,
+            plantName: 'testPlant3',
+            genotypeId: 3,
+            generationId: 3,
+            familyId: 2,
           },
-          '4': {
-            'plantId': 4,
-            'plantName': 'testPlant4',
-            'genotypeId': 3,
-            'generationId': 3,
-            'familyId': 2
+          4: {
+            plantId: 4,
+            plantName: 'testPlant4',
+            genotypeId: 3,
+            generationId: 3,
+            familyId: 2
           },
-          '5': {
-            'plantId': 5,
-            'plantName': 'testPlant5',
-            'genotypeId': 4,
-            'generationId': 4,
-            'familyId': 2
+          5: {
+            plantId: 5,
+            plantName: 'testPlant5',
+            genotypeId: 4,
+            generationId: 4,
+            familyId: 2
           }
         },
-        'generations': {
-          '3': {
-            'generationId': 3,
-            'generationName': 'S1',
-            'generationParents': [1, 2],
-            'familyId': 2
+        generations: {
+          3: {
+            generationId: 3,
+            generationName: 'S1',
+            generationParents: [1, 2],
+            familyId: 2
           },
-          '4': {
-            'generationId': 4,
-            'generationName': 'S1 #2',
-            'generationParents': [1, 3],
-            'familyId': 2
+          4: {
+            generationId: 4,
+            generationName: 'S1 #2',
+            generationParents: [1, 3],
+            familyId: 2
           }
         }
       });

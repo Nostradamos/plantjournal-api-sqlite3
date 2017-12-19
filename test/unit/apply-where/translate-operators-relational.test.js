@@ -18,7 +18,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR = OPEARTOROPTIONS expression for $eq`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentName', {'$eq': 'TestEnvironment420'},
+        {}, 'environmentName', {$eq: 'TestEnvironment420'},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.sqlEql(
@@ -28,7 +28,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR != OPEARTOROPTIONS expression for $neq`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentName', {'$neq': 'TestEnvironment420'},
+        {}, 'environmentName', {$neq: 'TestEnvironment420'},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.sqlEql(
@@ -38,7 +38,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR LIKE OPEARTOROPTIONS expression for $like`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentName', {'$like': '_estEnvironment420'},
+        {}, 'environmentName', {$like: '_estEnvironment420'},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.sqlEql(
@@ -48,7 +48,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR NOT LIKE OPEARTOROPTIONS expression for $nlike`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentName', {'$nlike': '_estEnvironment420'},
+        {}, 'environmentName', {$nlike: '_estEnvironment420'},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.sqlEql(
@@ -58,7 +58,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR > OPEARTOROPTIONS expression for $gt`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentId', {'$gt': 3},
+        {}, 'environmentId', {$gt: 3},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.eql(
@@ -67,7 +67,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR >= OPEARTOROPTIONS expression for $gte`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentId', {'$gte': 3},
+        {}, 'environmentId', {$gte: 3},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.eql(
@@ -76,7 +76,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR < OPEARTOROPTIONS expression for $lt`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentId', {'$lt': 3},
+        {}, 'environmentId', {$lt: 3},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.eql(
@@ -85,7 +85,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR <= OPEARTOROPTIONS expression for $lte`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentId', {'$lte': 3},
+        {}, 'environmentId', {$lte: 3},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.eql(
@@ -94,7 +94,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR IN OPEARTOROPTIONS expression for $in`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentId', {'$in': [3, 4]},
+        {}, 'environmentId', {$in: [3, 4]},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.eql(
@@ -104,7 +104,7 @@ describe(`TranslateOperatorsRelational`, () => {
 
     it(`should apply an TABLE.ATTR NOT IN OPEARTOROPTIONS expression for $nin`, () => {
       TranslateOperatorsRelational.translateAndApplyOperators(
-        {}, 'environmentId', {'$nin': [3, 4]},
+        {}, 'environmentId', {$nin: [3, 4]},
         squelExpr, 'and');
 
       query.where(squelExpr).toString().should.eql(

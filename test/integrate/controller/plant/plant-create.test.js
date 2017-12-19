@@ -106,18 +106,18 @@ describe(`Plant()`, () => {
       ];
 
       plant.should.deepEqual({
-        'plants': {
-          '1': {
-            'plantId': 1,
-            'plantName': 'testPlant1',
-            'plantClonedFrom': null,
-            'plantClones': [],
-            'plantSex': null,
-            'plantDescription': 'we found this plant in the backyard of our grandma',
-            'plantCreatedAt': createdAt,
-            'plantModifiedAt': modifiedAt,
-            'genotypeId': 1,
-            'mediumId': 1
+        plants: {
+          1: {
+            plantId: 1,
+            plantName: 'testPlant1',
+            plantClonedFrom: null,
+            plantClones: [],
+            plantSex: null,
+            plantDescription: 'we found this plant in the backyard of our grandma',
+            plantCreatedAt: createdAt,
+            plantModifiedAt: modifiedAt,
+            genotypeId: 1,
+            mediumId: 1
           }
         }
       });
@@ -128,9 +128,9 @@ describe(`Plant()`, () => {
       let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
       rowsGenotypes[0].should.containDeep(
         {
-          'genotypeId': 1,
-          'genotypeName': 'testGenotype1',
-          'generationId': 1
+          genotypeId: 1,
+          genotypeName: 'testGenotype1',
+          generationId: 1
         }
       );
     });
@@ -154,29 +154,29 @@ describe(`Plant()`, () => {
       ];
 
       plant.should.deepEqual({
-        'genotypes': {
-          '2': {
-            'genotypeId': 2,
-            'genotypeName': 'testGeno2',
-            'genotypeDescription': 'foobar',
-            'genotypePlants': [1],
-            'generationId': 1,
-            'genotypeCreatedAt': createdAtGenotype,
-            'genotypeModifiedAt': modifiedAtGenotype
+        genotypes: {
+          2: {
+            genotypeId: 2,
+            genotypeName: 'testGeno2',
+            genotypeDescription: 'foobar',
+            genotypePlants: [1],
+            generationId: 1,
+            genotypeCreatedAt: createdAtGenotype,
+            genotypeModifiedAt: modifiedAtGenotype
           }
         },
-        'plants': {
-          '1': {
-            'plantId': 1,
-            'plantName': 'testPlant1',
-            'plantClonedFrom': null,
-            'plantClones': [],
-            'plantSex': null,
-            'plantDescription': '',
-            'plantCreatedAt': createdAtPlant,
-            'plantModifiedAt': modifiedAtPlant,
-            'genotypeId': 2,
-            'mediumId': null
+        plants: {
+          1: {
+            plantId: 1,
+            plantName: 'testPlant1',
+            plantClonedFrom: null,
+            plantClones: [],
+            plantSex: null,
+            plantDescription: '',
+            plantCreatedAt: createdAtPlant,
+            plantModifiedAt: modifiedAtPlant,
+            genotypeId: 2,
+            mediumId: null
           }
         }
       });
@@ -192,18 +192,18 @@ describe(`Plant()`, () => {
 
       createdAtClone.should.eql(modifiedAtClone);
       plantClone.should.deepEqual({
-        'plants': {
-          '2': {
-            'plantId': 2,
-            'plantName': 'clonePlant2',
-            'plantClonedFrom': 1,
-            'plantClones': [],
-            'plantSex': null,
-            'plantDescription': '',
-            'plantCreatedAt': createdAtClone,
-            'plantModifiedAt': modifiedAtClone,
-            'genotypeId': 1,
-            'mediumId': null
+        plants: {
+          2: {
+            plantId: 2,
+            plantName: 'clonePlant2',
+            plantClonedFrom: 1,
+            plantClones: [],
+            plantSex: null,
+            plantDescription: '',
+            plantCreatedAt: createdAtClone,
+            plantModifiedAt: modifiedAtClone,
+            genotypeId: 1,
+            mediumId: null
           }
         }
       });
@@ -212,7 +212,7 @@ describe(`Plant()`, () => {
 
       let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
       rowsGenotypes.should.containDeep(
-        [{'genotypeId': 1, 'genotypeName': 'testGenotype1', 'generationId': 1}]);
+        [{genotypeId: 1, genotypeName: 'testGenotype1', generationId: 1}]);
     });
 
     it(`should be possible to create a plant without setting genotypeName or genotypeId`, async () => {

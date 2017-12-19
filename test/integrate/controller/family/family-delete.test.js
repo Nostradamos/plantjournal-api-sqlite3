@@ -47,10 +47,10 @@ describe(`Family()`, () => {
       let deletedFam = await pj.Family.delete({where: {familyId: 1}});
 
       deletedFam.should.deepEqual({
-        'families': [1],
-        'generations': [1],
-        'genotypes': [1, 2],
-        'plants': [1, 2]
+        families: [1],
+        generations: [1],
+        genotypes: [1, 2],
+        plants: [1, 2]
       });
 
       // Make sure we deleted also from database
@@ -82,8 +82,8 @@ describe(`Family()`, () => {
     it(`should be possibe to delete families with criteria.sort and criteria.limit instruction`, async () => {
       let deletedFam = await pj.Family.delete(
         {
-          'limit': 2,
-          'sort': 'familyId DESC'
+          limit: 2,
+          sort: 'familyId DESC'
         }
       );
 

@@ -50,15 +50,15 @@ describe(`UtilsQuery`, () => {
     beforeEach(() => q = squel.select().from('test'));
 
     it(`should set limit(options.limit) and offset(options.offset)`, () => {
-      UtilsQuery.applyCriteriaLimitAndOffset(q, {'limit': 42, 'offset': 13});
+      UtilsQuery.applyCriteriaLimitAndOffset(q, {limit: 42, offset: 13});
       q.toString().should.eql('SELECT * FROM test LIMIT 42 OFFSET 13');
     });
     it(`should set limit(10) if options.limit is not set`, () => {
-      UtilsQuery.applyCriteriaLimitAndOffset(q, {'offset': 13});
+      UtilsQuery.applyCriteriaLimitAndOffset(q, {offset: 13});
       q.toString().should.eql('SELECT * FROM test LIMIT 10 OFFSET 13');
     });
     it(`should set offset(0) if options.offset is not set`, () => {
-      UtilsQuery.applyCriteriaLimitAndOffset(q, {'limit': 42});
+      UtilsQuery.applyCriteriaLimitAndOffset(q, {limit: 42});
       q.toString().should.eql('SELECT * FROM test LIMIT 42 OFFSET 0');
     });
   });
@@ -70,42 +70,42 @@ describe(`UtilsQuery`, () => {
 
     it(`should throw error if attribute is not in allowedAttributes`, () => {
       should(() => UtilsQuery.applyCriteriaSort(
-        q, ['generationId'], {'sort': 'familyId ASC'}))
+        q, ['generationId'], {sort: 'familyId ASC'}))
         .throw('Illegal attribute: familyId');
     });
 
     it(`should throw error if sort type is given but neither ASC nor DESC`, () => {
       should(() => UtilsQuery.applyCriteriaSort(
-        q, ['familyId'], {'sort': 'familyId FOO'}))
+        q, ['familyId'], {sort: 'familyId FOO'}))
         .throw('Illegal sort type: FOO');
     });
 
     it(`should not have upper cased sort type in illegal sort type error`, () => {
       should(() => UtilsQuery.applyCriteriaSort(
-        q, ['familyId'], {'sort': 'familyId foO'}))
+        q, ['familyId'], {sort: 'familyId foO'}))
         .throw('Illegal sort type: foO');
     });
 
     it(`should sort ascending if no sort type (and no whitespace) is in string`, () => {
-      UtilsQuery.applyCriteriaSort(q, ['familyId'], {'sort': 'familyId'});
+      UtilsQuery.applyCriteriaSort(q, ['familyId'], {sort: 'familyId'});
       q.toString().should.eql(
         `SELECT * FROM test ORDER BY 'families'.'familyId' ASC`);
     });
 
     it(`should sort ascending if sort type is ASC`, () => {
-      UtilsQuery.applyCriteriaSort(q, ['familyId'], {'sort': 'familyId ASC'});
+      UtilsQuery.applyCriteriaSort(q, ['familyId'], {sort: 'familyId ASC'});
       q.toString().should.eql(
         `SELECT * FROM test ORDER BY 'families'.'familyId' ASC`);
     });
 
     it(`should sort descending if sort type is DESC`, () => {
-      UtilsQuery.applyCriteriaSort(q, ['familyId'], {'sort': 'familyId DESC'});
+      UtilsQuery.applyCriteriaSort(q, ['familyId'], {sort: 'familyId DESC'});
       q.toString().should.eql(
         `SELECT * FROM test ORDER BY 'families'.'familyId' DESC`);
     });
 
     it(`should uppercase sort type and not fail on lower cased sort type`, () => {
-      UtilsQuery.applyCriteriaSort(q, ['familyId'], {'sort': 'familyId desc'});
+      UtilsQuery.applyCriteriaSort(q, ['familyId'], {sort: 'familyId desc'});
       q.toString().should.eql(
         `SELECT * FROM test ORDER BY 'families'.'familyId' DESC`);
     });
@@ -114,7 +114,7 @@ describe(`UtilsQuery`, () => {
       UtilsQuery.applyCriteriaSort(
         q,
         ['familyId', 'generationId'],
-        {'sort': ['familyId DESC', 'generationId']});
+        {sort: ['familyId DESC', 'generationId']});
       q.toString().should.sqlEql(
         `SELECT * FROM test
          ORDER BY

@@ -30,10 +30,10 @@ describe(`Family()`, () => {
         found: 4,
         remaining: 0,
         families: {
-          '1': { familyId: 1, familyName: 'test1' },
-          '2': { familyId: 2, familyName: 'testB' },
-          '3': { familyId: 3, familyName: 'test3' },
-          '4': { familyId: 4, familyName: 'testD' }
+          1: { familyId: 1, familyName: 'test1' },
+          2: { familyId: 2, familyName: 'testB' },
+          3: { familyId: 3, familyName: 'test3' },
+          4: { familyId: 4, familyName: 'testD' }
         }
       });
       UtilsTest.allFamiliesShouldHaveCreatedAtAndModifiedAt(families);
@@ -46,8 +46,8 @@ describe(`Family()`, () => {
         found: 4,
         remaining: 2,
         families: {
-          '1': { familyId: 1, familyName: 'test1' },
-          '2': { familyId: 2, familyName: 'testB' }
+          1: { familyId: 1, familyName: 'test1' },
+          2: { familyId: 2, familyName: 'testB' }
         }
       });
     });
@@ -59,8 +59,8 @@ describe(`Family()`, () => {
         found: 4,
         remaining: 0,
         families: {
-          '3': { familyId: 3, familyName: 'test3' },
-          '4': { familyId: 4, familyName: 'testD' }
+          3: { familyId: 3, familyName: 'test3' },
+          4: { familyId: 4, familyName: 'testD' }
         }
       });
     });
@@ -69,7 +69,7 @@ describe(`Family()`, () => {
       let families = await pj.Family.find(
         {
           where : {
-            'familyId': 3
+            familyId: 3
           },
           attributes: ['familyId', 'familyName']
         }
@@ -79,7 +79,7 @@ describe(`Family()`, () => {
         found: 1,
         remaining: 0,
         families: {
-          '3': { familyId: 3, familyName: 'test3' }
+          3: { familyId: 3, familyName: 'test3' }
         }
       });
     });
@@ -88,7 +88,7 @@ describe(`Family()`, () => {
       let families = await pj.Family.find(
         {
           where : {
-            'familyName': 'testD'
+            familyName: 'testD'
           },
           attributes: ['familyId', 'familyName']
         }
@@ -98,7 +98,7 @@ describe(`Family()`, () => {
         found: 1,
         remaining: 0,
         families: {
-          '4': { familyId: 4, familyName: 'testD' }
+          4: { familyId: 4, familyName: 'testD' }
         }
       });
     });
@@ -107,8 +107,8 @@ describe(`Family()`, () => {
       let families = await pj.Family.find({sort: 'familyId DESC', limit: 2});
 
       families.families.should.containDeep({
-        '4': { familyId: 4, familyName: 'testD' },
-        '3': { familyId: 3, familyName: 'test3' },
+        4: { familyId: 4, familyName: 'testD' },
+        3: { familyId: 3, familyName: 'test3' },
       });
     });
   });

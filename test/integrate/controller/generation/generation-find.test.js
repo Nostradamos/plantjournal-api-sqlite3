@@ -32,42 +32,42 @@ describe(`Generation()`, () => {
       let generations = await pj.Generation.find();
 
       generations.should.containDeep({
-        'found': 4,
-        'remaining': 0,
-        'generations': {
-          '1': {
-            'generationId': 1,
-            'generationName': 'F1',
-            'generationParents': [],
-            'familyId': 1
+        found: 4,
+        remaining: 0,
+        generations: {
+          1: {
+            generationId: 1,
+            generationName: 'F1',
+            generationParents: [],
+            familyId: 1
           },
-          '2': {
-            'generationId': 2,
-            'generationName': 'F2',
-            'generationParents': [],
-            'familyId': 1
+          2: {
+            generationId: 2,
+            generationName: 'F2',
+            generationParents: [],
+            familyId: 1
           },
-          '3': {
-            'generationId': 3,
-            'generationName': 'S1',
-            'generationParents': [],
-            'familyId': 2
+          3: {
+            generationId: 3,
+            generationName: 'S1',
+            generationParents: [],
+            familyId: 2
           },
-          '4': {
-            'generationId': 4,
-            'generationName': 'S2',
-            'generationParents': [1,2],
-            'familyId': 2
+          4: {
+            generationId: 4,
+            generationName: 'S2',
+            generationParents: [1,2],
+            familyId: 2
           }
         },
-        'families': {
-          '1': {
-            'familyId': 1,
-            'familyName': 'testFamily1'
+        families: {
+          1: {
+            familyId: 1,
+            familyName: 'testFamily1'
           },
-          '2': {
-            'familyId': 2,
-            'familyName': 'testFamily2'
+          2: {
+            familyId: 2,
+            familyName: 'testFamily2'
           }
         }
       });
@@ -81,7 +81,7 @@ describe(`Generation()`, () => {
     it(`should not have an family property if familyName is not in options.attributes`, async () => {
       let generations = await pj.Generation.find(
         {
-          'attributes': ['familyId',
+          attributes: ['familyId',
             'generationName',
             'generationParents']
         }
@@ -95,36 +95,36 @@ describe(`Generation()`, () => {
       let generations = await pj.Generation
         .find(
           {
-            'limit': 2,
-            'offset': 1
+            limit: 2,
+            offset: 1
           }
         );
 
       generations.should.containDeep({
-        'found': 4,
-        'remaining': 1,
-        'generations': {
-          '2': {
-            'generationId': 2,
-            'generationName': 'F2',
-            'generationParents': [],
-            'familyId': 1
+        found: 4,
+        remaining: 1,
+        generations: {
+          2: {
+            generationId: 2,
+            generationName: 'F2',
+            generationParents: [],
+            familyId: 1
           },
-          '3': {
-            'generationId': 3,
-            'generationName': 'S1',
-            'generationParents': [],
-            'familyId': 2
+          3: {
+            generationId: 3,
+            generationName: 'S1',
+            generationParents: [],
+            familyId: 2
           }
         },
-        'families': {
-          '1': {
-            'familyId': 1,
-            'familyName': 'testFamily1'
+        families: {
+          1: {
+            familyId: 1,
+            familyName: 'testFamily1'
           },
-          '2': {
-            'familyId': 2,
-            'familyName': 'testFamily2'
+          2: {
+            familyId: 2,
+            familyName: 'testFamily2'
           }
         }
       });
@@ -132,32 +132,32 @@ describe(`Generation()`, () => {
 
     it(`should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMEINTEGER matches exactly`, async () => {
       let generations = await pj.Generation.find({
-        'where': {
-          'familyId': 1
+        where: {
+          familyId: 1
         }
       });
 
       generations.should.containDeep({
-        'found': 2,
-        'remaining': 0,
-        'generations': {
-          '1': {
-            'generationId': 1,
-            'generationName': 'F1',
-            'generationParents': [],
-            'familyId': 1
+        found: 2,
+        remaining: 0,
+        generations: {
+          1: {
+            generationId: 1,
+            generationName: 'F1',
+            generationParents: [],
+            familyId: 1
           },
-          '2': {
-            'generationId': 2,
-            'generationName': 'F2',
-            'generationParents': [],
-            'familyId': 1
+          2: {
+            generationId: 2,
+            generationName: 'F2',
+            generationParents: [],
+            familyId: 1
           }
         },
-        'families': {
-          '1': {
-            'familyId': 1,
-            'familyName': 'testFamily1'
+        families: {
+          1: {
+            familyId: 1,
+            familyName: 'testFamily1'
           }
         }
       });
@@ -165,49 +165,49 @@ describe(`Generation()`, () => {
 
     it(`should only return generations where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly`, async () => {
       let generations = await pj.Generation.find({
-        'where': {
-          'familyName': 'testFamily1'
+        where: {
+          familyName: 'testFamily1'
         }
       });
 
       generations.should.containDeep({
-        'found': 2,
-        'remaining': 0,
-        'families': {
-          '1': {
-            'familyId': 1,
-            'familyName': 'testFamily1'
+        found: 2,
+        remaining: 0,
+        families: {
+          1: {
+            familyId: 1,
+            familyName: 'testFamily1'
           }
         },
-        'generations': {
-          '1': {
-            'generationId': 1,
-            'generationName': 'F1',
-            'generationParents': [],
-            'familyId': 1
+        generations: {
+          1: {
+            generationId: 1,
+            generationName: 'F1',
+            generationParents: [],
+            familyId: 1
           },
-          '2': {
-            'generationId': 2,
-            'generationName': 'F2',
-            'generationParents': [],
-            'familyId': 1
+          2: {
+            generationId: 2,
+            generationName: 'F2',
+            generationParents: [],
+            familyId: 1
           }
         }
       });
     });
 
     it(`should only return generations where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]`, async () => {
-      let generations = await pj.Generation.find({'attributes': ['generationParents', 'generationName'], 'where': {'generationParents': [1,2]}});
+      let generations = await pj.Generation.find({attributes: ['generationParents', 'generationName'], where: {generationParents: [1,2]}});
 
       generations.should.deepEqual({
-        'found': 1,
-        'remaining': 0,
-        'generations': {
-          '4': {
-            'generationId': 4,
-            'generationName': 'S2',
-            'generationParents': [1, 2],
-            'familyId': 2
+        found: 1,
+        remaining: 0,
+        generations: {
+          4: {
+            generationId: 4,
+            generationName: 'S2',
+            generationParents: [1, 2],
+            familyId: 2
           }
         }
       });

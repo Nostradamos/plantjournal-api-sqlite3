@@ -44,14 +44,14 @@ describe(`Environment()`, () => {
       ];
 
       environment.should.deepEqual({
-        'environments': {
-          '1': {
-            'environmentId': 1,
-            'environmentName': 'Greenhouse #1',
-            'environmentDescription': 'Greenhouse in my garden.',
-            'environmentMediums': [],
-            'environmentCreatedAt': createdAt,
-            'environmentModifiedAt': modifiedAt,
+        environments: {
+          1: {
+            environmentId: 1,
+            environmentName: 'Greenhouse #1',
+            environmentDescription: 'Greenhouse in my garden.',
+            environmentMediums: [],
+            environmentCreatedAt: createdAt,
+            environmentModifiedAt: modifiedAt,
           }
         }
       });

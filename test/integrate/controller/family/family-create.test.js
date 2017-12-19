@@ -45,7 +45,7 @@ describe(`Family()`, () => {
     });
 
     it(`should throw error if options.familyName is not a string`, async () => {
-      await pj.Family.create({'familyName': 1})
+      await pj.Family.create({familyName: 1})
         .should.be.rejectedWith('options.familyName has to be a string');
     });
 
