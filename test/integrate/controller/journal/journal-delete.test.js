@@ -52,7 +52,7 @@ describe(`Journal()`, () => {
       await pj.Journal.create({
         journalTimestamp: 1555,
         journalType: 'watering',
-        journalValue: '{"amount": 1.5, "n": 3, "p": 4, "k": 1.7, "fertilizers": ["Hakaphos Grün", "Hakaphos Blau"]}',
+        journalValue: '{"amount": 1.5, "n": 3, "p": 4, "k": 1.7, "fertilizers": ["Hakaphos Grün", "Hakaphos Blau"]}', // eslint-disable-line max-len
         mediumId: 1});
       await pj.Journal.create({
         journalTimestamp: 1337,

@@ -288,9 +288,7 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         .having(self.squelExprHaving);
     }
 
-    logger.silly(
-      '#applyCriteriaFilter #translateAndApplyChildAttributesOperators() subQuery:',
-      subQuery.toString());
+    logger.silly('#applyCriteriaFilter #translateAndApplyChildAttributesOperators() subQuery:', subQuery.toString());
 
     UtilsExpression.applyExpression(
       self.squelExprOld,

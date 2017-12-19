@@ -37,9 +37,9 @@ class TranslateOperatorsGeneric {
      * @param  {String} type
      *         Has to be 'and' or 'or'.
      */
-  static translateAndApplyOperators(selfSelf, attr, attrOptions, squelExpr, type) {
-    logger.silly(
-      this.name, '#translateAndApplyOperators() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
+  static translateAndApplyOperators(
+    selfSelf, attr, attrOptions, squelExpr, type) {
+    logger.silly(this.name, '#translateAndApplyOperators() attr:', attr, 'attrOptions:', attrOptions, 'type:', type);
 
     // This object will get passed to every method of this class we will
     // call. If you need to store anything across the different methods,
@@ -56,8 +56,7 @@ class TranslateOperatorsGeneric {
     this.getTable(self);
     this.modifySelf(self);
 
-    logger.silly(
-      this.name, '#translateAndApplyOperators() self.table:', self.table);
+    logger.silly(this.name, '#translateAndApplyOperators() self.table:', self.table);
 
     if(_.isPlainObject(attrOptions)) {
       this.callOperatorFuncsAndApplyCriterias(self);
@@ -150,12 +149,10 @@ class TranslateOperatorsGeneric {
             _.isNumber(self.attrOptions) ||
             _.isBoolean(self.attrOptions) ||
             _.isNull(self.attrOptions)) {
-      logger.silly(
-        this.name, '#checkForShortHands() looks like String or Number/Boolean/Null short hand');
+      logger.silly(this.name, '#checkForShortHands() looks like String or Number/Boolean/Null short hand');
       this.processStringNumberBooleanNullShortHand(self, crit);
     } else if (_.isArray(self.attrOptions)) {
-      logger.silly(
-        this.name, '#checkForShortHands() looks like Array short hand');
+      logger.silly(this.name, '#checkForShortHands() looks like Array short hand');
       this.processArrayShortHand(self, crit);
     } else {
       this.unhandledShortHand(self);

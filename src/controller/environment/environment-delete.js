@@ -45,7 +45,8 @@ class EnvironmentDelete extends GenericDelete {
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
       .field(
-        Utils.explicitColumn(CONSTANTS.TABLE_ENVIRONMENT, CONSTANTS.ATTR_ID_ENVIRONMENT))
+        Utils.explicitColumn(
+          CONSTANTS.TABLE_ENVIRONMENT, CONSTANTS.ATTR_ID_ENVIRONMENT))
       .field(
         Utils.explicitColumn(CONSTANTS.TABLE_MEDIUM, CONSTANTS.ATTR_ID_MEDIUM))
       .field(

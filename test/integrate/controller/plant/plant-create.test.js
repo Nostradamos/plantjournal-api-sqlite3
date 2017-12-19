@@ -102,7 +102,8 @@ describe(`Plant()`, () => {
         {
           genotypeId: 1,
           plantName: 'testPlant1',
-          plantDescription: 'we found this plant in the backyard of our grandma',
+          plantDescription:
+            'we found this plant in the backyard of our grandma',
           mediumId: 1
         }
       );
@@ -119,7 +120,8 @@ describe(`Plant()`, () => {
             plantClonedFrom: null,
             plantClones: [],
             plantSex: null,
-            plantDescription: 'we found this plant in the backyard of our grandma',
+            plantDescription:
+              'we found this plant in the backyard of our grandma',
             plantCreatedAt: createdAt,
             plantModifiedAt: modifiedAt,
             genotypeId: 1,

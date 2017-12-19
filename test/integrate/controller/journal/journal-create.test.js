@@ -29,8 +29,7 @@ describe(`Journal()`, () => {
 
     it(`should throw error if none of options.{plantId|mediumId|environmentId} is set`, async () => {
       await pj.Journal.create({})
-        .should.be.rejectedWith(
-          'A journal has to be assigned to a plant, medium or environment. Therefore options.plantId,mediumId or environmentId has to be set');
+        .should.be.rejectedWith('A journal has to be assigned to a plant, medium or environment. Therefore options.plantId,mediumId or environmentId has to be set');
     });
 
     it(`should throw error if more than one of options.{plantId|mediumId|environmentId} is set`, async () => {

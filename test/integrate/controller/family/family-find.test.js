@@ -40,7 +40,8 @@ describe(`Family()`, () => {
     });
 
     it(`should only return the first two families if options.limit=2`, async () => {
-      let families = await pj.Family.find({limit: 2, attributes: ['familyId', 'familyName']});
+      let families = await pj.Family.find(
+        {limit: 2, attributes: ['familyId', 'familyName']});
 
       families.should.deepEqual({
         found: 4,
@@ -53,7 +54,8 @@ describe(`Family()`, () => {
     });
 
     it(`should only return the the last two families if options.offset=2 and options.limit=2`, async () => {
-      let families = await pj.Family.find({offset: 2, limit: 2, attributes: ['familyId', 'familyName']});
+      let families = await pj.Family.find(
+        {offset: 2, limit: 2, attributes: ['familyId', 'familyName']});
 
       families.should.deepEqual({
         found: 4,

@@ -56,7 +56,7 @@ let Generation = exports;
  *         Should throw error if famiylId is invalid or unexpected sqlite
  *         error happens (eg: database connection is broken)
  * @return {Object} generationCreate
- * @return {Object.<GenerationId, GenerationObject>} generationCreate.generations
+ * @return {Object.<GenerationId, GenerationObject>} ge...onCreate.generations
  *         Object holding information about created generation. There should
  *         only be one key, which is the id of the newly created generation.
  */

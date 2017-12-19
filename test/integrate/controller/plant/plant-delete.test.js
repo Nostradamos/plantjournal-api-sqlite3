@@ -43,7 +43,8 @@ describe(`Plant()`, () => {
       // familyId:4
       await pj.Family.create({familyName: 'testD'});
 
-      await pj.Plant.create({generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
+      await pj.Plant.create(
+        {generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
     });
 
     after(async () => {

@@ -195,9 +195,7 @@ describe(`Generation()`, () => {
           generationName: 'testWithParents2',
           generationParents: [1, 42]
         }
-      ).should.be.rejectedWith(
-        'options.generationParents contains at least one plantId which does not reference an existing plant'
-      );
+      ).should.be.rejectedWith('options.generationParents contains at least one plantId which does not reference an existing plant');
 
       let rowsGen = await sqlite.all(`
         SELECT

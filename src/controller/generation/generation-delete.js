@@ -43,9 +43,11 @@ class GenerationDelete extends GenericDelete {
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
       .field(
-        Utils.explicitColumn(CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION))
+        Utils.explicitColumn(
+          CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION))
       .field(
-        Utils.explicitColumn(CONSTANTS.TABLE_GENOTYPE, CONSTANTS.ATTR_ID_GENOTYPE))
+        Utils.explicitColumn(
+          CONSTANTS.TABLE_GENOTYPE, CONSTANTS.ATTR_ID_GENOTYPE))
       .field(
         Utils.explicitColumn(CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
   }
