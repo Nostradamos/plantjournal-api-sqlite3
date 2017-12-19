@@ -19,7 +19,8 @@ describe(`Journal()`, () => {
 
       await pj.Family.create({familyName: 'testFam1'});
       await pj.Generation.create({generationName: 'testGen1', familyId: 1});
-      await pj.Plant.create({plantName: 'testPlant1', mediumId: 1, generationId: 1});
+      await pj.Plant.create(
+        {plantName: 'testPlant1', mediumId: 1, generationId: 1});
     });
 
     afterEach(async () => {
@@ -46,7 +47,8 @@ describe(`Journal()`, () => {
 
     it(`should throw error if options.journalTimestamp is not a integer`, async () => {
       await pj.Journal.create({plantId: 1, journalTimestamp: '123'})
-        .should.be.rejectedWith('options.journalTimestamp has to be an integer');
+        .should.be.rejectedWith(
+          'options.journalTimestamp has to be an integer');
     });
 
     it(`should throw error if options.journalType is not set`, async () => {
@@ -62,7 +64,8 @@ describe(`Journal()`, () => {
 
 
     it(`should throw error if options.journalValue is not set`, async () => {
-      await pj.Journal.create({plantId: 1, journalTimestamp: 1111, journalType: 'log'})
+      await pj.Journal.create(
+        {plantId: 1, journalTimestamp: 1111, journalType: 'log'})
         .should.be.rejectedWith('options.journalValue has to be set');
     });
 
@@ -155,14 +158,12 @@ describe(`Journal()`, () => {
 
     it(`should quote journalValue if we pass valid JSON as string`, async () => {
       let journalValue = '{"foo":"bar"}';
-      let journal = await pj.Journal.create(
-        {
-          plantId: 1,
-          journalTimestamp: 1111,
-          journalType: 'test',
-          journalValue
-        }
-      );
+      let journal = await pj.Journal.create({
+        plantId: 1,
+        journalTimestamp: 1111,
+        journalType: 'test',
+        journalValue
+      });
 
       journal.journals.should.containDeep({
         1: {
@@ -171,9 +172,8 @@ describe(`Journal()`, () => {
           journalValue: journalValue,
         }
       });
-      let rowsJournals = await sqlite.all(
-        `SELECT journalValue FROM journals WHERE journalId = 1`
-      );
+      let rowsJournals = await sqlite.all(`
+        SELECT journalValue FROM journals WHERE journalId = 1`);
 
       rowsJournals[0].journalValue.should.eql(JSON.stringify(journalValue));
     });

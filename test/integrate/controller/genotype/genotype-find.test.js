@@ -19,13 +19,20 @@ describe(`Genotype()`, () => {
       await pj.Generation.create({familyId: 1, generationName: 'F1'});
       await pj.Generation.create({familyId: 1, generationName: 'F2'});
       await pj.Generation.create({familyId: 2, generationName: 'S1'});
-      await pj.Genotype.create({generationId: 1, genotypeName: 'testGenotype1'});
-      await pj.Genotype.create({generationId: 2, genotypeName: 'testGenotype2'});
-      await pj.Genotype.create({generationId: 3, genotypeName: 'testGenotype3'});
+      await pj.Genotype.create(
+        {generationId: 1, genotypeName: 'testGenotype1'});
+      await pj.Genotype.create(
+        {generationId: 2, genotypeName: 'testGenotype2'});
+      await pj.Genotype.create(
+        {generationId: 3, genotypeName: 'testGenotype3'});
       await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'});
       await pj.Plant.create({genotypeId: 2, plantName: 'testPlant2'});
-      await pj.Generation.create({familyId: 2, generationName: 'generationWithParents', generationParents: [1,2]});
-      await pj.Genotype.create({generationId: 4, genotypeName: 'testGenotype4'});
+      await pj.Generation.create({
+        familyId: 2,
+        generationName: 'generationWithParents',
+        generationParents: [1,2]});
+      await pj.Genotype.create(
+        {generationId: 4, genotypeName: 'testGenotype4'});
     });
 
     after(async () => {
@@ -286,23 +293,22 @@ describe(`Genotype()`, () => {
     });
 
     it(`should find all genotypes and the genotypePlants attribute should be an array containing all plantIds with this genotypeId`, async () => {
-      let genotypes = await pj.Genotype.find({attributes: ['genotypeName', 'genotypePlants']});
-      genotypes.should.containDeep(
-        {
-          found: 2,
-          remaining: 0,
-          genotypes: {
-            1: {
-              genotypeName: 'genotype1',
-              genotypePlants: [1, 2]
-            },
-            2: {
-              genotypeName: 'genotype2',
-              genotypePlants: []
-            },
-          }
+      let genotypes = await pj.Genotype.find(
+        {attributes: ['genotypeName', 'genotypePlants']});
+      genotypes.should.containDeep({
+        found: 2,
+        remaining: 0,
+        genotypes: {
+          1: {
+            genotypeName: 'genotype1',
+            genotypePlants: [1, 2]
+          },
+          2: {
+            genotypeName: 'genotype2',
+            genotypePlants: []
+          },
         }
-      );
+      });
     });
   });
 });

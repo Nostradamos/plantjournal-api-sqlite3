@@ -99,7 +99,8 @@ class GenericFind {
     this.buildReturnObjectWhere(returnObject, context, criteria);
     this.buildReturnObjectCount(returnObject, context, criteria);
 
-    logger.debug(this.name, '#find() returnObject:', JSON.stringify(returnObject));
+    logger.debug(
+      `${this.name} #find() returnObject:`, JSON.stringify(returnObject));
     return returnObject;
 
   }
@@ -297,7 +298,8 @@ class GenericFind {
     [context.rowsWhere, context.rowCount] = await Promise.all(
       [sqlite.all(context.queryWhere), sqlite.get(context.queryCount)]);
 
-    logger.debug(this.name, '#find() rowsWhere:', JSON.stringify(context.rowsWhere));
+    logger.debug(
+      this.name, '#find() rowsWhere:', JSON.stringify(context.rowsWhere));
     logger.debug(this.name, '#find() rowCount:', context.rowCount);
   }
 
@@ -326,7 +328,8 @@ class GenericFind {
      *         Criteria object passed to find()
      */
   static buildReturnObjectCount(returnObject, context, criteria) {
-    logger.debug(this.name, '#find() length RowsWhere:', context.rowsWhere.length);
+    logger.debug(
+      this.name, '#find() length RowsWhere:', context.rowsWhere.length);
     UtilsReturnObject.addFoundAndRemaining(
       context.rowCount,
       context.rowsWhere.length,

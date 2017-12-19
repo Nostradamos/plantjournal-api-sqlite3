@@ -57,7 +57,8 @@ describe(`Plant()`, () => {
 
     it(`should throw error if options.generationId does not reference an existing generationId`, async () => {
       await pj.Plant.create({generationId: 42, plantName: 'test'})
-        .should.be.rejectedWith('options.generationId does not reference an existing Generation');
+        .should.be.rejectedWith(
+          'options.generationId does not reference an existing Generation');
     });
 
     it(`should throw error if options.plantName is not set`, async () => {
@@ -71,23 +72,28 @@ describe(`Plant()`, () => {
     });
 
     it(`should throw error if options.plantSex is not a valid sex`, async () => {
-      await pj.Plant.create({genotypeId: 2, plantName: 'test', plantSex: 'notavalidsex'})
-        .should.be.rejectedWith('options.plantSex has to be null, male, female or hermaphrodite');
+      await pj.Plant
+        .create({genotypeId: 2, plantName: 'test', plantSex: 'notavalidsex'})
+        .should.be.rejectedWith(
+          'options.plantSex has to be null, male, female or hermaphrodite');
     });
 
     it(`should throw error if options.genotypeId does not reference an existing genotypeId`, async () => {
       await pj.Plant.create({genotypeId: 2, plantName: 'test'})
-        .should.be.rejectedWith('options.genotypeId does not reference an existing Genotype');
+        .should.be.rejectedWith(
+          'options.genotypeId does not reference an existing Genotype');
     });
 
     it(`should throw error if options.plantClonedFrom does not reference an existing plant`, async () => {
       await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1})
-        .should.be.rejectedWith('options.plantClonedFrom does not reference an existing Plant');
+        .should.be.rejectedWith(
+          'options.plantClonedFrom does not reference an existing Plant');
 
     });
 
     it(`should throw error if options.plantClonedFrom is not an integer`, async () => {
-      await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 'not an integer'})
+      await pj.Plant.create(
+        {plantName: 'clonePlant2', plantClonedFrom: 'not an integer'})
         .should.be.rejectedWith('options.plantClonedFrom has to be an integer');
     });
 
@@ -184,7 +190,8 @@ describe(`Plant()`, () => {
 
     it(`should only create a new plant entry if options.plantClonedFrom is set, and not options.genotypeId is not set but resolve the genotypeId from the mother plant`, async () => {
       await pj.Plant.create({genotypeId: 1, plantName: 'motherPlant1'});
-      let plantClone = await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1});
+      let plantClone = await pj.Plant.create(
+        {plantName: 'clonePlant2', plantClonedFrom: 1});
       let [createdAtClone, modifiedAtClone] = [
         plantClone.plants[2].plantCreatedAt,
         plantClone.plants[2].plantModifiedAt

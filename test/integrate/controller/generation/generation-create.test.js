@@ -2,6 +2,7 @@
 'use strict';
 
 require('should');
+const CONSTANTS = require('../../../../src/constants');
 const plantJournal = require('../../../../src/pj');
 const sqlite = require('sqlite');
 
@@ -34,33 +35,36 @@ describe(`Generation()`, () => {
     });
 
     it(`should throw error if generationParents is set but not an array`, async () => {
-      await pj.Generation.create({familyId: 1, generationName: 'test', generationParents: {}})
-        .should.be.rejectedWith('options.generationParents has to be an array of integers');
+      await pj.Generation.create(
+        {familyId: 1, generationName: 'test', generationParents: {}})
+        .should.be.rejectedWith(
+          'options.generationParents has to be an array of integers');
     });
 
     it(`should throw Error if familyId does not reference an entry in families`, async () => {
       await pj.Generation.create(
         {familyId: 1337, generationName: 'testGeneration3'})
-        .should.be.rejectedWith('options.familyId does not reference an existing Family');
+        .should.be.rejectedWith(
+          'options.familyId does not reference an existing Family');
 
-      let result = await sqlite.all(
-        `SELECT familyId, generationId, generationName
-                 FROM generations WHERE generationName = "testGeneration3"`);
+      let result = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_FAMILY},
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_NAME_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}
+        WHERE ${CONSTANTS.ATTR_NAME_GENERATION} = "testGeneration3"`);
 
       result.should.deepEqual([]);
     });
 
     it(`should throw error if options is not set or not an associative array`, async () => {
       let tested = 0;
+      let values = [[1,2], null, 'string', 1, true, undefined];
 
-      for (let value in [[1,2],
-        null,
-        'string',
-        1,
-        true,
-        undefined]) {
-        await pj.Generation.create(value)
-          .should.be.rejectedWith('First argument has to be an associative array');
+      for (let value in values) {
+        await pj.Generation.create(value).should.be.rejectedWith(
+          'First argument has to be an associative array');
         tested++;
       }
       tested.should.eql(6);
@@ -100,29 +104,35 @@ describe(`Generation()`, () => {
         }
       });
 
-      let rows = await sqlite.all(
-        `SELECT generationId, generationDescription, generationName,
-                familyId, generationCreatedAt, generationModifiedAt FROM generations`);
+      let rows = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_DESCRIPTION_GENERATION},
+          ${CONSTANTS.ATTR_NAME_GENERATION},
+          ${CONSTANTS.ATTR_ID_FAMILY},
+          ${CONSTANTS.ATTR_CREATED_AT_GENERATION},
+          ${CONSTANTS.ATTR_MODIFIED_AT_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}`);
       generation.generations[1].should.containDeep(rows[0]);
     });
 
     it(`should set generationDescription = '' if generationDescription is not defined`, async () => {
-      let generation = await pj.Generation.create(
-        {
-          familyId: 1,
-          generationName: 'testGeneration'
-        }
-      );
+      let generation = await pj.Generation.create({
+        familyId: 1,
+        generationName: 'testGeneration'
+      });
 
-      generation.generations[2].should.containDeep(
-        {
-          generationId: 2,
-          generationDescription: '',
-        }
-      );
+      generation.generations[2].should.containDeep({
+        generationId: 2,
+        generationDescription: '',
+      });
 
-      let rows = await sqlite.all(
-        `SELECT generationId, generationDescription FROM generations WHERE generationId = 2`);
+      let rows = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_DESCRIPTION_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}
+        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 2`);
       generation.generations[2].should.containDeep(rows[0]);
     });
 
@@ -172,12 +182,10 @@ describe(`Generation()`, () => {
       });
       let rows = await sqlite.all('SELECT * FROM generation_parents');
 
-      rows.should.deepEqual(
-        [
-          {parentId: 1, generationId: 2, plantId: 1},
-          {parentId: 2, generationId: 2, plantId: 2}
-        ]
-      );
+      rows.should.deepEqual([
+        {parentId: 1, generationId: 2, plantId: 1},
+        {parentId: 2, generationId: 2, plantId: 2}
+      ]);
     });
 
     it(`should throw error if options.generationParents does not reference existing plants and not add generation`, async () => {
@@ -191,10 +199,12 @@ describe(`Generation()`, () => {
         'options.generationParents contains at least one plantId which does not reference an existing plant'
       );
 
-      let rowsGen = await sqlite.all(
-        `SELECT generationId, generationName FROM generations
-                 WHERE generationName = "testWithParents2"`);
-
+      let rowsGen = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_NAME_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}
+        WHERE ${CONSTANTS.ATTR_NAME_GENERATION} = "testWithParents2"`);
       rowsGen.should.deepEqual([]);
     });
   });

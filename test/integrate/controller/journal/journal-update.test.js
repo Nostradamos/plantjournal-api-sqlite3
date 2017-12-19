@@ -4,6 +4,7 @@
 require('should');
 const sqlite = require('sqlite');
 
+const CONSTANTS = require('../../../../src/constants');
 const plantJournal = require('../../../../src/pj');
 
 describe(`Journal()`, () => {
@@ -16,9 +17,21 @@ describe(`Journal()`, () => {
 
       await pj.Environment.create({environmentName: 'Greenhouse #1'});
 
-      await pj.Journal.create({journalTimestamp: 1337, journalType: 'temp-sensor', journalValue: 6.5, environmentId: 1});
-      await pj.Journal.create({journalTimestamp: 1337, journalType: 'rlf-sensor', journalValue: 80, environmentId: 1});
-      await pj.Journal.create({journalTimestamp: 1437, journalType: 'rlf-sensor', journalValue: 78, environmentId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1337,
+        journalType: 'temp-sensor',
+        journalValue: 6.5,
+        environmentId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1337,
+        journalType: 'rlf-sensor',
+        journalValue: 80,
+        environmentId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1437,
+        journalType: 'rlf-sensor',
+        journalValue: 78,
+        environmentId: 1});
 
     });
 
@@ -57,9 +70,13 @@ describe(`Journal()`, () => {
 
       updated.should.deepEqual([2]);
 
-      let rows = await sqlite.all(
-        `SELECT journalType, journalValue, journalTimestamp FROM journals
-                WHERE journalId = 2`);
+      let rows = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_TYPE_JOURNAL},
+          ${CONSTANTS.ATTR_VALUE_JOURNAL},
+          ${CONSTANTS.ATTR_TIMESTAMP_JOURNAL}
+        FROM ${CONSTANTS.TABLE_JOURNAL}
+        WHERE ${CONSTANTS.ATTR_ID_JOURNAL} = 2`);
 
       rows[0].should.deepEqual(
         {journalType: 'rlf-sensor', journalValue: 90, journalTimestamp: 1337});
@@ -72,14 +89,34 @@ describe(`Journal()`, () => {
 
       updated.should.deepEqual([1, 2, 3]);
 
-      let rows = await sqlite.all(
-        `SELECT journalId, journalType, journalValue, journalTimestamp FROM journals`);
+      let rows = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_JOURNAL},
+          ${CONSTANTS.ATTR_TYPE_JOURNAL},
+          ${CONSTANTS.ATTR_VALUE_JOURNAL},
+          ${CONSTANTS.ATTR_TIMESTAMP_JOURNAL}
+        FROM ${CONSTANTS.TABLE_JOURNAL}`);
 
       rows.should.deepEqual(
         [
-          {journalId: 1, journalType: 'temp-sensor', journalValue: 90, journalTimestamp: 1337},
-          {journalId: 2, journalType: 'rlf-sensor', journalValue: 90, journalTimestamp: 1337},
-          {journalId: 3, journalType: 'rlf-sensor', journalValue: 90, journalTimestamp: 1437},
+          {
+            journalId: 1,
+            journalType: 'temp-sensor',
+            journalValue: 90,
+            journalTimestamp: 1337
+          },
+          {
+            journalId: 2,
+            journalType: 'rlf-sensor',
+            journalValue: 90,
+            journalTimestamp: 1337
+          },
+          {
+            journalId: 3,
+            journalType: 'rlf-sensor',
+            journalValue: 90,
+            journalTimestamp: 1437
+          },
         ]
       );
     });

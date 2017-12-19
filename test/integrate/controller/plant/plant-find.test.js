@@ -240,7 +240,8 @@ describe(`Plant()`, () => {
     });
 
     it(`should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for plant attributes)`, async () => {
-      let plants = await pj.Plant.find({where: {plantName: 'testPlant3'}, attributes: ['plantId']});
+      let plants = await pj.Plant.find(
+        {where: {plantName: 'testPlant3'}, attributes: ['plantId']});
 
       plants.should.containDeep({
         found: 1,
@@ -252,7 +253,8 @@ describe(`Plant()`, () => {
     });
 
     it(`should only return plants where options.where.ALLOWEDATTRIBUTENAME = SOMESTRING matches extactly (for genotype attributes)`, async () => {
-      let plants = await pj.Plant.find({where: {genotypeName: 'testGenotype3'}, attributes: ['plantId']});
+      let plants = await pj.Plant.find(
+        {where: {genotypeName: 'testGenotype3'}, attributes: ['plantId']});
 
       plants.should.containDeep({
         found: 2,
@@ -265,10 +267,12 @@ describe(`Plant()`, () => {
     });
 
     it(`should only return plants where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]`, async () => {
-      let plants = await pj.Plant.find({where: {generationParents: [1,2]}, attributes: ['plantId',
-        'plantName',
-        'generationParents',
-        'generationName']});
+      let plants = await pj.Plant.find(
+        {
+          where: {generationParents: [1,2]},
+          attributes: [
+            'plantId', 'plantName', 'generationParents', 'generationName']
+        });
 
       plants.should.containDeep({
         found: 2,
@@ -303,15 +307,8 @@ describe(`Plant()`, () => {
     it(`should be possible to find plants where parents are [1,2] OR [1,3]`, async () => {
       let plants = await pj.Plant.find(
         {
-          where:
-                        {generationParents: [1,2],
-                          $or: {generationParents: [1,3]}
-                        },
-          attributes: [
-            'plantName',
-            'generationParents',
-            'generationName',
-          ]
+          where: {generationParents: [1,2], $or: {generationParents: [1,3]}},
+          attributes: ['plantName', 'generationParents', 'generationName']
         }
       );
 
@@ -361,7 +358,8 @@ describe(`Plant()`, () => {
     it(`should get related medium/environment information if plant.mediumId is not null`, async () => {
       await pj.Environment.create({environmentName: 'Greenhouse #1'});
       await pj.Medium.create({mediumName: 'TestMedium #1', environmentId: 1});
-      await pj.Plant.create({generationId: 4, plantName: 'testPlant6', mediumId: 1});
+      await pj.Plant.create(
+        {generationId: 4, plantName: 'testPlant6', mediumId: 1});
 
       let plant = await pj.Plant.find({where: {plantId: 6}});
       plant.should.containDeep(
@@ -424,8 +422,6 @@ describe(`Plant()`, () => {
           }
         }
       );
-
     });
-
   });
 });

@@ -14,22 +14,35 @@ describe(`Genotype()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'test1'}); // familyId:1
-      await pj.Generation.create({generationName : 'testGen1', familyId: 1}); // generationId: 1
-      await pj.Plant.create({generationId: 1, plantName: 'blubb'}); // plantId: 1 genotypeId: 1
-      await pj.Plant.create({generationId: 1, plantName: 'blubb2'}); // plantId: 2 genotyeId: 2
+      // familyId:1
+      await pj.Family.create({familyName: 'test1'});
+      // generationId: 1
+      await pj.Generation.create({generationName : 'testGen1', familyId: 1});
+      // plantId: 1 genotypeId: 1
+      await pj.Plant.create({generationId: 1, plantName: 'blubb'});
+      // plantId: 2 genotyeId: 2
+      await pj.Plant.create({generationId: 1, plantName: 'blubb2'});
 
-      await pj.Family.create({familyName: 'testB'}); // id:2
-      await pj.Generation.create({generationName : 'testGen2', familyId: 2}); // generationId: 2
-      await pj.Generation.create({generationName : 'testGen3', familyId: 2}); // generationId: 3
-      await pj.Plant.create({generationId: 2, plantName: 'blubb'}); // plantId: 3 genotypeId: 3
+      // familyId:2
+      await pj.Family.create({familyName: 'testB'});
+      // generationId: 2
+      await pj.Generation.create({generationName : 'testGen2', familyId: 2});
+      // generationId: 3
+      await pj.Generation.create({generationName : 'testGen3', familyId: 2});
+      // plantId: 3 genotypeId: 3
+      await pj.Plant.create({generationId: 2, plantName: 'blubb'});
 
-      await pj.Family.create({familyName: 'test3'}); // id:3
-      await pj.Generation.create({generationName : 'testGen4', familyId: 3}); // generationId: 4
-      await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno1'}); // genotypeId: 4
-      await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno2'}); // genotypeId: 5
+      // familyId:3
+      await pj.Family.create({familyName: 'test3'});
+      // generationId: 4
+      await pj.Generation.create({generationName : 'testGen4', familyId: 3});
+      // genotypeId: 4
+      await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno1'});
+      // genotypeId: 5
+      await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno2'});
 
-      await pj.Family.create({familyName: 'testD'}); // id:4
+      // familyId:4
+      await pj.Family.create({familyName: 'testD'});
 
       await pj.Plant.create({generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
     });
@@ -44,23 +57,14 @@ describe(`Genotype()`, () => {
     });
 
     it(`should delete genotype specified in criteria.where.generationId referenced plants`, async () => {
-      let deletedGeno = await pj.Genotype.delete(
-        {
-          where: {
-            genotypeId: 1
-          }
-        }
-      );
+      let deletedGeno = await pj.Genotype.delete({where: {genotypeId: 1}});
 
-      deletedGeno.should.deepEqual(
-        {
-          genotypes: [1],
-          plants: [1, 4]
-        }
-      );
+      deletedGeno.should.deepEqual({genotypes: [1], plants: [1, 4]});
 
       // Make sure we deleted also from database
-      let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILY);
+      let rowsFam = await sqlite.all(`
+        SELECT ${CONSTANTS.ATTR_ID_FAMILY}, ${CONSTANTS.ATTR_NAME_FAMILY}
+        FROM ${CONSTANTS.TABLE_FAMILY}`);
 
       rowsFam.should.deepEqual(
         [
@@ -71,7 +75,11 @@ describe(`Genotype()`, () => {
         ]
       );
 
-      let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' +  CONSTANTS.TABLE_GENERATION);
+      let rowsGen = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_NAME_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}`);
 
       rowsGen.should.deepEqual(
         [
@@ -82,7 +90,9 @@ describe(`Genotype()`, () => {
         ]
       );
 
-      let rowsGeno = await sqlite.all('SELECT genotypeId, genotypeName FROM ' + CONSTANTS.TABLE_GENOTYPE);
+      let rowsGeno = await sqlite.all(`
+        SELECT ${CONSTANTS.ATTR_ID_GENOTYPE}, ${CONSTANTS.ATTR_NAME_GENOTYPE}
+        FROM ${CONSTANTS.TABLE_GENOTYPE}`);
 
       rowsGeno.should.deepEqual(
         [
@@ -93,7 +103,9 @@ describe(`Genotype()`, () => {
         ]
       );
 
-      let rowsPlant = await sqlite.all('SELECT plantId, plantName FROM ' + CONSTANTS.TABLE_PLANT);
+      let rowsPlant = await sqlite.all(`
+        SELECT ${CONSTANTS.ATTR_ID_PLANT}, ${CONSTANTS.ATTR_NAME_PLANT}
+        FROM ${CONSTANTS.TABLE_PLANT}`);
 
       rowsPlant.should.deepEqual(
         [

@@ -102,7 +102,7 @@ UtilsQuery.joinGenerationsAndGenerationParentsFromFamilies = function(query) {
  * @param  {String|null} [alias=null]
  * Name of the join alias. Leave null to use rTable
  */
-UtilsQuery.join = function(query, lTable, rTable, lAttr, rAttr = null, alias = null) {
+UtilsQuery.join = (query, lTable, rTable, lAttr, rAttr=null, alias=null) => {
   if(rAttr === null) rAttr = lAttr;
 
   let fullLeftAttr = Utils.explicitColumn(lTable, lAttr);
@@ -254,7 +254,8 @@ UtilsQuery.joinMediumsFromEnvironments = function(query) {
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table. .
  */
-UtilsQuery.applyCriteriaAttributes = function (query, allowedAttributes, criteriaAttributes, overWriteTableLookup = null) {
+UtilsQuery.applyCriteriaAttributes =
+(query, allowedAttributes, criteriaAttributes, overWriteTableLookup=null) => {
   let attributesToSelect;
 
   if (_.isEmpty(criteriaAttributes)) {
@@ -381,7 +382,8 @@ UtilsQuery.applyCriteriaLimitAndOffset = function (query, criteria) {
  *         If attribute is illegal (not in allowedAttributes) or the order type
  *         is unknown (not ASC or DESC).
  */
-UtilsQuery.applyCriteriaSort = function(query, allowedAttributes, criteria, overWriteTableLookup = null) {
+UtilsQuery.applyCriteriaSort =
+(query, allowedAttributes, criteria, overWriteTableLookup=null) => {
   if (_.isEmpty(criteria.sort)) return;
   if (!_.isArray(criteria.sort)) criteria.sort = [criteria.sort];
 

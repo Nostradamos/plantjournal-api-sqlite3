@@ -69,7 +69,9 @@ class GenerationUpdate extends GenericUpdate {
     // We have to delete the old parents, build query for this
     context.queryDeleteOldParents = squel.remove().from(this.TABLE_PARENTS)
       .where('generationId IN ?', context.idsToUpdate).toString();
-    logger.debug(this.name, '#update() queryDeleteOldParents:', context.queryDeleteOldParents);
+    logger.debug(
+      `${this.name} #update() queryDeleteOldParents:`,
+      context.queryDeleteOldParents);
 
     // Wa have to insert new parents, build query for this
     let attributesRows = [];
@@ -133,7 +135,8 @@ class GenerationUpdate extends GenericUpdate {
       await super.executeQueryUpdate(context, update, criteria);
     } catch (err) {
       if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
-        throw new Error('update.familyId does not reference an existing Family');
+        throw new Error(
+          'update.familyId does not reference an existing Family');
       }
       throw err;
     }

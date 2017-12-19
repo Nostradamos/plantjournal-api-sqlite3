@@ -78,13 +78,14 @@ class JournalCreate extends GenericCreate {
 
 
     let sanitizedJournalValue = UtilsJSON.sanitize(options.journalValue);
-    logger.silly(this.name, '#setQueryFields() sanitizedJournalValue:', sanitizedJournalValue);
+    logger.silly(
+      `${this.name} #setQueryFields() sanitizedJournalValue:`,
+      sanitizedJournalValue);
 
     context.query.set(
       CONSTANTS.ATTR_VALUE_JOURNAL,
       squel.rstr('json(?)', sanitizedJournalValue),
-      {dontQuote: true}
-    );
+      {dontQuote: true});
   }
 
   /**

@@ -56,7 +56,8 @@ const TranslateOperatorsJournalValue = require(
  *        If you want to overwrite the used table for specific attributes, set
  *        them here. Key should be the attribute, value the new table.
  */
-function applyCriteriaFilter(query, allowedAttributes, criteria, overwriteTableLookup = null) {
+function applyCriteriaFilter(
+  query, allowedAttributes, criteria, overwriteTableLookup=null) {
   let self = {
     query: query,
     allowedAttributes: allowedAttributes,

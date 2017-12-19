@@ -48,13 +48,17 @@ class FamilyDelete extends GenericDelete {
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
       .field(
-        Utils.explicitColumn(CONSTANTS.TABLE_FAMILY, CONSTANTS.ATTR_ID_FAMILY))
+        Utils.explicitColumn(
+          CONSTANTS.TABLE_FAMILY, CONSTANTS.ATTR_ID_FAMILY))
       .field(
-        Utils.explicitColumn(CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION))
+        Utils.explicitColumn(
+          CONSTANTS.TABLE_GENERATION, CONSTANTS.ATTR_ID_GENERATION))
       .field(
-        Utils.explicitColumn(CONSTANTS.TABLE_GENOTYPE, CONSTANTS.ATTR_ID_GENOTYPE))
+        Utils.explicitColumn(
+          CONSTANTS.TABLE_GENOTYPE, CONSTANTS.ATTR_ID_GENOTYPE))
       .field(
-        Utils.explicitColumn(CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
+        Utils.explicitColumn(
+          CONSTANTS.TABLE_PLANT, CONSTANTS.ATTR_ID_PLANT));
   }
 
   /**
@@ -95,10 +99,16 @@ class FamilyDelete extends GenericDelete {
 
     context.haveIdsToDelete = context.familyIdsToDelete.length > 0;
 
-    logger.debug(this.name, '#delete() familyIdsToDelete:', context.familyIdsToDelete);
-    logger.debug(this.name, '#delete() generationIdsToDelete:', context.generationIdsToDelete);
-    logger.debug(this.name, '#delete() genotypeIdsToDelete:', context.genotypeIdsToDelete);
-    logger.debug(this.name, '#delete() plantIdsToDelete:', context.plantIdsToDelete);
+    logger.debug(
+      `${this.name} #delete() familyIdsToDelete:`, context.familyIdsToDelete);
+    logger.debug(
+      `${this.name} #delete() generationIdsToDelete:`,
+      context.generationIdsToDelete);
+    logger.debug(
+      `${this.name} #delete() genotypeIdsToDelete:`,
+      context.genotypeIdsToDelete);
+    logger.debug(
+      `${this.name} #delete() plantIdsToDelete:`, context.plantIdsToDelete);
   }
 
   /**

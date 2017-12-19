@@ -19,11 +19,20 @@ describe(`Medium()`, () => {
       await pj.Medium.create({mediumName: 'medium1'});
       await pj.Medium.create({mediumName: 'medium2'});
 
-      await pj.Family.create({familyName: 'family1'}); // familyId:1
-      await pj.Generation.create({generationName : 'generation1', familyId: 1}); // generationId: 1
-      await pj.Plant.create({generationId: 1, plantName: 'plant1', mediumId: 1}); // plantId: 1 genotypeId: 1
-      await pj.Plant.create({generationId: 1, plantName: 'plant2', mediumId: 1}); // plantId: 2 genotypeId: 2
-      await pj.Plant.create({generationId: 1, plantName: 'plant3', mediumId: 2}); // plantId: 3 genotypeId: 3
+      // familyId:1
+      await pj.Family.create({familyName: 'family1'});
+      // generationId: 1
+      await pj.Generation.create(
+        {generationName : 'generation1', familyId: 1});
+      // plantId: 1 genotypeId: 1
+      await pj.Plant.create(
+        {generationId: 1, plantName: 'plant1', mediumId: 1});
+      // plantId: 2 genotypeId: 2
+      await pj.Plant.create(
+        {generationId: 1, plantName: 'plant2', mediumId: 1});
+      // plantId: 3 genotypeId: 3
+      await pj.Plant.create(
+        {generationId: 1, plantName: 'plant3', mediumId: 2});
     });
 
     after(async () => {
@@ -45,7 +54,6 @@ describe(`Medium()`, () => {
       let rowsPlant = await sqlite.all(
         'SELECT plantId FROM ' + CONSTANTS.TABLE_PLANT);
       rowsPlant.should.deepEqual([{plantId: 3}]);
-
     });
   });
 });

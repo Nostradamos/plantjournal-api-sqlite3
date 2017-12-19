@@ -56,7 +56,8 @@ class TranslateOperatorsGeneric {
     this.getTable(self);
     this.modifySelf(self);
 
-    logger.silly(this.name, '#translateAndApplyOperators() self.table:', self.table);
+    logger.silly(
+      this.name, '#translateAndApplyOperators() self.table:', self.table);
 
     if(_.isPlainObject(attrOptions)) {
       this.callOperatorFuncsAndApplyCriterias(self);
@@ -243,7 +244,6 @@ class TranslateOperatorsGeneric {
       logger.warn('crit.crit is null');
     }
   }
-
 }
 
 /**

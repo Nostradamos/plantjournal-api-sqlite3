@@ -21,7 +21,8 @@ describe(`Generation()`, () => {
       await pj.Generation.create({familyId: 2, generationName: 'S1'});
       await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
       await pj.Plant.create({generationId: 1, plantName: 'testPlant2'});
-      await pj.Generation.create({familyId: 2, generationName: 'S2', generationParents: [1,2]});
+      await pj.Generation.create(
+        {familyId: 2, generationName: 'S2', generationParents: [1,2]});
     });
 
     after(async () => {
@@ -197,7 +198,9 @@ describe(`Generation()`, () => {
     });
 
     it(`should only return generations where generation has only parents specified in options.where.generationParents = [plantIdA, plantIdB]`, async () => {
-      let generations = await pj.Generation.find({attributes: ['generationParents', 'generationName'], where: {generationParents: [1,2]}});
+      let generations = await pj.Generation.find({
+        attributes: ['generationParents', 'generationName'],
+        where: {generationParents: [1,2]}});
 
       generations.should.deepEqual({
         found: 1,
@@ -232,10 +235,20 @@ describe(`Generation()`, () => {
       await pj.Plant.create({plantName: 'testPlant3'});
       await pj.Plant.create({plantName: 'testPlant4'});
 
-      await pj.Generation.create({familyId: 2, generationName: 'S2', generationParents: [1,2]});
-      await pj.Generation.create({familyId: 2, generationName: 'GenerationWithOnlyOneParent1', generationParents: [1]});
-      await pj.Generation.create({familyId: 2, generationName: 'GenerationWithOnlyOneParent2', generationParents: [2]});
-      await pj.Generation.create({familyId: 2, generationName: 'S2 (open pollination)', generationParents: [1,2,3,4]});
+      await pj.Generation.create(
+        {familyId: 2, generationName: 'S2', generationParents: [1,2]});
+      await pj.Generation.create({
+        familyId: 2,
+        generationName: 'GenerationWithOnlyOneParent1',
+        generationParents: [1]});
+      await pj.Generation.create({
+        familyId: 2,
+        generationName: 'GenerationWithOnlyOneParent2',
+        generationParents: [2]});
+      await pj.Generation.create({
+        familyId: 2,
+        generationName: 'S2 (open pollination)',
+        generationParents: [1,2,3,4]});
     });
 
     after(async () => {
@@ -269,8 +282,9 @@ describe(`Generation()`, () => {
     });
 
     it(`should find with $neq all generations which don't have a specific set of parents but every other combination including them`, async () => {
-      let generations = await pj.Generation.find(
-        {attributes: ['generationName', 'generationParents'], where: {generationParents: {$neq: [1,2]}}});
+      let generations = await pj.Generation.find({
+        attributes: ['generationName', 'generationParents'],
+        where: {generationParents: {$neq: [1,2]}}});
       generations.generations.should.containDeep(
         {
           2: {
@@ -291,8 +305,9 @@ describe(`Generation()`, () => {
     });
 
     it(`should find all generations which have at least some parents with the $contains operator`, async () => {
-      let generations = await pj.Generation.find(
-        {attributes: ['generationName', 'generationParents'], where: {generationParents: {$contains: 2}}});
+      let generations = await pj.Generation.find({
+        attributes: ['generationName', 'generationParents'],
+        where: {generationParents: {$contains: 2}}});
       generations.generations.should.containDeep(
         {
           1: {
@@ -314,8 +329,9 @@ describe(`Generation()`, () => {
     });
 
     it(`should find generations which don't have a specif parent with $ncontains operator`, async () => {
-      let generations = await pj.Generation.find(
-        {attributes: ['generationName', 'generationParents'], where: {generationParents: {$ncontains: 2}}});
+      let generations = await pj.Generation.find({
+        attributes: ['generationName', 'generationParents'],
+        where: {generationParents: {$ncontains: 2}}});
       generations.generations.should.containDeep(
         {
           2: {
@@ -350,36 +366,34 @@ describe(`Generation()`, () => {
 
     it(`should find all generations and the generationGenotypes attribute should contain an array of genotypeIds related to the generation.`, async () => {
       let generations = await pj.Generation.find();
-      generations.should.containDeep(
-        {
-          found: 3,
-          remaining: 0,
-          generations: {
-            1: {
-              generationName: 'Gen1',
-              generationGenotypes: [1, 2]
-            },
-            2: {
-              generationName: 'Gen2',
-              generationGenotypes: [3]
-            },
-            3: {
-              generationName: 'Gen3',
-              generationGenotypes: []
-            }
+      generations.should.containDeep({
+        found: 3,
+        remaining: 0,
+        generations: {
+          1: {
+            generationName: 'Gen1',
+            generationGenotypes: [1, 2]
           },
-          families: {
-            1: {
-              familyName: 'Family1',
-              familyGenerations: [1, 2]
-            },
-            2: {
-              familyName: 'Family2',
-              familyGenerations: [3]
-            }
+          2: {
+            generationName: 'Gen2',
+            generationGenotypes: [3]
+          },
+          3: {
+            generationName: 'Gen3',
+            generationGenotypes: []
+          }
+        },
+        families: {
+          1: {
+            familyName: 'Family1',
+            familyGenerations: [1, 2]
+          },
+          2: {
+            familyName: 'Family2',
+            familyGenerations: [3]
           }
         }
-      );
+      });
     });
   });
 });

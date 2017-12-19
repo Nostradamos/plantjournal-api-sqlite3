@@ -14,14 +14,23 @@ describe(`Generation()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'}); //familyId: 1
-      await pj.Generation.create({generationName: 'F1', familyId: 1}); //generationId: 1
-      await pj.Generation.create({generationName: 'F2', familyId: 1}); //generationId: 2
-      await pj.Family.create({familyName: 'testFamily2'});  //familyId: 2
-      await pj.Generation.create({generationName: 'S1', familyId: 2}); //generationId: 3
-      await pj.Plant.create({plantName: 'testPlant1', generationId: 1}); //plantId: 1
-      await pj.Plant.create({plantName: 'testPlant2', generationId: 2}); //plantId: 2
-      await pj.Generation.create({generationName: 'S2', familyId: 2, generationParents: [1,2]}); //generationId: 4
+      //familyId: 1
+      await pj.Family.create({familyName: 'testFamily1'});
+      //generationId: 1
+      await pj.Generation.create({generationName: 'F1', familyId: 1});
+      //generationId: 2
+      await pj.Generation.create({generationName: 'F2', familyId: 1});
+      //familyId: 2
+      await pj.Family.create({familyName: 'testFamily2'});
+      //generationId: 3
+      await pj.Generation.create({generationName: 'S1', familyId: 2});
+      //plantId: 1
+      await pj.Plant.create({plantName: 'testPlant1', generationId: 1});
+      //plantId: 2
+      await pj.Plant.create({plantName: 'testPlant2', generationId: 2});
+      //generationId: 4
+      await pj.Generation.create(
+        {generationName: 'S2', familyId: 2, generationParents: [1,2]});
     });
 
     after(async () => {
@@ -55,15 +64,19 @@ describe(`Generation()`, () => {
       updatedGen.should.eql([1]);
 
       // Make sure family rows are untouched
-      let rowsFam = await sqlite.all('SELECT familyId, familyName FROM ' + CONSTANTS.TABLE_FAMILY);
+      let rowsFam = await sqlite.all(`
+        SELECT ${CONSTANTS.ATTR_ID_FAMILY}, ${CONSTANTS.ATTR_NAME_FAMILY}
+        FROM ${CONSTANTS.TABLE_FAMILY}`);
 
-      rowsFam.should.deepEqual(
-        [
-          {familyId: 1, familyName: 'testFamily1'}, {familyId: 2, familyName: 'testFamily2'}
-        ]
-      );
+      rowsFam.should.deepEqual([
+        {familyId: 1, familyName: 'testFamily1'},
+        {familyId: 2, familyName: 'testFamily2'}]);
 
-      let rowsGen = await sqlite.all('SELECT generationId, generationName FROM ' +  CONSTANTS.TABLE_GENERATION);
+      let rowsGen = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_NAME_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}`);
 
       rowsGen.should.deepEqual(
         [
@@ -84,9 +97,8 @@ describe(`Generation()`, () => {
     });
 
     it(`should also be possible to limit/offset generations to update when found multiple`, async () => {
-      let updatedGen = await pj.Generation
-        .update({generationName: 'NoGoodGenName'}, {where: {familyId: 1}, offset: 1});
-
+      let updatedGen = await pj.Generation.update(
+        {generationName: 'NoGoodGenName'}, {where: {familyId: 1}, offset: 1});
       updatedGen.should.eql([2]);
     });
 
@@ -98,9 +110,12 @@ describe(`Generation()`, () => {
 
       updatedGenerations.length.should.eql(0);
 
-      let rowsGen = await sqlite.all(
-        'SELECT generationId, generationModifiedAt FROM ' +  CONSTANTS.TABLE_GENERATION  + ' WHERE generationId = 1'
-      );
+      let rowsGen = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_MODIFIED_AT_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}
+        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 1`);
 
       rowsGen[0].generationModifiedAt.should.not.eql(1);
     });
@@ -113,9 +128,12 @@ describe(`Generation()`, () => {
 
       updatedGenerations.length.should.eql(0);
 
-      let rowsGen = await sqlite.all(
-        'SELECT generationId, generationCreatedAt FROM ' +  CONSTANTS.TABLE_GENERATION  + ' WHERE generationId = 1'
-      );
+      let rowsGen = await sqlite.all(`
+        SELECT
+          ${CONSTANTS.ATTR_ID_GENERATION},
+          ${CONSTANTS.ATTR_CREATED_AT_GENERATION}
+        FROM ${CONSTANTS.TABLE_GENERATION}
+        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 1`);
 
       rowsGen[0].generationCreatedAt.should.not.eql(1);
     });
@@ -124,7 +142,8 @@ describe(`Generation()`, () => {
       await pj.Generation.update(
         {familyId: 42},
         {where: {generationId: 1}}
-      ).should.be.rejectedWith('update.familyId does not reference an existing Family');
+      ).should.be.rejectedWith(
+        'update.familyId does not reference an existing Family');
     });
 
     it(`should update familyId if not invalid`, async () => {
@@ -135,9 +154,10 @@ describe(`Generation()`, () => {
 
       updatedGenerations.should.eql([1]);
 
-      let rowsGen = await sqlite.all(
-        'SELECT generationId, familyId FROM ' +  CONSTANTS.TABLE_GENERATION  + ' WHERE generationId = 1'
-      );
+      let rowsGen = await sqlite.all(`
+        SELECT ${CONSTANTS.ATTR_ID_GENERATION}, ${CONSTANTS.ATTR_ID_FAMILY}
+        FROM ${CONSTANTS.TABLE_GENERATION}
+        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 1`);
 
       rowsGen[0].familyId.should.eql(2);
 
@@ -151,15 +171,14 @@ describe(`Generation()`, () => {
 
       updatedGenerations.should.eql([2]);
 
-      let rowsParents = await sqlite.all(
-        'SELECT generationId, plantId FROM ' + CONSTANTS.TABLE_GENERATION_PARENT + ' WHERE generationId = 2'
-      );
+      let rowsParents = await sqlite.all(`
+        SELECT ${CONSTANTS.ATTR_ID_GENERATION}, ${CONSTANTS.ATTR_ID_PLANT}
+        FROM ${CONSTANTS.TABLE_GENERATION_PARENT}
+        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 2`);
 
-      rowsParents.should.eql(
-        [
-          {generationId: 2, plantId: 1}, {generationId: 2, plantId: 2}
-        ]
-      );
+      rowsParents.should.eql([
+        {generationId: 2, plantId: 1},
+        {generationId: 2, plantId: 2}]);
     });
 
     it(`should throw error and rollback if generationParents are invalid`, async () => {
@@ -168,15 +187,14 @@ describe(`Generation()`, () => {
         {where: {generationId: 4}}
       ).should.be.rejectedWith('update.generationParents does not reference to existing Plants. At least one reference is invalid.');
 
-      let rowsParents = await sqlite.all(
-        'SELECT generationId, plantId FROM ' + CONSTANTS.TABLE_GENERATION_PARENT + ' WHERE generationId = 4'
-      );
+      let rowsParents = await sqlite.all(`
+        SELECT ${CONSTANTS.ATTR_ID_GENERATION}, ${CONSTANTS.ATTR_ID_PLANT}
+        FROM ${CONSTANTS.TABLE_GENERATION_PARENT}
+        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 4`);
 
-      rowsParents.should.eql(
-        [
-          {generationId: 4, plantId: 1}, {generationId: 4, plantId: 2}
-        ]
-      );
+      rowsParents.should.eql([
+        {generationId: 4, plantId: 1},
+        {generationId: 4, plantId: 2}]);
     });
   });
 });

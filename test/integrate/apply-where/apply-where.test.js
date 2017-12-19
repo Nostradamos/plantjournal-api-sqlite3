@@ -676,7 +676,9 @@ describe(`src/apply-where/apply-where`, () => {
 
       it(`should do 'IN' for generationParents $in`, () => {
         applyWhere(
-          q, ['generationParents'], {where: {generationParents: {$in: [42, 43]}}});
+          q,
+          ['generationParents'],
+          {where: {generationParents: {$in: [42, 43]}}});
         q.toString().should.sqlEql(
           `SELECT * FROM test
            WHERE (

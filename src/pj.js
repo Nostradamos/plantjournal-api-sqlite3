@@ -46,7 +46,8 @@ class plantJournal {
     let row;
 
     try {
-      row = await sqlite.get(`SELECT json_extract('{"a":13, "b":42}', '$.b') as test;`);
+      row = await sqlite.get(
+        `SELECT json_extract('{"a":13, "b":42}', '$.b') as test;`);
     } catch (err) {
       throw err;
     } finally {

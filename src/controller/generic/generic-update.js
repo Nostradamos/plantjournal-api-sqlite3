@@ -32,11 +32,15 @@ class GenericUpdate {
      */
   static async update(update, criteria){
     Utils.throwErrorIfNotConnected();
-    logger.debug(this.name, '#update() update:', JSON.stringify(update), 'criteria:', JSON.stringify(criteria) || undefined);
+    logger.debug(
+      `${this.name} #update() update: ${JSON.stringify(update)}`,
+      `criteria: ${JSON.stringify(criteria) || undefined}`);
 
     // Validate update and criteria arguments
-    if (_.isUndefined(update) && _.isUndefined(criteria)) throw new Error('No Update and Critera Object got passed');
-    if (_.isUndefined(criteria)) throw new Error('No Criteria Object got passed');
+    if (_.isUndefined(update) && _.isUndefined(criteria))
+      throw new Error('No Update and Critera Object got passed');
+    if (_.isUndefined(criteria))
+      throw new Error('No Criteria Object got passed');
     Utils.hasToBeAssocArray(update, 'Update Object');
     Utils.hasToBeAssocArray(criteria, 'Criteria Object');
 
@@ -47,7 +51,8 @@ class GenericUpdate {
     this.pickFieldsToUpdate(context, update, criteria);
 
     if (_.isEmpty(context.attributesToUpdate)) {
-      logger.debug(this.name, '#update() attributesToUpdate is empty, returning');
+      logger.debug(
+        `${this.name} #update() attributesToUpdate is empty, returning`);
       return [];
     }
 
@@ -64,7 +69,7 @@ class GenericUpdate {
     this.extractIdsRowsFind(context, update, criteria);
 
     if(_.isEmpty(context.idsToUpdate)) {
-      logger.debug(this.name, '#update() idsToUpdate is empty, nothing to update, returning');
+      logger.debug(`${this.name} #update() idsToUpdate is empty, nothing to update, returning`);
       return [];
     }
 
@@ -93,7 +98,9 @@ class GenericUpdate {
     // only take attributes which are updatable and drop everything else
     context.attributesToUpdate = _.pick(update, this.ATTRIBUTES_UPDATABLE);
 
-    logger.debug(this.name, '#update() attributesToUpdate:', context.attributesToUpdate);
+    logger.debug(
+      `${this.name} #update() attributesToUpdate:`,
+      context.attributesToUpdate);
 
   }
 
@@ -185,7 +192,7 @@ class GenericUpdate {
   static stringifyQueryFind(context, update, criteria) {
     context.queryFind = context.queryFind.toString();
 
-    logger.debug(this.name, '#update() queryFind:', context.queryFind);
+    logger.debug(`${this.name} #update() queryFind: ${context.queryFind}`);
   }
 
   /**
@@ -215,7 +222,8 @@ class GenericUpdate {
       context.idsToUpdate.push(row[this.ATTR_ID]);
     }
 
-    logger.debug(this.name, '#update() context.idsToUpdate:', context.idsToUpdate);
+    logger.debug(
+      `${this.name} #update() context.idsToUpdate:`, context.idsToUpdate);
   }
 
   /**
@@ -249,7 +257,8 @@ class GenericUpdate {
      */
   static setQueryUpdateModifiedAt(context, update, criteria) {
     context.modifiedAt = Utils.getUnixTimestampUTC();
-    logger.debug(this.name, '#update() ATTR_MODIFIED_AT:', this.ATTR_MODIFIED_AT);
+    logger.debug(
+      this.name, '#update() ATTR_MODIFIED_AT:', this.ATTR_MODIFIED_AT);
     context.queryUpdate.set(
       this.ATTR_MODIFIED_AT,
       context.modifiedAt
@@ -277,7 +286,8 @@ class GenericUpdate {
   static stringifyQueryUpdate(context, update, criteria) {
     context.queryUpdate = context.queryUpdate.toString();
 
-    logger.debug(this.name, '#update() queryUpdate:', context.queryUpdate.toString());
+    logger.debug(
+      this.name, '#update() queryUpdate:', context.queryUpdate.toString());
   }
 
   /**

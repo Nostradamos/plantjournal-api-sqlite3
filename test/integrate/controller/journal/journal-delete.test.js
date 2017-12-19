@@ -16,19 +16,49 @@ describe(`Journal()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
 
-      await pj.Environment.create({environmentName: 'Greenhouse #1', environmentDescription: 'This is the first greenhouse in my garden.'});
+      await pj.Environment.create({
+        environmentName: 'Greenhouse #1',
+        environmentDescription: 'This is the first greenhouse in my garden.'});
       await pj.Medium.create({mediumName: 'Pot #1', environmentId: 1});
       await pj.Medium.create({mediumName: 'Pot #2', environmentId: 1});
       await pj.Genotype.create({});
       await pj.Plant.create({plantName: 'testPlant1', genotypeId: 1});
 
-      await pj.Journal.create({journalTimestamp: 1337, journalType: 'log', journalValue: 'This is a log', plantId: 1});
-      await pj.Journal.create({journalTimestamp: 1337, journalType: 'ph-sensor', journalValue: 6.5, mediumId: 1});
-      await pj.Journal.create({journalTimestamp: 1337, journalType: 'ec-sensor', journalValue: 1.3, mediumId: 1});
-      await pj.Journal.create({journalTimestamp: 1337, journalType: 'temp-sensor', journalValue: 28.7, environmentId: 1});
-      await pj.Journal.create({journalTimestamp: 1555, journalType: 'log', journalValue: 'This is a log', plantId: 1});
-      await pj.Journal.create({journalTimestamp: 1555, journalType: 'watering', journalValue: '{"amount": 1.5, "n": 3, "p": 4, "k": 1.7, "fertilizers": ["Hakaphos Grün", "Hakaphos Blau"]}', mediumId: 1});
-      await pj.Journal.create({journalTimestamp: 1337, journalType: 'ph-sensor', journalValue: 6.8, mediumId: 2});
+      await pj.Journal.create({
+        journalTimestamp: 1337,
+        journalType: 'log',
+        journalValue: 'This is a log',
+        plantId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1337,
+        journalType: 'ph-sensor',
+        journalValue: 6.5,
+        mediumId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1337,
+        journalType: 'ec-sensor',
+        journalValue: 1.3,
+        mediumId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1337,
+        journalType: 'temp-sensor',
+        journalValue: 28.7,
+        environmentId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1555,
+        journalType: 'log',
+        journalValue: 'This is a log',
+        plantId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1555,
+        journalType: 'watering',
+        journalValue: '{"amount": 1.5, "n": 3, "p": 4, "k": 1.7, "fertilizers": ["Hakaphos Grün", "Hakaphos Blau"]}',
+        mediumId: 1});
+      await pj.Journal.create({
+        journalTimestamp: 1337,
+        journalType: 'ph-sensor',
+        journalValue: 6.8,
+        mediumId: 2});
     });
 
     after(async () => {

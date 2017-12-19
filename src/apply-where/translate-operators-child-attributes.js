@@ -8,7 +8,8 @@ const Utils = require('../utils/utils');
 const UtilsChildAttributes = require('../utils/utils-child-attributes');
 const UtilsExpression = require('../utils/utils-expression');
 
-const TranslateOperatorsRelational = require('./translate-operators-relational');
+const TranslateOperatorsRelational = require(
+  './translate-operators-relational');
 
 /**
  * This class translates criterias for generationParents and all other child
@@ -128,7 +129,8 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         ...exprCountNotEqualArgs
       ).toString();
 
-    logger.silly(`${this.name} #operatorNotEquals() queryCountUnequal`, queryCountUnequal);
+    logger.silly(
+      `${this.name} #operatorNotEquals() queryCountUnequal`, queryCountUnequal);
 
     // Next we have to find all rows where we have values different to any
     // of operatorOptions. For the generationParents child attribute this
@@ -183,7 +185,8 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
       createGreaterThanEqualExpression(
         self.table, self.attr, operatorOptions.length || 1, 'COUNT');
 
-    logger.silly(`${this.name} #operatorContains()`, critHaving, critHavingArgs);
+    logger.silly(
+      `${this.name} #operatorContains()`, critHaving, critHavingArgs);
 
     UtilsExpression.applyExpression(
       self.squelExprHaving, critHaving, critHavingArgs, self.type);
@@ -285,7 +288,9 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
         .having(self.squelExprHaving);
     }
 
-    logger.silly('#applyCriteriaFilter #translateAndApplyChildAttributesOperators() subQuery:', subQuery.toString());
+    logger.silly(
+      '#applyCriteriaFilter #translateAndApplyChildAttributesOperators() subQuery:',
+      subQuery.toString());
 
     UtilsExpression.applyExpression(
       self.squelExprOld,

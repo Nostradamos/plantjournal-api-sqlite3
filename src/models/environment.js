@@ -1,9 +1,13 @@
 'use strict';
 
-const EnvironmentCreate = require('../controller/environment/environment-create');
-const EnvironmentFind = require('../controller/environment/environment-find');
-const EnvironmentDelete = require('../controller/environment/environment-delete');
-const EnvironmentUpdate = require('../controller/environment/environment-update');
+const EnvironmentCreate = require(
+  '../controller/environment/environment-create');
+const EnvironmentFind = require(
+  '../controller/environment/environment-find');
+const EnvironmentDelete = require(
+  '../controller/environment/environment-delete');
+const EnvironmentUpdate = require(
+  '../controller/environment/environment-update');
 
 /**
  * Namespace containing all CRUD methods of Environment.

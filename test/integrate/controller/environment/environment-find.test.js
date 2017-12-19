@@ -13,10 +13,18 @@ describe(`Environment()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Environment.create({environmentName: 'Greenhouse #1', environmentDescription: 'This is the first greenhouse in my garden.'});
-      await pj.Environment.create({environmentName: 'Greenhouse #2', environmentDescription: 'This is the second greenhouse in my garden.'});
-      await pj.Environment.create({environmentName: 'Growbox #1', environmentDescription: 'Small growbox to keep mother plants all over the year.'});
-      await pj.Environment.create({environmentName: 'Allotment garden #1', environmentDescription: 'Allotment garden where i usually plant all food producing plants or test new varities.'});
+      await pj.Environment.create({
+        environmentName: 'Greenhouse #1',
+        environmentDescription: 'This is the first greenhouse in my garden.'});
+      await pj.Environment.create({
+        environmentName: 'Greenhouse #2',
+        environmentDescription: 'This is the second greenhouse in my garden.'});
+      await pj.Environment.create({
+        environmentName: 'Growbox #1',
+        environmentDescription: 'Small growbox to keep mother plants all over the year.'});
+      await pj.Environment.create({
+        environmentName: 'Allotment garden #1',
+        environmentDescription: 'Allotment garden where i usually plant all food producing plants or test new varities.'});
     });
 
     after(async () => {
@@ -78,26 +86,24 @@ describe(`Environment()`, () => {
 
     it(`should find all environments and environmentMediums should contain all mediums related to that environment`, async () => {
       let environments = await pj.Environment.find();
-      environments.should.containDeep(
-        {
-          found: 3,
-          remaining: 0,
-          environments: {
-            1: {
-              environmentName: 'env1',
-              environmentMediums: [1, 2]
-            },
-            2: {
-              environmentName: 'env2',
-              environmentMediums: [3]
-            },
-            3: {
-              environmentName: 'env3',
-              environmentMediums: []
-            }
+      environments.should.containDeep({
+        found: 3,
+        remaining: 0,
+        environments: {
+          1: {
+            environmentName: 'env1',
+            environmentMediums: [1, 2]
+          },
+          2: {
+            environmentName: 'env2',
+            environmentMediums: [3]
+          },
+          3: {
+            environmentName: 'env3',
+            environmentMediums: []
           }
         }
-      );
+      });
     });
   });
 });

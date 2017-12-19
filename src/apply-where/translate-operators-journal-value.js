@@ -51,8 +51,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
       // Make sure the first char after journalValue is a `.` (dot) or
       // `[` (bracket). If not, throw an errror.
       if (charAfterAttr !== '.' && charAfterAttr !== '[') {
-        throw new Error(
-          `Invalid JSON Path for attr: ${self.attr}.JSON PATHS have to start with "." or "[" but it starts with "${charAfterAttr}"`);
+        throw new Error(`Invalid JSON Path for attr: ${self.attr}.JSON PATHS have to start with "." or "[" but it starts with "${charAfterAttr}"`);
       }
 
       // We need to access the attribute path value with a function, so
@@ -107,7 +106,11 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
      */
   static operatorNotEquals(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createNotEqualsExpression(
-      self.table, self.attr, UtilsJSON.sanitize(operatorOptions, self.isPath), self.func, self.funcArgs);
+      self.table,
+      self.attr,
+      UtilsJSON.sanitize(operatorOptions, self.isPath),
+      self.func,
+      self.funcArgs);
   }
 
   /**
@@ -492,8 +495,7 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
         _.isNull(self.attrOptions) ||
         _.isArray(self.attrOptions) ||
         _.isPlainObject(self.attrOptions)) {
-      logger.silly(
-        this.name, '#checkForShortHands() looks like String/Number/Boolean/Null/Array/PlainObject short hand');
+      logger.silly(this.name, '#checkForShortHands() looks like String/Number/Boolean/Null/Array/PlainObject short hand');
       this.processStringNumberBooleanNullArrayPlainObjectShortHand(self, crit);
     } else {
       this.unhandledShortHand(self);

@@ -83,8 +83,7 @@ class PlantCreate extends GenericCreate {
             // If neither genotypeId nor plantClonedFrom is set, we want to
             // create a new genotypeId for this plant.
             _.isUndefined(options.plantClonedFrom)) {
-      logger.debug(
-        `${this.name} #create() We need to create a new genotype for this plant`);
+      logger.debug(`${this.name} #create() We need to create a new genotype for this plant`);
 
       context.createdGenotype = await Genotype.create(options);
       context.genotypeId = _.parseInt(
@@ -100,10 +99,10 @@ class PlantCreate extends GenericCreate {
         `SELECT ${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_GENOTYPE}
          FROM ${CONSTANTS.TABLE_PLANT} plants
          WHERE
-           ${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_PLANT} = $plantClonedFrom`;
+           ${CONSTANTS.TABLE_PLANT}.${CONSTANTS.ATTR_ID_PLANT} =
+             $plantClonedFrom`;
 
-      logger.debug(
-        `${this.name} #create() queryRetrieveGenotypeId: ${queryRetrieveGenotypeId} ? = : ${options.plantClonedFrom}`);
+      logger.debug(`${this.name} #create() queryRetrieveGenotypeId: ${queryRetrieveGenotypeId} ? = : ${options.plantClonedFrom}`);
 
       let motherPlantRow = await sqlite.get(
         queryRetrieveGenotypeId,
@@ -141,7 +140,8 @@ class PlantCreate extends GenericCreate {
      */
   static async executeQueryInsertPlant(context, options) {
     try {
-      context.result = await sqlite.run(context.query, {$genotypeId: context.genotypeId});
+      context.result = await sqlite.run(
+        context.query, {$genotypeId: context.genotypeId});
     } catch (err) {
       // it's possible that we created a genotype for this, undo it.
       await sqlite.get('ROLLBACK');
