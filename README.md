@@ -295,10 +295,18 @@ Valid records: medium
   lamda expression allows you to fit max line length for named functions, feel
   free to use it.
 
-* Descriptions of tests should get encapsulated inside of \`\` to not need to
-  escape `"` or `'` and make it possible to easily search the test.
+* Descriptions of tests should get encapsulated inside of `\`\`` to not need to
+  escape `"` or `'` and make it possible to easily search the test. Besides
+  that test description lines are allowed to have more than 80 characters, and
+  it's prefered to do so, again to make it easier to find the test.
 
-* SQLite3 queries should also be inside of \`\`.
+* SQLite3 queries should also be inside of `\`\``, if they exceed one line.
+  Queries which fit into one line can use the normal \'\'. If the query exceeds
+  one line (80 characters), break the line before FROM/WHERE/LIMIT/GROUP...
+  and use tabs/indent to make the query readable. Try to make the queries
+  easily readable, for examples have a look at some tests.
+  NOTE: You can use the should.sqlEql assertion to test a single lined query
+  against a multi line equal.
 
 * Try to not use more than 80 characters per line. Only exception are strings
   encapsulated in an `it()` function for tests.
