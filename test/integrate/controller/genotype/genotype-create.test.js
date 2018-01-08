@@ -42,8 +42,7 @@ describe(`Genotype()`, () => {
 
     it(`should throw error if options.generationId is not an integer`, async () => {
       await pj.Genotype.create({generationId: '1'})
-        .should.be.rejectedWith(
-          'options.generationId has to be an integer');
+        .should.be.rejectedWith('options.generationId has to be an integer');
     });
 
     it(`should throw an error if options.generationId does not reference a generation`, async () => {
@@ -107,6 +106,67 @@ describe(`Genotype()`, () => {
       genotype.genotypes[1].should.containDeep(rows[0]);
     });
 
+    it(`should not create a new genotype with a generation if generationId is null`, async () => {
+      let genotype = await pj.Genotype.create(
+        {genotypeName: 'genoTest42', generationId: null});
 
+      genotype.genotypes[1].should.containDeep({
+        genotypeName: 'genoTest42',
+        generationId: null,
+      });
+
+      let rows = await sqlite.all(`SELECT * FROM generations`);
+      rows.length.should.eql(1);
+    });
+
+    it(`should be possible to create a new genotype and generation at once`, async () => {
+      let genotype = await pj.Genotype.create(
+        {genotypeName: 'genoTest43', generationName: 'F2', familyId: 1});
+      genotype.should.containDeep({
+        genotypes: {
+          1: {
+            genotypeName: 'genoTest43',
+            generationId: 2
+          }
+        },
+        generations: {
+          2: {
+            generationName: 'F2',
+            generationGenotypes: [1],
+            familyId: 1
+          }
+        }
+      });
+    });
+
+    it(`should be possible to create a new genotype, generation and family at once`, async () => {
+      let genotype = await pj.Genotype.create({
+        genotypeName: 'genoTest43',
+        generationName: 'F2',
+        familyName: 'TestFamily2'});
+
+      genotype.should.containDeep({
+        genotypes: {
+          1: {
+            genotypeName: 'genoTest43',
+            generationId: 2
+          }
+        },
+        generations: {
+          2: {
+            generationName: 'F2',
+            generationGenotypes: [1],
+            familyId: 2
+          }
+        },
+        families: {
+          2: {
+            familyName: 'TestFamily2',
+            familyGenerations: [2],
+            familyId: 2
+          }
+        }
+      });
+    });
   });
 });

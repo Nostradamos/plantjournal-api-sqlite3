@@ -159,3 +159,47 @@ Utils.explicitColumnRstr = function(table, column) {
 Utils.splitToInt = function(str, sep = ',') {
   return str === null ? [] : _(str).split(sep).map(_.toInteger).value();
 };
+
+// Object to cache getSelfsAndCallStack() resolves
+Utils.getSelfsAndClassStackCache = {};
+
+/**
+ * This method is used from GenericCreate to resolve the PARENT classes and
+ * initiate the self array.
+ * We expect an Object (normally a class) with an PARENT attribute which
+ * references another class/object which again has an PARENT attribute which...
+ * This method resolves this by collecting all class references in a sorted
+ * order where the first passed class is the last item.
+ * Besides that we also generate an array with as many empty objects in it
+ * as we collected class references (including the passed one).
+ * NOTE: We also cache our results in getSelfsAndCallStackCache.
+ * @param  {Object|Class} obj
+ *         Object or class for which you want to resolve the PARENT classes.
+ * @param  {Object|Class|false|undefined|null} obj.PARENT
+ *         This attribute should reference another Object/Class which again
+ *         can have a .PARENT attribute which references another... to stop
+ *         this lookup, set .PARENT to undefined/null/false...
+ * @return {{0: Object[], 1: Object[]}}
+ *         We return an array with two elements. The first is again a list,
+ *         which contains n empty objects. The second element is a list of
+ *         the collected/resolved class/object references.
+ */
+Utils.getSelfsAndClassStack = function(obj) {
+  // Check if we already have a cached result for this request
+  let cached = Utils.getSelfsAndClassStackCache[obj];
+  if(!cached) {
+    let [callStack, selfs] = [[obj],[{}]];
+
+    let rP = obj.PARENT;
+    while(rP) {
+      callStack.unshift(rP);
+      selfs.push({});
+      rP = rP.PARENT;
+    }
+
+    cached = [selfs, callStack];
+    Utils.getSelfsAndClassStackCache[obj] = cached;
+
+  }
+  return [_.cloneDeep(cached[0]), cached[1]];
+};

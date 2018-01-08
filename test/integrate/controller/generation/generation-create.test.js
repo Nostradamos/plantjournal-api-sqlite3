@@ -10,7 +10,7 @@ describe(`Generation()`, () => {
   describe(`#create()`, () => {
     let pj;
 
-    before(async () => {
+    beforeEach(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
       await pj.Family.create({familyName: 'testName'});
@@ -22,6 +22,12 @@ describe(`Generation()`, () => {
       await pj.Generation.create(
         {generationName: 'testGeneration2', familyId: '1'})
         .should.be.rejectedWith('options.familyId has to be an integer');
+    });
+
+    it(`should throw error if options.familyId is not set`, async () => {
+      await pj.Generation.create(
+        {generationName: 'testGeneration2'})
+        .should.be.rejectedWith('options.familyId is not set. Missing familyId or attributes to create a new family.');
     });
 
     it(`should throw error if options.generationName is not set`, async () => {
@@ -68,11 +74,6 @@ describe(`Generation()`, () => {
         tested++;
       }
       tested.should.eql(6);
-    });
-
-    it(`should throw Error if options.familyId is not set`, async () => {
-      await pj.Generation.create({generationName: 'testGeneration2'})
-        .should.be.rejectedWith('options.familyId has to be set');
     });
 
     it(`should create a new generations entry and return generation object`, async () => {
@@ -122,8 +123,8 @@ describe(`Generation()`, () => {
         generationName: 'testGeneration'
       });
 
-      generation.generations[2].should.containDeep({
-        generationId: 2,
+      generation.generations[1].should.containDeep({
+        generationId: 1,
         generationDescription: '',
       });
 
@@ -132,8 +133,43 @@ describe(`Generation()`, () => {
           ${CONSTANTS.ATTR_ID_GENERATION},
           ${CONSTANTS.ATTR_DESCRIPTION_GENERATION}
         FROM ${CONSTANTS.TABLE_GENERATION}
-        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 2`);
-      generation.generations[2].should.containDeep(rows[0]);
+        WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 1`);
+      generation.generations[1].should.containDeep(rows[0]);
+    });
+
+    it(`should be possible to create a generation and family in one request`, async () => {
+      let generation = await pj.Generation.create({
+        generationName: 'F1',
+        familyName: 'Haze X Haze'
+      });
+
+      let createdAt = generation
+        .generations[1][CONSTANTS.ATTR_CREATED_AT_GENERATION];
+
+      generation.should.deepEqual({
+        generations: {
+          1: {
+            generationId: 1,
+            generationDescription: '',
+            generationName: 'F1',
+            generationCreatedAt: createdAt,
+            generationModifiedAt: createdAt,
+            generationGenotypes: [],
+            generationParents: [],
+            familyId: 2
+          }
+        },
+        families: {
+          2: {
+            familyId: 2,
+            familyName: 'Haze X Haze',
+            familyDescription: '',
+            familyGenerations: [1],
+            familyCreatedAt: createdAt,
+            familyModifiedAt: createdAt
+          }
+        }
+      });
     });
 
   });

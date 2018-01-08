@@ -92,4 +92,38 @@ describe(`utils/utils`, () => {
       Utils.splitToInt(null).should.eql([]);
     });
   });
+
+  describe(`#getSelfsAndClassStack()`, () => {
+    afterEach(() => {
+      // Reset cache
+      Utils.getSelfsAndClassStackCache = {};
+    });
+
+    it(`should resolve all PARENT classes and return the references to them`, () => {
+      let foo = {};
+      let bar = {PARENT: foo};
+      Utils.getSelfsAndClassStack(bar).should.eql([
+        [{}, {}],
+        [foo, bar]
+      ]);
+    });
+
+    it(`should store result in cache`, () => {
+      let foo = {};
+      let bar = {PARENT: foo};
+      Utils.getSelfsAndClassStack(bar);
+      Utils.getSelfsAndClassStackCache.should.eql({
+        [bar]: [[{}, {}], [foo, bar]]
+      });
+    });
+
+    it(`should return result from cache and not compute result again`, () => {
+      let foo = {};
+      Utils.getSelfsAndClassStackCache[foo] = [[{}], ['test']];
+      Utils.getSelfsAndClassStack(foo).should.eql([
+        [{}],
+        ['test']
+      ]);
+    });
+  });
 });

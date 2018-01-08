@@ -2,20 +2,22 @@
 'use strict';
 
 require('should');
-const plantJournal = require('../../../../src/pj');
 const sqlite = require('sqlite');
+
+const plantJournal = require('../../../../src/pj');
+const CONSTANTS = require('../../../../src/constants');
 
 describe(`Medium()`, () => {
   describe(`#create()`, () => {
     let pj;
 
-    before(async () => {
+    beforeEach(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
       await pj.Environment.create({environmentName: 'testEnvironment1'});
     });
 
-    after(async () => {
+    afterEach(async () => {
       await pj.disconnect();
     });
 
@@ -79,6 +81,81 @@ describe(`Medium()`, () => {
 
       let rows = await sqlite.all(`SELECT * FROM mediums`);
       medium.mediums[1].should.containDeep(rows[0]);
+    });
+
+    it(`should be possible to create a new medium without an environment`, async () => {
+      let medium = await pj.Medium.create({
+        mediumName: 'testMediumWithoutEnv',
+        mediumDescription: 'This is a test'});
+
+      medium.should.containDeep({
+        mediums: {
+          1: {
+            mediumId: 1,
+            mediumDescription: 'This is a test',
+            mediumName: 'testMediumWithoutEnv',
+            mediumPlants: [],
+            environmentId: null,
+          }
+        }
+      });
+
+      let result = await sqlite.get(
+        `SELECT count(*) FROM ${CONSTANTS.TABLE_ENVIRONMENT}`);
+      result['count(*)'].should.eql(1);
+    });
+
+    it(`should be possible to create a new medium without an environment if environmentId is set to null`, async () => {
+      let medium = await pj.Medium.create({
+        mediumName: 'testMediumWithoutEnv',
+        mediumDescription: 'This is a test',
+        environmentId: null});
+
+      medium.should.containDeep({
+        mediums: {
+          1: {
+            mediumId: 1,
+            mediumDescription: 'This is a test',
+            mediumName: 'testMediumWithoutEnv',
+            mediumPlants: [],
+            environmentId: null,
+          }
+        }
+      });
+
+      let result = await sqlite.get(
+        `SELECT count(*) FROM ${CONSTANTS.TABLE_ENVIRONMENT}`);
+      result['count(*)'].should.eql(1);
+    });
+
+
+    it(`should be possible to create a new medium and environment in one create`, async () => {
+      let medium = await pj.Medium.create({
+        mediumName: 'testMedium',
+        mediumDescription: 'This is a test234',
+        environmentName: 'testEnvironment2',
+        environmentDescription: 'test description for two'
+      });
+
+      medium.should.containDeep({
+        mediums: {
+          1: {
+            mediumId: 1,
+            mediumName: 'testMedium',
+            mediumDescription: 'This is a test234',
+            mediumPlants: [],
+            environmentId: 2,
+          }
+        },
+        environments: {
+          2: {
+            environmentId: 2,
+            environmentName: 'testEnvironment2',
+            environmentDescription: 'test description for two',
+            environmentMediums: [1],
+          }
+        }
+      });
     });
   });
 });
