@@ -28,30 +28,51 @@ class GenericCreate {
      *        Object which should hold enough information to create
      *        a new entry with.
      * @throws {Error}
-     * @return {object} - returnObject, should normally contain information
-     *                    about created record.
+     * @return {object}
+     *        returnObject, should normally contain information about created
+     *        record.
      */
   static async create(options) {
     Utils.throwErrorIfNotConnected();
-    logger.debug(this.name, '#create() options:', JSON.stringify(options));
-    let context = {};
+    logger.debug(`${this.name} #create() options:`, JSON.stringify(options));
 
-    this.validateOptionsIsAssoc(context, options);
-    this.validateOptions(context, options);
+    Utils.hasToBeAssocArray(options);
 
-    this.initQuery(context, options);
-    this.setQueryFields(context, options);
-    this.setQueryCreatedAtAndModifiedAt(context, options);
-    this.stringifyQuery(context, options);
+    let [selfs, callStack] = getSelfsAndCallStack(this);
+    logger.debug(`${this.name} #create() callStack`, callStack.toString());
 
-    await this.executeQuery(context, options);
+    let functions = [
+      'validate',
+      'initQuery',
+      'setQueryFields',
+      'setQueryCreatedAtAndModifiedAtFields',
+      'stringifyQuery',
+      'beginTransaction',
+      'execute',
+      'endTransaction',
+      'buildReturnObject'
+    ];
 
-    let returnObject = {};
+    for(let f of functions) {
+      for(let i=0;i<callStack.length;i++) {
+        let shouldAwait = _.indexOf(
+          ['beginTransaction', 'executeTransaction', 'endTransaction']) !== -1;
 
-    this.buildReturnObject(returnObject, context, options);
+        let removeFromCallStack = shouldAwait ?
+          await callStack[i][f](selfs[i], context) :
+          callStack[i][f](selfs[i], context);
+
+        if(removeFromCallStack === 1) {
+          [selfs, callStack] = [selfs.splice(i+1), callStack.splice(i+1)];
+        }
+
+        // Make sure we execute begin/endTransaction only once
+        if(f === 'beginTransaction' || f === 'endTransaction') break;
+      }
+    }
+
     logger.debug(this.name, '#create() returnObject:', JSON.stringify(returnObject));
-
-    return returnObject;
+    return context.returnObject;
   }
 
   /**
