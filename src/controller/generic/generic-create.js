@@ -7,6 +7,7 @@ const sqlite = require('sqlite');
 const logger = require('../../logger');
 const Utils = require('../../utils/utils');
 
+var i = 0;
 
 /**
  * Generic create class which is the skeleton for all *-create classes.
@@ -38,29 +39,39 @@ class GenericCreate {
 
     Utils.hasToBeAssocArray(options);
 
-    let [selfs, callStack] = getSelfsAndCallStack(this);
-    logger.debug(`${this.name} #create() callStack`, callStack.toString());
+    let [selfs, callStack] = Utils.getSelfsAndCallStack(this);
+    logger.debug(`${this.name} #create() callStack:`, _.map(callStack, e => e.name));
 
-    let functions = [
+    const functions = [
       'validate',
       'initQuery',
       'setQueryFields',
       'setQueryCreatedAtAndModifiedAtFields',
       'stringifyQuery',
       'beginTransaction',
-      'execute',
+      'executeQuery',
       'endTransaction',
       'buildReturnObject'
     ];
 
-    for(let f of functions) {
-      for(let i=0;i<callStack.length;i++) {
-        let shouldAwait = _.indexOf(
-          ['beginTransaction', 'executeTransaction', 'endTransaction']) !== -1;
+    let context = {options, returnObject: {}, insertId: {}, i: i+1};
 
-        let removeFromCallStack = shouldAwait ?
-          await callStack[i][f](selfs[i], context) :
-          callStack[i][f](selfs[i], context);
+    for(let f of functions) {
+      let shouldAwait = _.indexOf(
+        ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
+      for(let i=0;i<callStack.length;i++) {
+        let removeFromCallStack;
+        try {
+          logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`)
+          removeFromCallStack = shouldAwait ?
+            await callStack[i][f](selfs[i], context) :
+            callStack[i][f](selfs[i], context);
+        } catch(err) {
+          if(err.message === 'callStack[i][f] is not a function') {
+            throw new Error(`Could not execute ${callStack[i].name}.${f}`)
+          }
+          throw err;
+        }
 
         if(removeFromCallStack === 1) {
           [selfs, callStack] = [selfs.splice(i+1), callStack.splice(i+1)];
@@ -71,7 +82,7 @@ class GenericCreate {
       }
     }
 
-    logger.debug(this.name, '#create() returnObject:', JSON.stringify(returnObject));
+    logger.debug(this.name, '#create() returnObject:', JSON.stringify(context.returnObject));
     return context.returnObject;
   }
 
@@ -83,7 +94,7 @@ class GenericCreate {
      * @param  {object} options
      *         options object which got passed to GenericCreate.create().
      */
-  static validateOptionsIsAssoc(context, options) {
+  static validateOptionsIsAssoc(self, context) {
     Utils.hasToBeAssocArray(options);
   }
 
@@ -96,7 +107,7 @@ class GenericCreate {
      * @param  {object} options
      *         options object which got passed to GenericCreate.create().
      */
-  static validateOptions(context, options) {
+  static validateOptions(self, context) {
   }
 
   /**
@@ -110,7 +121,7 @@ class GenericCreate {
      * @param  {object} options
      *         options object which got passed to GenericCreate.create().
      */
-  static initQuery(context, options) {
+  static initQuery(self, context) {
     context.query = squel.insert().into(this.TABLE);
   }
 
@@ -124,14 +135,14 @@ class GenericCreate {
      * @param  {object} options
      *         options object which got passed to GenericCreate.create().
      */
-  static setQueryFields(context, options) {
+  static setQueryFields(self, context) {
     for(let attr of this.ATTRIBUTES) {
       if (_.indexOf(this.SKIP_ATTRIBUTES, attr) !== -1) {
         continue;
       } else if (!_.isUndefined(context[attr])) {
         context.query.set(attr, context[attr]);
-      } else if (!_.isUndefined(options[attr])) {
-        context.query.set(attr, options[attr]);
+      } else if (!_.isUndefined(context.options[attr])) {
+        context.query.set(attr, context.options[attr]);
       } else if (!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
         context.query.set(attr, this.DEFAULT_VALUES_ATTRIBUTES[attr]);
       } else {
@@ -152,14 +163,13 @@ class GenericCreate {
      * @param  {object} options
      *         options object which got passed to GenericCreate.create().
      */
-  static setQueryCreatedAtAndModifiedAt(context, options) {
-    context.createdAt = context.modifiedAt = Utils.getUnixTimestampUTC();
-    logger.debug(this.name, '#setQueryCreatedAtAndModifiedAt() createdAt:', context.createdAt,
-      'modifiedAt:', context.modifiedAt);
+  static setQueryCreatedAtAndModifiedAtFields(self, context) {
+    self.createdAt = Utils.getUnixTimestampUTC();
+    logger.debug(this.name, '#setQueryCreatedAtAndModifiedAt() createdAt:', self.createdAt);
 
     context.query
-      .set(this.ATTR_CREATED_AT, context.createdAt)
-      .set(this.ATTR_MODIFIED_AT, context.modifiedAt);
+      .set(this.ATTR_CREATED_AT, self.createdAt)
+      .set(this.ATTR_MODIFIED_AT, self.createdAt);
   }
 
   /**
@@ -171,9 +181,24 @@ class GenericCreate {
      * @param  {object} options
      *         options object which got passed to GenericCreate.create().
      */
-  static stringifyQuery(context, options) {
+  static stringifyQuery(self, context) {
     context.query = context.query.toString();
-    logger.debug(this.name, '#create() query:', context.query);
+    logger.debug(this.name, '#stringify() query:', context.query);
+  }
+
+  static async beginTransaction(self, context) {
+    logger.debug(this.name,  '#beginTransaction() BEGIN');
+    await sqlite.get('BEGIN');
+  }
+
+  static async rollbackTransaction(self, context) {
+    logger.debug(this.name,  '#rollbackTransaction() ROLLBACK');
+    await sqlite.get('ROLLBACK');
+  }
+
+  static async endTransaction(self, context) {
+    logger.debug(this.name, context.i, '#endTransaction() COMMIT');
+    await sqlite.get('COMMIT');
   }
 
   /**
@@ -187,15 +212,16 @@ class GenericCreate {
      * @throws {Error}
      *         Throws all sql errors
      */
-  static async executeQuery(context, options) {
+  static async executeQuery(self, context) {
+    logger.debug(this.name, context.i, '#execute() Executing sql query');
     context.result = await sqlite.run(context.query);
-    context.insertId = context.result.stmt.lastID;
-    logger.debug(this.name, '#create() result:', context.result);
+    self.insertId = context.result.stmt.lastID;
+    logger.debug(this.name, context.i, '#execute() result:', context.result);
   }
 
   /**
      * This method builds the returnObject by iterating over all ATTRIBUTES
-     * and trying to retrieve the information either from context, options or
+     * and trying to retrieve the information either from self, context or
      * DEFAULT_VALUES_ATTRIBUTES. We also add internal attributes.
      * The so called `recordObject` will be in
      * returnObject[plural][insertId]. returnObject is the object returned
@@ -207,13 +233,13 @@ class GenericCreate {
      * @param  {object} options
      *         options object which got passed to GenericCreate.create().
      */
-  static buildReturnObject(returnObject, context, options) {
+  static buildReturnObject(self, context) {
     let recordObject = {};
     for (let attr of this.ATTRIBUTES) {
       if (!_.isUndefined(context[attr])) {
         recordObject[attr] = context[attr];
-      } else if (!_.isUndefined(options[attr])) {
-        recordObject[attr] = options[attr];
+      } else if (!_.isUndefined(context.options[attr])) {
+        recordObject[attr] = context.options[attr];
       } else if (!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
         recordObject[attr] = this.DEFAULT_VALUES_ATTRIBUTES[attr];
       } else {
@@ -221,15 +247,17 @@ class GenericCreate {
       }
     }
 
-    recordObject[this.ATTR_ID] = context.insertId;
-    recordObject[this.ATTR_CREATED_AT] = context.createdAt;
-    recordObject[this.ATTR_MODIFIED_AT] = context.modifiedAt;
+    recordObject[this.ATTR_ID] = self.insertId;
+    recordObject[this.ATTR_CREATED_AT] = self.createdAt;
+    recordObject[this.ATTR_MODIFIED_AT] = self.createdAt;
 
-    returnObject[this.PLURAL] = {
-      [context.insertId]: recordObject
+    context.returnObject[this.PLURAL] = {
+      [self.insertId]: recordObject
     };
   }
 }
+
+GenericCreate.PARENT = false;
 
 // set this field for the default table name used in #initQuery()
 GenericCreate.TABLE = null;
@@ -247,5 +275,6 @@ GenericCreate.SKIP_ATTRIBUTES = [];
 GenericCreate.DEFAULT_VALUES_ATTRIBUTES = [];
 
 GenericCreate.PLURAL;
+
 
 module.exports = GenericCreate;

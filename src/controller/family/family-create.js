@@ -25,10 +25,10 @@ class FamilyCreate extends GenericCreate {
      *         options object which got passed to GenericCreate.create().
      * @throws {Error}
      */
-  static validateOptions(context, options) {
-    Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_FAMILY);
-    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_FAMILY);
-    Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);
+  static validate(self, context) {
+    Utils.hasToBeSet(context.options, CONSTANTS.ATTR_NAME_FAMILY);
+    Utils.hasToBeString(context.options, CONSTANTS.ATTR_NAME_FAMILY);
+    Utils.hasToBeString(context.options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);
   }
 }
 
