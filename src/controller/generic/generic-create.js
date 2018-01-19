@@ -68,8 +68,37 @@ class GenericCreate {
     logger.debug(
       `${this.name} #create() callStack:`, _.map(callStack, e => e.name));
 
+
+    let context = {
+      options,
+      returnObject: {},
+      createdAt: Utils.getUnixTimestampUTC()
+    };
+
+    for(let i=callStack.length-1;i>=0;i--) {
+      let removeFromCallStack;
+      try {
+        logger.debug(this.name, `#create() executing ${callStack[i].name}.validate`);
+        removeFromCallStack = callStack[i].validate(selfs[i], context);
+      } catch(err) {
+        // Make this error more readable
+        if(err.message === 'callStack[i][f] is not a function') {
+          throw new Error(`Could not execute ${callStack[i].name}.${f}`)
+        }
+        throw err;
+      }
+
+      if(removeFromCallStack === 1) {
+        logger.debug(this.name, `#create() removing ${callStack[i].name} and it's parents from callStack`);
+        [selfs, callStack] = [_.slice(selfs, i+1), _.slice(callStack, i+1)];
+        // we need to set i to -1, because current callStack element
+        // will be after the slice again the first element. Therefore i needs
+        // to be zero after the loop i increment.
+        i = -1;
+      }
+    }
+
     const functions = [
-      'validate',
       'initQuery',
       'setQueryFields',
       'setQueryCreatedAtAndModifiedAtFields',
@@ -80,22 +109,15 @@ class GenericCreate {
       'buildReturnObject'
     ];
 
-    let context = {
-      options,
-      returnObject: {},
-      createdAt: Utils.getUnixTimestampUTC()
-    };
 
     for(let f of functions) {
       let shouldAwait = _.indexOf(
         ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
 
       for(let i=0;i<callStack.length;i++) {
-        console.log(i, callStack.length);
-        let removeFromCallStack;
         try {
           logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`);
-          removeFromCallStack = shouldAwait ?
+          shouldAwait ?
             await callStack[i][f](selfs[i], context) :
             callStack[i][f](selfs[i], context);
         } catch(err) {
@@ -104,15 +126,6 @@ class GenericCreate {
             throw new Error(`Could not execute ${callStack[i].name}.${f}`)
           }
           throw err;
-        }
-
-        if(removeFromCallStack === 1) {
-          logger.debug(this.name, `#create() removing ${callStack[i].name} and it's parents from callStack`);
-          [selfs, callStack] = [selfs.splice(i+1), callStack.splice(i+1)];
-          // we need to set i to -1, because current callStack element
-          // will be after the slice again the first element. Therefore i needs
-          // to be zero after the loop i increment.
-          i = -1;
         }
 
         // Make sure we execute begin/endTransaction only once
