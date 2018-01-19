@@ -76,26 +76,15 @@ class GenericCreate {
     };
 
     for(let i=callStack.length-1;i>=0;i--) {
-      let removeFromCallStack;
-      try {
-        logger.debug(this.name, `#create() executing ${callStack[i].name}.validate`);
-        removeFromCallStack = callStack[i].validate(selfs[i], context);
-      } catch(err) {
-        // Make this error more readable
-        if(err.message === 'callStack[i][f] is not a function') {
-          throw new Error(`Could not execute ${callStack[i].name}.${f}`)
-        }
-        throw err;
-      }
-
-      if(removeFromCallStack === 1) {
+      logger.debug(this.name, `#create() executing ${callStack[i].name}.validate`);
+      let removeFromCallStack = await this._callCallStackMethod(
+        callStack, selfs, context, i, 'validate', false);
+      if(removeFromCallStack === true) {
         logger.debug(this.name, `#create() removing ${callStack[i].name} and it's parents from callStack`);
         [selfs, callStack] = [_.slice(selfs, i+1), _.slice(callStack, i+1)];
-        // we need to set i to -1, because current callStack element
-        // will be after the slice again the first element. Therefore i needs
-        // to be zero after the loop i increment.
-        i = -1;
+        break;
       }
+
     }
 
     const functions = [
@@ -115,18 +104,8 @@ class GenericCreate {
         ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
 
       for(let i=0;i<callStack.length;i++) {
-        try {
-          logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`);
-          shouldAwait ?
-            await callStack[i][f](selfs[i], context) :
-            callStack[i][f](selfs[i], context);
-        } catch(err) {
-          // Make this error more readable
-          if(err.message === 'callStack[i][f] is not a function') {
-            throw new Error(`Could not execute ${callStack[i].name}.${f}`)
-          }
-          throw err;
-        }
+        logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`);
+        await this._callCallStackMethod(callStack, selfs, context, i, f, false);
 
         // Make sure we execute begin/endTransaction only once
         if(f === 'beginTransaction' || f === 'endTransaction') break;
@@ -138,9 +117,52 @@ class GenericCreate {
   }
 
   /**
-   * Overwrite this method to validate all properties in options.
-   * Eg: making sure a property has a specific type or is set...
-   * If something isn't valid, throw an error.
+   * Helper method to call a callStack Method and return it's return value. Tis method
+   * allows us to await the method or normally call it, and we catch an unreadable
+   * error code and throw it readable again.
+   * @param  {GenericCreate[]}  callStack
+   *         callStack Object
+   * @param  {Object[]}  selfs
+   *         selfs object
+   * @param  {Object}  context
+   *         context object
+   * @param  {Integer}  i
+   *         Integer which indicates the index of the class reference in callStack
+   *         from which we should call f.
+   * @param  {String}  f
+   *         Name of the function to execute
+   * @param  {Boolean}  shouldAwait
+   *         Set to true if we want to await the result
+   * @return {Object}
+   *         Return whatever the called method returned.
+   */
+  static async _callCallStackMethod(callStack, selfs, context, i, f, shouldAwait) {
+    let returnValue;
+    let fnc = callStack[i][f].bind(this);
+    try {
+      if(shouldAwait) {
+        returnValue = await fnc(selfs, context);
+      } else {
+        returnValue = fnc(selfs, context);
+      }
+    } catch(err) {
+      // Make this error more readable
+      if(err.message === 'callStack[i][f] is not a function') {
+        throw new Error(`Could not execute ${callStack[i].name}.${f}`);
+      }
+      throw err;
+    }
+    return returnValue;
+  }
+
+  /**
+   * This method should check if all properties for creating this record are
+   * valid and make sure, that this record even needs to be created. Because
+   * We can create a Family from a GenerationCreate, we need to make sure
+   * that familyId isn't already set, and if so, abort this whole creation
+   * process by removing us and our parents from the callStack. Sounds
+   * complicate, but you just need to return true to remove us and our parents
+   * from the callStack :)
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
@@ -148,9 +170,12 @@ class GenericCreate {
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
    *         all classes in callStack.
+   * @return {Boolean}
+   *         Return true if we don't need to insert this record and this class
+   *         reference and it's parents should get deleted from the callStack.
    */
-static validate(self, context) {
-}
+  static validate(self, context) {
+  }
 
 /**
    * This function inits the self.query squel object.
@@ -382,6 +407,5 @@ GenericCreate.SKIP_ATTRIBUTES = [];
 GenericCreate.DEFAULT_VALUES_ATTRIBUTES = [];
 
 GenericCreate.PLURAL;
-
 
 module.exports = GenericCreate;
