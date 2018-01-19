@@ -56,8 +56,7 @@ class GenericCreate {
    *        with.
    * @throws {Error}
    * @return {object}
-   *        returnObject, should normally contain information about created
-   *        record.
+   *        returnObject, should contain information about created record.
    */
   static async create(options) {
     Utils.throwErrorIfNotConnected();
@@ -66,7 +65,8 @@ class GenericCreate {
     Utils.hasToBeAssocArray(options);
 
     let [selfs, callStack] = Utils.getSelfsAndCallStack(this);
-    logger.debug(`${this.name} #create() callStack:`, _.map(callStack, e => e.name));
+    logger.debug(
+      `${this.name} #create() callStack:`, _.map(callStack, e => e.name));
 
     const functions = [
       'validate',
@@ -93,7 +93,7 @@ class GenericCreate {
       for(let i=0;i<callStack.length;i++) {
         let removeFromCallStack;
         try {
-          logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`)
+          logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`);
           removeFromCallStack = shouldAwait ?
             await callStack[i][f](selfs[i], context) :
             callStack[i][f](selfs[i], context);
@@ -135,10 +135,9 @@ static validate(self, context) {
 
 /**
    * This function inits the self.query squel object.
-   * By default it will be an insert query and the table will
-   * be this.TABLE.
-   * Overwrite this if you want to init more than one query or you're
-   * not happy with the default behaviour.
+   * By default it will be an insert query and the table will be this.TABLE.
+   * Overwrite this if you want to init more than one query or you're not happy
+   * with the default behaviour.
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
@@ -204,19 +203,19 @@ static validate(self, context) {
   }
 
   /**
-     * This method stringifies self.query and logs the value of it.
-     * Overwrite this method if you have to stringify more than one query
-     * or if you named the query differently.
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {squel}  self.query
-     *         Query object
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     */
+   * This method stringifies self.query and logs the value of it.
+   * Overwrite this method if you have to stringify more than one query
+   * or if you named the query differently.
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {squel}  self.query
+   *         Query object
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   */
   static stringifyQuery(self, context) {
     self.query = self.query.toString();
     logger.debug(this.name, '#stringify() query:', self.query);
@@ -242,7 +241,8 @@ static validate(self, context) {
   }
 
   /**
-   * [rollbackTransaction description]
+   * Rollback the transaction. This undos all inserted rows (if any happend).
+   * Will be called from #executeQuery().
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
@@ -257,6 +257,8 @@ static validate(self, context) {
   }
 
   /**
+   * Ends/commits the transaction.
+   * NOTE:Should only be called once in the whole create prcoess.
    * NOTE: Because we always only execute the first beginTransaction in our
    * callStack. it will have weird effects if you try to overwrite this method.
    * Just don't :)
@@ -274,22 +276,31 @@ static validate(self, context) {
   }
 
   /**
-     * In case your query is named differently or you have to do more advanced
-     * stuff, Overwrite this method.
-     * @async
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     * @throws {Error}
-     *         Throws all sql errors
-     */
+   * This method passes the self.query query string to the sqlite api and
+   * saves the result in self. If errors happend during query execution, we
+   * will try to roll back and undo inserts.
+   * @async
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @throws {Error}
+   *         Throws all sql errors
+   */
   static async executeQuery(self, context) {
     logger.debug(this.name, '#execute() Executing sql query');
-    context.result = await sqlite.run(self.query);
+
+    try {
+      self.result = await sqlite.run(self.query);
+    } catch(err) {
+      // If error happend while rolling back, roll back.
+      this.rollbackTransaction(self, context);
+      throw err;
+    }
+
     self.insertId = context.result.stmt.lastID;
     logger.debug(this.name, '#execute() result:', context.result);
   }
