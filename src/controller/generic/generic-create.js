@@ -91,6 +91,7 @@ class GenericCreate {
         ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
 
       for(let i=0;i<callStack.length;i++) {
+        console.log(i, callStack.length);
         let removeFromCallStack;
         try {
           logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`);
@@ -106,7 +107,12 @@ class GenericCreate {
         }
 
         if(removeFromCallStack === 1) {
+          logger.debug(this.name, `#create() removing ${callStack[i].name} and it's parents from callStack`);
           [selfs, callStack] = [selfs.splice(i+1), callStack.splice(i+1)];
+          // we need to set i to -1, because current callStack element
+          // will be after the slice again the first element. Therefore i needs
+          // to be zero after the loop i increment.
+          i = -1;
         }
 
         // Make sure we execute begin/endTransaction only once
@@ -297,11 +303,12 @@ static validate(self, context) {
       self.result = await sqlite.run(self.query);
     } catch(err) {
       // If error happend while rolling back, roll back.
+      logger.error(this.name, '#execute()', err);
       this.rollbackTransaction(self, context);
       throw err;
     }
 
-    self.insertId = context.result.stmt.lastID;
+    context.lastInsertId = self.insertId = self.result.stmt.lastID;
     logger.debug(this.name, '#execute() result:', context.result);
   }
 

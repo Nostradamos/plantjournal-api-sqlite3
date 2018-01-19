@@ -97,7 +97,8 @@ describe(`utils/utils`, () => {
     afterEach(() => {
       // Reset cache
       Utils.getSelfsAndCallStackCache = {};
-    })
+    });
+
     it(`should resolve all PARENT classes and return the references to them`, () => {
       let foo = {}
       let bar = {PARENT: foo};

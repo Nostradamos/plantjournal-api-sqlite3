@@ -26,6 +26,7 @@ class FamilyCreate extends GenericCreate {
      * @throws {Error}
      */
   static validate(self, context) {
+    if(context.options.familyId) return 1;
     Utils.hasToBeSet(context.options, CONSTANTS.ATTR_NAME_FAMILY);
     Utils.hasToBeString(context.options, CONSTANTS.ATTR_NAME_FAMILY);
     Utils.hasToBeString(context.options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);
