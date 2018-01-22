@@ -36,13 +36,27 @@ class GenerationCreate extends GenericCreate {
    *         Throws error if we are unhappy with the options object.
    */
   static validate(self, context) {
-    Utils.hasToBeSet(context.options, CONSTANTS.ATTR_NAME_GENERATION);
-    Utils.hasToBeString(context.options, CONSTANTS.ATTR_NAME_GENERATION);
-    Utils.hasToBeIntArray(
-      context.options, CONSTANTS.ATTR_PARENTS_GENERATION);
-    Utils.hasToBeString(context.options, CONSTANTS.ATTR_DESCRIPTION_GENERATION);
-    Utils.hasToBeSet(context.options, CONSTANTS.ATTR_ID_FAMILY);
-    Utils.hasToBeInt(context.options, CONSTANTS.ATTR_ID_FAMILY);
+    let options = context.options;
+
+    // Some additional validations if we got called from a child class
+    if(context.creatingClassName !== this.name) {
+      if(options[CONSTANTS.ATTR_ID_GENERATION]) {
+        Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
+        return true;
+      }
+
+      // If we don't have any attributes available for creating a new
+      // generation, don't create one.
+      if(!options[CONSTANTS.ATTR_NAME_GENERATION]) {
+        return true;
+      }
+    }
+
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_GENERATION);
+
+    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENERATION);
+    Utils.hasToBeIntArray(options, CONSTANTS.ATTR_PARENTS_GENERATION);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_GENERATION);
   }
 
   /**

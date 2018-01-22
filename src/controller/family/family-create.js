@@ -26,10 +26,23 @@ class FamilyCreate extends GenericCreate {
      * @throws {Error}
      */
   static validate(self, context) {
-    if(context.options.familyId) return true;
-    Utils.hasToBeSet(context.options, CONSTANTS.ATTR_NAME_FAMILY);
-    Utils.hasToBeString(context.options, CONSTANTS.ATTR_NAME_FAMILY);
-    Utils.hasToBeString(context.options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);
+    let options = context.options;
+
+    // Some additional validations if we got called from a child class
+    if(context.creatingClassName !== this.name) {
+      if(options[CONSTANTS.ATTR_ID_FAMILY]) {
+        Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_FAMILY);
+        return true;
+      }
+
+      if(!options[CONSTANTS.ATTR_NAME_FAMILY]) {
+        throw new Error(`options.familyId or options.familyName has to be set`);
+      }
+    }
+
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_FAMILY);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_FAMILY);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);
   }
 }
 

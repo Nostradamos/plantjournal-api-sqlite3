@@ -68,23 +68,26 @@ class GenericCreate {
     logger.debug(
       `${this.name} #create() callStack:`, _.map(callStack, e => e.name));
 
-
     let context = {
       options,
       returnObject: {},
-      createdAt: Utils.getUnixTimestampUTC()
+      createdAt: Utils.getUnixTimestampUTC(),
+      creatingClassName: this.name,
+      lastInsertId: null,
+      insertIds: {}
     };
 
+    // Call all validate methods in decreasing order
     for(let i=callStack.length-1;i>=0;i--) {
       logger.debug(this.name, `#create() executing ${callStack[i].name}.validate`);
       let removeFromCallStack = await this._callCallStackMethod(
         callStack, selfs, context, i, 'validate', false);
+
       if(removeFromCallStack === true) {
         logger.debug(this.name, `#create() removing ${callStack[i].name} and it's parents from callStack`);
         [selfs, callStack] = [_.slice(selfs, i+1), _.slice(callStack, i+1)];
         break;
       }
-
     }
 
     const functions = [
@@ -98,7 +101,7 @@ class GenericCreate {
       'buildReturnObject'
     ];
 
-
+    // Call each other function in increasing order
     for(let f of functions) {
       let shouldAwait = _.indexOf(
         ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
@@ -138,12 +141,14 @@ class GenericCreate {
    */
   static async _callCallStackMethod(callStack, selfs, context, i, f, shouldAwait) {
     let returnValue;
-    let fnc = callStack[i][f].bind(this);
+    let fnc = callStack[i][f].bind(callStack[i]);
+    let self = selfs[i];
+
     try {
       if(shouldAwait) {
-        returnValue = await fnc(selfs, context);
+        returnValue = await fnc(self, context);
       } else {
-        returnValue = fnc(selfs, context);
+        returnValue = fnc(self, context);
       }
     } catch(err) {
       // Make this error more readable
@@ -191,7 +196,9 @@ class GenericCreate {
    *         all classes in callStack.
    */
   static initQuery(self, context) {
+    console.log(this.name, '#initQuery() table:', this.TABLE);
     self.query = squel.insert().into(this.TABLE);
+    console.log(this.name, '#initQuery() query', self.query.toString());
   }
 
   /**
@@ -208,6 +215,8 @@ class GenericCreate {
    *         all classes in callStack.
    */
   static setQueryFields(self, context) {
+    console.log(this.name, '#setQueryFields() query', self.query.toString());
+
     for(let attr of this.ATTRIBUTES) {
       if (_.indexOf(this.SKIP_ATTRIBUTES, attr) !== -1) {
         continue;
@@ -220,6 +229,11 @@ class GenericCreate {
       } else {
         self.query.set(attr, null);
       }
+    }
+
+    let parentPrimaryKey = this.PARENT.ATTR_ID;
+    if(parentPrimaryKey && !context.options[parentPrimaryKey]) {
+      self.query.set(parentPrimaryKey, '$lastInsertId', {dontQuote: true});
     }
 
     // set id field
@@ -337,8 +351,13 @@ class GenericCreate {
   static async executeQuery(self, context) {
     logger.debug(this.name, '#execute() Executing sql query');
 
+    let placeholders = {};
+    if(context.lastInsertId) {
+      placeholders['$lastInsertId'] = context.lastInsertId;
+    }
+
     try {
-      self.result = await sqlite.run(self.query);
+      self.result = await sqlite.run(self.query, placeholders);
     } catch(err) {
       // If error happend while rolling back, roll back.
       logger.error(this.name, '#execute()', err);
@@ -346,7 +365,7 @@ class GenericCreate {
       throw err;
     }
 
-    context.lastInsertId = self.insertId = self.result.stmt.lastID;
+    context.insertIds[this.ATTR_ID] = context.lastInsertId = self.insertId = self.result.stmt.lastID;
     logger.debug(this.name, '#execute() result:', context.result);
   }
 
@@ -374,6 +393,8 @@ class GenericCreate {
         recordObject[attr] = context.options[attr];
       } else if (!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
         recordObject[attr] = this.DEFAULT_VALUES_ATTRIBUTES[attr];
+      } else if (!_.isUndefined(context.insertIds[attr])){
+        recordObject[attr] = context.insertIds[attr];
       } else {
         recordObject[attr] = null;
       }

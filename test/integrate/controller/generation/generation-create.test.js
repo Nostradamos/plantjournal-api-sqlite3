@@ -72,7 +72,7 @@ describe(`Generation()`, () => {
 
     it(`should throw Error if options.familyId is not set`, async () => {
       await pj.Generation.create({generationName: 'testGeneration2'})
-        .should.be.rejectedWith('options.familyId has to be set');
+        .should.be.rejectedWith('options.familyId or options.familyName has to be set');
     });
 
     it(`should create a new generations entry and return generation object`, async () => {

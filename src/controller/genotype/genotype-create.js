@@ -4,6 +4,7 @@ const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
 const GenericCreate = require('../generic/generic-create');
+const GenerationCreate = require('../generation/generation-create');
 
 /**
  * GentopyeCreate Class which creates a new Genotype.
@@ -20,13 +21,29 @@ class GenotypeCreate extends GenericCreate {
   /**
      * We need to validate input and throw errors if we're
      * unhappy with it.
+     * @param  {object} self
+     *         Namespace/object only for the context of this class and this
+     *         creation process. Not shared across differenct classes in
+     *         callStack.
      * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
+     *         Namespace/object of this creation process. It's shared across
+     *         all classes in callStack.
+     * @return {Boolean}
+     *         Return true if we don't need to insert this record and this class
+     *         reference and it's parents should get deleted from the callStack.
      * @throws {Error}
      */
-  static validateOptions(context, options) {
+  static validate(self, context) {
+    let options = context.options;
+
+    // Some additional validations if we got called from a child class
+    if(context.creatingClassName !== this.name) {
+      if(options[CONSTANTS.ATTR_ID_GENOTYPE]) {
+        Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENOTYPE);
+        return true;
+      }
+    }
+
     Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
     Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
   }
@@ -43,9 +60,9 @@ class GenotypeCreate extends GenericCreate {
      *         If generationId reference fails we will throw custom error,
      *         everything else should be a sqlite error.
      */
-  static async executeQuery(context, options) {
+  static async executeQuery(self, context) {
     try {
-      await super.executeQuery(context, options);
+      await super.executeQuery(self, context);
     } catch (err) {
       // We only have one foreign key so we can safely assume, if a
       // foreign key constraint fails, it's the generationId constraint.
@@ -56,6 +73,8 @@ class GenotypeCreate extends GenericCreate {
     }
   }
 }
+
+GenotypeCreate.PARENT = GenerationCreate;
 
 GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPE;
 
