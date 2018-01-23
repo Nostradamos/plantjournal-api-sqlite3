@@ -85,7 +85,7 @@ describe(`Plant()`, () => {
     });
 
     it(`should throw error if options.plantClonedFrom does not reference an existing plant`, async () => {
-      await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 1})
+      await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 12})
         .should.be.rejectedWith(
           'options.plantClonedFrom does not reference an existing Plant');
 

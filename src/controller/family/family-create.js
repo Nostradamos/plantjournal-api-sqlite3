@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
@@ -30,7 +32,7 @@ class FamilyCreate extends GenericCreate {
 
     // Some additional validations if we got called from a child class
     if(context.creatingClassName !== this.name) {
-      if(options[CONSTANTS.ATTR_ID_FAMILY]) {
+      if(_.has(options, CONSTANTS.ATTR_ID_FAMILY)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_FAMILY);
         return true;
       }

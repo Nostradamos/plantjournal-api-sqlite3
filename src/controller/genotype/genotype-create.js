@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
@@ -38,7 +40,7 @@ class GenotypeCreate extends GenericCreate {
 
     // Some additional validations if we got called from a child class
     if(context.creatingClassName !== this.name) {
-      if(options[CONSTANTS.ATTR_ID_GENOTYPE]) {
+      if(_.has(options, CONSTANTS.ATTR_ID_GENOTYPE)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENOTYPE);
         return true;
       }
@@ -83,6 +85,10 @@ GenotypeCreate.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 GenotypeCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENOTYPE;
 
 GenotypeCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENOTYPE;
+
+GenotypeCreate.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_PLANTS_GENOTYPE;
+
+GenotypeCreate.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_PLANT;
 
 GenotypeCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENOTYPE;
 

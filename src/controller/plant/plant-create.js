@@ -38,8 +38,6 @@ class PlantCreate extends GenericCreate {
     Utils.hasToBeSet(options, 'plantName');
     Utils.hasToBeString(options, 'plantName');
     Utils.hasToBeInt(options, 'plantClonedFrom');
-    Utils.hasToBeInt(options, 'genotypeId');
-    Utils.hasToBeInt(options, 'generationId');
     Utils.hasToBeInt(options, 'environmentId');
 
     // plantSex has to be either male, female or hermaphrodite
@@ -69,7 +67,7 @@ class PlantCreate extends GenericCreate {
        // We only have one foreign key so we can safely assume, if a
        // foreign key constraint fails, it's the generationId constraint.
        if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
-         throw new Error('options.generationId does not reference an existing Generation');
+         throw new Error('options.genotypeId does not reference an existing Genotype');
        }
        throw err;
      }
