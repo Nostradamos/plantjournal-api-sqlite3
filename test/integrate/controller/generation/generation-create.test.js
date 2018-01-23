@@ -136,6 +136,40 @@ describe(`Generation()`, () => {
       generation.generations[2].should.containDeep(rows[0]);
     });
 
+    it(`should be possible to create a generation and family in one request`, async () => {
+      let generation = await pj.Generation.create({
+        generationName: 'F1',
+        familyName: 'Haze X Haze'
+      });
+
+      let createdAt = generation.generations[1][CONSTANTS.ATTR_CREATED_AT_GENERATION];
+
+      generation.should.deepEqual({
+        generations: {
+          1: {
+            generationId: 1,
+            generationDescription: '',
+            generationName: 'F1',
+            generationCreatedAt: createdAt,
+            generationModifiedAt: createdAt,
+            generationGenotypes: [],
+            generationParents: [],
+            familyId: 2
+          }
+        },
+        families: {
+          2: {
+            familyId: 2,
+            familyName: 'Haze X Haze',
+            familyDescription: '',
+            familyGenerations: [1],
+            familyCreatedAt: createdAt,
+            familyModifiedAt: createdAt
+          }
+        }
+      });
+    });
+
   });
 
   describe(`#create() (with options.generationParents)`, () => {

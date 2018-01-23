@@ -389,12 +389,16 @@ class GenericCreate {
     for (let attr of this.ATTRIBUTES) {
       if (!_.isUndefined(context[attr])) {
         recordObject[attr] = context[attr];
+      } else if (attr === this.ATTR_FILL_CHILD_IDS) {
+        recordObject[attr] = this.ATTR_CHILD_ID in context.insertIds ?
+          [context.insertIds[this.ATTR_CHILD_ID]] :
+          [];
+      } else if (!_.isUndefined(context.insertIds[attr])){
+        recordObject[attr] = context.insertIds[attr];
       } else if (!_.isUndefined(context.options[attr])) {
         recordObject[attr] = context.options[attr];
       } else if (!_.isUndefined(this.DEFAULT_VALUES_ATTRIBUTES[attr])) {
         recordObject[attr] = this.DEFAULT_VALUES_ATTRIBUTES[attr];
-      } else if (!_.isUndefined(context.insertIds[attr])){
-        recordObject[attr] = context.insertIds[attr];
       } else {
         recordObject[attr] = null;
       }
@@ -420,6 +424,10 @@ GenericCreate.ATTR_ID;
 GenericCreate.ATTR_CREATED_AT;
 
 GenericCreate.ATTR_MODIFIED_AT;
+
+GenericCreate.ATTR_FILL_CHILD_IDS;
+
+GenericCreate.ATTR_CHILD_ID;
 
 GenericCreate.ATTRIBUTES = [];
 
