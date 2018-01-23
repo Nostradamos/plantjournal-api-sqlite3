@@ -140,16 +140,12 @@ class GenericCreate {
    *         Return whatever the called method returned.
    */
   static async _callCallStackMethod(callStack, selfs, context, i, f, shouldAwait) {
-    let returnValue;
     let fnc = callStack[i][f].bind(callStack[i]);
     let self = selfs[i];
 
+    let returnValue;
     try {
-      if(shouldAwait) {
-        returnValue = await fnc(self, context);
-      } else {
-        returnValue = fnc(self, context);
-      }
+      returnValue = shouldAwait ? await fnc(self, context) : fnc(self, context);
     } catch(err) {
       // Make this error more readable
       if(err.message === 'callStack[i][f] is not a function') {
@@ -196,9 +192,7 @@ class GenericCreate {
    *         all classes in callStack.
    */
   static initQuery(self, context) {
-    console.log(this.name, '#initQuery() table:', this.TABLE);
     self.query = squel.insert().into(this.TABLE);
-    console.log(this.name, '#initQuery() query', self.query.toString());
   }
 
   /**
@@ -349,26 +343,54 @@ class GenericCreate {
    *         Throws all sql errors
    */
   static async executeQuery(self, context) {
-    logger.debug(this.name, '#execute() Executing sql query');
-
-    let placeholders = {};
-    if(context.lastInsertId) {
-      placeholders['$lastInsertId'] = context.lastInsertId;
-    }
+    let placeholders = context.lastInsertId ?
+      {'$lastInsertId': context.lastInsertId} :
+      {};
 
     try {
-      self.result = await sqlite.run(self.query, placeholders);
+      self.result = await this._executeQuery(
+        self, context, self.query, placeholders);
     } catch(err) {
-      // If error happend while rolling back, roll back.
-      logger.error(this.name, '#execute()', err);
-      this.rollbackTransaction(self, context);
       throw err;
     }
 
     context.insertIds[this.ATTR_ID] = context.lastInsertId = self.insertId = self.result.stmt.lastID;
-    logger.debug(this.name, '#execute() result:', context.result);
   }
 
+  /**
+   * Helper method which executes a query string and returns the sqlite result
+   * object.
+   * We make sure to safely rollback if we encounter an error.
+   * @async
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @param  {String} query
+   *         SQLite Query string.
+   * @param  {Object} placeholders
+   *         Any valid placeholders which you can pass to sqlite.run().
+   * @throws {Error}
+   *         Throws all sql errors
+   */
+  static async _executeQuery(self, context, query, placeholders) {
+    logger.debug(this.name, '#_executeQuery() Executing sql query:', query);
+
+    let result;
+    try {
+      result = await sqlite.run(query, placeholders);
+    } catch(err) {
+      // If error happend while rolling back, roll back.
+      logger.error(this.name, '#_executeQuery()', err);
+      this.rollbackTransaction(self, context);
+      throw err;
+    }
+    logger.debug(this.name, '#_executeQuery() result:', result);
+    return result;
+  }
   /**
      * This method builds the returnObject by iterating over all ATTRIBUTES
      * and trying to retrieve the information either from self, context or

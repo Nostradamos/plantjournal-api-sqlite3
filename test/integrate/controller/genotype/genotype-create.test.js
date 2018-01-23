@@ -58,6 +58,12 @@ describe(`Genotype()`, () => {
           'options.genotypeName has to be a string');
     });
 
+    it(`should throw error if options.generationId is not an integer`, async () => {
+      await pj.Genotype.create({generationId: 1, genotypeName: 'asd', generationId: 'test'})
+        .should.be.rejectedWith(
+          'options.generationId has to be an integer');
+    });
+
     it(`should create a new genotypes entry and return Genotypes Object`, async () => {
       let genotype = await pj.Genotype.create(
         {
@@ -107,6 +113,51 @@ describe(`Genotype()`, () => {
       genotype.genotypes[1].should.containDeep(rows[0]);
     });
 
+    it(`should be possible to create a new genotype and generation at once`, async () => {
+      let genotype = await pj.Genotype.create(
+        {genotypeName: 'genoTest43', generationName: 'F2', familyId: 1});
+      genotype.should.containDeep({
+        genotypes: {
+          1: {
+            genotypeName: 'genoTest43',
+            generationId: 2
+          }
+        },
+        generations: {
+          2: {
+            generationName: 'F2',
+            generationGenotypes: [1],
+            familyId: 1
+          }
+        }
+      });
+    });
 
+    it(`should be possible to create a new genotype, generation and family at once`, async () => {
+      let genotype = await pj.Genotype.create(
+        {genotypeName: 'genoTest43', generationName: 'F2', familyName: 'TestFamily2'});
+      genotype.should.containDeep({
+        genotypes: {
+          1: {
+            genotypeName: 'genoTest43',
+            generationId: 2
+          }
+        },
+        generations: {
+          2: {
+            generationName: 'F2',
+            generationGenotypes: [1],
+            familyId: 2
+          }
+        },
+        families: {
+          2: {
+            familyName: 'TestFamily2',
+            familyGenerations: [2],
+            familyId: 2
+          }
+        }
+      });
+    });
   });
 });

@@ -36,7 +36,7 @@ class FamilyCreate extends GenericCreate {
       }
 
       if(!options[CONSTANTS.ATTR_NAME_FAMILY]) {
-        throw new Error(`options.familyId or options.familyName has to be set`);
+        throw new Error(`options.familyId is not set. Missing familyId or attributes to create a new family.`);
       }
     }
 
