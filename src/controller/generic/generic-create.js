@@ -64,10 +64,6 @@ class GenericCreate {
     logger.debug(`${this.name} #create() options:`, JSON.stringify(options));
     Utils.hasToBeAssocArray(options);
 
-    let [selfs, callStack] = Utils.getSelfsAndCallStack(this);
-    logger.debug(
-      `${this.name} #create() callStack:`, _.map(callStack, e => e.name));
-
     let context = {
       options,
       returnObject: {},
@@ -77,6 +73,24 @@ class GenericCreate {
       insertIds: {}
     };
 
+    let [selfs, callStack] = this.resolveClassStackAndBuildSelfs(context);
+    logger.debug(
+      `${this.name} #create() callStack:`, _.map(callStack, e => e.name));
+
+    [selfs, callStack] = await this.callClassStackValidationMethods(
+      selfs, callStack, context);
+    await this.callClassStackRemainingMethods(selfs, callStack, context);
+
+
+    logger.debug(this.name, '#create() returnObject:', JSON.stringify(context.returnObject));
+    return context.returnObject;
+  }
+
+  static resolveClassStackAndBuildSelfs(context) {
+    return Utils.getSelfsAndCallStack(this);
+  }
+
+  static async callClassStackValidationMethods(selfs, callStack, context) {
     // Call all validate methods in decreasing order
     for(let i=callStack.length-1;i>=0;i--) {
       logger.debug(this.name, `#create() executing ${callStack[i].name}.validate`);
@@ -89,20 +103,12 @@ class GenericCreate {
         break;
       }
     }
+    return [selfs, callStack];
+  }
 
-    const functions = [
-      'initQuery',
-      'setQueryFields',
-      'setQueryCreatedAtAndModifiedAtFields',
-      'stringifyQuery',
-      'beginTransaction',
-      'executeQuery',
-      'endTransaction',
-      'buildReturnObject'
-    ];
-
+  static async callClassStackRemainingMethods(selfs, callStack, context) {
     // Call each other function in increasing order
-    for(let f of functions) {
+    for(let f of this.CLASS_STACK_CALL_ORDER) {
       let shouldAwait = _.indexOf(
         ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
 
@@ -114,9 +120,6 @@ class GenericCreate {
         if(f === 'beginTransaction' || f === 'endTransaction') break;
       }
     }
-
-    logger.debug(this.name, '#create() returnObject:', JSON.stringify(context.returnObject));
-    return context.returnObject;
   }
 
   /**
@@ -435,6 +438,17 @@ class GenericCreate {
     };
   }
 }
+
+GenericCreate.CLASS_STACK_CALL_ORDER = [
+  'initQuery',
+  'setQueryFields',
+  'setQueryCreatedAtAndModifiedAtFields',
+  'stringifyQuery',
+  'beginTransaction',
+  'executeQuery',
+  'endTransaction',
+  'buildReturnObject'
+];
 
 GenericCreate.PARENT = false;
 

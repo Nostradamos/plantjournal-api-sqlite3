@@ -61,17 +61,31 @@ class PlantCreate extends GenericCreate {
    *         #executeQueryInsertPlant() or unexpected sqlite errors.
    */
    static async executeQuery(self, context) {
-     try {
-       await super.executeQuery(self, context);
-     } catch (err) {
-       // We only have one foreign key so we can safely assume, if a
-       // foreign key constraint fails, it's the generationId constraint.
-       if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
-         throw new Error('options.genotypeId does not reference an existing Genotype');
-       }
-       throw err;
-     }
-   }
+    if(context.options.plantClonedFrom &&
+       _.isUndefined(context.insertIds['genotypeId'])) {
+      // Retrieve the genotypeId of the mother plant
+      let result = await sqlite.get(
+          `SELECT plants.genotypeId FROM plants WHERE plants.plantId = ?`,
+          context.options.plantClonedFrom);
+
+      if(_.isUndefined(result)) {
+        throw new Error('options.plantClonedFrom does not reference an existing Plant');
+      }
+
+      context['genotypeId'] = context.lastInsertId = result['genotypeId'];
+    }
+
+    try {
+      await super.executeQuery(self, context);
+    } catch (err) {
+      // We only have one foreign key so we can safely assume, if a
+      // foreign key constraint fails, it's the generationId constraint.
+      if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+        throw new Error('options.genotypeId does not reference an existing Genotype');
+      }
+      throw err;
+    }
+  }
 }
 
 PlantCreate.PARENT = GenotypeCreate;

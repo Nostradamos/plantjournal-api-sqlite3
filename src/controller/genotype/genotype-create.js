@@ -44,6 +44,11 @@ class GenotypeCreate extends GenericCreate {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENOTYPE);
         return true;
       }
+
+      if(_.has(options, CONSTANTS.ATTR_CLONED_FROM_PLANT)) {
+        Utils.hasToBeInt(options, CONSTANTS.ATTR_CLONED_FROM_PLANT);
+        return true;
+      }
     }
 
     Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
