@@ -4,9 +4,7 @@ const _ = require('lodash');
 const sqlite = require('sqlite');
 
 const CONSTANTS = require('../../constants');
-const logger = require('../../logger');
 const Utils = require('../../utils/utils');
-const Genotype = require('../../models/genotype');
 
 const GenericCreate = require('../generic/generic-create');
 const GenotypeCreate = require('../genotype/genotype-create');
@@ -26,10 +24,13 @@ class PlantCreate extends GenericCreate {
 
   /**
      * We need to validate input and throw errors if we're unhappy with it.
+     * @param  {object} self
+     *         Namespace/object only for the context of this class and this
+     *         creation process. Not shared across differenct classes in
+     *         callStack.
      * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
+     *         Namespace/object of this creation process. It's shared across
+     *         all classes in callStack.
      * @throws {Error}
      */
   static validate(self, context) {
@@ -52,23 +53,28 @@ class PlantCreate extends GenericCreate {
    * case we have to create genotype before plant. To undo the insert of
    * genotype if shit happens, we need to do this in a transaction.
    * @async
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
    * @param  {object} context
-   *         internal context object in #create().
-   * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
    * @throws {Error}
    *         Any errors from #createGenotypeOrResolveGenotypeIdIfNeeded() or
    *         #executeQueryInsertPlant() or unexpected sqlite errors.
    */
-   static async executeQuery(self, context) {
+  static async executeQuery(self, context) {
     if(context.options.plantClonedFrom &&
-       _.isUndefined(context.insertIds['genotypeId'])) {
+       _.isUndefined(context.insertIds['genotypeId']) &&
+       _.isUndefined(context.options['genotypeId'])) {
       // Retrieve the genotypeId of the mother plant
       let result = await sqlite.get(
-          `SELECT plants.genotypeId FROM plants WHERE plants.plantId = ?`,
-          context.options.plantClonedFrom);
+        `SELECT plants.genotypeId FROM plants WHERE plants.plantId = ?`,
+        context.options.plantClonedFrom);
 
       if(_.isUndefined(result)) {
+        await this.rollbackTransaction(self, context);
         throw new Error('options.plantClonedFrom does not reference an existing Plant');
       }
 

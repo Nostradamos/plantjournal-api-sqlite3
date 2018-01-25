@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const squel = require('squel');
-const sqlite = require('sqlite');
 
 const CONSTANTS = require('../../constants');
 const logger = require('../../logger');
@@ -34,6 +33,9 @@ class GenerationCreate extends GenericCreate {
    *         all classes in callStack.
    * @throws {Error}
    *         Throws error if we are unhappy with the options object.
+   * @return {Boolean}
+   *         Return true if we don't need to insert this record and this class
+   *         reference and it's parents should get deleted from the callStack.
    */
   static validate(self, context) {
     let options = context.options;
@@ -82,9 +84,9 @@ class GenerationCreate extends GenericCreate {
     let attributesRows = [];
     for(let parentPlantId of context.options.generationParents) {
       attributesRows.push({
-          parentId: null,
-          generationId: squel.rstr('$lastInsertId'),
-          plantId: parentPlantId
+        parentId: null,
+        generationId: squel.rstr('$lastInsertId'),
+        plantId: parentPlantId
       });
     }
 
@@ -128,7 +130,7 @@ class GenerationCreate extends GenericCreate {
 
 
     try {
-      let placeholders = {'$lastInsertId': context.lastInsertId};
+      let placeholders = {$lastInsertId: context.lastInsertId};
       await super._executeQuery(self, context, self.queryParents, placeholders);
     } catch (err) {
       if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {

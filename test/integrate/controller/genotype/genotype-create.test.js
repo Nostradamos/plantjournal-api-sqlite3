@@ -42,8 +42,7 @@ describe(`Genotype()`, () => {
 
     it(`should throw error if options.generationId is not an integer`, async () => {
       await pj.Genotype.create({generationId: '1'})
-        .should.be.rejectedWith(
-          'options.generationId has to be an integer');
+        .should.be.rejectedWith('options.generationId has to be an integer');
     });
 
     it(`should throw an error if options.generationId does not reference a generation`, async () => {
@@ -56,12 +55,6 @@ describe(`Genotype()`, () => {
       await pj.Genotype.create({generationId: 1, genotypeName: 1})
         .should.be.rejectedWith(
           'options.genotypeName has to be a string');
-    });
-
-    it(`should throw error if options.generationId is not an integer`, async () => {
-      await pj.Genotype.create({generationId: 1, genotypeName: 'asd', generationId: 'test'})
-        .should.be.rejectedWith(
-          'options.generationId has to be an integer');
     });
 
     it(`should create a new genotypes entry and return Genotypes Object`, async () => {
@@ -134,8 +127,11 @@ describe(`Genotype()`, () => {
     });
 
     it(`should be possible to create a new genotype, generation and family at once`, async () => {
-      let genotype = await pj.Genotype.create(
-        {genotypeName: 'genoTest43', generationName: 'F2', familyName: 'TestFamily2'});
+      let genotype = await pj.Genotype.create({
+        genotypeName: 'genoTest43',
+        generationName: 'F2',
+        familyName: 'TestFamily2'});
+
       genotype.should.containDeep({
         genotypes: {
           1: {

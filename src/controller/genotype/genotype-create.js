@@ -59,10 +59,13 @@ class GenotypeCreate extends GenericCreate {
      * We want to catch foreign key error to custom throw error that genotype
      * reference failed.
      * @async
+     * @param  {object} self
+     *         Namespace/object only for the context of this class and this
+     *         creation process. Not shared across differenct classes in
+     *         callStack.
      * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
+     *         Namespace/object of this creation process. It's shared across
+     *         all classes in callStack.
      * @throws {Error}
      *         If generationId reference fails we will throw custom error,
      *         everything else should be a sqlite error.

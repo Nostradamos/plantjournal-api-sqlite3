@@ -143,7 +143,8 @@ describe(`Generation()`, () => {
         familyName: 'Haze X Haze'
       });
 
-      let createdAt = generation.generations[1][CONSTANTS.ATTR_CREATED_AT_GENERATION];
+      let createdAt = generation
+        .generations[1][CONSTANTS.ATTR_CREATED_AT_GENERATION];
 
       generation.should.deepEqual({
         generations: {

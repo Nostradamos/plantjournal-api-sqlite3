@@ -47,8 +47,8 @@ class GenericCreate {
    * 1, we remove the class from the stack, and all classes before that one.
    * The reason for that is, that if we for example don't have enough data to
    * create a Generation, we also wont have enough information to create a
-   * Family. Therefore we can safely remove both of them from the stack and don't
-   * call the class methods without any effect.
+   * Family. Therefore we can safely remove both of them from the stack and
+   * don't call the class methods without any effect.
    * @async
    * @param {object} options
    *        Object which should hold enough information to create a new entry
@@ -77,19 +77,48 @@ class GenericCreate {
       `${this.name} #create() callStack:`, _.map(callStack, e => e.name));
 
     [selfs, callStack] = await this.callClassStackValidationMethods(
-      selfs, callStack, context);
-    await this.callClassStackRemainingMethods(selfs, callStack, context);
+      selfs, context, callStack);
+    await this.callClassStackRemainingMethods(selfs, context, callStack);
 
 
     logger.debug(this.name, '#create() returnObject:', JSON.stringify(context.returnObject));
     return context.returnObject;
   }
 
+  /**
+   * Resolved the class call stack and builds the self scope array.
+   * NOTE: In case you need to modify a self scope object or the class call
+   * stack, overwrite this method.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @return {{0: Object[], 1: Object[]}}
+   *         Returns an array with two elements. First is the array containing
+   *         the self scope objects, second is an array containg all the
+   *         GenericCreate class instances.
+   */
   static resolveClassStackAndBuildSelfs(context) {
     return Utils.getSelfsAndCallStack(this);
   }
 
-  static async callClassStackValidationMethods(selfs, callStack, context) {
+  /**
+   * Calls the validate method of each Class in callStack. We do this in a
+   * DECREASING order, to fail on the first Parent class and then remove
+   * the parent and all it's parents from callStack and the related self
+   * scopes. We return the modified selfs & callStack.
+   * @param  {Object[]}  selfs
+   *         Array of objects which are the self scopes for the different
+   *         Classes in call stack.
+   * @param  {Object}  context
+   *         Context object for this insert/create request.
+   * @param  {Class[]}  callStack
+   *         List of Classes for each we will call validate()
+   * @return {{0: Object[], 1: Object[]}}
+   *         Returns an array with two elements. First is the array containing
+   *         the self scope objects, second is an array containg all the
+   *         GenericCreate class instances.
+   */
+  static async callClassStackValidationMethods(selfs, context, callStack) {
     // Call all validate methods in decreasing order
     for(let i=callStack.length-1;i>=0;i--) {
       logger.debug(this.name, `#create() executing ${callStack[i].name}.validate`);
@@ -105,9 +134,22 @@ class GenericCreate {
     return [selfs, callStack];
   }
 
-  static async callClassStackRemainingMethods(selfs, callStack, context) {
+  /**
+   * Calls all remaining methods specified in
+   * GenericCreate.CLASS_CALL__STACK_ORDER.
+   * We do this in an INCREASING order, where we call each method for
+   * each class, and then continuing with the next class call stack method.
+   * @param  {Object[]}  selfs
+   *         Array of objects which are the self scopes for the different
+   *         Classes in call stack.
+   * @param  {Object}  context
+   *         Context object for this insert/create request.
+   * @param  {Class[]}  callStack
+   *         List of Classes for each we will call validate()
+   */
+  static async callClassStackRemainingMethods(selfs, context, callStack) {
     // Call each other function in increasing order
-    for(let f of this.CLASS_STACK_CALL_ORDER) {
+    for(let f of this.CLASS_CALL_STACK_ORDER) {
       let shouldAwait = _.indexOf(
         ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
 
@@ -122,9 +164,9 @@ class GenericCreate {
   }
 
   /**
-   * Helper method to call a callStack Method and return it's return value. Tis method
-   * allows us to await the method or normally call it, and we catch an unreadable
-   * error code and throw it readable again.
+   * Helper method to call a callStack Method and return it's return value. This
+   * method allows us to await the method or normally call it, and we catch an
+   * unreadable error code and throw it readable again.
    * @param  {GenericCreate[]}  callStack
    *         callStack Object
    * @param  {Object[]}  selfs
@@ -132,8 +174,8 @@ class GenericCreate {
    * @param  {Object}  context
    *         context object
    * @param  {Integer}  i
-   *         Integer which indicates the index of the class reference in callStack
-   *         from which we should call f.
+   *         Integer which indicates the index of the class reference in
+   *         callStack from which we should call f.
    * @param  {String}  f
    *         Name of the function to execute
    * @param  {Boolean}  shouldAwait
@@ -141,7 +183,8 @@ class GenericCreate {
    * @return {Object}
    *         Return whatever the called method returned.
    */
-  static async _callCallStackMethod(callStack, selfs, context, i, f, shouldAwait) {
+  static async _callCallStackMethod(
+    callStack, selfs, context, i, f, shouldAwait) {
     let fnc = callStack[i][f].bind(callStack[i]);
     let self = selfs[i];
 
@@ -178,9 +221,10 @@ class GenericCreate {
    *         reference and it's parents should get deleted from the callStack.
    */
   static validate(self, context) {
+    return false;
   }
 
-/**
+  /**
    * This function inits the self.query squel object.
    * By default it will be an insert query and the table will be this.TABLE.
    * Overwrite this if you want to init more than one query or you're not happy
@@ -211,8 +255,6 @@ class GenericCreate {
    *         all classes in callStack.
    */
   static setQueryFields(self, context) {
-    console.log(this.name, '#setQueryFields() query', self.query.toString());
-
     for(let attr of this.ATTRIBUTES) {
       if (_.indexOf(this.SKIP_ATTRIBUTES, attr) !== -1) {
         continue;
@@ -346,7 +388,7 @@ class GenericCreate {
    */
   static async executeQuery(self, context) {
     let placeholders = context.lastInsertId ?
-      {'$lastInsertId': context.lastInsertId} :
+      {$lastInsertId: context.lastInsertId} :
       {};
 
     try {
@@ -356,7 +398,9 @@ class GenericCreate {
       throw err;
     }
 
-    context.insertIds[this.ATTR_ID] = context.lastInsertId = self.insertId = self.result.stmt.lastID;
+    context.insertIds[this.ATTR_ID] =
+      context.lastInsertId =
+      self.insertId = self.result.stmt.lastID;
   }
 
   /**
@@ -377,9 +421,11 @@ class GenericCreate {
    *         Any valid placeholders which you can pass to sqlite.run().
    * @throws {Error}
    *         Throws all sql errors
+   * @return {Object}
+   *         Sqlite result
    */
   static async _executeQuery(self, context, query, placeholders) {
-    logger.debug(this.name, '#_executeQuery() Executing sql query:', query);
+    logger.debug(this.name, '#_executeQuery() Executing sql query:', query, 'placeholders:', placeholders);
 
     let result;
     try {
@@ -438,7 +484,7 @@ class GenericCreate {
   }
 }
 
-GenericCreate.CLASS_STACK_CALL_ORDER = [
+GenericCreate.CLASS_CALL_STACK_ORDER = [
   'initQuery',
   'setQueryFields',
   'setQueryCreatedAtAndModifiedAtFields',

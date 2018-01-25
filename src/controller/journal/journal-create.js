@@ -21,15 +21,19 @@ const GenericCreate = require('../generic/generic-create');
 class JournalCreate extends GenericCreate {
   /**
      * We need to validate the properties for new journal.
+     * @param  {object} self
+     *         Namespace/object only for the context of this class and this
+     *         creation process. Not shared across differenct classes in
+     *         callStack.
      * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
+     *         Namespace/object of this creation process. It's shared across
+     *         all classes in callStack.
      * @throws {Error}
      */
-  static validateOptions(context, options) {
+  static validate(self, context) {
     // Figure out for which model this journal is for
-    context.journalFor = null;
+    let options = context.options;
+    self.journalFor = null;
     let models = [
       CONSTANTS.ATTR_ID_PLANT,
       CONSTANTS.ATTR_ID_MEDIUM,
@@ -39,15 +43,15 @@ class JournalCreate extends GenericCreate {
     for(let attr of models) {
       if(_.has(options, attr)) {
         Utils.hasToBeInt(options, attr);
-        if(context.journalFor === null) {
-          context.journalFor = attr;
+        if(self.journalFor === null) {
+          self.journalFor = attr;
         } else {
           throw Error('Journal can only be assigned to a plant OR medium OR environment');
         }
       }
     }
 
-    if(context.journalFor === null) {
+    if(self.journalFor === null) {
       throw Error('A journal has to be assigned to a plant, medium or environment. Therefore options.plantId,mediumId or environmentId has to be set');
     }
 
@@ -64,14 +68,18 @@ class JournalCreate extends GenericCreate {
   /**
      * Set query fields and do some special stuff for journalValue to always
      * parse json inside sqlite and sometimes quote it.
+     * @param  {object} self
+     *         Namespace/object only for the context of this class and this
+     *         creation process. Not shared across differenct classes in
+     *         callStack.
      * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
+     *         Namespace/object of this creation process. It's shared across
+     *         all classes in callStack.
      */
-  static setQueryFields(context, options) {
-    context.query
-      .set(context.journalFor, options[context.journalFor])
+  static setQueryFields(self, context) {
+    let options = context.options;
+    self.query
+      .set(self.journalFor, options[self.journalFor])
       .set(CONSTANTS.ATTR_ID_JOURNAL, null)
       .set(CONSTANTS.ATTR_TIMESTAMP_JOURNAL, options.journalTimestamp)
       .set(CONSTANTS.ATTR_TYPE_JOURNAL, options.journalType);
@@ -82,7 +90,7 @@ class JournalCreate extends GenericCreate {
       `${this.name} #setQueryFields() sanitizedJournalValue:`,
       sanitizedJournalValue);
 
-    context.query.set(
+    self.query.set(
       CONSTANTS.ATTR_VALUE_JOURNAL,
       squel.rstr('json(?)', sanitizedJournalValue),
       {dontQuote: true});
@@ -90,23 +98,25 @@ class JournalCreate extends GenericCreate {
 
   /**
      * Build returnObject
-     * @param  {object} returnObject
-     *         Object which will get returned from JournalCreate.create()
+     * @param  {object} self
+     *         Namespace/object only for the context of this class and this
+     *         creation process. Not shared across differenct classes in
+     *         callStack.
      * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
+     *         Namespace/object of this creation process. It's shared across
+     *         all classes in callStack.
      */
-  static buildReturnObject(returnObject, context, options) {
-    returnObject[this.PLURAL] = {
-      [context.insertId]: {
-        [CONSTANTS.ATTR_ID_JOURNAL]: context.insertId,
+  static buildReturnObject(self, context) {
+    let options = context.options;
+    context.returnObject[this.PLURAL] = {
+      [self.insertId]: {
+        [CONSTANTS.ATTR_ID_JOURNAL]: self.insertId,
         [CONSTANTS.ATTR_TIMESTAMP_JOURNAL]: options.journalTimestamp,
         [CONSTANTS.ATTR_TYPE_JOURNAL]: options.journalType,
         [CONSTANTS.ATTR_VALUE_JOURNAL]: options.journalValue,
         [CONSTANTS.ATTR_CREATED_AT_JOURNAL]: context.createdAt,
-        [CONSTANTS.ATTR_MODIFIED_AT_JOURNAL]: context.modifiedAt,
-        [context.journalFor]: options[context.journalFor]
+        [CONSTANTS.ATTR_MODIFIED_AT_JOURNAL]: context.createdAt,
+        [self.journalFor]: options[self.journalFor]
       }
     };
   }

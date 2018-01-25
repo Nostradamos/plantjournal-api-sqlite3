@@ -4,12 +4,19 @@
 require('should');
 
 const Mutex = require('../../../src/utils/mutex');
+const logger = require('../../../src/logger');
 
+/**
+ * Awaitable sleep function.
+ * Example:
+ * async () => { await sleep(3000); console.log('test')}
+ * @param  {[type]} timeout [description]
+ * @return {[type]}         [description]
+ */
 function sleep (timeout) {
   return new Promise((resolve) => {
-    // wait 3s before calling fn(par)
-    setTimeout(() => resolve(), timeout)
-  })
+    setTimeout(() => resolve(), timeout);
+  });
 }
 
 describe(`Mutex`, () => {
@@ -18,20 +25,20 @@ describe(`Mutex`, () => {
       let m = new Mutex();
       let a = false;
       let b = false;
-      async function lockTest1() {
-        console.log('starting a');
+      async function lockTest1() { // eslint-disable-line require-jsdoc
+        logger.debug('starting a');
         await m.lock();
         await sleep(50);
         a = true;
-        console.log('a done');
+        logger.debug('a done');
         m.unlock();
       }
-      async function lockTest2() {
-        console.log('starting b');
+      async function lockTest2() { // eslint-disable-line require-jsdoc
+        logger.debug('starting b');
         await m.lock();
         await sleep(50);
         b = true;
-        console.log('b done');
+        logger.debug('b done');
         m.unlock();
       }
       await Promise.all([lockTest1(), lockTest2()]);
@@ -43,10 +50,10 @@ describe(`Mutex`, () => {
   describe(`mass testing`, () => {
     it(`should be able to have 500 async methods waiting for the lock`, async () => {
       let m = new Mutex();
-      async function lockTest(i) {
+      async function lockTest(i) { // eslint-disable-line require-jsdoc
         await m.lock();
         setTimeout(() => {
-          console.log(i);
+          logger.debug(i);
           m.unlock();
         }, 10);
       }

@@ -4,6 +4,7 @@ const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
 const GenericCreate = require('../generic/generic-create');
+const EnvironmentCreate = require('../environment/environment-create');
 
 /**
  * This class creates a new Medium and gets internally called from
@@ -16,13 +17,17 @@ const GenericCreate = require('../generic/generic-create');
 class MediumCreate extends GenericCreate {
   /**
      * We need to validate the properties for new Medium.
+     * @param  {object} self
+     *         Namespace/object only for the context of this class and this
+     *         creation process. Not shared across differenct classes in
+     *         callStack.
      * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
+     *         Namespace/object of this creation process. It's shared across
+     *         all classes in callStack.
      * @throws {Error}
      */
-  static validateOptions(context, options) {
+  static validate(self, context) {
+    let options = context.options;
     Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_MEDIUM);
     Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_MEDIUM);
     Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_MEDIUM);
@@ -53,6 +58,8 @@ class MediumCreate extends GenericCreate {
     }
   }
 }
+
+MediumCreate.PARENT = EnvironmentCreate;
 
 MediumCreate.TABLE = CONSTANTS.TABLE_MEDIUM;
 

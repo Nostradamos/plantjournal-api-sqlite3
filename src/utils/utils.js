@@ -179,11 +179,10 @@ Utils.getSelfsAndCallStackCache = {};
  *         This attribute should reference another Object/Class which again
  *         can have a .PARENT attribute which references another... to stop
  *         this lookup, set .PARENT to undefined/null/false...
- * @return {[Object[], Object[]]}
+ * @return {{0: Object[], 1: Object[]}}
  *         We return an array with two elements. The first is again a list,
  *         which contains n empty objects. The second element is a list of
  *         the collected/resolved class/object references.
- *
  */
 Utils.getSelfsAndCallStack = function(obj) {
   // Check if we already have a cached result for this request
@@ -202,4 +201,4 @@ Utils.getSelfsAndCallStack = function(obj) {
   let returnValue = [selfs, callStack];
   Utils.getSelfsAndCallStackCache[obj] = returnValue;
   return returnValue;
-}
+};

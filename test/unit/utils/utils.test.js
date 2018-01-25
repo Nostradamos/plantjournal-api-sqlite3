@@ -100,7 +100,7 @@ describe(`utils/utils`, () => {
     });
 
     it(`should resolve all PARENT classes and return the references to them`, () => {
-      let foo = {}
+      let foo = {};
       let bar = {PARENT: foo};
       Utils.getSelfsAndCallStack(bar).should.eql([
         [{}, {}],
@@ -109,7 +109,7 @@ describe(`utils/utils`, () => {
     });
 
     it(`should store result in cache`, () => {
-      let foo = {}
+      let foo = {};
       let bar = {PARENT: foo};
       Utils.getSelfsAndCallStack(bar);
       Utils.getSelfsAndCallStackCache.should.eql({
@@ -118,12 +118,12 @@ describe(`utils/utils`, () => {
     });
 
     it(`should return result from cache and not compute result again`, () => {
-      let foo = {}
-      Utils.getSelfsAndCallStackCache[foo] = [[{}], ['test']]
+      let foo = {};
+      Utils.getSelfsAndCallStackCache[foo] = [[{}], ['test']];
       Utils.getSelfsAndCallStack(foo).should.eql([
         [{}],
         ['test']
       ]);
-    })
+    });
   });
 });
