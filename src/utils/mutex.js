@@ -17,7 +17,8 @@ class Mutex extends EventEmitter {
   async lock() {
     if(!this.locked) return this._lock();
 
-    // We are locked, return a promise waiting till 'unlock' got emitted.
+    // We are locked, return a promise and add a resolver callback to
+    // this.waitingResolvers.
     logger.debug(`Mutex ${this.id} waiting till mutex gets unlocked`);
     return new Promise(resolve => {
       this.waitingResolvers.push(() => {
