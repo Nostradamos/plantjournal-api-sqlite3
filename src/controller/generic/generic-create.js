@@ -6,8 +6,7 @@ const sqlite = require('sqlite');
 
 const logger = require('../../logger');
 const Utils = require('../../utils/utils');
-
-var i = 0;
+const UtilsTransactions = require('../../utils/utils-transactions');
 
 /**
  * Generic create class which is the skeleton for all *-create classes.
@@ -292,7 +291,7 @@ class GenericCreate {
    */
   static async beginTransaction(self, context) {
     logger.debug(this.name, '#beginTransaction() BEGIN');
-    await sqlite.get('BEGIN');
+    await UtilsTransactions.beginTransaction();
   }
 
   /**
@@ -308,7 +307,7 @@ class GenericCreate {
    */
   static async rollbackTransaction(self, context) {
     logger.debug(this.name, '#rollbackTransaction() ROLLBACK');
-    await sqlite.get('ROLLBACK');
+    await UtilsTransactions.rollbackTransaction();
   }
 
   /**
@@ -327,7 +326,7 @@ class GenericCreate {
    */
   static async endTransaction(self, context) {
     logger.debug(this.name, '#endTransaction() COMMIT');
-    await sqlite.get('COMMIT');
+    await UtilsTransactions.endTransaction();
   }
 
   /**
