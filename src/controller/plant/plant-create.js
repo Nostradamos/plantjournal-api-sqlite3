@@ -8,6 +8,7 @@ const Utils = require('../../utils/utils');
 
 const GenericCreate = require('../generic/generic-create');
 const GenotypeCreate = require('../genotype/genotype-create');
+const MediumCreate =require('../medium/medium-create');
 
 
 /**
@@ -21,16 +22,76 @@ const GenotypeCreate = require('../genotype/genotype-create');
  * @extends GenericCreate
  */
 class PlantCreate extends GenericCreate {
+  /**
+   * We need to resolve selfs/classStack for Genotype and it's parents and
+   * also for Medium and it's parents. Therefore we now also return a
+   * classStackAndSelfs object with two selfs and two classStack properties.
+   * @param  {Object}  context
+   *         Context object for this insert/create request.
+   * @return {{selfs: Object[], classStack: Object[],
+   *           selfs2: Object[], classStack2: Object[]}} classStackAndSelfs
+   *         Returns an object with four properties:
+   *         selfs property is the selfs object of PlantCreate, GenotypeCreate
+   *         and it's parents.
+   *         classStack property is the classStack for PlantCreate,
+   *         GenotypeCreate and it's parents.
+   *         selfs2 property is the selfs object of MediumCreate and it's
+   *         parents (EnvironmentCreate).
+   *         classStack2 property is the classStack array of MediumCreate and
+   *         it's parents (EnvironmentCreate).
+   */
+  static resolveClassStackAndBuildSelfs(context) {
+    let [selfs, classStack] = Utils.getSelfsAndClassStack(this);
+    let [selfs2, classStack2] = Utils.getSelfsAndClassStack(this.PARENT2);
+
+    return {selfs, classStack, selfs2, classStack2};
+  }
+
+  /**
+   * This method calls the validate methods for classStack and classStack2 and
+   *  merges them again into one selfs/classStack object and returns them.
+   * @param {{selfs: Object[], classStack: Object[],
+   *         selfs2: Object[], classStack2: Object[]}} classStackAndSelfs
+   *         The classStackAndSelfs object returned from
+   *         PlantCreate.resolveClassStackAndBuildSelfs()
+   * @param  {Object}  context
+   *         Context object for this insert/create request.
+   * @return {classStackAndSelfs}
+   *         classStackAndSelfs object
+   */
+  static async callClassStackValidationMethods(classStackAndSelfs, context) {
+    let [selfs2, classStack2] = [
+      classStackAndSelfs.selfs2,
+      classStackAndSelfs.classStack2
+    ];
+    let classStackAndSelfs2 = {selfs: selfs2, classStack: classStack2};
+    classStackAndSelfs2 = await this.PARENT2.callClassStackValidationMethods(
+      classStackAndSelfs2, context);
+
+    classStackAndSelfs = await super.callClassStackValidationMethods(
+      classStackAndSelfs, context);
+
+    return {
+      selfs: [
+        ...classStackAndSelfs2.selfs,
+        ...classStackAndSelfs.selfs
+      ],
+      classStack: [
+        ...classStackAndSelfs2.classStack,
+        ...classStackAndSelfs.classStack
+      ]
+    };
+  }
 
   /**
      * We need to validate input and throw errors if we're unhappy with it.
      * @param  {object} self
      *         Namespace/object only for the context of this class and this
      *         creation process. Not shared across differenct classes in
-     *         callStack.
+     *         classStack.
      * @param  {object} context
      *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
+     *         all classes in classStack.
      * @throws {Error}
      */
   static validate(self, context) {
@@ -56,10 +117,10 @@ class PlantCreate extends GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    * @throws {Error}
    *         Any errors from #createGenotypeOrResolveGenotypeIdIfNeeded() or
    *         #executeQueryInsertPlant() or unexpected sqlite errors.
@@ -78,7 +139,7 @@ class PlantCreate extends GenericCreate {
         throw new Error('options.plantClonedFrom does not reference an existing Plant');
       }
 
-      context['genotypeId'] = context.lastInsertId = result['genotypeId'];
+      context.insertIds['genotypeId'] = result['genotypeId'];
     }
 
     try {
@@ -95,6 +156,8 @@ class PlantCreate extends GenericCreate {
 }
 
 PlantCreate.PARENT = GenotypeCreate;
+
+PlantCreate.PARENT2 = MediumCreate;
 
 PlantCreate.TABLE = CONSTANTS.TABLE_PLANT;
 

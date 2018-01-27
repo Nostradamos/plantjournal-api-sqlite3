@@ -93,16 +93,16 @@ describe(`utils/utils`, () => {
     });
   });
 
-  describe(`#getSelfsAndCallStack()`, () => {
+  describe(`#getSelfsAndClassStack()`, () => {
     afterEach(() => {
       // Reset cache
-      Utils.getSelfsAndCallStackCache = {};
+      Utils.getSelfsAndClassStackCache = {};
     });
 
     it(`should resolve all PARENT classes and return the references to them`, () => {
       let foo = {};
       let bar = {PARENT: foo};
-      Utils.getSelfsAndCallStack(bar).should.eql([
+      Utils.getSelfsAndClassStack(bar).should.eql([
         [{}, {}],
         [foo, bar]
       ]);
@@ -111,16 +111,16 @@ describe(`utils/utils`, () => {
     it(`should store result in cache`, () => {
       let foo = {};
       let bar = {PARENT: foo};
-      Utils.getSelfsAndCallStack(bar);
-      Utils.getSelfsAndCallStackCache.should.eql({
+      Utils.getSelfsAndClassStack(bar);
+      Utils.getSelfsAndClassStackCache.should.eql({
         [bar]: [[{}, {}], [foo, bar]]
       });
     });
 
     it(`should return result from cache and not compute result again`, () => {
       let foo = {};
-      Utils.getSelfsAndCallStackCache[foo] = [[{}], ['test']];
-      Utils.getSelfsAndCallStack(foo).should.eql([
+      Utils.getSelfsAndClassStackCache[foo] = [[{}], ['test']];
+      Utils.getSelfsAndClassStack(foo).should.eql([
         [{}],
         ['test']
       ]);

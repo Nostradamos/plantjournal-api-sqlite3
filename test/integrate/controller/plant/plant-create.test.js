@@ -251,5 +251,50 @@ describe(`Plant()`, () => {
         }
       );
     });
+
+    it(`should be possible to create a plant and a medium at once`, async () => {
+      let plant = await pj.Plant.create(
+        {plantName: 'motherPlant1', mediumName: 'testMedium'});
+
+      plant.should.containDeep({
+        plants: {
+          1: {
+            plantId: 1,
+            plantName: 'motherPlant1',
+            plantClonedFrom: null,
+            plantSex: null,
+            plantDescription: '',
+            genotypeId: 2,
+            mediumId: 2,
+          }
+        },
+        mediums: {
+          2: {
+            mediumId: 2,
+            mediumName: 'testMedium',
+            mediumPlants: [1]
+          }
+        }
+      });
+    });
+
+    it(`should not create a medium if mediumId is null`, async () => {
+      let plant = await pj.Plant.create(
+        {plantName: 'motherPlant1', mediumId: null});
+
+      plant.should.containDeep({
+        plants: {
+          1: {
+            plantId: 1,
+            plantName: 'motherPlant1',
+            plantClonedFrom: null,
+            plantSex: null,
+            plantDescription: '',
+            genotypeId: 2,
+            mediumId: null,
+          }
+        }
+      });
+    });
   });
 });

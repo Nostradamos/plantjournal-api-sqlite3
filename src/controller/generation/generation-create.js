@@ -42,6 +42,8 @@ class GenerationCreate extends GenericCreate {
 
     // Some additional validations if we got called from a child class
     if(context.creatingClassName !== this.name) {
+      if(options[CONSTANTS.ATTR_ID_GENERATION] === null) return true;
+
       if(_.has(options, CONSTANTS.ATTR_ID_GENERATION)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
         return true;
@@ -49,7 +51,9 @@ class GenerationCreate extends GenericCreate {
 
       // If we don't have any attributes available for creating a new
       // generation, don't create one.
-      if(!options[CONSTANTS.ATTR_NAME_GENERATION]) {
+      if(!options[CONSTANTS.ATTR_NAME_GENERATION] &&
+         !options[CONSTANTS.ATTR_PARENTS_GENERATION] &&
+         !options[CONSTANTS.ATTR_DESCRIPTION_GENERATION]) {
         return true;
       }
     }
@@ -85,7 +89,7 @@ class GenerationCreate extends GenericCreate {
     for(let parentPlantId of context.options.generationParents) {
       attributesRows.push({
         parentId: null,
-        generationId: squel.rstr('$lastInsertId'),
+        generationId: squel.rstr('$generationId'),
         plantId: parentPlantId
       });
     }
@@ -130,7 +134,7 @@ class GenerationCreate extends GenericCreate {
 
 
     try {
-      let placeholders = {$lastInsertId: context.lastInsertId};
+      let placeholders = {$generationId: self.insertId};
       await super._executeQuery(self, context, self.queryParents, placeholders);
     } catch (err) {
       if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {

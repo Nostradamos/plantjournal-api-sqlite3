@@ -161,7 +161,7 @@ Utils.splitToInt = function(str, sep = ',') {
 };
 
 // Object to cache getSelfsAndCallStack() resolves
-Utils.getSelfsAndCallStackCache = {};
+Utils.getSelfsAndClassStackCache = {};
 
 /**
  * This method is used from GenericCreate to resolve the PARENT classes and
@@ -184,21 +184,22 @@ Utils.getSelfsAndCallStackCache = {};
  *         which contains n empty objects. The second element is a list of
  *         the collected/resolved class/object references.
  */
-Utils.getSelfsAndCallStack = function(obj) {
+Utils.getSelfsAndClassStack = function(obj) {
   // Check if we already have a cached result for this request
-  let cached = Utils.getSelfsAndCallStackCache[obj];
-  if(cached) return cached;
+  let cached = Utils.getSelfsAndClassStackCache[obj];
+  if(!cached) {
+    let [callStack, selfs] = [[obj],[{}]];
 
-  let [callStack, selfs] = [[obj],[{}]];
+    let rP = obj.PARENT;
+    while(rP) {
+      callStack.unshift(rP);
+      selfs.push({});
+      rP = rP.PARENT;
+    }
 
-  let rP = obj.PARENT;
-  while(rP) {
-    callStack.unshift(rP);
-    selfs.push({});
-    rP = rP.PARENT;
+    cached = [selfs, callStack];
+    Utils.getSelfsAndClassStackCache[obj] = cached;
+
   }
-
-  let returnValue = [selfs, callStack];
-  Utils.getSelfsAndCallStackCache[obj] = returnValue;
-  return returnValue;
+  return [_.cloneDeep(cached[0]), cached[1]];
 };

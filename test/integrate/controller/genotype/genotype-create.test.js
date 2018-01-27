@@ -106,6 +106,19 @@ describe(`Genotype()`, () => {
       genotype.genotypes[1].should.containDeep(rows[0]);
     });
 
+    it(`should not create a new genotype with a generation if generationId is null`, async () => {
+      let genotype = await pj.Genotype.create(
+        {genotypeName: 'genoTest42', generationId: null});
+
+      genotype.genotypes[1].should.containDeep({
+        genotypeName: 'genoTest42',
+        generationId: null,
+      });
+
+      let rows = await sqlite.all(`SELECT * FROM generations`);
+      rows.length.should.eql(1);
+    });
+
     it(`should be possible to create a new genotype and generation at once`, async () => {
       let genotype = await pj.Genotype.create(
         {genotypeName: 'genoTest43', generationName: 'F2', familyId: 1});

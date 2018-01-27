@@ -52,7 +52,7 @@ class GenotypeCreate extends GenericCreate {
     }
 
     Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_GENOTYPE);
-    Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
+    Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_GENOTYPE);
   }
 
   /**

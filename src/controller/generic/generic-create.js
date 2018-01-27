@@ -9,6 +9,19 @@ const Utils = require('../../utils/utils');
 const UtilsTransactions = require('../../utils/utils-transactions');
 
 /**
+ * @typedef  {Object} classStackAndSelfs
+ *           Object containing self scopes and classStack classes for creation
+ *           process.
+ * @property {Object[]} selfs
+ *           Array of objects which represent the self scopes for the different
+ *           classStack scopes.
+ * @property {Object[]} classStack
+ *           Array of Objects which should be Classes which are child of
+ *           GenericCreate.
+ */
+
+
+/**
  * Generic create class which is the skeleton for all *-create classes.
  * It defines some general static methods which will called in a specific
  * order (see create()). Besides that this class also does some simple stuff
@@ -29,12 +42,12 @@ class GenericCreate {
    * 2. Each sub class of GenericCreate needs to specify the .PARENT class
    * attribute which should reference the PARENT creation class if possible.
    * Eg: GenerationCreate.PARENT = FamilyCreate
-   * Now we can resolve the so called "callStack", which just follows the
+   * Now we can resolve the so called "classStack", which just follows the
    * this.PARENT references until this.PARENT is undefined/false (this is done
-   * in the Utils.getSelfsAndCallStack method). And we create for each element
+   * in the Utils.getSelfsAndclassStack method). And we create for each element
    * in the stack (a create class) an own self object, which is a "private"
    * namespace where only the create class itself has access to, and a context
-   * namespace where every create class in the callstack has access to.
+   * namespace where every create class in the classStack has access to.
    * Now we can execute a set of hard coded functions (validate, initQuery...).
    * We do this like this, we first execute the first function on the first
    * element in the call stack, than the same function on the second element...
@@ -68,17 +81,17 @@ class GenericCreate {
       returnObject: {},
       createdAt: Utils.getUnixTimestampUTC(),
       creatingClassName: this.name,
-      lastInsertId: null,
-      insertIds: {}
+      insertIds: {},
     };
 
-    let [selfs, callStack] = this.resolveClassStackAndBuildSelfs(context);
-    logger.debug(
-      `${this.name} #create() callStack:`, _.map(callStack, e => e.name));
+    let classStackAndSelfs = this.resolveClassStackAndBuildSelfs(context);
 
-    [selfs, callStack] = await this.callClassStackValidationMethods(
-      selfs, context, callStack);
-    await this.callClassStackRemainingMethods(selfs, context, callStack);
+    logger.debug(`${this.name} #create() classStack:`, _.map(classStackAndSelfs.classStack, e => e.name));
+
+    classStackAndSelfs = await this
+      .callClassStackValidationMethods(classStackAndSelfs, context);
+
+    await this.callClassStackRemainingMethods(classStackAndSelfs, context);
 
 
     logger.debug(this.name, '#create() returnObject:', JSON.stringify(context.returnObject));
@@ -91,47 +104,45 @@ class GenericCreate {
    * stack, overwrite this method.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
-   * @return {{0: Object[], 1: Object[]}}
-   *         Returns an array with two elements. First is the array containing
-   *         the self scope objects, second is an array containg all the
-   *         GenericCreate class instances.
+   *         all classes in classStack.
+   * @return {classStackAndSelfs}
+   *         classStackAndSelfs object
    */
   static resolveClassStackAndBuildSelfs(context) {
-    return Utils.getSelfsAndCallStack(this);
+    let [selfs, classStack] = Utils.getSelfsAndClassStack(this);
+    return {selfs, classStack};
   }
 
   /**
-   * Calls the validate method of each Class in callStack. We do this in a
+   * Calls the validate method of each Class in classStack. We do this in a
    * DECREASING order, to fail on the first Parent class and then remove
-   * the parent and all it's parents from callStack and the related self
-   * scopes. We return the modified selfs & callStack.
-   * @param  {Object[]}  selfs
-   *         Array of objects which are the self scopes for the different
-   *         Classes in call stack.
+   * the parent and all it's parents from classStack and the related self
+   * scopes. We return the modified selfs & classStack.
+   * @param {classStackAndSelfs} classStackAndSelfs
+   *         classStackAndSelfs object
    * @param  {Object}  context
    *         Context object for this insert/create request.
-   * @param  {Class[]}  callStack
-   *         List of Classes for each we will call validate()
-   * @return {{0: Object[], 1: Object[]}}
-   *         Returns an array with two elements. First is the array containing
-   *         the self scope objects, second is an array containg all the
-   *         GenericCreate class instances.
+   * @return {classStackAndSelfs}
+   *         classStackAndSelfs object
    */
-  static async callClassStackValidationMethods(selfs, context, callStack) {
-    // Call all validate methods in decreasing order
-    for(let i=callStack.length-1;i>=0;i--) {
-      logger.debug(this.name, `#create() executing ${callStack[i].name}.validate`);
-      let removeFromCallStack = await this._callCallStackMethod(
-        callStack, selfs, context, i, 'validate', false);
+  static async callClassStackValidationMethods(classStackAndSelfs, context) {
+    let selfs = classStackAndSelfs.selfs;
+    let classStack = classStackAndSelfs.classStack;
 
-      if(removeFromCallStack === true) {
-        logger.debug(this.name, `#create() removing ${callStack[i].name} and it's parents from callStack`);
-        [selfs, callStack] = [_.slice(selfs, i+1), _.slice(callStack, i+1)];
+    // Call all validate methods in decreasing order
+    for(let i=classStack.length-1;i>=0;i--) {
+      logger.debug(this.name, `#create() executing ${classStack[i].name}.validate`);
+      let removeFromClassStack = await this._callClassStackMethod(
+        classStack, selfs, context, i, 'validate', false);
+
+      if(removeFromClassStack === true) {
+        logger.debug(this.name, `#create() removing ${classStack[i].name} and it's parents from classStack`);
+        [selfs, classStack] = [_.slice(selfs, i+1), _.slice(classStack, i+1)];
         break;
       }
     }
-    return [selfs, callStack];
+
+    return {selfs, classStack};
   }
 
   /**
@@ -139,23 +150,24 @@ class GenericCreate {
    * GenericCreate.CLASS_CALL__STACK_ORDER.
    * We do this in an INCREASING order, where we call each method for
    * each class, and then continuing with the next class call stack method.
-   * @param  {Object[]}  selfs
-   *         Array of objects which are the self scopes for the different
-   *         Classes in call stack.
-   * @param  {Object}  context
+   * @param {classStackAndSelfs} classStackAndSelfs
+   *         classStackAndSelfs object
+   * @param  {Object} context
    *         Context object for this insert/create request.
-   * @param  {Class[]}  callStack
-   *         List of Classes for each we will call validate()
    */
-  static async callClassStackRemainingMethods(selfs, context, callStack) {
+  static async callClassStackRemainingMethods(classStackAndSelfs, context) {
+    let selfs = classStackAndSelfs.selfs;
+    let classStack = classStackAndSelfs.classStack;
+
     // Call each other function in increasing order
     for(let f of this.CLASS_CALL_STACK_ORDER) {
       let shouldAwait = _.indexOf(
         ['beginTransaction', 'executeQuery', 'endTransaction'], f) !== -1;
 
-      for(let i=0;i<callStack.length;i++) {
-        logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${callStack[i].name}.${f}`);
-        await this._callCallStackMethod(callStack, selfs, context, i, f, false);
+      for(let i=0;i<classStack.length;i++) {
+        logger.debug(this.name, `#create() executing ${shouldAwait ? 'await' : ''} ${classStack[i].name}.${f}`);
+        await this._callClassStackMethod(
+          classStack, selfs, context, i, f, false);
 
         // Make sure we execute begin/endTransaction only once
         if(f === 'beginTransaction' || f === 'endTransaction') break;
@@ -164,18 +176,18 @@ class GenericCreate {
   }
 
   /**
-   * Helper method to call a callStack Method and return it's return value. This
-   * method allows us to await the method or normally call it, and we catch an
-   * unreadable error code and throw it readable again.
-   * @param  {GenericCreate[]}  callStack
-   *         callStack Object
+   * Helper method to call a classStack Method and return it's return value.
+   * This method allows us to await the method or normally call it, and we catch
+   * an unreadable error code and throw it readable again.
+   * @param  {GenericCreate[]}  classStack
+   *         classStack Object
    * @param  {Object[]}  selfs
    *         selfs object
    * @param  {Object}  context
    *         context object
    * @param  {Integer}  i
    *         Integer which indicates the index of the class reference in
-   *         callStack from which we should call f.
+   *         classStack from which we should call f.
    * @param  {String}  f
    *         Name of the function to execute
    * @param  {Boolean}  shouldAwait
@@ -183,9 +195,9 @@ class GenericCreate {
    * @return {Object}
    *         Return whatever the called method returned.
    */
-  static async _callCallStackMethod(
-    callStack, selfs, context, i, f, shouldAwait) {
-    let fnc = callStack[i][f].bind(callStack[i]);
+  static async _callClassStackMethod(
+    classStack, selfs, context, i, f, shouldAwait) {
+    let fnc = classStack[i][f].bind(classStack[i]);
     let self = selfs[i];
 
     let returnValue;
@@ -193,8 +205,8 @@ class GenericCreate {
       returnValue = shouldAwait ? await fnc(self, context) : fnc(self, context);
     } catch(err) {
       // Make this error more readable
-      if(err.message === 'callStack[i][f] is not a function') {
-        throw new Error(`Could not execute ${callStack[i].name}.${f}`);
+      if(err.message === 'classStack[i][f] is not a function') {
+        throw new Error(`Could not execute ${classStack[i].name}.${f}`);
       }
       throw err;
     }
@@ -206,19 +218,19 @@ class GenericCreate {
    * valid and make sure, that this record even needs to be created. Because
    * We can create a Family from a GenerationCreate, we need to make sure
    * that familyId isn't already set, and if so, abort this whole creation
-   * process by removing us and our parents from the callStack. Sounds
+   * process by removing us and our parents from the classStack. Sounds
    * complicate, but you just need to return true to remove us and our parents
-   * from the callStack :)
+   * from the classStack :)
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    * @return {Boolean}
    *         Return true if we don't need to insert this record and this class
-   *         reference and it's parents should get deleted from the callStack.
+   *         reference and it's parents should get deleted from the classStack.
    */
   static validate(self, context) {
     return false;
@@ -232,10 +244,10 @@ class GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    */
   static initQuery(self, context) {
     self.query = squel.insert().into(this.TABLE);
@@ -249,10 +261,10 @@ class GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    */
   static setQueryFields(self, context) {
     for(let attr of this.ATTRIBUTES) {
@@ -271,7 +283,7 @@ class GenericCreate {
 
     let parentPrimaryKey = this.PARENT.ATTR_ID;
     if(parentPrimaryKey && !context.options[parentPrimaryKey]) {
-      self.query.set(parentPrimaryKey, '$lastInsertId', {dontQuote: true});
+      self.query.set(parentPrimaryKey, '$parentId', {dontQuote: true});
     }
 
     // set id field
@@ -284,10 +296,10 @@ class GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    * @param  {UnixTimestampUTC} context.createdAt
    *         Unix timestamp which should indicate when we created this record.
    */
@@ -305,12 +317,12 @@ class GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {squel}  self.query
    *         Query object
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    */
   static stringifyQuery(self, context) {
     self.query = self.query.toString();
@@ -321,15 +333,15 @@ class GenericCreate {
    * Begins a new transaction. This is needed to perform rollbacks. See sqlite
    * transactions for more information.
    * NOTE: Because we always only execute the first beginTransaction in our
-   * callStack. it will have weird effects if you try to overwrite this method.
+   * classStack. it will have weird effects if you try to overwrite this method.
    * Just don't :)
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    */
   static async beginTransaction(self, context) {
     logger.debug(this.name, '#beginTransaction() BEGIN');
@@ -342,10 +354,10 @@ class GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    */
   static async rollbackTransaction(self, context) {
     logger.debug(this.name, '#rollbackTransaction() ROLLBACK');
@@ -356,15 +368,15 @@ class GenericCreate {
    * Ends/commits the transaction.
    * NOTE:Should only be called once in the whole create prcoess.
    * NOTE: Because we always only execute the first beginTransaction in our
-   * callStack. it will have weird effects if you try to overwrite this method.
+   * classStack. it will have weird effects if you try to overwrite this method.
    * Just don't :)
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    */
   static async endTransaction(self, context) {
     logger.debug(this.name, '#endTransaction() COMMIT');
@@ -379,16 +391,17 @@ class GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    * @throws {Error}
    *         Throws all sql errors
    */
   static async executeQuery(self, context) {
-    let placeholders = context.lastInsertId ?
-      {$lastInsertId: context.lastInsertId} :
+    let parentId = context.insertIds[this.PARENT.ATTR_ID];
+    let placeholders = parentId ?
+      {$parentId: parentId} :
       {};
 
     try {
@@ -398,9 +411,7 @@ class GenericCreate {
       throw err;
     }
 
-    context.insertIds[this.ATTR_ID] =
-      context.lastInsertId =
-      self.insertId = self.result.stmt.lastID;
+    context.insertIds[this.ATTR_ID] = self.insertId = self.result.stmt.lastID;
   }
 
   /**
@@ -411,10 +422,10 @@ class GenericCreate {
    * @param  {object} self
    *         Namespace/object only for the context of this class and this
    *         creation process. Not shared across differenct classes in
-   *         callStack.
+   *         classStack.
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
-   *         all classes in callStack.
+   *         all classes in classStack.
    * @param  {String} query
    *         SQLite Query string.
    * @param  {Object} placeholders
@@ -449,10 +460,10 @@ class GenericCreate {
      * @param  {object} self
      *         Namespace/object only for the context of this class and this
      *         creation process. Not shared across differenct classes in
-     *         callStack.
+     *         classStack.
      * @param  {object} context
      *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
+     *         all classes in classStack.
      */
   static buildReturnObject(self, context) {
     let recordObject = {};
