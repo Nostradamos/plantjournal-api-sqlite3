@@ -84,16 +84,16 @@ class PlantCreate extends GenericCreate {
   }
 
   /**
-     * We need to validate input and throw errors if we're unhappy with it.
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         classStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in classStack.
-     * @throws {Error}
-     */
+   * We need to validate input and throw errors if we're unhappy with it.
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         classStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in classStack.
+   * @throws {Error}
+   */
   static validate(self, context) {
     let options = context.options;
 

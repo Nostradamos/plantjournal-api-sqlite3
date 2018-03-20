@@ -23,55 +23,55 @@ const ApplyWhere = require('../../apply-where/apply-where');
  */
 class GenericFind {
   /**
-     * This method takes care of the execution of the whole find process.
-     * Your api calls this function.
-     * @async
-     * @param  {object}  [criteria={}]
-     *         Criterias for find
-     * @param  {string[]} [criteria.attributes]
-     *         Specify the attributes to query and return.
-     *         Eg: [familyName, generationName]
-     * @param  {object} [criteria.where]
-     *         Object which contains
-     * @param  {integer} [criteria.offset]
-     *         Skip the first x results
-     * @param  {integer} [criteria.limit]
-     *         limit to x results
-     * @throws {Error}
-     *         Only throws errors if something unexpected happens with sqlite.
-     * @return {Object}
-     *         returnObject which by default only contains how many entries
-     *         where found (count) and how many are left (remaining). You can
-     *         modify the content by overwriting #buildReturnObjectWhere()
-     *         method.
-     *         A returnObject should look like this:
-     *         {
-     *           count: 42,
-     *           remaining: 13,
-     *           families: {
-     *             1: {
-     *               familyId: 1,
-     *               familyName: 'TestFamily'
-     *             },
-     *             2: {
-     *               familyId: 2,
-     *               familyName: 'TestFamily2'
-     *             }
-     *           },
-     *           generations: {
-     *             1: {
-     *               generationId: 1,
-     *               generationName: 'F1',
-     *               familyId: 1
-     *             },
-     *             2: {
-     *               generationId: 2,,
-     *               generationName: 'S1',
-     *               familyId: 2
-     *             }
-     *           }
-     *         }
-     */
+   * This method takes care of the execution of the whole find process.
+   * Your api calls this function.
+   * @async
+   * @param  {object}  [criteria={}]
+   *         Criterias for find
+   * @param  {string[]} [criteria.attributes]
+   *         Specify the attributes to query and return.
+   *         Eg: [familyName, generationName]
+   * @param  {object} [criteria.where]
+   *         Object which contains
+   * @param  {integer} [criteria.offset]
+   *         Skip the first x results
+   * @param  {integer} [criteria.limit]
+   *         limit to x results
+   * @throws {Error}
+   *         Only throws errors if something unexpected happens with sqlite.
+   * @return {Object}
+   *         returnObject which by default only contains how many entries
+   *         where found (count) and how many are left (remaining). You can
+   *         modify the content by overwriting #buildReturnObjectWhere()
+   *         method.
+   *         A returnObject should look like this:
+   *         {
+   *           count: 42,
+   *           remaining: 13,
+   *           families: {
+   *             1: {
+   *               familyId: 1,
+   *               familyName: 'TestFamily'
+   *             },
+   *             2: {
+   *               familyId: 2,
+   *               familyName: 'TestFamily2'
+   *             }
+   *           },
+   *           generations: {
+   *             1: {
+   *               generationId: 1,
+   *               generationName: 'F1',
+   *               familyId: 1
+   *             },
+   *             2: {
+   *               generationId: 2,,
+   *               generationName: 'S1',
+   *               familyId: 2
+   *             }
+   *           }
+   *         }
+   */
   static async find(criteria) {
     Utils.throwErrorIfNotConnected();
     if (_.isNil(criteria)) criteria = {};
@@ -106,14 +106,14 @@ class GenericFind {
   }
 
   /**
-     * Init queries. Basically defines two properties in context
-     * for queryWhere and queryCount. Besides that it sets
-     * queryWhere to a select() and table to this.TABLE.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Init queries. Basically defines two properties in context
+   * for queryWhere and queryCount. Besides that it sets
+   * queryWhere to a select() and table to this.TABLE.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static initQueries(context, criteria) {
     // Init queries, we need two query objects, because we need a subquery
     // which counts the total rows we could find for this query. Basically
@@ -126,25 +126,25 @@ class GenericFind {
   }
 
   /**
-     * In case you have to join some tables, overwrite this function and
-     * apply joins to context.queryWhere.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * In case you have to join some tables, overwrite this function and
+   * apply joins to context.queryWhere.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereJoin(context, criteria) {
   }
 
   /**
-     * This method just applies {@link ApplyWhere} to the context.queryWhere
-     * query. Normally you shouldn't overwrite this, you can use
-     * this.ATTRIBUTES_SEARCHABLE to adjust the behaviour.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * This method just applies {@link ApplyWhere} to the context.queryWhere
+   * query. Normally you shouldn't overwrite this, you can use
+   * this.ATTRIBUTES_SEARCHABLE to adjust the behaviour.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhere(context, criteria) {
     ApplyWhere(
       context.queryWhere,
@@ -155,27 +155,27 @@ class GenericFind {
   }
 
   /**
-     * Clones queryWhere into queryCount. So everything applied to
-     * context.queryWhere before this gets called will also be in
-     * context.queryCount.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Clones queryWhere into queryCount. So everything applied to
+   * context.queryWhere before this gets called will also be in
+   * context.queryCount.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static cloneQueryWhereIntoQueryCount(context, criteria) {
     context.queryCount = context.queryWhere.clone();
   }
 
   /**
-     * Sets attributes to select for queryWhere to this.ATTR_ID if
-     * this.DEFAULT_FIELDS is not set. Otherwise all attributes of
-     * this.DEFAULT_FIELDS will get selected.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Sets attributes to select for queryWhere to this.ATTR_ID if
+   * this.DEFAULT_FIELDS is not set. Otherwise all attributes of
+   * this.DEFAULT_FIELDS will get selected.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereDefaultFields(context, criteria) {
     // For queryWhere we always have to set familyId, because it's needed
     // for the object key.
@@ -188,13 +188,13 @@ class GenericFind {
   }
 
   /**
-     * Applies {@link UtilsQuery.applyCriteriaAttributes} to context.queryWhere.
-     * Normally you shouldn't overwrite this function.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Applies {@link UtilsQuery.applyCriteriaAttributes} to context.queryWhere.
+   * Normally you shouldn't overwrite this function.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereAdditionalFields(context, criteria) {
     // We only have to set attributes specified if options.attributes,
     // otherwise all.
@@ -207,14 +207,14 @@ class GenericFind {
   }
 
   /**
-     * Sets the count field for queryCount. If this.COUNT is not set, we will
-     * use this.ATTR_ID. If you need to distinct the ids, just set:
-     * this.COUNT = 'distinct(sometable.someIdField)'
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Sets the count field for queryCount. If this.COUNT is not set, we will
+   * use this.ATTR_ID. If you need to distinct the ids, just set:
+   * this.COUNT = 'distinct(sometable.someIdField)'
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryCountFields(context, criteria) {
     // Attribute on which we want to perform the count operation
     let toCount = _.isEmpty(this.COUNT) ?
@@ -225,24 +225,24 @@ class GenericFind {
   }
 
   /**
-     * Sets limit and offset for queryWhere.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Sets limit and offset for queryWhere.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereLimitAndOffset(context, criteria) {
     // Set LIMIT and OFFSET for queryWhere (and only for queryWhere)
     UtilsQuery.applyCriteriaLimitAndOffset(context.queryWhere, criteria);
   }
 
   /**
-     * Takes sort instructions from criteria and applies them to queryWhere.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Takes sort instructions from criteria and applies them to queryWhere.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereOrder(context, criteria) {
     UtilsQuery.applyCriteriaSort(
       context.queryWhere,
@@ -253,25 +253,25 @@ class GenericFind {
   }
 
   /**
-     * You need to group your queries? Just set this.GROUP_BY.
-     * ToDo: Is this needed for any find*?
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * You need to group your queries? Just set this.GROUP_BY.
+   * ToDo: Is this needed for any find*?
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereGroup(context, criteria) {
     if (!_.isEmpty(this.GROUP_BY)) context.queryWhere.group(this.GROUP_BY);
   }
 
   /**
-     * Stringfies both queries queryWhere and queryCount.
-     * If you named them differently, overwrite this method.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Stringfies both queries queryWhere and queryCount.
+   * If you named them differently, overwrite this method.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static stringifyQueries(context, criteria) {
     // Stringify queries
     context.queryWhere = context.queryWhere.toString();
@@ -281,18 +281,18 @@ class GenericFind {
   }
 
   /**
-     * Executes queryWhere and queryCount in parallel and puts the results
-     * in context.rowsWhere and context.rowCount (mind the missing s on
-     * rowCount). You shouldn't need to overwrite this method if you don't
-     * rename the queries.
-     * @async
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     * @throws {Error}
-     *         Only throws errors if something unexpected happens with sqlite.
-     */
+   * Executes queryWhere and queryCount in parallel and puts the results
+   * in context.rowsWhere and context.rowCount (mind the missing s on
+   * rowCount). You shouldn't need to overwrite this method if you don't
+   * rename the queries.
+   * @async
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   * @throws {Error}
+   *         Only throws errors if something unexpected happens with sqlite.
+   */
   static async executeQueries(context, criteria) {
     // Now we will execute both queries and catch the results
     [context.rowsWhere, context.rowCount] = await Promise.all(
@@ -304,29 +304,29 @@ class GenericFind {
   }
 
   /**
-     * Apply all info from context.rowsWhere to returnObject here.
-     * @param  {object} returnObject
-     *         object which will get returned later from #find().
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Apply all info from context.rowsWhere to returnObject here.
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static buildReturnObjectWhere(returnObject, context, criteria) {
 
   }
 
   /**
-     * Applies all info from context.rowCount. So basically adds found
-     * and remaining properties to returnObject. Normally no need to
-     * overwrite this method.
-     * @param  {object} returnObject
-     *         object which will get returned later from #find().
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Applies all info from context.rowCount. So basically adds found
+   * and remaining properties to returnObject. Normally no need to
+   * overwrite this method.
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static buildReturnObjectCount(returnObject, context, criteria) {
     logger.debug(
       this.name, '#find() length RowsWhere:', context.rowsWhere.length);

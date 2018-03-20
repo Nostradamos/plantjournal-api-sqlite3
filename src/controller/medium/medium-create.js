@@ -18,19 +18,19 @@ const EnvironmentCreate = require('../environment/environment-create');
  */
 class MediumCreate extends GenericCreate {
   /**
-     * We need to validate the properties for new Medium.
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     * @throws {Error}
-     * @return {Boolean}
-     *         Return true if we don't need to insert this record and this class
-     *         reference and it's parents should get deleted from the callStack.
-     */
+   * We need to validate the properties for new Medium.
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @throws {Error}
+   * @return {Boolean}
+   *         Return true if we don't need to insert this record and this class
+   *         reference and it's parents should get deleted from the callStack.
+   */
   static validate(self, context) {
     let options = context.options;
 
@@ -62,17 +62,17 @@ class MediumCreate extends GenericCreate {
 
 
   /**
-     * We need to catch foreig key constraing failed error to throw our
-     * own error.
-     * @async
-     * @param  {object} context
-     *         internal context object in #create().
-     * @param  {object} options
-     *         options object which got passed to GenericCreate.create().
-     * @throws {Error}
-     *         Will throw error if options.familyId does not reference an
-     *         existing family.
-     */
+   * We need to catch foreig key constraing failed error to throw our
+   * own error.
+   * @async
+   * @param  {object} context
+   *         internal context object in #create().
+   * @param  {object} options
+   *         options object which got passed to GenericCreate.create().
+   * @throws {Error}
+   *         Will throw error if options.familyId does not reference an
+   *         existing family.
+   */
   static async executeQuery(context, options) {
     try {
       await super.executeQuery(context, options);

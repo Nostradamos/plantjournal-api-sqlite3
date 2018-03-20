@@ -21,20 +21,20 @@ const GenerationCreate = require('../generation/generation-create');
 class GenotypeCreate extends GenericCreate {
 
   /**
-     * We need to validate input and throw errors if we're
-     * unhappy with it.
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     * @return {Boolean}
-     *         Return true if we don't need to insert this record and this class
-     *         reference and it's parents should get deleted from the callStack.
-     * @throws {Error}
-     */
+   * We need to validate input and throw errors if we're
+   * unhappy with it.
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @return {Boolean}
+   *         Return true if we don't need to insert this record and this class
+   *         reference and it's parents should get deleted from the callStack.
+   * @throws {Error}
+   */
   static validate(self, context) {
     let options = context.options;
 
@@ -56,20 +56,20 @@ class GenotypeCreate extends GenericCreate {
   }
 
   /**
-     * We want to catch foreign key error to custom throw error that genotype
-     * reference failed.
-     * @async
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     * @throws {Error}
-     *         If generationId reference fails we will throw custom error,
-     *         everything else should be a sqlite error.
-     */
+   * We want to catch foreign key error to custom throw error that genotype
+   * reference failed.
+   * @async
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @throws {Error}
+   *         If generationId reference fails we will throw custom error,
+   *         everything else should be a sqlite error.
+   */
   static async executeQuery(self, context) {
     try {
       await super.executeQuery(self, context);

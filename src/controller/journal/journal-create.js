@@ -20,16 +20,16 @@ const GenericCreate = require('../generic/generic-create');
  */
 class JournalCreate extends GenericCreate {
   /**
-     * We need to validate the properties for new journal.
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     * @throws {Error}
-     */
+   * We need to validate the properties for new journal.
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @throws {Error}
+   */
   static validate(self, context) {
     // Figure out for which model this journal is for
     let options = context.options;
@@ -41,14 +41,17 @@ class JournalCreate extends GenericCreate {
     ];
 
     for(let attr of models) {
-      if(_.has(options, attr)) {
-        Utils.hasToBeInt(options, attr);
-        if(self.journalFor === null) {
-          self.journalFor = attr;
-        } else {
-          throw Error('Journal can only be assigned to a plant OR medium OR environment');
-        }
+      if(!_.has(options, attr)) {
+        continue;
       }
+
+      Utils.hasToBeInt(options, attr);
+      
+      if(self.journalFor !== null) {
+        throw Error('Journal can only be assigned to a plant OR medium OR environment');
+      }
+      
+      self.journalFor = attr;
     }
 
     if(self.journalFor === null) {
@@ -66,16 +69,16 @@ class JournalCreate extends GenericCreate {
   }
 
   /**
-     * Set query fields and do some special stuff for journalValue to always
-     * parse json inside sqlite and sometimes quote it.
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     */
+   * Set query fields and do some special stuff for journalValue to always
+   * parse json inside sqlite and sometimes quote it.
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   */
   static setQueryFields(self, context) {
     let options = context.options;
     self.query
@@ -97,15 +100,15 @@ class JournalCreate extends GenericCreate {
   }
 
   /**
-     * Build returnObject
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     */
+   * Build returnObject
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   */
   static buildReturnObject(self, context) {
     let options = context.options;
     context.returnObject[this.PLURAL] = {

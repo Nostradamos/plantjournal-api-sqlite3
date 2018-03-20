@@ -20,28 +20,28 @@ const GenericDelete = require('../generic/generic-delete');
 class MediumDelete extends GenericDelete {
 
   /**
-     * Because we don't only want to delete mediums, but also related
-     * plants, we want to know all them. SQLITE will make sure
-     * that they will get deleted, but without us knowing that. So get them.
-     * We need this information for the later return object (and in future
-     * for onDelete events.).
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to delete()
-     */
+   * Because we don't only want to delete mediums, but also related
+   * plants, we want to know all them. SQLITE will make sure
+   * that they will get deleted, but without us knowing that. So get them.
+   * We need this information for the later return object (and in future
+   * for onDelete events.).
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to delete()
+   */
   static setQueryRelatedJoin(context, criteria) {
     UtilsQuery.joinPlantsFromMediums(context.queryRelated);
   }
 
   /**
-     * We need to know mediumId and plantId.
-     * They all can get deleted, so select them.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to delete()
-     */
+   * We need to know mediumId and plantId.
+   * They all can get deleted, so select them.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to delete()
+   */
   static setQueryRelatedFields(context, criteria) {
     context.queryRelated
       .field(
@@ -51,13 +51,13 @@ class MediumDelete extends GenericDelete {
   }
 
   /**
-     * We want to extract all the ids which we queried before and which will
-     * get deleted later when we fire the DELETE command.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to delete()
-     */
+   * We want to extract all the ids which we queried before and which will
+   * get deleted later when we fire the DELETE command.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to delete()
+   */
   static extractIdsToDelete(context, criteria) {
     context.mediumIdsToDelete = new Set();
     context.plantIdsToDelete = new Set();
@@ -83,31 +83,31 @@ class MediumDelete extends GenericDelete {
   }
 
   /**
-     * We need to apply the mediumsId's to delete to the queryDelete.
-     * plants will get deleted automatically by sqlite because
-     * of the foreign key and ON DELETE CASCADE. See create-tables.js
-     * for table schema/instructions.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to delete()
-     */
+   * We need to apply the mediumsId's to delete to the queryDelete.
+   * plants will get deleted automatically by sqlite because
+   * of the foreign key and ON DELETE CASCADE. See create-tables.js
+   * for table schema/instructions.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to delete()
+   */
   static setQueryDeleteWhere(context, criteria) {
     context.queryDelete
       .where('mediums.mediumId IN ?', context.mediumIdsToDelete);
   }
 
   /**
-     * Build returnObject. It should contain all deleted ids for the various
-     * models.
-     * @param  {object} returnObject
-     *         returnObject, an empty assoc array which will get returned at the
-     *         end of #delete()
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to delete()
-     */
+   * Build returnObject. It should contain all deleted ids for the various
+   * models.
+   * @param  {object} returnObject
+   *         returnObject, an empty assoc array which will get returned at the
+   *         end of #delete()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to delete()
+   */
   static buildReturnObject(returnObject, context, criteria) {
     returnObject['mediums'] = context.mediumIdsToDelete;
     returnObject['plants'] = context.plantIdsToDelete;

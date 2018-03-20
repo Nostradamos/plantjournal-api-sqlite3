@@ -20,29 +20,29 @@ const GenericFind = require('../generic/generic-find');
  */
 class MediumFind extends GenericFind {
   /**
-     * We need to join families table, so that we can for example also find
-     * generations based on their family name.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * We need to join families table, so that we can for example also find
+   * generations based on their family name.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereJoin(context, criteria) {
     // Joins families, and because of the true flag also generation_parents.
     UtilsQuery.joinRelatedMediums(context.queryWhere, true);
   }
 
   /**
-     * We need to overwrite this method to, yeah, build the returnObject. We
-     * basically iterate over each row we get from database and add all
-     * environment related attributes to returnObject.environments.
-     * @override
-     * @param  {object} returnObject
-     *         object which will get returned later from #find().
-     * @param  {object} context
-     *         Internal context object
-     *         Criteria object passed to find()
-     */
+   * We need to overwrite this method to, yeah, build the returnObject. We
+   * basically iterate over each row we get from database and add all
+   * environment related attributes to returnObject.environments.
+   * @override
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
+   * @param  {object} context
+   *         Internal context object
+   *         Criteria object passed to find()
+   */
   static buildReturnObjectWhere(returnObject, context, criteria) {
     // build families object
     returnObject.environments =  {};

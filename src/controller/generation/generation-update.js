@@ -21,34 +21,34 @@ const GenericUpdate = require('../generic/generic-update');
  */
 class GenerationUpdate extends GenericUpdate {
   /**
-    * We need to do an group by.
-    * @param  {object} context   - Internal context object
-    * @param  {object} update    - Updated object passed to update()
-    * @param  {object} criteria  - Criteria object passed to update()
-     */
+   * We need to do an group by.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryFindGroup(context, update, criteria) {
     context.queryFind.group(Utils.explicitColumn(this.TABLE, this.ATTR_ID));
   }
 
   /**
-     * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of
-     * generation work.
-     * @param  {object} context   - Internal context object
-     * @param  {object} update    - Updated object passed to update()
-     * @param  {object} criteria  - Criteria object passed to update()
-     */
+   * We need to join some tables to make all ATTRIBUTES_SEARCHABLE of
+   * generation work.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryFindJoin(context, update, criteria) {
     UtilsQuery.joinRelatedGenerations(context.queryFind);
   }
 
   /**
-     * We need to remove generationParents from queryUpdate.setFields.
-     * generationParents has to get applied to TABLE_PARENTS and not normal
-     * generation TABLE.
-     * @param  {object} context   - Internal context object
-     * @param  {object} update    - Updated object passed to update()
-     * @param  {object} criteria  - Criteria object passed to update()
-     */
+   * We need to remove generationParents from queryUpdate.setFields.
+   * generationParents has to get applied to TABLE_PARENTS and not normal
+   * generation TABLE.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static setQueryUpdateFieldValues(context, update, criteria) {
     // generationParents has to be in a different table, so leave it out
     // for the main update query
@@ -58,13 +58,13 @@ class GenerationUpdate extends GenericUpdate {
   }
 
   /**
-     * Inits two new queries. queryDeleteOldParents
-     * and queryInsertNewParents. First one is to delete
-     * all old parents, second to insert new parent plant ids.
-     * @param  {object} context   - Internal context object
-     * @param  {object} update    - Updated object passed to update()
-     * @param  {object} criteria  - Criteria object passed to update()
-     */
+   * Inits two new queries. queryDeleteOldParents
+   * and queryInsertNewParents. First one is to delete
+   * all old parents, second to insert new parent plant ids.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static initQueryUpdateParents(context, update, criteria) {
     // We have to delete the old parents, build query for this
     context.queryDeleteOldParents = squel.remove().from(this.TABLE_PARENTS)
@@ -94,14 +94,14 @@ class GenerationUpdate extends GenericUpdate {
   }
 
   /**
-     * Executes context.queryDeleteOldParents and context.queryInsertNewParents
-     * in a transaction. If query fails because of foreign key, transaction
-     * will get rolled back (deletes will be undone) and an Error will be
-     * thrown.
-     * @param  {object} context   - Internal context object
-     * @param  {object} update    - Updated object passed to update()
-     * @param  {object} criteria  - Criteria object passed to update()
-     */
+   * Executes context.queryDeleteOldParents and context.queryInsertNewParents
+   * in a transaction. If query fails because of foreign key, transaction
+   * will get rolled back (deletes will be undone) and an Error will be
+   * thrown.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static async executeQueryUpdateParents(context, update, criteria) {
     try {
       await sqlite.get('BEGIN');
@@ -118,13 +118,13 @@ class GenerationUpdate extends GenericUpdate {
   }
 
   /**
-     * We have to modify the behaviour of execution because we have to also
-     * query TABLE_PARENTS if generationParents is in attributesToUpdate.
-     * Besides that we catch foreign key errors and throw our own error.
-     * @param  {object} context   - Internal context object
-     * @param  {object} update    - Updated object passed to update()
-     * @param  {object} criteria  - Criteria object passed to update()
-     */
+   * We have to modify the behaviour of execution because we have to also
+   * query TABLE_PARENTS if generationParents is in attributesToUpdate.
+   * Besides that we catch foreign key errors and throw our own error.
+   * @param  {object} context   - Internal context object
+   * @param  {object} update    - Updated object passed to update()
+   * @param  {object} criteria  - Criteria object passed to update()
+   */
   static async executeQueryUpdate(context, update, criteria) {
     if (_.has(context.attributesToUpdate, 'generationParents')) {
       this.initQueryUpdateParents(context, update, criteria);

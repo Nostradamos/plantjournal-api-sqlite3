@@ -18,17 +18,17 @@ const GenericFind = require('../generic/generic-find');
  */
 class FamilyFind extends GenericFind {
   /**
-     * We need to overwrite this method to, yeah,
-     * build the returnObject. We basically iterate over
-     * each row we get from database and add all family related
-     * attributes to returnObject.families.
-     * @override
-     * @param  {object} returnObject
-     *         object which will get returned later from #find().
-     * @param  {object} context
-     *         Internal context object
-     *         Criteria object passed to find()
-     */
+   * We need to overwrite this method to, yeah,
+   * build the returnObject. We basically iterate over
+   * each row we get from database and add all family related
+   * attributes to returnObject.families.
+   * @override
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
+   * @param  {object} context
+   *         Internal context object
+   *         Criteria object passed to find()
+   */
   static buildReturnObjectWhere(returnObject, context, criteria) {
     // build families object
     returnObject.families =  {};

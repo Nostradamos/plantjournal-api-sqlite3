@@ -19,20 +19,20 @@ const GenericCreate = require('../generic/generic-create');
  */
 class FamilyCreate extends GenericCreate {
   /**
-     * We need to validate the options.familyName property and throw
-     * Error if we don't accept the input.
-     * @param  {object} self
-     *         Namespace/object only for the context of this class and this
-     *         creation process. Not shared across differenct classes in
-     *         callStack.
-     * @param  {object} context
-     *         Namespace/object of this creation process. It's shared across
-     *         all classes in callStack.
-     * @throws {Error}
-     * @return {Boolean}
-     *         Return true if we don't need to insert this record and this class
-     *         reference and it's parents should get deleted from the callStack.
-     */
+   * We need to validate the options.familyName property and throw
+   * Error if we don't accept the input.
+   * @param  {object} self
+   *         Namespace/object only for the context of this class and this
+   *         creation process. Not shared across differenct classes in
+   *         callStack.
+   * @param  {object} context
+   *         Namespace/object of this creation process. It's shared across
+   *         all classes in callStack.
+   * @throws {Error}
+   * @return {Boolean}
+   *         Return true if we don't need to insert this record and this class
+   *         reference and it's parents should get deleted from the callStack.
+   */
   static validate(self, context) {
     let options = context.options;
 

@@ -22,29 +22,29 @@ const GenericFind = require('../generic/generic-find');
  */
 class GenerationFind extends GenericFind {
   /**
-     * We need to join families table, so that we can for example also find
-     * generations based on their family name.
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * We need to join families table, so that we can for example also find
+   * generations based on their family name.
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static setQueryWhereJoin(context, criteria) {
     // Joins families, and because of the true flag also generation_parents.
     UtilsQuery.joinRelatedGenerations(context.queryWhere, true);
   }
 
   /**
-     * Build the returnObject. We want to have all family attributes
-     * (like familyName, familyId) inreturnObject.families and all
-     * generation attributes in returnObject.generations.
-     * @param  {object} returnObject
-     *         Object which will later get returned from #find()
-     * @param  {object} context
-     *         Internal context object
-     * @param  {object} criteria
-     *         Criteria object passed to find()
-     */
+   * Build the returnObject. We want to have all family attributes
+   * (like familyName, familyId) inreturnObject.families and all
+   * generation attributes in returnObject.generations.
+   * @param  {object} returnObject
+   *         Object which will later get returned from #find()
+   * @param  {object} context
+   *         Internal context object
+   * @param  {object} criteria
+   *         Criteria object passed to find()
+   */
   static buildReturnObjectWhere(returnObject, context, criteria) {
     returnObject.families = {};
     returnObject.generations = {};

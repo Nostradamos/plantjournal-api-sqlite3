@@ -18,16 +18,16 @@ const GenericFind = require('../generic/generic-find');
  */
 class JournalFind extends GenericFind {
   /**
-     * We need to overwrite this method to, yeah, build the returnObject. We
-     * basically iterate over each row we get from database and add all
-     * journal related attributes to returnObject.journals.
-     * @override
-     * @param  {object} returnObject
-     *         object which will get returned later from #find().
-     * @param  {object} context
-     *         Internal context object
-     *         Criteria object passed to find()
-     */
+   * We need to overwrite this method to, yeah, build the returnObject. We
+   * basically iterate over each row we get from database and add all
+   * journal related attributes to returnObject.journals.
+   * @override
+   * @param  {object} returnObject
+   *         object which will get returned later from #find().
+   * @param  {object} context
+   *         Internal context object
+   *         Criteria object passed to find()
+   */
   static buildReturnObjectWhere(returnObject, context, criteria) {
     // build families object
     returnObject.journals =  {};
