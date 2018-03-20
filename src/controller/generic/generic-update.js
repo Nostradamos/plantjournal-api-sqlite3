@@ -205,8 +205,8 @@ class GenericUpdate {
   static async executeQueryFind(context, update, criteria) {
     context.rowsFind = await sqlite.all(context.queryFind);
     logger.debug(this.name, '#update() rowsFind:', context.rowsFind);
-  }  
-     
+  }
+
   /**
    * Extracts ids based on this.ATTR_ID from context.rowsFind
    * and puts them into context.idsToUpdate.

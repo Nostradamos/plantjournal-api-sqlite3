@@ -46,11 +46,11 @@ class JournalCreate extends GenericCreate {
       }
 
       Utils.hasToBeInt(options, attr);
-      
+
       if(self.journalFor !== null) {
         throw Error('Journal can only be assigned to a plant OR medium OR environment');
       }
-      
+
       self.journalFor = attr;
     }
 
