@@ -30,16 +30,16 @@ const TranslateOperatorsRelational = require(
  */
 class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
   /**
-     * We need to the (destination) table and attribute, and the (source) table
-     * and attributes. They are different because we wont build our query
-     * against the family table for the `familyGenerations` attribute but for
-     * the generations table.
-     * Besides that we need to redirect self.squelExpr to a new squel expression
-     * because we want to build a subquery in the end. We also need another
-     * squel expression to handle the having part of the new sub query.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     */
+   * We need to the (destination) table and attribute, and the (source) table
+   * and attributes. They are different because we wont build our query
+   * against the family table for the `familyGenerations` attribute but for
+   * the generations table.
+   * Besides that we need to redirect self.squelExpr to a new squel expression
+   * because we want to build a subquery in the end. We also need another
+   * squel expression to handle the having part of the new sub query.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   */
   static modifySelf(self) {
     [self.table, self.attr, self.srcTable, self.srcAttr] =
             UtilsChildAttributes._getTableSrcTableSrcAttrOfChildAttribute(
@@ -50,25 +50,25 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function handling equals. The child attribute value will be
-     * represented as an array, so the child attribute is equal to another
-     * array if the contain the same elements and have the same count of
-     * elements.
-     * NOTE: We can't simply use the method provided by
-     * TranslateOperatorsRelational because of the way we store
-     * the generationParents. Each parent is in a own row which we join to.
-     * So we get a row for every parent, for this row we need to make sure
-     * that the id is in our equals array (operatorOptions), plus we need to
-     * make sure that we selected exactly operatorOptions.length parents by
-     * using a HAVIN expression.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Integer|Integer[]} operatorOptions
-     *         Array of integers which represent the plantIds (parentIds)
-     *         we want to check against
-     * @param  {Object} crit
-     *         Expression object
-     */
+   * Operator function handling equals. The child attribute value will be
+   * represented as an array, so the child attribute is equal to another
+   * array if the contain the same elements and have the same count of
+   * elements.
+   * NOTE: We can't simply use the method provided by
+   * TranslateOperatorsRelational because of the way we store
+   * the generationParents. Each parent is in a own row which we join to.
+   * So we get a row for every parent, for this row we need to make sure
+   * that the id is in our equals array (operatorOptions), plus we need to
+   * make sure that we selected exactly operatorOptions.length parents by
+   * using a HAVIN expression.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Integer|Integer[]} operatorOptions
+   *         Array of integers which represent the plantIds (parentIds)
+   *         we want to check against
+   * @param  {Object} crit
+   *         Expression object
+   */
   static operatorEquals(self, operatorOptions, crit) {
     // With the in expression we make sure we only select values which are
     // in operator options
@@ -87,26 +87,26 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for equals NOT ($neq). This operator lets you find
-     * records where the child attribute value array is different to the
-     * operator options value array.
-     * They are not equal if they have a different count of elements or if they
-     * consist of other values.
-     * NOTE: We can't use the TranslateOperatorsRelational.operatorNotEquals()
-     * method because we don't do an unequal operatoion on a column but on a
-     * whole query of another table. So we more do a not in operation combined
-     * with another query selecting all child attribute ids which have a
-     * different count of values.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Integer|Integer[]} operatorOptions
-     *         We want to find records, where attribute value is not in
-     *         this array.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for equals NOT ($neq). This operator lets you find
+   * records where the child attribute value array is different to the
+   * operator options value array.
+   * They are not equal if they have a different count of elements or if they
+   * consist of other values.
+   * NOTE: We can't use the TranslateOperatorsRelational.operatorNotEquals()
+   * method because we don't do an unequal operatoion on a column but on a
+   * whole query of another table. So we more do a not in operation combined
+   * with another query selecting all child attribute ids which have a
+   * different count of values.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Integer|Integer[]} operatorOptions
+   *         We want to find records, where attribute value is not in
+   *         this array.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorNotEquals(self, operatorOptions, crit) {
     // To for example get all generations which don't have a specific set of
     // parents, we need to find generations which have a different amount of
@@ -162,22 +162,22 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
   }
 
   /**
-     * This operator lets you find records where the child attribute array
-     * contains all elements of operatorOptions. The child attribute can also
-     * contain more different elements.
-     * To achieve this we select all child records which have any of operator
-     * options elements in it, and from the selected we only keep those where
-     * we had at least operatorOptions.length matches.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Integer|Integer[]} operatorOptions
-     *         We want to find records, where attribute value is not in
-     *         this array.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * This operator lets you find records where the child attribute array
+   * contains all elements of operatorOptions. The child attribute can also
+   * contain more different elements.
+   * To achieve this we select all child records which have any of operator
+   * options elements in it, and from the selected we only keep those where
+   * we had at least operatorOptions.length matches.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Integer|Integer[]} operatorOptions
+   *         We want to find records, where attribute value is not in
+   *         this array.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorContains(self, operatorOptions, crit) {
     this.operatorIn(self, operatorOptions, crit);
 
@@ -193,21 +193,21 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
   }
 
   /**
-     * This operator lets you select records where the child attribute doesn't
-     * contain any of the elements in operatorOptions.
-     * To achieve this behaviour we first select all records where any of the
-     * operatorOptions elements is in, and then we select all records where
-     * the id doesn't match with the previously selected.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Integer|Integer[]} operatorOptions
-     *         We want to find records, where attribute value is not in
-     *         this array.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * This operator lets you select records where the child attribute doesn't
+   * contain any of the elements in operatorOptions.
+   * To achieve this behaviour we first select all records where any of the
+   * operatorOptions elements is in, and then we select all records where
+   * the id doesn't match with the previously selected.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Integer|Integer[]} operatorOptions
+   *         We want to find records, where attribute value is not in
+   *         this array.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorNotContains(self, operatorOptions, crit) {
     if(!_.isArray(operatorOptions)) operatorOptions = [operatorOptions];
 
@@ -232,42 +232,42 @@ class TranslateOperatorsChildAttributes extends TranslateOperatorsRelational {
   }
 
   /**
-     * This short hand should just does an equals operation, but we need to call
-     * the TranslateOperatorsChildAttributes.operatorEquals() method,
-     * therefore we need to reassign it.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * This short hand should just does an equals operation, but we need to call
+   * the TranslateOperatorsChildAttributes.operatorEquals() method,
+   * therefore we need to reassign it.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static processStringNumberBooleanNullShortHand(self, crit) {
     super.operatorEquals(self, self.attrOptions, crit);
   }
 
   /**
-     * And this short hand should does an equals operation, but we need to call
-     * the TranslateOperatorsChildAttributes.operatorEquals() method,
-     * therefore we need to reassign it.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * And this short hand should does an equals operation, but we need to call
+   * the TranslateOperatorsChildAttributes.operatorEquals() method,
+   * therefore we need to reassign it.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static processArrayShortHand(self, crit) {
     this.operatorEquals(self, self.attrOptions, crit);
   }
 
   /**
-     * Before we're done, we need to build a sub query were we select from the
-     * child attributes destination table the id's we want to select in the
-     * source table.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     */
+   * Before we're done, we need to build a sub query were we select from the
+   * child attributes destination table the id's we want to select in the
+   * source table.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   */
   static beforeDone(self) {
     // Make sure we have any expressions to add
     let emptySquelExpr = _.isEmpty(self.squelExpr._nodes);

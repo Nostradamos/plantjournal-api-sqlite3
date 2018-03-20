@@ -1,9 +1,9 @@
 'use strict';
 
-const JournalCreate = require('../controller/journal/journal-create');
-const JournalFind = require('../controller/journal/journal-find');
-const JournalDelete = require('../controller/journal/journal-delete');
-const JournalUpdate = require('../controller/journal/journal-update');
+const JournalCreate = require('./journal/journal-create');
+const JournalFind = require('./journal/journal-find');
+const JournalDelete = require('./journal/journal-delete');
+const JournalUpdate = require('./journal/journal-update');
 
 /**
  * Namespace containing all CRUD methods for Journal.

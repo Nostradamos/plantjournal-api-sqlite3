@@ -23,20 +23,20 @@ const TranslateOperatorsRelational = require(
  */
 class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   /**
-     * We know the table, it will always be journals.
-     * @param  {Object} self
-       *         Object containing information about this translation process
-     */
+   * We know the table, it will always be journals.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   */
   static getTable(self) {
     self.table = CONSTANTS.TABLE_JOURNAL;
   }
 
   /**
-     * We need to check if we want to query only the journalValue attribute
-     * or a json path from it.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     */
+   * We need to check if we want to query only the journalValue attribute
+   * or a json path from it.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   */
   static modifySelf(self) {
 
     self.func = null;
@@ -67,19 +67,19 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for equals ($eq)
-     * NOTE: Can't use the TranslateOperatorsRelational.operatorEquals() method
-     * because we need to relate to an json_exctrat() sqlite function and not
-     * only the attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {String|Number|Boolean|Null} operatorOptions
-     *         We want to find records, where attribute value equals this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for equals ($eq)
+   * NOTE: Can't use the TranslateOperatorsRelational.operatorEquals() method
+   * because we need to relate to an json_exctrat() sqlite function and not
+   * only the attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {String|Number|Boolean|Null} operatorOptions
+   *         We want to find records, where attribute value equals this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorEquals(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createEqualsExpression(
       self.table,
@@ -91,19 +91,19 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for equals NOT ($neq)
-     * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals()
-     * method because we need to relate to an json_exctrat() sqlite function and
-     * not only the attribute.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {String|Number|Boolean|Null} operatorOptions
-     *         We want to find records, where attribute value equals NOT this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for equals NOT ($neq)
+   * NOTE: Can't use the TranslateOperatorsRelational.operatorNotEquals()
+   * method because we need to relate to an json_exctrat() sqlite function and
+   * not only the attribute.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {String|Number|Boolean|Null} operatorOptions
+   *         We want to find records, where attribute value equals NOT this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorNotEquals(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createNotEqualsExpression(
       self.table,
@@ -114,25 +114,25 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for like ($like). Like is an relational operator
-     * which matches a bit similiar to regexpressions, but a lot simpler.
-     * Basically you have to special chars `_` and `%`. `_` matches exactly
-     * one character, no whether which one. `%` matches zero or more characters.
-     * For example if you want to check if an attribute contains the sub String
-     * 'sensor' at any position, you could do following:
-     * `{attribute: {$like: '%sensor%'}}`
-     * NOTE: Can't use the TranslateOperatorsRelational.operatorLike() method
-     * because we need to relate to an json_exctrat() sqlite function and not
-     * only the attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {String} operatorOptions
-     *         We want to find records, where attribute value is like this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for like ($like). Like is an relational operator
+   * which matches a bit similiar to regexpressions, but a lot simpler.
+   * Basically you have to special chars `_` and `%`. `_` matches exactly
+   * one character, no whether which one. `%` matches zero or more characters.
+   * For example if you want to check if an attribute contains the sub String
+   * 'sensor' at any position, you could do following:
+   * `{attribute: {$like: '%sensor%'}}`
+   * NOTE: Can't use the TranslateOperatorsRelational.operatorLike() method
+   * because we need to relate to an json_exctrat() sqlite function and not
+   * only the attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {String} operatorOptions
+   *         We want to find records, where attribute value is like this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorLike(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLikeExpression(
       self.table,
@@ -143,19 +143,19 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for NOT like ($nlike)
-     * NOTE: Can't use the TranslateOperatorsRelational.operatorNotLike() method
-     * because we need to relate to an json_exctrat() sqlite function and not
-     * only the attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {String} operatorOptions
-     *         We want to find records, where attribute value is NOT like this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for NOT like ($nlike)
+   * NOTE: Can't use the TranslateOperatorsRelational.operatorNotLike() method
+   * because we need to relate to an json_exctrat() sqlite function and not
+   * only the attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {String} operatorOptions
+   *         We want to find records, where attribute value is NOT like this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorNotLike(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createNotLikeExpression(
       self.table,
@@ -166,19 +166,19 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for greater than ($gt)
-     * NOTE: Can't use the TranslateOperatorsRelational.operatorGreatherThan()
-     * method because we need to relate to an json_exctrat() sqlite function and
-     * not only the attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Number} operatorOptions
-     *         We want to find records, where attribute value greater than this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for greater than ($gt)
+   * NOTE: Can't use the TranslateOperatorsRelational.operatorGreatherThan()
+   * method because we need to relate to an json_exctrat() sqlite function and
+   * not only the attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number} operatorOptions
+   *         We want to find records, where attribute value greater than this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorGreatherThan(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createGreaterThanExpression(
       self.table,
@@ -189,21 +189,21 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for greater than equal ($gte)
-     * NOTE: Can't use the
-     * TranslateOperatorsRelational.operatorGreatherThanEqual() method because
-     * we need to relate to an json_exctrat() sqlite function and not only the
-     * attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Number} operatorOptions
-     *         We want to find records, where attribute value is greater or
-     *         equal to this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for greater than equal ($gte)
+   * NOTE: Can't use the
+   * TranslateOperatorsRelational.operatorGreatherThanEqual() method because
+   * we need to relate to an json_exctrat() sqlite function and not only the
+   * attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number} operatorOptions
+   *         We want to find records, where attribute value is greater or
+   *         equal to this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorGreatherThanEqual(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createGreaterThanEqualExpression(
       self.table,
@@ -214,21 +214,21 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for lower than ($lt)
-     * NOTE: Can't use the
-     * TranslateOperatorsRelational.operatorLowerThan() method because we need
-     * to relate to an json_exctrat() sqlite function and not only the
-     * attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Number} operatorOptions
-     *         We want to find records, where attribute value is lower than
-     *         this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for lower than ($lt)
+   * NOTE: Can't use the
+   * TranslateOperatorsRelational.operatorLowerThan() method because we need
+   * to relate to an json_exctrat() sqlite function and not only the
+   * attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number} operatorOptions
+   *         We want to find records, where attribute value is lower than
+   *         this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorLowerThan(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLowerThanExpression(
       self.table,
@@ -239,21 +239,21 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for lower than equal ($lte)
-     * NOTE: Can't use the
-     * TranslateOperatorsRelational.operatorLowerThanEqual() method because we
-     * need to relate to an json_exctrat() sqlite function and not only the
-     * attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Number} operatorOptions
-     *         We want to find records, where attribute value is lower or
-     *         equal to this.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for lower than equal ($lte)
+   * NOTE: Can't use the
+   * TranslateOperatorsRelational.operatorLowerThanEqual() method because we
+   * need to relate to an json_exctrat() sqlite function and not only the
+   * attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number} operatorOptions
+   *         We want to find records, where attribute value is lower or
+   *         equal to this.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorLowerThanEqual(self, operatorOptions, crit) {
     [crit.crit, crit.args] = UtilsExpression.createLowerThanEqualExpression(
       self.table,
@@ -264,21 +264,21 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for IN operation. Checks if attribute value is in
-     * an array of elements.
-     * NOTE: Can't use the
-     * TranslateOperatorsRelational.operatorIn() method because we need to
-     * relate to an json_exctrat() sqlite function and not only the attribute
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Number[]|String[]} operatorOptions
-     *         We want to find records, where attribute value is equal to
-     *         one element in the array operatorOptions.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for IN operation. Checks if attribute value is in
+   * an array of elements.
+   * NOTE: Can't use the
+   * TranslateOperatorsRelational.operatorIn() method because we need to
+   * relate to an json_exctrat() sqlite function and not only the attribute
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]} operatorOptions
+   *         We want to find records, where attribute value is equal to
+   *         one element in the array operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorIn(self, operatorOptions, crit) {
     if(!_.isArray(operatorOptions)) {
       TranslateOperatorsJournalValue.operatorEquals(
@@ -295,21 +295,21 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * Operator function for NOT IN operation. Checks if attribute value is NOT
-     * in an array of elements.
-     * NOTE: Can't use the
-     * TranslateOperatorsRelational.operatorNotIn() method because we need to
-     * relate to an json_exctrat() sqlite function and not only the attribute.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Number[]|String[]} operatorOptions
-     *         We want to find records, where attribute value is NOT equal to
-     *         one element in the array operatorOptions.
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     */
+   * Operator function for NOT IN operation. Checks if attribute value is NOT
+   * in an array of elements.
+   * NOTE: Can't use the
+   * TranslateOperatorsRelational.operatorNotIn() method because we need to
+   * relate to an json_exctrat() sqlite function and not only the attribute.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Number[]|String[]} operatorOptions
+   *         We want to find records, where attribute value is NOT equal to
+   *         one element in the array operatorOptions.
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   */
   static operatorNotIn(self, operatorOptions, crit) {
     if(!_.isArray(operatorOptions)) {
       TranslateOperatorsJournalValue.operatorNotEquals(
@@ -508,24 +508,24 @@ class TranslateOperatorsJournalValue extends TranslateOperatorsRelational {
   }
 
   /**
-     * This method gets called if attrOptions is a Number (Integer or Float),
-     * String, Boolean, null, Array of Plain Object. We will just execute
-     * a normal equals operation. Benefit of this shorthand is that You
-     * don't need to specify an {$eq: x} value and simply can pass the object.
-     * Based on this you can create a new squel expression inside crit or just
-     * leave crit.crit null to not do anything.
-     * @param  {Object} self
-     *         Object containing information about this translation process
-     * @param  {Object} crit
-     *         Object which contains expression and expressionArgs. Modify
-     *         this two properties to create a new expression which gets
-     *         added to self.squelExpr.
-     * @param  {String} crit.crit
-     *         By default null, you can set it to an sqlite expression.
-     *         Eg: 'TABLE.ATTR >= ?'
-     * @param  {Array} crit.args
-     *         Apply any arguments for crit to this array.
-     */
+   * This method gets called if attrOptions is a Number (Integer or Float),
+   * String, Boolean, null, Array of Plain Object. We will just execute
+   * a normal equals operation. Benefit of this shorthand is that You
+   * don't need to specify an {$eq: x} value and simply can pass the object.
+   * Based on this you can create a new squel expression inside crit or just
+   * leave crit.crit null to not do anything.
+   * @param  {Object} self
+   *         Object containing information about this translation process
+   * @param  {Object} crit
+   *         Object which contains expression and expressionArgs. Modify
+   *         this two properties to create a new expression which gets
+   *         added to self.squelExpr.
+   * @param  {String} crit.crit
+   *         By default null, you can set it to an sqlite expression.
+   *         Eg: 'TABLE.ATTR >= ?'
+   * @param  {Array} crit.args
+   *         Apply any arguments for crit to this array.
+   */
   static processStringNumberBooleanNullArrayPlainObjectShortHand(self, crit) {
     this.operatorEquals(self, self.attrOptions, crit);
   }

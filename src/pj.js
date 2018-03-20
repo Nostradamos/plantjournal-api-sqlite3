@@ -11,23 +11,23 @@ const logger = require('./logger');
  */
 class plantJournal {
   /**
-     * Init a new plantJournal instance.
-     * @param  {object} options
-     *         All options. Currently this will get directly passed to sqlite,
-     *         so all valid sqlite options you can also use here.
-     */
+   * Init a new plantJournal instance.
+   * @param  {object} options
+   *         All options. Currently this will get directly passed to sqlite,
+   *         so all valid sqlite options you can also use here.
+   */
   constructor(options) {
     this.options = options;
   }
 
   /**
-     * Connects to sqlite
-     * @async
-     * @throws {Error}
-     *         Throws error if sqlite lib doesn't support JSON or foreign_keys,
-     *         or if anything else happens and we fail to connect to the sqlite
-     *         database.
-     */
+   * Connects to sqlite
+   * @async
+   * @throws {Error}
+   *         Throws error if sqlite lib doesn't support JSON or foreign_keys,
+   *         or if anything else happens and we fail to connect to the sqlite
+   *         database.
+   */
   async connect() {
     await sqlite.open(this.options);
     logger.info('Creating default tables');
@@ -58,8 +58,8 @@ class plantJournal {
   }
 
   /**
-     * Disconnect from sqlite3 database
-     */
+   * Disconnect from sqlite3 database
+   */
   async disconnect() {
     await sqlite.close();
   }

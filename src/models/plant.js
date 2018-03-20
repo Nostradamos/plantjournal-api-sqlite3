@@ -1,9 +1,9 @@
 'use strict';
 
-const PlantCreate = require('../controller/plant/plant-create');
-const PlantFind = require('../controller/plant/plant-find');
-const PlantDelete = require('../controller/plant/plant-delete');
-const PlantUpdate = require('../controller/plant/plant-update');
+const PlantCreate = require('./plant/plant-create');
+const PlantFind = require('./plant/plant-find');
+const PlantDelete = require('./plant/plant-delete');
+const PlantUpdate = require('./plant/plant-update');
 
 /**
  * Namespace containing all CRUD methods of Plant.

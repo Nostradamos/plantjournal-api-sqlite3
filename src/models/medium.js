@@ -1,9 +1,9 @@
 'use strict';
 
-const MediumCreate = require('../controller/medium/medium-create');
-const MediumFind = require('../controller/medium/medium-find');
-const MediumDelete = require('../controller/medium/medium-delete');
-const MediumUpdate = require('../controller/medium/medium-update');
+const MediumCreate = require('./medium/medium-create');
+const MediumFind = require('./medium/medium-find');
+const MediumDelete = require('./medium/medium-delete');
+const MediumUpdate = require('./medium/medium-update');
 
 /**
  * Namespace containing all CRUD methods of Medium.

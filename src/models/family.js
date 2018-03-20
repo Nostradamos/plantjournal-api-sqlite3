@@ -1,9 +1,9 @@
 'use strict';
 
-const FamilyCreate = require('../controller/family/family-create');
-const FamilyFind = require('../controller/family/family-find');
-const FamilyDelete = require('../controller/family/family-delete');
-const FamilyUpdate = require('../controller/family/family-update');
+const FamilyCreate = require('./family/family-create');
+const FamilyFind = require('./family/family-find');
+const FamilyDelete = require('./family/family-delete');
+const FamilyUpdate = require('./family/family-update');
 
 /**
  * @typedef {Object} ReturnFind

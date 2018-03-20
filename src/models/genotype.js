@@ -1,9 +1,9 @@
 'use strict';
 
-const GenotypeCreate = require('../controller/genotype/genotype-create');
-const GenotypeFind = require('../controller/genotype/genotype-find');
-const GenotypeDelete = require('../controller/genotype/genotype-delete');
-const GenotypeUpdate = require('../controller/genotype/genotype-update');
+const GenotypeCreate = require('./genotype/genotype-create');
+const GenotypeFind = require('./genotype/genotype-find');
+const GenotypeDelete = require('./genotype/genotype-delete');
+const GenotypeUpdate = require('./genotype/genotype-update');
 
 /**
  * Namespace containing all CRUD methods for Genotype.
