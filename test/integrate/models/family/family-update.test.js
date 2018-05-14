@@ -65,7 +65,7 @@ describe(`Family()`, () => {
     });
 
     it(`should update modifiedAt Field in database`, async () => {
-      let currentTimestamp = Utils.getUnixTimestampUTC();
+      let currentDatetime = Utils.getDatetimeUTC();
 
       await pj.Family.update(
         {familyName: 'testFamily2'}, {where: {familyId: 2}});
@@ -75,7 +75,7 @@ describe(`Family()`, () => {
         FROM ${CONSTANTS.TABLE_FAMILY}
         WHERE ${CONSTANTS.ATTR_ID_FAMILY} = 2`);
 
-      (rowsFam[0].familyModifiedAt >= currentTimestamp).should.be.true();
+      (rowsFam[0].familyModifiedAt >= currentDatetime).should.be.true();
 
     });
 

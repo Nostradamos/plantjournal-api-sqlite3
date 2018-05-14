@@ -23,19 +23,19 @@ let Journal = exports;
  *           The unique identifier of this journal record.
  * @property {plantId} plantId
  *           The id of the plant this log is for.
- * @property {UnixTimestampUTC} journalTimestamp
- *           Unix UTC Timestamp specifying the time this log is connected to.
- *           Multiple logs can have the same timestamp, they will be grouped
+ * @property {DatetimeUTC} journalDatetime
+ *           UTC Datetime specifying the time this log is connected to.
+ *           Multiple logs can have the same datetime, they will be grouped
  *           together.
  * @property {String} journalType
  *           Type of this log. Could be "log", "note", "todo".
  * @property {String} journalValue
  *           Value for this journal. For a journal of the type "todo", this
  *           would be the for example the task in text.
- * @property {UnixTimestampUTC} journalCreatedAt
- *           UTC Timestamp when this journal got created.
- * @property {UnixTimestampUTC} journalModifiedAt
- *           UTC Timestamp when this journal got modified the last time.
+ * @property {DatetimeUTC} journalCreatedAt
+ *           UTC Datetime when this journal got created.
+ * @property {DatetimeUTC} journalModifiedAt
+ *           UTC Datetime when this journal got modified the last time.
  */
 
 
@@ -48,8 +48,8 @@ let Journal = exports;
  *         Options how the new family should be.
  * @param  {Number} options.plantId
  *         Has to be the id of the plant this log should be for.
- * @param  {UnixTimestampUTC} options.journalTimestamp
- *         Timestamp for this log
+ * @param  {DatetimeUTC} options.journalDatetime
+ *         Datetime for this log
  * @param  {String} options.journalType
  *         Type of the journal.
  * @param  {integer} options.journalValue
@@ -111,7 +111,7 @@ Journal.delete = async function(criteria) {
  * equal) to journal.find().
  * With update you can overwrite all attributes except journalId,
  * journalCreatedAt, journalModifiedAt.
- * journalModifiedAt will be set to the current UTC timestamp for all updated
+ * journalModifiedAt will be set to the current UTC datetime for all updated
  * genotypes. If you want to know how journal update works internally,
  * see src/controller/journal/journal-update and
  * src/controller/generic/generic-update.
@@ -119,8 +119,8 @@ Journal.delete = async function(criteria) {
  * @async
  * @param  {Object} update
  *         Fields to update.
- * @param  {UnixTimestampUTC} [update.journalTimestamp]
- *         Update journalTimestamp.
+ * @param  {DatetimeUTC} [update.journalDatetime]
+ *         Update journalDatetime.
  * @param  {String} [update.journalType]
  *         Update journalType.
  * @param  {String} [update.journalValue]

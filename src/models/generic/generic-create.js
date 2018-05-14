@@ -79,7 +79,7 @@ class GenericCreate {
     let context = {
       options,
       returnObject: {},
-      createdAt: Utils.getUnixTimestampUTC(),
+      createdAt: Utils.getDatetimeUTC(),
       creatingClassName: this.name,
       insertIds: {},
     };
@@ -300,8 +300,8 @@ class GenericCreate {
    * @param  {object} context
    *         Namespace/object of this creation process. It's shared across
    *         all classes in classStack.
-   * @param  {UnixTimestampUTC} context.createdAt
-   *         Unix timestamp which should indicate when we created this record.
+   * @param  {DatetimeUTC} context.createdAt
+   *         UTC Datetime which should indicate when we created this record.
    */
   static setQueryCreatedAtAndModifiedAtFields(self, context) {
     logger.debug(this.name, '#setQueryCreatedAtAndModifiedAt() createdAt:', context.createdAt);

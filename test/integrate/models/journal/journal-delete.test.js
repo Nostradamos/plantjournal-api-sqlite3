@@ -25,37 +25,37 @@ describe(`Journal()`, () => {
       await pj.Plant.create({plantName: 'testPlant1', genotypeId: 1});
 
       await pj.Journal.create({
-        journalTimestamp: 1337,
+        journalDatetime: 1337,
         journalType: 'log',
         journalValue: 'This is a log',
         plantId: 1});
       await pj.Journal.create({
-        journalTimestamp: 1337,
+        journalDatetime: 1337,
         journalType: 'ph-sensor',
         journalValue: 6.5,
         mediumId: 1});
       await pj.Journal.create({
-        journalTimestamp: 1337,
+        journalDatetime: 1337,
         journalType: 'ec-sensor',
         journalValue: 1.3,
         mediumId: 1});
       await pj.Journal.create({
-        journalTimestamp: 1337,
+        journalDatetime: 1337,
         journalType: 'temp-sensor',
         journalValue: 28.7,
         environmentId: 1});
       await pj.Journal.create({
-        journalTimestamp: 1555,
+        journalDatetime: 1555,
         journalType: 'log',
         journalValue: 'This is a log',
         plantId: 1});
       await pj.Journal.create({
-        journalTimestamp: 1555,
+        journalDatetime: 1555,
         journalType: 'watering',
         journalValue: '{"amount": 1.5, "n": 3, "p": 4, "k": 1.7, "fertilizers": ["Hakaphos Grün", "Hakaphos Blau"]}', // eslint-disable-line max-len
         mediumId: 1});
       await pj.Journal.create({
-        journalTimestamp: 1337,
+        journalDatetime: 1337,
         journalType: 'ph-sensor',
         journalValue: 6.8,
         mediumId: 2});

@@ -58,8 +58,8 @@ class JournalCreate extends GenericCreate {
       throw Error('A journal has to be assigned to a plant, medium or environment. Therefore options.plantId,mediumId or environmentId has to be set');
     }
 
-    Utils.hasToBeSet(options, CONSTANTS.ATTR_TIMESTAMP_JOURNAL);
-    Utils.hasToBeInt(options, CONSTANTS.ATTR_TIMESTAMP_JOURNAL);
+    Utils.hasToBeSet(options, CONSTANTS.ATTR_DATETIME_JOURNAL);
+    Utils.hasToBeInt(options, CONSTANTS.ATTR_DATETIME_JOURNAL);
 
     Utils.hasToBeSet(options, CONSTANTS.ATTR_TYPE_JOURNAL);
     Utils.hasToBeString(options, CONSTANTS.ATTR_TYPE_JOURNAL);
@@ -84,7 +84,7 @@ class JournalCreate extends GenericCreate {
     self.query
       .set(self.journalFor, options[self.journalFor])
       .set(CONSTANTS.ATTR_ID_JOURNAL, null)
-      .set(CONSTANTS.ATTR_TIMESTAMP_JOURNAL, options.journalTimestamp)
+      .set(CONSTANTS.ATTR_DATETIME_JOURNAL, options.journalDatetime)
       .set(CONSTANTS.ATTR_TYPE_JOURNAL, options.journalType);
 
 
@@ -114,7 +114,7 @@ class JournalCreate extends GenericCreate {
     context.returnObject[this.PLURAL] = {
       [self.insertId]: {
         [CONSTANTS.ATTR_ID_JOURNAL]: self.insertId,
-        [CONSTANTS.ATTR_TIMESTAMP_JOURNAL]: options.journalTimestamp,
+        [CONSTANTS.ATTR_DATETIME_JOURNAL]: options.journalDatetime,
         [CONSTANTS.ATTR_TYPE_JOURNAL]: options.journalType,
         [CONSTANTS.ATTR_VALUE_JOURNAL]: options.journalValue,
         [CONSTANTS.ATTR_CREATED_AT_JOURNAL]: context.createdAt,

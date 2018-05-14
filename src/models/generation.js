@@ -26,10 +26,10 @@ let Generation = exports;
  *           Name of this generation.
  * @property {FamilyId} familyId
  *           The familyId this family is member of.
- * @property {UnixTimestampUTC} generationCreatedAt
- *           UTC Timestamp when this generation got created.
- * @property {UnixTimestampUTC} generationModifiedAt
- *           UTC Timestamp when this generation got modified the last time.
+ * @property {DatetimeUTC} generationCreatedAt
+ *           UTC Datetime when this generation got created.
+ * @property {DatetimeUTC} generationModifiedAt
+ *           UTC Datetime when this generation got modified the last time.
  */
 
 /**
@@ -120,7 +120,7 @@ Generation.delete = async function(criteria) {
  * equal) to Generation.find().
  * With update you can overwrite all attributes except generationId,
  * generationCreatedAt, generationModifiedAt, parentId. generationModifiedAt
- * will be set to the current UTC timestamp for all updated generations.
+ * will be set to the current UTC datetime for all updated generations.
  * If you want to know how generation update works internally,
  * see src/controller/generation-update and src/controller/generic-update.
  * @async

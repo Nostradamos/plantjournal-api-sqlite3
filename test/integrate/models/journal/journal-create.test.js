@@ -38,40 +38,40 @@ describe(`Journal()`, () => {
           'Journal can only be assigned to a plant OR medium OR environment');
     });
 
-    it(`should throw error if options.journalTimestamp is not set`, async () => {
+    it(`should throw error if options.journalDatetime is not set`, async () => {
       await pj.Journal.create({plantId: 1})
-        .should.be.rejectedWith('options.journalTimestamp has to be set');
+        .should.be.rejectedWith('options.journalDatetime has to be set');
     });
 
 
-    it(`should throw error if options.journalTimestamp is not a integer`, async () => {
-      await pj.Journal.create({plantId: 1, journalTimestamp: '123'})
+    it(`should throw error if options.journalDatetime is not a integer`, async () => {
+      await pj.Journal.create({plantId: 1, journalDatetime: '123'})
         .should.be.rejectedWith(
-          'options.journalTimestamp has to be an integer');
+          'options.journalDatetime has to be an integer');
     });
 
     it(`should throw error if options.journalType is not set`, async () => {
-      await pj.Journal.create({plantId: 1, journalTimestamp: 1111})
+      await pj.Journal.create({plantId: 1, journalDatetime: 1111})
         .should.be.rejectedWith('options.journalType has to be set');
     });
 
     it(`should throw error if options.journalType is not a string`, async () => {
       await pj.Journal.create(
-        {plantId: 1, journalTimestamp: 1111, journalType: 123})
+        {plantId: 1, journalDatetime: 1111, journalType: 123})
         .should.be.rejectedWith('options.journalType has to be a string');
     });
 
 
     it(`should throw error if options.journalValue is not set`, async () => {
       await pj.Journal.create(
-        {plantId: 1, journalTimestamp: 1111, journalType: 'log'})
+        {plantId: 1, journalDatetime: 1111, journalType: 'log'})
         .should.be.rejectedWith('options.journalValue has to be set');
     });
 
     it(`should create new journal record and return the journal object`, async () => {
       let journal = await pj.Journal.create(
         {
-          plantId: 1, journalTimestamp: 1111,
+          plantId: 1, journalDatetime: 1111,
           journalType: 'log', journalValue: 'test test'
         }
       );
@@ -84,7 +84,7 @@ describe(`Journal()`, () => {
       journal.journals.should.deepEqual({
         1: {
           journalId: 1,
-          journalTimestamp: 1111,
+          journalDatetime: 1111,
           journalType: 'log',
           journalValue: 'test test',
           journalCreatedAt: createdAt,
@@ -108,7 +108,7 @@ describe(`Journal()`, () => {
     it(`should be possible to insert a journal where journalValue is a boolean`, async () => {
       let journal = await pj.Journal.create(
         {
-          plantId: 1, journalTimestamp: 1111,
+          plantId: 1, journalDatetime: 1111,
           journalType: 'log', journalValue: true
         }
       );
@@ -133,7 +133,7 @@ describe(`Journal()`, () => {
       let journal = await pj.Journal.create(
         {
           plantId: 1,
-          journalTimestamp: 1111,
+          journalDatetime: 1111,
           journalType: 'watering',
           journalValue
         }
@@ -159,7 +159,7 @@ describe(`Journal()`, () => {
       let journalValue = '{"foo":"bar"}';
       let journal = await pj.Journal.create({
         plantId: 1,
-        journalTimestamp: 1111,
+        journalDatetime: 1111,
         journalType: 'test',
         journalValue
       });

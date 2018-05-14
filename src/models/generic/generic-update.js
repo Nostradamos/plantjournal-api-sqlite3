@@ -250,13 +250,13 @@ class GenericUpdate {
   }
 
   /**
-   * Sets modifedAt Field with current timestamp.
+   * Sets modifedAt Field with current datetime.
    * @param  {object} context   - Internal context object
    * @param  {object} update    - Updated object passed to update()
    * @param  {object} criteria  - Criteria object passed to update()
    */
   static setQueryUpdateModifiedAt(context, update, criteria) {
-    context.modifiedAt = Utils.getUnixTimestampUTC();
+    context.modifiedAt = Utils.getDatetimeUTC();
     logger.debug(
       this.name, '#update() ATTR_MODIFIED_AT:', this.ATTR_MODIFIED_AT);
     context.queryUpdate.set(

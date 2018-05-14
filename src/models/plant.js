@@ -34,10 +34,10 @@ let Plant = exports;
  * @property {PlantSex} plantSex
  *           Sex of this plant.
  * @property {GenotypeId} genotypeId
- * @property {UnixTimestampUTC} plantCreatedAt
- *           UTC Timestamp when this plant got created.
- * @property {UnixTimestampUTC} plantModifiedAt
- *           UTC Timestamp when this plant got modified the last time.
+ * @property {DatetimeUTC} plantCreatedAt
+ *           UTC Datetime when this plant got created.
+ * @property {DatetimeUTC} plantModifiedAt
+ *           UTC Datetime when this plant got modified the last time.
  */
 
 
@@ -133,7 +133,7 @@ Plant.delete = async function(criteria) {
  * equal) to Plant.find().
  * With update you can overwrite all attributes except plantId,
  * plantCreatedAt, plantModifiedAt. plantModifiedAt
- * will be set to the current UTC timestamp for all updated plants.
+ * will be set to the current UTC datetime for all updated plants.
  * If you want to know how Plant.update() works internally,
  * see src/controller/plant-update and src/controller/generic-update.
  * @memberof plantJournal.Plant

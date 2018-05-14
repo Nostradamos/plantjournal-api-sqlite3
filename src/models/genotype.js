@@ -25,10 +25,10 @@ let Genotype = exports;
  *           Name of this genotype.
  * @property {genotypeId} genotypeId
  *           The genotypeId this genotype is in.
- * @property {UnixTimestampUTC} genotypeCreatedAt
- *           UTC Timestamp when this genotype got created.
- * @property {UnixTimestampUTC} genotypeModifiedAt
- *           UTC Timestamp when this genotype got modified the last time.
+ * @property {DatetimeUTC} genotypeCreatedAt
+ *           UTC Datetime when this genotype got created.
+ * @property {DatetimeUTC} genotypeModifiedAt
+ *           UTC Datetime when this genotype got modified the last time.
  */
 
 
@@ -112,7 +112,7 @@ Genotype.delete = async function(criteria) {
  * equal) to Genotype.find().
  * With update you can overwrite all attributes except genotpeId,
  * genotypeCreatedAt, genotypeModifiedAt. genotypeModifiedAt
- * will be set to the current UTC timestamp for all updated genotypes.
+ * will be set to the current UTC datetime for all updated genotypes.
  * If you want to know how Genotype update works internally,
  * see src/controller/genotype-update and src/controller/generic-update.
  * @memberof plantJournal.Genotype

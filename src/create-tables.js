@@ -110,7 +110,7 @@ module.exports =  async function createTables() {
   await sqlite.run(`
       CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_JOURNAL} (
         journalId INTEGER,
-        journalTimestamp DATETIME NOT NULL,
+        journalDatetime DATETIME NOT NULL,
         journalType TEXT NOT NULL,
         journalValue JSON NOT NULL,
         journalCreatedAt DATETIME NOT NULL,

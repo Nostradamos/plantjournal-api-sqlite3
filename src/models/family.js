@@ -44,9 +44,9 @@ const FamilyUpdate = require('./family/family-update');
 
 
 /**
- * @typedef {number} UnixTimestampUTC
- *          UTC Timestamp. If you want to create a timestamp, see
- *          {@link Utils.getUnixTimestampUTC}.
+ * @typedef {number} DatetimeUTC
+ *          UTC Datetime. If you want to create a datetime, see
+ *          {@link Utils.getDatetimeUTC}.
  */
 
 /**
@@ -84,10 +84,10 @@ var Family = {};
  *           Unique Identifier for this family.
  * @property {String} familyName
  *           Name of this family.
- * @property {UnixTimestampUTC} familyCreatedAt
- *           UTC Timestamp when this family got created.
- * @property {UnixTimestampUTC} familyModifiedAt
- *           UTC Timestamp when this family got modified the last time.
+ * @property {DatetimeUTC} familyCreatedAt
+ *           UTC Datetime when this family got created.
+ * @property {DatetimeUTC} familyModifiedAt
+ *           UTC Datetime when this family got modified the last time.
  */
 
 /**
@@ -160,7 +160,7 @@ Family.delete = async function(criteria) {
 
 /**
  * Finds families and updates attributes based on the passed update Object.
- * Sets familyUpdatedAt to current UTC Timestamp of all changed families.
+ * Sets familyUpdatedAt to current UTC Datetime of all changed families.
  * @memberof plantJournal.Family
  * @async
  * @param  {Object} update

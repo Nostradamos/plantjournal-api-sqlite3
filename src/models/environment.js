@@ -26,10 +26,10 @@ let Environment = exports;
  *           Name of this environment.
  * @property {String} [environmentDescription]
  *           Description for this environment.
- * @property {UnixTimestampUTC} [environmentCreatedAt]
- *           UTC Timestamp when this environment got created.
- * @property {UnixTimestampUTC} [environmentModifiedAt]
- *           UTC Timestamp when this environment got modified the last time.
+ * @property {DatetimeUTC} [environmentCreatedAt]
+ *           UTC Datetime when this environment got created.
+ * @property {DatetimeUTC} [environmentModifiedAt]
+ *           UTC Datetime when this environment got modified the last time.
  */
 
 /**
@@ -98,7 +98,7 @@ Environment.delete = async function(criteria) {
 
 /**
  * Finds environments and updates attributes based on the passed update Object.
- * Sets environmentUpdatedAt to current UTC Timestamp of all changed families.
+ * Sets environmentUpdatedAt to current UTC Datetime of all changed families.
  * @memberof plantJournal.Family
  * @async
  * @param  {EnvironmentObject} update

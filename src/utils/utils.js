@@ -1,5 +1,7 @@
 'use strict';
 
+const util = require('util');
+
 const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
@@ -109,11 +111,18 @@ Utils.hasToBeSet = function(obj, property, name = 'options') {
 };
 
 /**
- * Return a unix timestamp (seconds)
- * @return {UnixTimestampUTC} Unix Timestamp
+ * Return a UTC datetime string.
+ * @return {DatetimeUTC} Datetime
  */
-Utils.getUnixTimestampUTC = function() {
-  return Math.floor(new Date() / 1000);
+Utils.getDatetimeUTC = function() {
+  let date = new Date();
+  date = date.getUTCFullYear() + '-' +
+    ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+    ('00' + date.getUTCDate()).slice(-2) + ' ' +
+    ('00' + date.getUTCHours()).slice(-2) + ':' +
+    ('00' + date.getUTCMinutes()).slice(-2) + ':' +
+    ('00' + date.getUTCSeconds()).slice(-2);
+  return date;
 };
 
 /**

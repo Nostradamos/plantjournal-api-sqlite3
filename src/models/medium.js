@@ -26,10 +26,10 @@ let Medium = exports;
   *           Name of this medium
   * @property {String} [MediumDescription]
   *           Description for this medium.
-  * @property {UnixTimestampUTC} [mediumCreatedAt]
-  *           UTC Timestamp when this medium got created.
-  * @property {UnixTimestampUTC} [mediumModifiedAt]
-  *           UTC Timestamp when this medium got modified the last time.
+  * @property {DatetimeUTC} [mediumCreatedAt]
+  *           UTC Datetime when this medium got created.
+  * @property {DatetimeUTC} [mediumModifiedAt]
+  *           UTC Datetime when this medium got modified the last time.
   */
 
 /**
@@ -96,7 +96,7 @@ Medium.delete = async function(criteria) {
 
 /**
  * Finds mediums and updates attributes based on the passed update Object.
- * Sets environmentUpdatedAt to current UTC Timestamp of all changed families.
+ * Sets environmentUpdatedAt to current UTC Datetime of all changed families.
  * @memberof plantJournal.Family
  * @async
  * @param  {MediumObject} update

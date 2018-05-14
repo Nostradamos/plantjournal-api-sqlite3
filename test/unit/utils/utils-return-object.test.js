@@ -477,7 +477,7 @@ describe(`utils/utils-return-object`, () => {
     it(`should add journal to returnObject`, () => {
       let row = {
         journalId: 14,
-        journalTimestamp: 122223,
+        journalDatetime: 122223,
         journalType: 'log',
         journalValue: '"foobar"',
         plantId: 4
@@ -488,7 +488,7 @@ describe(`utils/utils-return-object`, () => {
         journals: {
           14: {
             journalId: 14,
-            journalTimestamp: 122223,
+            journalDatetime: 122223,
             journalType: 'log',
             journalValue: 'foobar',
             plantId: 4
@@ -499,7 +499,7 @@ describe(`utils/utils-return-object`, () => {
       it(`should not add journal if journalId is null`, () => {
         let row = {
           journalId: null,
-          journalTimestamp: null,
+          journalDatetime: null,
           journalType: null,
           journalValue: null,
           plantId: 4

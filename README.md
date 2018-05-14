@@ -93,8 +93,8 @@ Models/Tables
 | familyId          | int      |          | AUTO_INCREMENT    | *        |             |
 | familyName        | text     | *        |                   |          |             |
 | familyDescription | text     |          | ""                |          |             |
-| familyCreatedAt   | datetime |          | CURRENT_TIMESTAMP | *        |             |
-| familyModifiedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
+| familyCreatedAt   | datetime |          | CURRENT_DATETIME | *        |             |
+| familyModifiedAt  | datetime |          | CURRENT_DATETIME | *        |             |
 
 ## Generation (=generations)
 
@@ -104,8 +104,8 @@ Models/Tables
 | generationName        | text      |          |                   |          |             |
 | generationDescription | text      |          | ""                |          |             |
 | generationParents     | plantId[] |          | []                |          |             |
-| generationCreatedAt   | datetime  |          | CURRENT_TIMESTAMP | *        |             |
-| generationModifiedAt  | datetime  |          | CURRENT_TIMESTAMP | *        |             |
+| generationCreatedAt   | datetime  |          | CURRENT_DATETIME | *        |             |
+| generationModifiedAt  | datetime  |          | CURRENT_DATETIME | *        |             |
 | familyId              | familyId  | *        |                   |          |             |
 
 ## Genotype (=genotypes)
@@ -115,8 +115,8 @@ Models/Tables
 | genotypeId          | int          |          | AUTO_INCREMENT    | *        |             |
 | genotypeName        | text         |          |                   |          |             |
 | genotypeDescription | text         |          | ""                |          |             |
-| genotypeCreatedAt   | datetime     |          | CURRENT_TIMESTAMP | *        |             |
-| genotypeModifiedAt  | datetime     |          | CURRENT_TIMESTAMP | *        |             |
+| genotypeCreatedAt   | datetime     |          | CURRENT_DATETIME | *        |             |
+| genotypeModifiedAt  | datetime     |          | CURRENT_DATETIME | *        |             |
 | generationId        | generationId | *        |                   |          |             |
 
 ## Plant (=plants)
@@ -128,8 +128,8 @@ Models/Tables
 | plantSex         | text       |          | null              |          |             |
 | plantClonedFrom  | plantId    |          | null              |          |             |
 | plantDescription | text       |          | ""                |          |             |
-| plantCreatedAt   | datetime   |          | CURRENT_TIMESTAMP | *        |             |
-| plantModifiedAt  | datetime   |          | CURRENT_TIMESTAMP | *        |             |
+| plantCreatedAt   | datetime   |          | CURRENT_DATETIME | *        |             |
+| plantModifiedAt  | datetime   |          | CURRENT_DATETIME | *        |             |
 | genotypeId       | genotypeId | *        |                   |          |             |
 | mediumId         | mediumId   | *        |                   |          |             |
 
@@ -140,8 +140,8 @@ Models/Tables
 | mediumId          | int           |          | AUTO_INCREMENT    | *        |             |
 | mediumName        | text          | *        | ""                |          |             |
 | mediumDescription | text          |          | ""                |          |             |
-| mediumCreatedAt   | datetime      |          | CURRENT_TIMESTAMP | *        |             |
-| mediumModifiedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |             |
+| mediumCreatedAt   | datetime      |          | CURRENT_DATETIME | *        |             |
+| mediumModifiedAt  | datetime      |          | CURRENT_DATETIME | *        |             |
 | environmentId     | environmentId | *        |                   |          |             |
 
 ## Environment (=environments)
@@ -151,8 +151,8 @@ Models/Tables
 | environmentId          | int      |          | AUTO_INCREMENT    | *        |             |
 | environmentName        | text     | *        |                   |          |             |
 | environmentDescription | text     |          |                   |          |             |
-| environmentCreatedAt   | datetime |          | CURRENT_TIMESTAMP | *        |             |
-| environmentModifiedAt  | datetime |          | CURRENT_TIMESTAMP | *        |             |
+| environmentCreatedAt   | datetime |          | CURRENT_DATETIME | *        |             |
+| environmentModifiedAt  | datetime |          | CURRENT_DATETIME | *        |             |
 
 ## Journal (=journals)
 
@@ -161,11 +161,11 @@ NOTE: You can only set one of the attributes where required is "\*\*"
 | Attribute         | Type          | Required | Default           | Internal | Description |
 | ----------------- | ------------- | -------- | ----------------- | -------- | ----------- |
 | journalId         | int           |          | AUTO_INCREMENT    | *        |             |
-| journalTimestamp  | datetime      | *        |                   |          |             |
+| journalDatetime  | datetime      | *        |                   |          |             |
 | journalType       | text          | *        |                   |          |             |
 | journalValue      | json          | *        |                   |          |             |
-| journalCreatedAt  | datetime      |          | CURRENT_TIMESTAMP | *        |             |
-| journalModifiedAt | datetime      |          | CURRENT_TIMESTAMP | *        |             |
+| journalCreatedAt  | datetime      |          | CURRENT_DATETIME | *        |             |
+| journalModifiedAt | datetime      |          | CURRENT_DATETIME | *        |             |
 | plantId           | plantId       | **       |                   |          |             |
 | mediumId          | mediumId      | **       |                   |          |             |
 | environmentId     | environmentId | **       |                   |          |             |
