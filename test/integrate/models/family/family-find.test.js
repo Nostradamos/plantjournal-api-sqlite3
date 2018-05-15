@@ -13,10 +13,10 @@ describe(`Family()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'test1'});
-      await pj.Family.create({familyName: 'testB'});
-      await pj.Family.create({familyName: 'test3'});
-      await pj.Family.create({familyName: 'testD'});
+      await pj.Family.add({familyName: 'test1'});
+      await pj.Family.add({familyName: 'testB'});
+      await pj.Family.add({familyName: 'test3'});
+      await pj.Family.add({familyName: 'testD'});
     });
 
     after(async () => {
@@ -36,7 +36,7 @@ describe(`Family()`, () => {
           4: { familyId: 4, familyName: 'testD' }
         }
       });
-      UtilsTest.allFamiliesShouldHaveCreatedAtAndModifiedAt(families);
+      UtilsTest.allFamiliesShouldHaveAddedAtAndModifiedAt(families);
     });
 
     it(`should only return the first two families if options.limit=2`, async () => {
@@ -121,13 +121,13 @@ describe(`Family()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'Family1'});
-      await pj.Generation.create({generationName: 'Gen1', familyId: 1});
-      await pj.Generation.create({generationName: 'Gen2', familyId: 1});
-      await pj.Family.create({familyName: 'Family2'});
-      await pj.Generation.create({generationName: 'Gen3', familyId: 2});
-      await pj.Generation.create({generationName: 'Gen4', familyId: 2});
-      await pj.Family.create({familyName: 'Family3'});
+      await pj.Family.add({familyName: 'Family1'});
+      await pj.Generation.add({generationName: 'Gen1', familyId: 1});
+      await pj.Generation.add({generationName: 'Gen2', familyId: 1});
+      await pj.Family.add({familyName: 'Family2'});
+      await pj.Generation.add({generationName: 'Gen3', familyId: 2});
+      await pj.Generation.add({generationName: 'Gen4', familyId: 2});
+      await pj.Family.add({familyName: 'Family3'});
     });
 
     after(async () => {

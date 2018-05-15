@@ -14,14 +14,14 @@ describe(`Generation()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'});
-      await pj.Family.create({familyName: 'testFamily2'});
-      await pj.Generation.create({familyId: 1, generationName: 'F1'});
-      await pj.Generation.create({familyId: 1, generationName: 'F2'});
-      await pj.Generation.create({familyId: 2, generationName: 'S1'});
-      await pj.Plant.create({generationId: 1, plantName: 'testPlant1'});
-      await pj.Plant.create({generationId: 1, plantName: 'testPlant2'});
-      await pj.Generation.create(
+      await pj.Family.add({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFamily2'});
+      await pj.Generation.add({familyId: 1, generationName: 'F1'});
+      await pj.Generation.add({familyId: 1, generationName: 'F2'});
+      await pj.Generation.add({familyId: 2, generationName: 'S1'});
+      await pj.Plant.add({generationId: 1, plantName: 'testPlant1'});
+      await pj.Plant.add({generationId: 1, plantName: 'testPlant2'});
+      await pj.Generation.add(
         {familyId: 2, generationName: 'S2', generationParents: [1,2]});
     });
 
@@ -73,9 +73,9 @@ describe(`Generation()`, () => {
         }
       });
       UtilsTest
-        .allGenerationsShouldHaveCreatedAtAndModifiedAt(generations);
+        .allGenerationsShouldHaveAddedAtAndModifiedAt(generations);
       UtilsTest
-        .allFamiliesShouldHaveCreatedAtAndModifiedAt(generations);
+        .allFamiliesShouldHaveAddedAtAndModifiedAt(generations);
 
     });
 
@@ -227,25 +227,25 @@ describe(`Generation()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'});
-      await pj.Family.create({familyName: 'testFamily2'});
+      await pj.Family.add({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFamily2'});
 
-      await pj.Plant.create({plantName: 'testPlant1'});
-      await pj.Plant.create({plantName: 'testPlant2'});
-      await pj.Plant.create({plantName: 'testPlant3'});
-      await pj.Plant.create({plantName: 'testPlant4'});
+      await pj.Plant.add({plantName: 'testPlant1'});
+      await pj.Plant.add({plantName: 'testPlant2'});
+      await pj.Plant.add({plantName: 'testPlant3'});
+      await pj.Plant.add({plantName: 'testPlant4'});
 
-      await pj.Generation.create(
+      await pj.Generation.add(
         {familyId: 2, generationName: 'S2', generationParents: [1,2]});
-      await pj.Generation.create({
+      await pj.Generation.add({
         familyId: 2,
         generationName: 'GenerationWithOnlyOneParent1',
         generationParents: [1]});
-      await pj.Generation.create({
+      await pj.Generation.add({
         familyId: 2,
         generationName: 'GenerationWithOnlyOneParent2',
         generationParents: [2]});
-      await pj.Generation.create({
+      await pj.Generation.add({
         familyId: 2,
         generationName: 'S2 (open pollination)',
         generationParents: [1,2,3,4]});
@@ -350,14 +350,14 @@ describe(`Generation()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'Family1'});
-      await pj.Generation.create({generationName: 'Gen1', familyId: 1});
-      await pj.Genotype.create({generationId: 1});
-      await pj.Genotype.create({generationId: 1});
-      await pj.Generation.create({generationName: 'Gen2', familyId: 1});
-      await pj.Genotype.create({generationId: 2});
-      await pj.Family.create({familyName: 'Family2'});
-      await pj.Generation.create({generationName: 'Gen3', familyId: 2});
+      await pj.Family.add({familyName: 'Family1'});
+      await pj.Generation.add({generationName: 'Gen1', familyId: 1});
+      await pj.Genotype.add({generationId: 1});
+      await pj.Genotype.add({generationId: 1});
+      await pj.Generation.add({generationName: 'Gen2', familyId: 1});
+      await pj.Genotype.add({generationId: 2});
+      await pj.Family.add({familyName: 'Family2'});
+      await pj.Generation.add({generationName: 'Gen3', familyId: 2});
     });
 
     after(async () => {

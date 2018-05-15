@@ -7,20 +7,20 @@ const CONSTANTS = require('../../constants');
 const logger = require('../../logger');
 const Utils = require('../../utils/utils');
 
-const GenericCreate = require('../generic/generic-create');
-const FamilyCreate = require('../family/family-create');
+const GenericAdd = require('../generic/generic-add');
+const FamilyAdd = require('../family/family-add');
 
 /**
- * GenerationCreate Class which creates a new Generation.
- * Gets internally called from Generation.create(). If you want
+ * GenerationAdd Class which creates a new Generation.
+ * Gets internally called from Generation.add(). If you want
  * to know how Create works internally, see
- * src/controller/generic-create.
- * If you want to know how to use the Generation.create()
+ * src/controller/generic-add.
+ * If you want to know how to use the Generation.add()
  * API from outside, see src/models/Generation #create().
  * @private
- * @extends GenericCreate
+ * @extends GenericAdd
  */
-class GenerationCreate extends GenericCreate {
+class GenerationAdd extends GenericAdd {
 
   /**
    * We need to validate input and throw errors if we're unhappy with it.
@@ -145,35 +145,35 @@ class GenerationCreate extends GenericCreate {
   }
 }
 
-GenerationCreate.PARENT = FamilyCreate;
+GenerationAdd.PARENT = FamilyAdd;
 
-GenerationCreate.TABLE = CONSTANTS.TABLE_GENERATION;
+GenerationAdd.TABLE = CONSTANTS.TABLE_GENERATION;
 
-GenerationCreate.TABLE_PARENTS = CONSTANTS.TABLE_GENERATION_PARENT;
+GenerationAdd.TABLE_PARENTS = CONSTANTS.TABLE_GENERATION_PARENT;
 
-GenerationCreate.ATTR_ID = CONSTANTS.ATTR_ID_GENERATION;
+GenerationAdd.ATTR_ID = CONSTANTS.ATTR_ID_GENERATION;
 
-GenerationCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENERATION;
+GenerationAdd.ATTR_ADDED_AT = CONSTANTS.ATTR_ADDED_AT_GENERATION;
 
-GenerationCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
+GenerationAdd.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENERATION;
 
-GenerationCreate.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_GENOTYPES_GENERATION;
+GenerationAdd.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_GENOTYPES_GENERATION;
 
-GenerationCreate.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_GENOTYPE;
+GenerationAdd.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 
-GenerationCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENERATION;
+GenerationAdd.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENERATION;
 
-GenerationCreate.SKIP_ATTRIBUTES = [
+GenerationAdd.SKIP_ATTRIBUTES = [
   CONSTANTS.ATTR_PARENTS_GENERATION,
   CONSTANTS.ATTR_GENOTYPES_GENERATION
 ];
 
-GenerationCreate.PLURAL = CONSTANTS.PLURAL_GENERATION;
+GenerationAdd.PLURAL = CONSTANTS.PLURAL_GENERATION;
 
-GenerationCreate.DEFAULT_VALUES_ATTRIBUTES = {
+GenerationAdd.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_GENERATION]: '',
   [CONSTANTS.ATTR_PARENTS_GENERATION]: [],
   [CONSTANTS.ATTR_GENOTYPES_GENERATION]: []
 };
 
-module.exports = GenerationCreate;
+module.exports = GenerationAdd;

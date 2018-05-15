@@ -1,6 +1,6 @@
 'use strict';
 
-const JournalCreate = require('./journal/journal-create');
+const JournalAdd = require('./journal/journal-add');
 const JournalFind = require('./journal/journal-find');
 const JournalDelete = require('./journal/journal-delete');
 const JournalUpdate = require('./journal/journal-update');
@@ -32,7 +32,7 @@ let Journal = exports;
  * @property {String} journalValue
  *           Value for this journal. For a journal of the type "todo", this
  *           would be the for example the task in text.
- * @property {DatetimeUTC} journalCreatedAt
+ * @property {DatetimeUTC} journalAddedAt
  *           UTC Datetime when this journal got created.
  * @property {DatetimeUTC} journalModifiedAt
  *           UTC Datetime when this journal got modified the last time.
@@ -57,11 +57,11 @@ let Journal = exports;
  * @throws {Error}
  *         Will throw error if plantId is invalid or if an unexpected
  *         sqlite error happens.
- * @return {Object} JournalCreate
+ * @return {Object} JournalAdd
  *         Object containing all information given
  */
-Journal.create = async function(options) {
-  return await JournalCreate.create(options);
+Journal.add = async function(options) {
+  return await JournalAdd.add(options);
 };
 
 /**
@@ -72,7 +72,7 @@ Journal.create = async function(options) {
  * @param {criteria} criteria
  *        Control which journals you want to search for.
  *        Queryable Fields: plantId, journalId, journalType, journalValue,
- *        journalCreatedAt, journalModifiedAt
+ *        journalAddedAt, journalModifiedAt
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {ReturnFind}
@@ -91,7 +91,7 @@ Journal.find = async function(criteria) {
  *         Criteria Object. With this you can control which genotypes you want
  *         to delete.
  *         Queryable Fields: plantId, journalId, journalType, journalValue,
- *         journalCreatedAt, journalModifiedAt
+ *         journalAddedAt, journalModifiedAt
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {Object} returnGenotypeDelete
@@ -110,7 +110,7 @@ Journal.delete = async function(criteria) {
  * and pick the ones you want to update. It behaves similiar (but not
  * equal) to journal.find().
  * With update you can overwrite all attributes except journalId,
- * journalCreatedAt, journalModifiedAt.
+ * journalAddedAt, journalModifiedAt.
  * journalModifiedAt will be set to the current UTC datetime for all updated
  * genotypes. If you want to know how journal update works internally,
  * see src/controller/journal/journal-update and

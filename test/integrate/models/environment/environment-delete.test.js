@@ -16,23 +16,23 @@ describe(`Environment()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
 
-      await pj.Environment.create({environmentName: 'environment1'});
-      await pj.Environment.create({environmentName: 'environment2'});
-      await pj.Medium.create({mediumName: 'medium1', environmentId: 1});
-      await pj.Medium.create({mediumName: 'medium2', environmentId: 1});
-      await pj.Medium.create({mediumName: 'medium3'});
+      await pj.Environment.add({environmentName: 'environment1'});
+      await pj.Environment.add({environmentName: 'environment2'});
+      await pj.Medium.add({mediumName: 'medium1', environmentId: 1});
+      await pj.Medium.add({mediumName: 'medium2', environmentId: 1});
+      await pj.Medium.add({mediumName: 'medium3'});
 
       // familyId:1
-      await pj.Family.create(
+      await pj.Family.add(
         {familyName: 'family1'});
       // generationId: 1
-      await pj.Generation.create(
+      await pj.Generation.add(
         {generationName : 'generation1', familyId: 1});
       // plantId: 1 genotypeId: 1
-      await pj.Plant.create(
+      await pj.Plant.add(
         {generationId: 1, plantName: 'plant1', mediumId: 1});
       // plantId: 1 genotypeId: 1
-      await pj.Plant.create(
+      await pj.Plant.add(
         {generationId: 1, plantName: 'plant2', mediumId: null});
     });
 

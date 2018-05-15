@@ -14,42 +14,42 @@ describe(`Plant()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
       // familyId: 1
-      await pj.Family.create({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFamily1'});
       // familyId: 2
-      await pj.Family.create({familyName: 'testFamily2'});
+      await pj.Family.add({familyName: 'testFamily2'});
       // generationId: 1
-      await pj.Generation.create({familyId: 1, generationName: 'F1'});
+      await pj.Generation.add({familyId: 1, generationName: 'F1'});
       // generationId: 2
-      await pj.Generation.create({familyId: 1, generationName: 'F2'});
+      await pj.Generation.add({familyId: 1, generationName: 'F2'});
       // genotypeId: 1
-      await pj.Genotype.create(
+      await pj.Genotype.add(
         {generationId: 1, genotypeName: 'testGenotype1'});
       // genotypeId: 2
-      await pj.Genotype.create(
+      await pj.Genotype.add(
         {generationId: 2, genotypeName: 'testGenotype2'});
       // plantId: 1
-      await pj.Plant.create(
+      await pj.Plant.add(
         {genotypeId: 1, plantName: 'testPlant1'});
       // plantId: 2
-      await pj.Plant.create(
+      await pj.Plant.add(
         {genotypeId: 2, plantName: 'testPlant2', plantSex: 'male'});
       // generationId: 3
-      await pj.Generation.create(
+      await pj.Generation.add(
         {familyId: 2, generationName: 'S1', generationParents: [1,2]});
       // genotypeId: 3
-      await pj.Genotype.create(
+      await pj.Genotype.add(
         {generationId: 3, genotypeName: 'testGenotype3'});
       // plantId: 3
-      await pj.Plant.create(
+      await pj.Plant.add(
         {genotypeId: 3, plantName: 'testPlant3', plantSex: 'male'});
       // plantId: 4
-      await pj.Plant.create(
+      await pj.Plant.add(
         {plantName: 'testPlant4', plantClonedFrom: 3, plantSex: 'female'});
       // generationId: 4
-      await pj.Generation.create(
+      await pj.Generation.add(
         {familyId: 2, generationName: 'S1 #2', generationParents: [1,3]});
       // plantId: 5 genotypeId: 4
-      await pj.Plant.create({generationId: 4, plantName: 'testPlant5'});
+      await pj.Plant.add({generationId: 4, plantName: 'testPlant5'});
     });
 
     after(async () => {
@@ -179,13 +179,13 @@ describe(`Plant()`, () => {
       );
 
       UtilsTest
-        .allPlantsShouldHaveCreatedAtAndModifiedAt(plants);
+        .allPlantsShouldHaveAddedAtAndModifiedAt(plants);
       UtilsTest
-        .allGenotypesShouldHaveCreatedAtAndModifiedAt(plants);
+        .allGenotypesShouldHaveAddedAtAndModifiedAt(plants);
       UtilsTest
-        .allGenerationsShouldHaveCreatedAtAndModifiedAt(plants);
+        .allGenerationsShouldHaveAddedAtAndModifiedAt(plants);
       UtilsTest
-        .allFamiliesShouldHaveCreatedAtAndModifiedAt(plants);
+        .allFamiliesShouldHaveAddedAtAndModifiedAt(plants);
     });
 
     it(`should not have an empty families property object if familyName is NOT in options.attributes`, async () => {
@@ -356,9 +356,9 @@ describe(`Plant()`, () => {
     });
 
     it(`should get related medium/environment information if plant.mediumId is not null`, async () => {
-      await pj.Environment.create({environmentName: 'Greenhouse #1'});
-      await pj.Medium.create({mediumName: 'TestMedium #1', environmentId: 1});
-      await pj.Plant.create(
+      await pj.Environment.add({environmentName: 'Greenhouse #1'});
+      await pj.Medium.add({mediumName: 'TestMedium #1', environmentId: 1});
+      await pj.Plant.add(
         {generationId: 4, plantName: 'testPlant6', mediumId: 1});
 
       let plant = await pj.Plant.find({where: {plantId: 6}});

@@ -1,6 +1,6 @@
 'use strict';
 
-const GenotypeCreate = require('./genotype/genotype-create');
+const GenotypeAdd = require('./genotype/genotype-add');
 const GenotypeFind = require('./genotype/genotype-find');
 const GenotypeDelete = require('./genotype/genotype-delete');
 const GenotypeUpdate = require('./genotype/genotype-update');
@@ -25,7 +25,7 @@ let Genotype = exports;
  *           Name of this genotype.
  * @property {genotypeId} genotypeId
  *           The genotypeId this genotype is in.
- * @property {DatetimeUTC} genotypeCreatedAt
+ * @property {DatetimeUTC} genotypeAddedAt
  *           UTC Datetime when this genotype got created.
  * @property {DatetimeUTC} genotypeModifiedAt
  *           UTC Datetime when this genotype got modified the last time.
@@ -51,8 +51,8 @@ let Genotype = exports;
  *         Object holding information about created genotype. There should
  *         only be one key, which is the id of the newly created genotype.
  */
-Genotype.create = async function(options) {
-  return await GenotypeCreate.create(options);
+Genotype.add = async function(options) {
+  return await GenotypeAdd.add(options);
 };
 
 /**
@@ -62,10 +62,10 @@ Genotype.create = async function(options) {
  * @async
  * @param {criteria} criteria
  *        Control which genotypes you want to search for.
- *        Queryable Fields: familyId, familyName, familyCreatedAt,
+ *        Queryable Fields: familyId, familyName, familyAddedAt,
  *        familyModifiedAt, generationId, generationIdName,
- *        generationCreatedAt, generationModifiedAt, genotypeId, genotypeName,
- *        genotypeCreatedAt, genotypeModifiedAt
+ *        generationAddedAt, generationModifiedAt, genotypeId, genotypeName,
+ *        genotypeAddedAt, genotypeModifiedAt
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {ReturnFind}
@@ -84,10 +84,10 @@ Genotype.find = async function(criteria) {
  * @async
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which genotypes you want
- *         to delete. Queryable Fields: familyId, familyName, familyCreatedAt,
+ *         to delete. Queryable Fields: familyId, familyName, familyAddedAt,
  *         familyModifiedAt, generationId, generationIdName,
- *         generationCreatedAt, generationModifiedAt, genotypeId, genotypeName,
- *         genotypeCreatedAt, genotypeModifiedAt
+ *         generationAddedAt, generationModifiedAt, genotypeId, genotypeName,
+ *         genotypeAddedAt, genotypeModifiedAt
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {Object} returnGenotypeDelete
@@ -111,7 +111,7 @@ Genotype.delete = async function(criteria) {
  * and pick the ones you want to update. It behaves similiar (but not
  * equal) to Genotype.find().
  * With update you can overwrite all attributes except genotpeId,
- * genotypeCreatedAt, genotypeModifiedAt. genotypeModifiedAt
+ * genotypeAddedAt, genotypeModifiedAt. genotypeModifiedAt
  * will be set to the current UTC datetime for all updated genotypes.
  * If you want to know how Genotype update works internally,
  * see src/controller/genotype-update and src/controller/generic-update.

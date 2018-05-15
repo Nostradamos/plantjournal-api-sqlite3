@@ -10,7 +10,7 @@ const GenericDelete = require('../generic/generic-delete');
  * This class extends {@link GenericDelete} to fit the needs for Plant
  * deletions. The delete() method gets called internally from Plant.delete().
  * If you want to know how delete works internally, see
- * {@link GenericCreate|src/controller/generic-create}.
+ * {@link GenericAdd|src/controller/generic-add}.
  * If you want to know how to use the Plant.delete()
  * API from outside, see {@link Plant|src/models/Plant #create()}.
  * @private

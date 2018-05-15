@@ -5,18 +5,18 @@ const _ = require('lodash');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const GenericCreate = require('../generic/generic-create');
-const EnvironmentCreate = require('../environment/environment-create');
+const GenericAdd = require('../generic/generic-add');
+const EnvironmentAdd = require('../environment/environment-add');
 
 /**
  * This class creates a new Medium and gets internally called from
- * Medium.create(). If you want to know how Create works internally, see
- * src/controller/generic-create. If you want to know how to use the
- * Medium.create() API from outside, see src/models/Medium #create().
+ * Medium.add(). If you want to know how Create works internally, see
+ * src/controller/generic-add. If you want to know how to use the
+ * Medium.add() API from outside, see src/models/Medium #create().
  * @private
- * @extends GenericCreate
+ * @extends GenericAdd
  */
-class MediumCreate extends GenericCreate {
+class MediumAdd extends GenericAdd {
   /**
    * We need to validate the properties for new Medium.
    * @param  {object} self
@@ -68,7 +68,7 @@ class MediumCreate extends GenericCreate {
    * @param  {object} context
    *         internal context object in #create().
    * @param  {object} options
-   *         options object which got passed to GenericCreate.create().
+   *         options object which got passed to GenericAdd.add().
    * @throws {Error}
    *         Will throw error if options.familyId does not reference an
    *         existing family.
@@ -85,32 +85,32 @@ class MediumCreate extends GenericCreate {
   }
 }
 
-MediumCreate.PARENT = EnvironmentCreate;
+MediumAdd.PARENT = EnvironmentAdd;
 
-MediumCreate.TABLE = CONSTANTS.TABLE_MEDIUM;
+MediumAdd.TABLE = CONSTANTS.TABLE_MEDIUM;
 
-MediumCreate.ATTR_ID = CONSTANTS.ATTR_ID_MEDIUM;
+MediumAdd.ATTR_ID = CONSTANTS.ATTR_ID_MEDIUM;
 
-MediumCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_MEDIUM;
+MediumAdd.ATTR_ADDED_AT = CONSTANTS.ATTR_ADDED_AT_MEDIUM;
 
-MediumCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_MEDIUM;
+MediumAdd.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_MEDIUM;
 
-MediumCreate.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_PLANTS_MEDIUM;
+MediumAdd.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_PLANTS_MEDIUM;
 
-MediumCreate.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_PLANT;
+MediumAdd.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_PLANT;
 
-MediumCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_MEDIUM;
+MediumAdd.ATTRIBUTES = CONSTANTS.ATTRIBUTES_MEDIUM;
 
-MediumCreate.SKIP_ATTRIBUTES = [
+MediumAdd.SKIP_ATTRIBUTES = [
   CONSTANTS.ATTR_PLANTS_MEDIUM
 ];
 
-MediumCreate.DEFAULT_VALUES_ATTRIBUTES = {
+MediumAdd.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_MEDIUM]: '',
   [CONSTANTS.ATTR_PLANTS_MEDIUM]: []
 };
 
-MediumCreate.PLURAL = CONSTANTS.PLURAL_MEDIUM;
+MediumAdd.PLURAL = CONSTANTS.PLURAL_MEDIUM;
 
 
-module.exports = MediumCreate;
+module.exports = MediumAdd;

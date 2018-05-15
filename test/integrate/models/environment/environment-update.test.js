@@ -13,9 +13,9 @@ describe(`Environment()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Environment.create({environmentName: 'testEnvronment1'});
-      await pj.Environment.create({environmentName: 'testEnvronment2'});
-      await pj.Environment.create({environmentName: 'testEnvronment3'});
+      await pj.Environment.add({environmentName: 'testEnvronment1'});
+      await pj.Environment.add({environmentName: 'testEnvronment2'});
+      await pj.Environment.add({environmentName: 'testEnvronment3'});
     });
 
     after(async () => {

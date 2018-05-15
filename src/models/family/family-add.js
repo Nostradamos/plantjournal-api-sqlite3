@@ -5,19 +5,19 @@ const _ = require('lodash');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const GenericCreate = require('../generic/generic-create');
+const GenericAdd = require('../generic/generic-add');
 
 /**
- * FamilyCreate Class. Creates a new Family and gets
- * internally called from Family.create(). If you want
+ * FamilyAdd Class. Creates a new Family and gets
+ * internally called from Family.add(). If you want
  * to know how Create works internally, see
- * src/controller/generic-create.
- * If you want to know how to use the Family.create()
+ * src/controller/generic-add.
+ * If you want to know how to use the Family.add()
  * API from outside, see src/models/Family #create().
  * @private
- * @extends GenericCreate
+ * @extends GenericAdd
  */
-class FamilyCreate extends GenericCreate {
+class FamilyAdd extends GenericAdd {
   /**
    * We need to validate the options.familyName property and throw
    * Error if we don't accept the input.
@@ -54,29 +54,29 @@ class FamilyCreate extends GenericCreate {
   }
 }
 
-FamilyCreate.TABLE = CONSTANTS.TABLE_FAMILY;
+FamilyAdd.TABLE = CONSTANTS.TABLE_FAMILY;
 
-FamilyCreate.ATTR_ID = CONSTANTS.ATTR_ID_FAMILY;
+FamilyAdd.ATTR_ID = CONSTANTS.ATTR_ID_FAMILY;
 
-FamilyCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_FAMILY;
+FamilyAdd.ATTR_ADDED_AT = CONSTANTS.ATTR_ADDED_AT_FAMILY;
 
-FamilyCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_FAMILY;
+FamilyAdd.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_FAMILY;
 
-FamilyCreate.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_GENERATIONS_FAMILY;
+FamilyAdd.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_GENERATIONS_FAMILY;
 
-FamilyCreate.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_GENERATION;
+FamilyAdd.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_GENERATION;
 
-FamilyCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_FAMILY;
+FamilyAdd.ATTRIBUTES = CONSTANTS.ATTRIBUTES_FAMILY;
 
-FamilyCreate.DEFAULT_VALUES_ATTRIBUTES = {
+FamilyAdd.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_FAMILY]: '',
   [CONSTANTS.ATTR_GENERATIONS_FAMILY]: []
 };
 
-FamilyCreate.SKIP_ATTRIBUTES = [
+FamilyAdd.SKIP_ATTRIBUTES = [
   CONSTANTS.ATTR_GENERATIONS_FAMILY
 ];
 
-FamilyCreate.PLURAL = CONSTANTS.PLURAL_FAMILY;
+FamilyAdd.PLURAL = CONSTANTS.PLURAL_FAMILY;
 
-module.exports = FamilyCreate;
+module.exports = FamilyAdd;

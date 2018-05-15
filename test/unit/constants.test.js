@@ -19,7 +19,7 @@ describe(`CONSTANTS`, () => {
 
     it(`INTERNAL_ATTRIBUTES_FAMILY should all internal family attributes`, () => {
       CONSTANTS.INTERNAL_ATTRIBUTES_FAMILY.should.deepEqual(
-        ['familyId', 'familyCreatedAt', 'familyModifiedAt']);
+        ['familyId', 'familyAddedAt', 'familyModifiedAt']);
     });
   });
 
@@ -40,7 +40,7 @@ describe(`CONSTANTS`, () => {
       CONSTANTS.INTERNAL_ATTRIBUTES_GENERATION.should.deepEqual(
         [
           'generationId',
-          'generationCreatedAt',
+          'generationAddedAt',
           'generationModifiedAt'
         ]
       );
@@ -63,7 +63,7 @@ describe(`CONSTANTS`, () => {
       CONSTANTS.INTERNAL_ATTRIBUTES_GENOTYPE.should.deepEqual(
         [
           'genotypeId',
-          'genotypeCreatedAt',
+          'genotypeAddedAt',
           'genotypeModifiedAt'
         ]
       );
@@ -89,7 +89,7 @@ describe(`CONSTANTS`, () => {
       CONSTANTS.INTERNAL_ATTRIBUTES_PLANT.should.deepEqual(
         [
           'plantId',
-          'plantCreatedAt',
+          'plantAddedAt',
           'plantModifiedAt'
         ]
       );

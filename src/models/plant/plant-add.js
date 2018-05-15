@@ -6,22 +6,22 @@ const sqlite = require('sqlite');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const GenericCreate = require('../generic/generic-create');
-const GenotypeCreate = require('../genotype/genotype-create');
-const MediumCreate =require('../medium/medium-create');
+const GenericAdd = require('../generic/generic-add');
+const GenotypeAdd = require('../genotype/genotype-add');
+const MediumAdd =require('../medium/medium-add');
 
 
 /**
- * PlantCreate Class which creates a new Plant.
- * Gets internally called from Plant.create(). If you want
+ * PlantAdd Class which creates a new Plant.
+ * Gets internally called from Plant.add(). If you want
  * to know how Create works internally, see
- * src/controller/generic-create.
- * If you want to know how to use the Plant.create()
+ * src/controller/generic-add.
+ * If you want to know how to use the Plant.add()
  * API from outside, see src/models/Plant #create().
  * @private
- * @extends GenericCreate
+ * @extends GenericAdd
  */
-class PlantCreate extends GenericCreate {
+class PlantAdd extends GenericAdd {
   /**
    * We need to resolve selfs/classStack for Genotype and it's parents and
    * also for Medium and it's parents. Therefore we now also return a
@@ -31,14 +31,14 @@ class PlantCreate extends GenericCreate {
    * @return {{selfs: Object[], classStack: Object[],
    *           selfs2: Object[], classStack2: Object[]}} classStackAndSelfs
    *         Returns an object with four properties:
-   *         selfs property is the selfs object of PlantCreate, GenotypeCreate
+   *         selfs property is the selfs object of PlantAdd, GenotypeAdd
    *         and it's parents.
-   *         classStack property is the classStack for PlantCreate,
-   *         GenotypeCreate and it's parents.
-   *         selfs2 property is the selfs object of MediumCreate and it's
-   *         parents (EnvironmentCreate).
-   *         classStack2 property is the classStack array of MediumCreate and
-   *         it's parents (EnvironmentCreate).
+   *         classStack property is the classStack for PlantAdd,
+   *         GenotypeAdd and it's parents.
+   *         selfs2 property is the selfs object of MediumAdd and it's
+   *         parents (EnvironmentAdd).
+   *         classStack2 property is the classStack array of MediumAdd and
+   *         it's parents (EnvironmentAdd).
    */
   static resolveClassStackAndBuildSelfs(context) {
     let [selfs, classStack] = Utils.getSelfsAndClassStack(this);
@@ -53,7 +53,7 @@ class PlantCreate extends GenericCreate {
    * @param {{selfs: Object[], classStack: Object[],
    *         selfs2: Object[], classStack2: Object[]}} classStackAndSelfs
    *         The classStackAndSelfs object returned from
-   *         PlantCreate.resolveClassStackAndBuildSelfs()
+   *         PlantAdd.resolveClassStackAndBuildSelfs()
    * @param  {Object}  context
    *         Context object for this insert/create request.
    * @return {classStackAndSelfs}
@@ -155,30 +155,30 @@ class PlantCreate extends GenericCreate {
   }
 }
 
-PlantCreate.PARENT = GenotypeCreate;
+PlantAdd.PARENT = GenotypeAdd;
 
-PlantCreate.PARENT2 = MediumCreate;
+PlantAdd.PARENT2 = MediumAdd;
 
-PlantCreate.TABLE = CONSTANTS.TABLE_PLANT;
+PlantAdd.TABLE = CONSTANTS.TABLE_PLANT;
 
-PlantCreate.ATTR_ID = CONSTANTS.ATTR_ID_PLANT;
+PlantAdd.ATTR_ID = CONSTANTS.ATTR_ID_PLANT;
 
-PlantCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_PLANT;
+PlantAdd.ATTR_ADDED_AT = CONSTANTS.ATTR_ADDED_AT_PLANT;
 
-PlantCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_PLANT;
+PlantAdd.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_PLANT;
 
-PlantCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_PLANT;
+PlantAdd.ATTRIBUTES = CONSTANTS.ATTRIBUTES_PLANT;
 
-PlantCreate.SKIP_ATTRIBUTES = [
+PlantAdd.SKIP_ATTRIBUTES = [
   CONSTANTS.ATTR_CLONES_PLANT
 ];
 
-PlantCreate.DEFAULT_VALUES_ATTRIBUTES = {
+PlantAdd.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_PLANT]: '',
   [CONSTANTS.ATTR_ID_MEDIUM]: null,
   [CONSTANTS.ATTR_CLONES_PLANT]: []
 };
 
-PlantCreate.PLURAL = CONSTANTS.PLURAL_PLANT;
+PlantAdd.PLURAL = CONSTANTS.PLURAL_PLANT;
 
-module.exports = PlantCreate;
+module.exports = PlantAdd;

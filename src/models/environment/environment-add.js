@@ -5,17 +5,17 @@ const _ = require('lodash');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const GenericCreate = require('../generic/generic-create');
+const GenericAdd = require('../generic/generic-add');
 
 /**
  * This class creates a new Environment and gets internally called from
- * Environment.create(). If you want to know how Create works internally, see
- * src/controller/generic-create. If you want to know how to use the
- * Environment.create() API from outside, see src/models/Environment #create().
+ * Environment.add(). If you want to know how Create works internally, see
+ * src/controller/generic-add. If you want to know how to use the
+ * Environment.add() API from outside, see src/models/Environment #create().
  * @private
- * @extends GenericCreate
+ * @extends GenericAdd
  */
-class EnvironmentCreate extends GenericCreate {
+class EnvironmentAdd extends GenericAdd {
   /**
    * We need to validate the properties for new environment.
    * @param  {object} self
@@ -51,30 +51,30 @@ class EnvironmentCreate extends GenericCreate {
   }
 }
 
-EnvironmentCreate.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
+EnvironmentAdd.TABLE = CONSTANTS.TABLE_ENVIRONMENT;
 
-EnvironmentCreate.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
+EnvironmentAdd.ATTR_ID = CONSTANTS.ATTR_ID_ENVIRONMENT;
 
-EnvironmentCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_ENVIRONMENT;
+EnvironmentAdd.ATTR_ADDED_AT = CONSTANTS.ATTR_ADDED_AT_ENVIRONMENT;
 
-EnvironmentCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_ENVIRONMENT;
+EnvironmentAdd.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_ENVIRONMENT;
 
-EnvironmentCreate.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT;
+EnvironmentAdd.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT;
 
-EnvironmentCreate.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_MEDIUM;
+EnvironmentAdd.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_MEDIUM;
 
-EnvironmentCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_ENVIRONMENT;
+EnvironmentAdd.ATTRIBUTES = CONSTANTS.ATTRIBUTES_ENVIRONMENT;
 
-EnvironmentCreate.SKIP_ATTRIBUTES = [
+EnvironmentAdd.SKIP_ATTRIBUTES = [
   CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT
 ];
 
-EnvironmentCreate.DEFAULT_VALUES_ATTRIBUTES = {
+EnvironmentAdd.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_ENVIRONMENT]: '',
   [CONSTANTS.ATTR_MEDIUMS_ENVIRONMENT]: []
 };
 
-EnvironmentCreate.PLURAL = CONSTANTS.PLURAL_ENVIRONMENT;
+EnvironmentAdd.PLURAL = CONSTANTS.PLURAL_ENVIRONMENT;
 
 
-module.exports = EnvironmentCreate;
+module.exports = EnvironmentAdd;

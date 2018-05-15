@@ -81,6 +81,8 @@ plantJournal.prototype.Medium = require('./models/medium');
 
 plantJournal.prototype.Journal = require('./models/journal');
 
+plantJournal.prototype.Attachment = require('./models/attachment');
+
 plantJournal.prototype.version = '0.0.1';
 
 module.exports = plantJournal;

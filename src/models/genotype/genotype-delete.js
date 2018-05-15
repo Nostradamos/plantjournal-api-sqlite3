@@ -12,7 +12,7 @@ const GenericDelete = require('../generic/generic-delete');
  * deletions. The delete() method gets called internally from
  * Genotype.delete().
  * If you want to know how delete works internally, see
- * {@link GenericCreate|src/controller/generic-create}.
+ * {@link GenericAdd|src/controller/generic-add}.
  * If you want to know how to use the Genotype.delete()
  * API from outside, see {@link Genotype|src/models/Genotype #create()}.
  * @private

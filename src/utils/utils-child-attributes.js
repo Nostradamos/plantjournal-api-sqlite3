@@ -22,6 +22,8 @@ UtilsChildAttributes.isChildAttribute = function(attr) {
     ._getTableSrcTableSrcAttrOfChildAttribute(attr) !== null;
 };
 
+
+
 UtilsChildAttributes.getTableOfChildAttribute = function(attr) {
   return UtilsChildAttributes
     ._getTableSrcTableSrcAttrOfChildAttribute(attr, 0);

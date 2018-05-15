@@ -21,17 +21,17 @@ describe(`Environment()`, () => {
     });
 
     it(`should throw error if options.environmentName is not set`, async () => {
-      await pj.Environment.create({environmentDescription: 'blubb'})
+      await pj.Environment.add({environmentDescription: 'blubb'})
         .should.be.rejectedWith('options.environmentName has to be set');
     });
 
     it(`should throw error if options.environmentName is not a string`, async () => {
-      await pj.Environment.create({environmentName: 1})
+      await pj.Environment.add({environmentName: 1})
         .should.be.rejectedWith('options.environmentName has to be a string');
     });
 
     it(`should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId`, async () => {
-      let environment = await pj.Environment.create(
+      let environment = await pj.Environment.add(
         {
           environmentName: 'Greenhouse #1',
           environmentDescription: 'Greenhouse in my garden.'
@@ -39,7 +39,7 @@ describe(`Environment()`, () => {
       );
 
       let [createdAt, modifiedAt] = [
-        environment.environments[1].environmentCreatedAt,
+        environment.environments[1].environmentAddedAt,
         environment.environments[1].environmentModifiedAt
       ];
 
@@ -50,7 +50,7 @@ describe(`Environment()`, () => {
             environmentName: 'Greenhouse #1',
             environmentDescription: 'Greenhouse in my garden.',
             environmentMediums: [],
-            environmentCreatedAt: createdAt,
+            environmentAddedAt: createdAt,
             environmentModifiedAt: modifiedAt,
           }
         }

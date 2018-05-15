@@ -16,45 +16,45 @@ describe(`Journal()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
 
-      await pj.Environment.create({
+      await pj.Environment.add({
         environmentName: 'Greenhouse #1',
         environmentDescription: 'This is the first greenhouse in my garden.'});
-      await pj.Medium.create({mediumName: 'Pot #1', environmentId: 1});
-      await pj.Medium.create({mediumName: 'Pot #2', environmentId: 1});
-      await pj.Genotype.create({});
-      await pj.Plant.create({plantName: 'testPlant1', genotypeId: 1});
+      await pj.Medium.add({mediumName: 'Pot #1', environmentId: 1});
+      await pj.Medium.add({mediumName: 'Pot #2', environmentId: 1});
+      await pj.Genotype.add({});
+      await pj.Plant.add({plantName: 'testPlant1', genotypeId: 1});
 
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1337,
         journalType: 'log',
         journalValue: 'This is a log',
         plantId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1337,
         journalType: 'ph-sensor',
         journalValue: 6.5,
         mediumId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1337,
         journalType: 'ec-sensor',
         journalValue: 1.3,
         mediumId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1337,
         journalType: 'temp-sensor',
         journalValue: 28.7,
         environmentId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1555,
         journalType: 'log',
         journalValue: 'This is a log',
         plantId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1555,
         journalType: 'watering',
         journalValue: '{"amount": 1.5, "n": 3, "p": 4, "k": 1.7, "fertilizers": ["Hakaphos Grün", "Hakaphos Blau"]}', // eslint-disable-line max-len
         mediumId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1337,
         journalType: 'ph-sensor',
         journalValue: 6.8,

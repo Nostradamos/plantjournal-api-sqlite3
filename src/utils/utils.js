@@ -1,7 +1,5 @@
 'use strict';
 
-const util = require('util');
-
 const _ = require('lodash');
 const squel = require('squel');
 const sqlite = require('sqlite');
@@ -173,7 +171,7 @@ Utils.splitToInt = function(str, sep = ',') {
 Utils.getSelfsAndClassStackCache = {};
 
 /**
- * This method is used from GenericCreate to resolve the PARENT classes and
+ * This method is used from GenericAdd to resolve the PARENT classes and
  * initiate the self array.
  * We expect an Object (normally a class) with an PARENT attribute which
  * references another class/object which again has an PARENT attribute which...

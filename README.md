@@ -71,7 +71,7 @@ let family = pj.Family.create({
 //      1: {
 //        familyName: 'testFamily',
 //        familyDescription: '',
-//        familyCreatedAt: 12354,
+//        familyAddedAt: 12354,
 //        familyModifiedAt: 12354
 //      },
 // }
@@ -93,7 +93,7 @@ Models/Tables
 | familyId          | int      |          | AUTO_INCREMENT    | *        |             |
 | familyName        | text     | *        |                   |          |             |
 | familyDescription | text     |          | ""                |          |             |
-| familyCreatedAt   | datetime |          | CURRENT_DATETIME | *        |             |
+| familyAddedAt   | datetime |          | CURRENT_DATETIME | *        |             |
 | familyModifiedAt  | datetime |          | CURRENT_DATETIME | *        |             |
 
 ## Generation (=generations)
@@ -104,7 +104,7 @@ Models/Tables
 | generationName        | text      |          |                   |          |             |
 | generationDescription | text      |          | ""                |          |             |
 | generationParents     | plantId[] |          | []                |          |             |
-| generationCreatedAt   | datetime  |          | CURRENT_DATETIME | *        |             |
+| generationAddedAt   | datetime  |          | CURRENT_DATETIME | *        |             |
 | generationModifiedAt  | datetime  |          | CURRENT_DATETIME | *        |             |
 | familyId              | familyId  | *        |                   |          |             |
 
@@ -115,7 +115,7 @@ Models/Tables
 | genotypeId          | int          |          | AUTO_INCREMENT    | *        |             |
 | genotypeName        | text         |          |                   |          |             |
 | genotypeDescription | text         |          | ""                |          |             |
-| genotypeCreatedAt   | datetime     |          | CURRENT_DATETIME | *        |             |
+| genotypeAddedAt   | datetime     |          | CURRENT_DATETIME | *        |             |
 | genotypeModifiedAt  | datetime     |          | CURRENT_DATETIME | *        |             |
 | generationId        | generationId | *        |                   |          |             |
 
@@ -128,7 +128,7 @@ Models/Tables
 | plantSex         | text       |          | null              |          |             |
 | plantClonedFrom  | plantId    |          | null              |          |             |
 | plantDescription | text       |          | ""                |          |             |
-| plantCreatedAt   | datetime   |          | CURRENT_DATETIME | *        |             |
+| plantAddedAt   | datetime   |          | CURRENT_DATETIME | *        |             |
 | plantModifiedAt  | datetime   |          | CURRENT_DATETIME | *        |             |
 | genotypeId       | genotypeId | *        |                   |          |             |
 | mediumId         | mediumId   | *        |                   |          |             |
@@ -140,7 +140,7 @@ Models/Tables
 | mediumId          | int           |          | AUTO_INCREMENT    | *        |             |
 | mediumName        | text          | *        | ""                |          |             |
 | mediumDescription | text          |          | ""                |          |             |
-| mediumCreatedAt   | datetime      |          | CURRENT_DATETIME | *        |             |
+| mediumAddedAt   | datetime      |          | CURRENT_DATETIME | *        |             |
 | mediumModifiedAt  | datetime      |          | CURRENT_DATETIME | *        |             |
 | environmentId     | environmentId | *        |                   |          |             |
 
@@ -151,7 +151,7 @@ Models/Tables
 | environmentId          | int      |          | AUTO_INCREMENT    | *        |             |
 | environmentName        | text     | *        |                   |          |             |
 | environmentDescription | text     |          |                   |          |             |
-| environmentCreatedAt   | datetime |          | CURRENT_DATETIME | *        |             |
+| environmentAddedAt   | datetime |          | CURRENT_DATETIME | *        |             |
 | environmentModifiedAt  | datetime |          | CURRENT_DATETIME | *        |             |
 
 ## Journal (=journals)
@@ -164,7 +164,7 @@ NOTE: You can only set one of the attributes where required is "\*\*"
 | journalDatetime  | datetime      | *        |                   |          |             |
 | journalType       | text          | *        |                   |          |             |
 | journalValue      | json          | *        |                   |          |             |
-| journalCreatedAt  | datetime      |          | CURRENT_DATETIME | *        |             |
+| journalAddedAt  | datetime      |          | CURRENT_DATETIME | *        |             |
 | journalModifiedAt | datetime      |          | CURRENT_DATETIME | *        |             |
 | plantId           | plantId       | **       |                   |          |             |
 | mediumId          | mediumId      | **       |                   |          |             |

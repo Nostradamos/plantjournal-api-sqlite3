@@ -15,35 +15,35 @@ describe(`Plant()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
       // familyId:1
-      await pj.Family.create({familyName: 'test1'});
+      await pj.Family.add({familyName: 'test1'});
       // generationId: 1
-      await pj.Generation.create({generationName : 'testGen1', familyId: 1});
+      await pj.Generation.add({generationName : 'testGen1', familyId: 1});
       // plantId: 1 genotypeId: 1
-      await pj.Plant.create({generationId: 1, plantName: 'blubb'});
+      await pj.Plant.add({generationId: 1, plantName: 'blubb'});
       // plantId: 2 genotyeId: 2
-      await pj.Plant.create({generationId: 1, plantName: 'blubb2'});
+      await pj.Plant.add({generationId: 1, plantName: 'blubb2'});
 
       // familyId:2
-      await pj.Family.create({familyName: 'testB'});
+      await pj.Family.add({familyName: 'testB'});
       // generationId: 2
-      await pj.Generation.create({generationName : 'testGen2', familyId: 2});
+      await pj.Generation.add({generationName : 'testGen2', familyId: 2});
       // generationId: 3
-      await pj.Generation.create({generationName : 'testGen3', familyId: 2});
+      await pj.Generation.add({generationName : 'testGen3', familyId: 2});
       // plantId: 3 genotypeId: 3
-      await pj.Plant.create({generationId: 2, plantName: 'blubb'});
+      await pj.Plant.add({generationId: 2, plantName: 'blubb'});
 
       // familyId:3
-      await pj.Family.create({familyName: 'test3'});
+      await pj.Family.add({familyName: 'test3'});
       // generationId: 4
-      await pj.Generation.create({generationName : 'testGen4', familyId: 3});
+      await pj.Generation.add({generationName : 'testGen4', familyId: 3});
       // genotypeId: 4
-      await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno1'});
+      await pj.Genotype.add({generationId: 4, genotypeName: 'testGeno1'});
       // genotypeId: 5
-      await pj.Genotype.create({generationId: 4, genotypeName: 'testGeno2'});
+      await pj.Genotype.add({generationId: 4, genotypeName: 'testGeno2'});
       // familyId:4
-      await pj.Family.create({familyName: 'testD'});
+      await pj.Family.add({familyName: 'testD'});
 
-      await pj.Plant.create(
+      await pj.Plant.add(
         {generationId: 1, plantName: 'blubbClone', plantClonedFrom: 1});
     });
 

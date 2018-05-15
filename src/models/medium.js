@@ -1,6 +1,6 @@
 'use strict';
 
-const MediumCreate = require('./medium/medium-create');
+const MediumAdd = require('./medium/medium-add');
 const MediumFind = require('./medium/medium-find');
 const MediumDelete = require('./medium/medium-delete');
 const MediumUpdate = require('./medium/medium-update');
@@ -26,7 +26,7 @@ let Medium = exports;
   *           Name of this medium
   * @property {String} [MediumDescription]
   *           Description for this medium.
-  * @property {DatetimeUTC} [mediumCreatedAt]
+  * @property {DatetimeUTC} [mediumAddedAt]
   *           UTC Datetime when this medium got created.
   * @property {DatetimeUTC} [mediumModifiedAt]
   *           UTC Datetime when this medium got modified the last time.
@@ -50,8 +50,8 @@ let Medium = exports;
  *         happen if no options.genotypId was set. There should only be one key,
  *         which is the id of the newly created plant.
  */
-Medium.create = async function(options) {
-  return await MediumCreate.create(options);
+Medium.add = async function(options) {
+  return await MediumAdd.add(options);
 };
 
 /**
@@ -61,7 +61,7 @@ Medium.create = async function(options) {
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which families you want
  *         to return. Queryable Attributes: mediumId, mediumName,
- *         mediumDescription, mediumCreatedAt, mediumModifiedAt.
+ *         mediumDescription, mediumAddedAt, mediumModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {ReturnFindMedium}
@@ -79,7 +79,7 @@ Medium.find = async function(criteria) {
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which families you want
  *         to return. Queryable Attributes: mediumId, mediumName,
- *         mediumDescription, mediumCreatedAt, mediumModifiedAt.
+ *         mediumDescription, mediumAddedAt, mediumModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {Object} returnMediumDelete
@@ -101,12 +101,12 @@ Medium.delete = async function(criteria) {
  * @async
  * @param  {MediumObject} update
  *         Subset of MediumObject containing attributes which should get
- *         updated. You can't update environmentId, environmentCreatedAt
+ *         updated. You can't update environmentId, environmentAddedAt
  *         and environmentUpdatedAt.
  * @param  {Criteria} criteria
  *         Criteria Object. With this you can control which families you want
  *         to return. Queryable Attributes: mediumId, mediumName,
- *         mediumDescription, mediumCreatedAt, mediumModifiedAt.
+ *         mediumDescription, mediumAddedAt, mediumModifiedAt.
  * @throws {Error}
  *         Should only throw error if something suspicous and unexpected
  *         happend to our sqlite connection.

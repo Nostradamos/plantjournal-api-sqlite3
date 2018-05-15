@@ -1,6 +1,6 @@
 'use strict';
 
-const PlantCreate = require('./plant/plant-create');
+const PlantAdd = require('./plant/plant-add');
 const PlantFind = require('./plant/plant-find');
 const PlantDelete = require('./plant/plant-delete');
 const PlantUpdate = require('./plant/plant-update');
@@ -34,7 +34,7 @@ let Plant = exports;
  * @property {PlantSex} plantSex
  *           Sex of this plant.
  * @property {GenotypeId} genotypeId
- * @property {DatetimeUTC} plantCreatedAt
+ * @property {DatetimeUTC} plantAddedAt
  *           UTC Datetime when this plant got created.
  * @property {DatetimeUTC} plantModifiedAt
  *           UTC Datetime when this plant got modified the last time.
@@ -72,8 +72,8 @@ let Plant = exports;
  *         happen if no options.genotypId was set. There should
  *         only be one key, which is the id of the newly created genotype.
  */
-Plant.create = async function(options) {
-  return await PlantCreate.create(options);
+Plant.add = async function(options) {
+  return await PlantAdd.add(options);
 };
 
 /**
@@ -84,9 +84,9 @@ Plant.create = async function(options) {
  * @param {criteria} criteria
  *        Control which plants you want to search for.
  *        Queryable attributes:
- *        familyId, familyName, familyCreatedAt, familyModifiedAt,
- *        generationId, generatioName, generationParents, generationCreatedAt,
- *        generationModifiedAt, genotypeId, genotypeName, genotypeCreatedAt,
+ *        familyId, familyName, familyAddedAt, familyModifiedAt,
+ *        generationId, generatioName, generationParents, generationAddedAt,
+ *        generationModifiedAt, genotypeId, genotypeName, genotypeAddedAt,
  *        genotypeModifiedAt, plantId, plantName, plantClonedFrom,
  *        plantModifiedAt, plantClonedFrom
  * @throws {Error}
@@ -108,9 +108,9 @@ Plant.find = async function(criteria) {
  *         Criteria Object. With this you can control which genotypes you want
  *         to delete.
  *         Queryable attributes:
- *         familyId, familyName, familyCreatedAt, familyModifiedAt,
- *         generationId, generatioName, generationParents, generationCreatedAt,
- *         generationModifiedAt, genotypeId, genotypeName, genotypeCreatedAt,
+ *         familyId, familyName, familyAddedAt, familyModifiedAt,
+ *         generationId, generatioName, generationParents, generationAddedAt,
+ *         generationModifiedAt, genotypeId, genotypeName, genotypeAddedAt,
  *         genotypeModifiedAt, plantId, plantName, plantClonedFrom,
  *         plantModifiedAt, plantClonedFrom
  * @throws {Error}
@@ -132,7 +132,7 @@ Plant.delete = async function(criteria) {
  * and pick the ones you want to update. It behaves similiar (but not
  * equal) to Plant.find().
  * With update you can overwrite all attributes except plantId,
- * plantCreatedAt, plantModifiedAt. plantModifiedAt
+ * plantAddedAt, plantModifiedAt. plantModifiedAt
  * will be set to the current UTC datetime for all updated plants.
  * If you want to know how Plant.update() works internally,
  * see src/controller/plant-update and src/controller/generic-update.
@@ -151,9 +151,9 @@ Plant.delete = async function(criteria) {
  *         With Criteria you can control which plants should get updated.
  *         Behaves similiar to Plant.find().
  *         Queryable attributes:
- *         familyId, familyName, familyCreatedAt, familyModifiedAt,
- *         generationId, generatioName, generationParents, generationCreatedAt,
- *         generationModifiedAt, genotypeId, genotypeName, genotypeCreatedAt,
+ *         familyId, familyName, familyAddedAt, familyModifiedAt,
+ *         generationId, generatioName, generationParents, generationAddedAt,
+ *         generationModifiedAt, genotypeId, genotypeName, genotypeAddedAt,
  *         genotypeModifiedAt, plantId, plantName, plantClonedFrom,
  *         plantModifiedAt, plantClonedFrom
  * @return {PlantId[]}

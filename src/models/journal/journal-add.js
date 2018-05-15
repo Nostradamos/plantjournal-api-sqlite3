@@ -8,17 +8,17 @@ const Utils = require('../../utils/utils');
 const UtilsJSON = require('../../utils/utils-json');
 const logger = require('../../logger');
 
-const GenericCreate = require('../generic/generic-create');
+const GenericAdd = require('../generic/generic-add');
 
 /**
  * This class creates a new Journal and gets internally called from
- * Journal.create(). If you want to know how Create works internally, see
- * src/controller/generic-create. If you want to know how to use the
- * Journal.create() API from outside, see src/models/Journal #create().
+ * Journal.add(). If you want to know how Create works internally, see
+ * src/controller/generic-add. If you want to know how to use the
+ * Journal.add() API from outside, see src/models/Journal #create().
  * @private
- * @extends GenericCreate
+ * @extends GenericAdd
  */
-class JournalCreate extends GenericCreate {
+class JournalAdd extends GenericAdd {
   /**
    * We need to validate the properties for new journal.
    * @param  {object} self
@@ -117,7 +117,7 @@ class JournalCreate extends GenericCreate {
         [CONSTANTS.ATTR_DATETIME_JOURNAL]: options.journalDatetime,
         [CONSTANTS.ATTR_TYPE_JOURNAL]: options.journalType,
         [CONSTANTS.ATTR_VALUE_JOURNAL]: options.journalValue,
-        [CONSTANTS.ATTR_CREATED_AT_JOURNAL]: context.createdAt,
+        [CONSTANTS.ATTR_ADDED_AT_JOURNAL]: context.createdAt,
         [CONSTANTS.ATTR_MODIFIED_AT_JOURNAL]: context.createdAt,
         [self.journalFor]: options[self.journalFor]
       }
@@ -126,20 +126,20 @@ class JournalCreate extends GenericCreate {
 
 }
 
-JournalCreate.TABLE = CONSTANTS.TABLE_JOURNAL;
+JournalAdd.TABLE = CONSTANTS.TABLE_JOURNAL;
 
-JournalCreate.ATTR_ID = CONSTANTS.ATTR_ID_JOURNAL;
+JournalAdd.ATTR_ID = CONSTANTS.ATTR_ID_JOURNAL;
 
-JournalCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_JOURNAL;
+JournalAdd.ATTR_ADDED_AT = CONSTANTS.ATTR_ADDED_AT_JOURNAL;
 
-JournalCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_JOURNAL;
+JournalAdd.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_JOURNAL;
 
-JournalCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_JOURNAL;
+JournalAdd.ATTRIBUTES = CONSTANTS.ATTRIBUTES_JOURNAL;
 
-JournalCreate.DEFAULT_VALUES_ATTRIBUTES = {
+JournalAdd.DEFAULT_VALUES_ATTRIBUTES = {
 };
 
-JournalCreate.PLURAL = CONSTANTS.PLURAL_JOURNAL;
+JournalAdd.PLURAL = CONSTANTS.PLURAL_JOURNAL;
 
 
-module.exports = JournalCreate;
+module.exports = JournalAdd;

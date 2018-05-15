@@ -14,7 +14,7 @@ describe(`Medium()`, () => {
     beforeEach(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Environment.create({environmentName: 'testEnvironment1'});
+      await pj.Environment.add({environmentName: 'testEnvironment1'});
     });
 
     afterEach(async () => {
@@ -22,23 +22,23 @@ describe(`Medium()`, () => {
     });
 
     it(`should throw error if options.mediumName is not set`, async () => {
-      await pj.Medium.create({environmentId: 1})
+      await pj.Medium.add({environmentId: 1})
         .should.be.rejectedWith('options.mediumName has to be set');
     });
 
     it(`should throw error if options.mediumName is not a string`, async () => {
-      await pj.Medium.create({environmentId: 1, mediumName: null})
+      await pj.Medium.add({environmentId: 1, mediumName: null})
         .should.be.rejectedWith('options.mediumName has to be a string');
     });
 
     it(`should throw error if options.mediumDescription is set but not a string`, async () => {
-      await pj.Medium.create(
+      await pj.Medium.add(
         {environmentId: 1, mediumName: 'testMedium1', mediumDescription: 123})
         .should.be.rejectedWith('options.mediumDescription has to be a string');
     });
 
     it(`should throw error if options.environmentId is not an int`, async () => {
-      await pj.Medium.create({
+      await pj.Medium.add({
         environmentId: '123',
         mediumName: 'testMedium1',
         mediumDescription: '123'})
@@ -47,20 +47,20 @@ describe(`Medium()`, () => {
     });
 
     it(`should throw error if options.environmentId doesn't reference existing environment`, async () => {
-      await pj.Medium.create(
+      await pj.Medium.add(
         {environmentId: 3, mediumName: 'testMedium1', mediumDescription: '123'})
         .should.be.rejectedWith(
           'options.environmentId does not reference an existing environment');
     });
 
     it(`should create a new generations entry and return generation object`, async () => {
-      let medium = await pj.Medium.create({
+      let medium = await pj.Medium.add({
         environmentId: 1,
         mediumName: 'testMedium',
         mediumDescription: 'This is a test'});
 
       let [createdAt, modifiedAt] = [
-        medium.mediums[1].mediumCreatedAt,
+        medium.mediums[1].mediumAddedAt,
         medium.mediums[1].mediumModifiedAt];
 
       createdAt.should.eql(modifiedAt);
@@ -73,7 +73,7 @@ describe(`Medium()`, () => {
             mediumName: 'testMedium',
             mediumPlants: [],
             environmentId: 1,
-            mediumCreatedAt: createdAt,
+            mediumAddedAt: createdAt,
             mediumModifiedAt: modifiedAt
           }
         }
@@ -84,7 +84,7 @@ describe(`Medium()`, () => {
     });
 
     it(`should be possible to create a new medium without an environment`, async () => {
-      let medium = await pj.Medium.create({
+      let medium = await pj.Medium.add({
         mediumName: 'testMediumWithoutEnv',
         mediumDescription: 'This is a test'});
 
@@ -106,7 +106,7 @@ describe(`Medium()`, () => {
     });
 
     it(`should be possible to create a new medium without an environment if environmentId is set to null`, async () => {
-      let medium = await pj.Medium.create({
+      let medium = await pj.Medium.add({
         mediumName: 'testMediumWithoutEnv',
         mediumDescription: 'This is a test',
         environmentId: null});
@@ -130,7 +130,7 @@ describe(`Medium()`, () => {
 
 
     it(`should be possible to create a new medium and environment in one create`, async () => {
-      let medium = await pj.Medium.create({
+      let medium = await pj.Medium.add({
         mediumName: 'testMedium',
         mediumDescription: 'This is a test234',
         environmentName: 'testEnvironment2',

@@ -13,16 +13,16 @@ describe(`Environment()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Environment.create({
+      await pj.Environment.add({
         environmentName: 'Greenhouse #1',
         environmentDescription: 'This is the first greenhouse in my garden.'});
-      await pj.Environment.create({
+      await pj.Environment.add({
         environmentName: 'Greenhouse #2',
         environmentDescription: 'This is the second greenhouse in my garden.'});
-      await pj.Environment.create({
+      await pj.Environment.add({
         environmentName: 'Growbox #1',
         environmentDescription: 'Small growbox to keep mother plants all over the year.'});  // eslint-disable-line max-len
-      await pj.Environment.create({
+      await pj.Environment.add({
         environmentName: 'Allotment garden #1',
         environmentDescription: 'Allotment garden where i usually plant all food producing plants or test new varities.'});  // eslint-disable-line max-len
     });
@@ -63,7 +63,7 @@ describe(`Environment()`, () => {
       });
 
       UtilsTest
-        .allEnvironmentsShouldHaveCreatedAtAndModifiedAt(environments);
+        .allEnvironmentsShouldHaveAddedAtAndModifiedAt(environments);
     });
   });
 
@@ -72,12 +72,12 @@ describe(`Environment()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Environment.create({environmentName: 'env1'});
-      await pj.Medium.create({mediumName: 'med1', environmentId: 1});
-      await pj.Medium.create({mediumName: 'med2', environmentId: 1});
-      await pj.Environment.create({environmentName: 'env2'});
-      await pj.Medium.create({mediumName: 'med3', environmentId: 2});
-      await pj.Environment.create({environmentName: 'env3'});
+      await pj.Environment.add({environmentName: 'env1'});
+      await pj.Medium.add({mediumName: 'med1', environmentId: 1});
+      await pj.Medium.add({mediumName: 'med2', environmentId: 1});
+      await pj.Environment.add({environmentName: 'env2'});
+      await pj.Medium.add({mediumName: 'med3', environmentId: 2});
+      await pj.Environment.add({environmentName: 'env3'});
     });
 
     after(async () => {

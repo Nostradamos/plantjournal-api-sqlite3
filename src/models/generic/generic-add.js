@@ -17,19 +17,19 @@ const UtilsTransactions = require('../../utils/utils-transactions');
  *           classStack scopes.
  * @property {Object[]} classStack
  *           Array of Objects which should be Classes which are child of
- *           GenericCreate.
+ *           GenericAdd.
  */
 
 
 /**
- * Generic create class which is the skeleton for all *-create classes.
+ * Generic create class which is the skeleton for all *-add classes.
  * It defines some general static methods which will called in a specific
  * order (see create()). Besides that this class also does some simple stuff
- * which most *-create classes would have to do too (eg. basic logging,
+ * which most *-add classes would have to do too (eg. basic logging,
  * initing query object... )
  * @private
  */
-class GenericCreate {
+class GenericAdd {
 
   /**
    * This function executes the whole create process.
@@ -38,10 +38,10 @@ class GenericCreate {
    * (same for Genotype, Generation and Family or only a Plant and a Genotype).
    * We solve this by doing two things before:
    * 1. We outsource the creation logic for each own model
-   * (Family, Generation...) into it's own sub class of GenericCreate
-   * 2. Each sub class of GenericCreate needs to specify the .PARENT class
+   * (Family, Generation...) into it's own sub class of GenericAdd
+   * 2. Each sub class of GenericAdd needs to specify the .PARENT class
    * attribute which should reference the PARENT creation class if possible.
-   * Eg: GenerationCreate.PARENT = FamilyCreate
+   * Eg: GenerationAdd.PARENT = FamilyAdd
    * Now we can resolve the so called "classStack", which just follows the
    * this.PARENT references until this.PARENT is undefined/false (this is done
    * in the Utils.getSelfsAndclassStack method). And we create for each element
@@ -70,7 +70,7 @@ class GenericCreate {
    * @return {object}
    *        returnObject, should contain information about created record.
    */
-  static async create(options) {
+  static async add(options) {
     Utils.throwErrorIfNotConnected();
 
     logger.debug(`${this.name} #create() options:`, JSON.stringify(options));
@@ -147,7 +147,7 @@ class GenericCreate {
 
   /**
    * Calls all remaining methods specified in
-   * GenericCreate.CLASS_CALL__STACK_ORDER.
+   * GenericAdd.CLASS_CALL__STACK_ORDER.
    * We do this in an INCREASING order, where we call each method for
    * each class, and then continuing with the next class call stack method.
    * @param {classStackAndSelfs} classStackAndSelfs
@@ -179,7 +179,7 @@ class GenericCreate {
    * Helper method to call a classStack Method and return it's return value.
    * This method allows us to await the method or normally call it, and we catch
    * an unreadable error code and throw it readable again.
-   * @param  {GenericCreate[]}  classStack
+   * @param  {GenericAdd[]}  classStack
    *         classStack Object
    * @param  {Object[]}  selfs
    *         selfs object
@@ -216,7 +216,7 @@ class GenericCreate {
   /**
    * This method should check if all properties for creating this record are
    * valid and make sure, that this record even needs to be created. Because
-   * We can create a Family from a GenerationCreate, we need to make sure
+   * We can create a Family from a GenerationAdd, we need to make sure
    * that familyId isn't already set, and if so, abort this whole creation
    * process by removing us and our parents from the classStack. Sounds
    * complicate, but you just need to return true to remove us and our parents
@@ -303,10 +303,10 @@ class GenericCreate {
    * @param  {DatetimeUTC} context.createdAt
    *         UTC Datetime which should indicate when we created this record.
    */
-  static setQueryCreatedAtAndModifiedAtFields(self, context) {
-    logger.debug(this.name, '#setQueryCreatedAtAndModifiedAt() createdAt:', context.createdAt);
+  static setQueryAddedAtAndModifiedAtFields(self, context) {
+    logger.debug(this.name, '#setQueryAddedAtAndModifiedAt() createdAt:', context.createdAt);
     self.query
-      .set(this.ATTR_CREATED_AT, context.createdAt)
+      .set(this.ATTR_ADDED_AT, context.createdAt)
       .set(this.ATTR_MODIFIED_AT, context.createdAt);
   }
 
@@ -486,7 +486,7 @@ class GenericCreate {
     }
 
     recordObject[this.ATTR_ID] = self.insertId;
-    recordObject[this.ATTR_CREATED_AT] = context.createdAt;
+    recordObject[this.ATTR_ADDED_AT] = context.createdAt;
     recordObject[this.ATTR_MODIFIED_AT] = context.createdAt;
 
     context.returnObject[this.PLURAL] = {
@@ -495,10 +495,10 @@ class GenericCreate {
   }
 }
 
-GenericCreate.CLASS_CALL_STACK_ORDER = [
+GenericAdd.CLASS_CALL_STACK_ORDER = [
   'initQuery',
   'setQueryFields',
-  'setQueryCreatedAtAndModifiedAtFields',
+  'setQueryAddedAtAndModifiedAtFields',
   'stringifyQuery',
   'beginTransaction',
   'executeQuery',
@@ -506,27 +506,27 @@ GenericCreate.CLASS_CALL_STACK_ORDER = [
   'buildReturnObject'
 ];
 
-GenericCreate.PARENT = false;
+GenericAdd.PARENT = false;
 
 // set this field for the default table name used in #initQuery()
-GenericCreate.TABLE = null;
+GenericAdd.TABLE = null;
 
-GenericCreate.ATTR_ID;
+GenericAdd.ATTR_ID;
 
-GenericCreate.ATTR_CREATED_AT;
+GenericAdd.ATTR_ADDED_AT;
 
-GenericCreate.ATTR_MODIFIED_AT;
+GenericAdd.ATTR_MODIFIED_AT;
 
-GenericCreate.ATTR_FILL_CHILD_IDS;
+GenericAdd.ATTR_FILL_CHILD_IDS;
 
-GenericCreate.ATTR_CHILD_ID;
+GenericAdd.ATTR_CHILD_ID;
 
-GenericCreate.ATTRIBUTES = [];
+GenericAdd.ATTRIBUTES = [];
 
-GenericCreate.SKIP_ATTRIBUTES = [];
+GenericAdd.SKIP_ATTRIBUTES = [];
 
-GenericCreate.DEFAULT_VALUES_ATTRIBUTES = [];
+GenericAdd.DEFAULT_VALUES_ATTRIBUTES = [];
 
-GenericCreate.PLURAL;
+GenericAdd.PLURAL;
 
-module.exports = GenericCreate;
+module.exports = GenericAdd;

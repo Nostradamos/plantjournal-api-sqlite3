@@ -14,24 +14,24 @@ describe(`Genotype()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'});
-      await pj.Family.create({familyName: 'testFamily2'});
-      await pj.Generation.create({familyId: 1, generationName: 'F1'});
-      await pj.Generation.create({familyId: 1, generationName: 'F2'});
-      await pj.Generation.create({familyId: 2, generationName: 'S1'});
-      await pj.Genotype.create(
+      await pj.Family.add({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFamily2'});
+      await pj.Generation.add({familyId: 1, generationName: 'F1'});
+      await pj.Generation.add({familyId: 1, generationName: 'F2'});
+      await pj.Generation.add({familyId: 2, generationName: 'S1'});
+      await pj.Genotype.add(
         {generationId: 1, genotypeName: 'testGenotype1'});
-      await pj.Genotype.create(
+      await pj.Genotype.add(
         {generationId: 2, genotypeName: 'testGenotype2'});
-      await pj.Genotype.create(
+      await pj.Genotype.add(
         {generationId: 3, genotypeName: 'testGenotype3'});
-      await pj.Plant.create({genotypeId: 1, plantName: 'testPlant1'});
-      await pj.Plant.create({genotypeId: 2, plantName: 'testPlant2'});
-      await pj.Generation.create({
+      await pj.Plant.add({genotypeId: 1, plantName: 'testPlant1'});
+      await pj.Plant.add({genotypeId: 2, plantName: 'testPlant2'});
+      await pj.Generation.add({
         familyId: 2,
         generationName: 'generationWithParents',
         generationParents: [1,2]});
-      await pj.Genotype.create(
+      await pj.Genotype.add(
         {generationId: 4, genotypeName: 'testGenotype4'});
     });
 
@@ -111,11 +111,11 @@ describe(`Genotype()`, () => {
         }
       );
       UtilsTest
-        .allGenotypesShouldHaveCreatedAtAndModifiedAt(genotypes);
+        .allGenotypesShouldHaveAddedAtAndModifiedAt(genotypes);
       UtilsTest
-        .allGenerationsShouldHaveCreatedAtAndModifiedAt(genotypes);
+        .allGenerationsShouldHaveAddedAtAndModifiedAt(genotypes);
       UtilsTest
-        .allFamiliesShouldHaveCreatedAtAndModifiedAt(genotypes);
+        .allFamiliesShouldHaveAddedAtAndModifiedAt(genotypes);
     });
 
     it(`should not have an empty families property object if familyName is NOT in options.attributes`, async () => {
@@ -282,10 +282,10 @@ describe(`Genotype()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Genotype.create({genotypeName: 'genotype1'});
-      await pj.Plant.create({plantName: 'plant1', genotypeId: 1});
-      await pj.Plant.create({plantName: 'plant2', genotypeId: 1});
-      await pj.Genotype.create({genotypeName: 'genotype2'});
+      await pj.Genotype.add({genotypeName: 'genotype1'});
+      await pj.Plant.add({plantName: 'plant1', genotypeId: 1});
+      await pj.Plant.add({plantName: 'plant2', genotypeId: 1});
+      await pj.Genotype.add({genotypeName: 'genotype2'});
     });
 
     after(async () => {

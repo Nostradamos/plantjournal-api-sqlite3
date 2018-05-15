@@ -14,12 +14,12 @@ describe(`Plant()`, () => {
     beforeEach(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'});
-      await pj.Generation.create({familyId: 1, generationName: 'F1'});
-      await pj.Genotype.create(
+      await pj.Family.add({familyName: 'testFamily1'});
+      await pj.Generation.add({familyId: 1, generationName: 'F1'});
+      await pj.Genotype.add(
         {generationId: 1, genotypeName: 'testGenotype1'});
-      await pj.Environment.create({environmentName: 'Greenhouse #1'});
-      await pj.Medium.create({mediumName: 'Medium #1', environmentId: 1});
+      await pj.Environment.add({environmentName: 'Greenhouse #1'});
+      await pj.Medium.add({mediumName: 'Medium #1', environmentId: 1});
     });
 
     afterEach(async () => {
@@ -37,7 +37,7 @@ describe(`Plant()`, () => {
         undefined
       ];
       for (let value in toTest) {
-        await pj.Family.create(value).should.be.rejectedWith(
+        await pj.Family.add(value).should.be.rejectedWith(
           'First argument has to be an associative array');
         tested++;
       }
@@ -46,59 +46,59 @@ describe(`Plant()`, () => {
 
     it(`should throw error if options.generationId is not an integer`, async () => {
       await pj.Plant
-        .create({plantName: 'testPlant', generationId: 'test'})
+        .add({plantName: 'testPlant', generationId: 'test'})
         .should.be.rejectedWith('options.generationId has to be an integer');
     });
 
     it(`should throw error if options.genotypeId is not an integer`, async () => {
-      await pj.Plant.create({plantName: 'testPlant', genotypeId: null})
+      await pj.Plant.add({plantName: 'testPlant', genotypeId: null})
         .should.be.rejectedWith('options.genotypeId has to be an integer');
     });
 
     it(`should throw error if options.generationId does not reference an existing generationId`, async () => {
-      await pj.Plant.create({generationId: 42, plantName: 'test'})
+      await pj.Plant.add({generationId: 42, plantName: 'test'})
         .should.be.rejectedWith(
           'options.generationId does not reference an existing Generation');
     });
 
     it(`should throw error if options.plantName is not set`, async () => {
-      await pj.Plant.create({genotypeId: 2})
+      await pj.Plant.add({genotypeId: 2})
         .should.be.rejectedWith('options.plantName has to be set');
     });
 
     it(`should throw error if options.plantName is not a string`, async () => {
-      await pj.Plant.create({genotypeId: 2, plantName: 1})
+      await pj.Plant.add({genotypeId: 2, plantName: 1})
         .should.be.rejectedWith('options.plantName has to be a string');
     });
 
     it(`should throw error if options.plantSex is not a valid sex`, async () => {
       await pj.Plant
-        .create({genotypeId: 2, plantName: 'test', plantSex: 'notavalidsex'})
+        .add({genotypeId: 2, plantName: 'test', plantSex: 'notavalidsex'})
         .should.be.rejectedWith(
           'options.plantSex has to be null, male, female or hermaphrodite');
     });
 
     it(`should throw error if options.genotypeId does not reference an existing genotypeId`, async () => {
-      await pj.Plant.create({genotypeId: 2, plantName: 'test'})
+      await pj.Plant.add({genotypeId: 2, plantName: 'test'})
         .should.be.rejectedWith(
           'options.genotypeId does not reference an existing Genotype');
     });
 
     it(`should throw error if options.plantClonedFrom does not reference an existing plant`, async () => {
-      await pj.Plant.create({plantName: 'clonePlant2', plantClonedFrom: 12})
+      await pj.Plant.add({plantName: 'clonePlant2', plantClonedFrom: 12})
         .should.be.rejectedWith(
           'options.plantClonedFrom does not reference an existing Plant');
 
     });
 
     it(`should throw error if options.plantClonedFrom is not an integer`, async () => {
-      await pj.Plant.create(
+      await pj.Plant.add(
         {plantName: 'clonePlant2', plantClonedFrom: 'not an integer'})
         .should.be.rejectedWith('options.plantClonedFrom has to be an integer');
     });
 
     it(`should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId`, async () => {
-      let plant = await pj.Plant.create(
+      let plant = await pj.Plant.add(
         {
           genotypeId: 1,
           plantName: 'testPlant1',
@@ -108,7 +108,7 @@ describe(`Plant()`, () => {
         }
       );
       let [createdAt, modifiedAt] = [
-        plant.plants[1].plantCreatedAt,
+        plant.plants[1].plantAddedAt,
         plant.plants[1].plantModifiedAt
       ];
 
@@ -122,7 +122,7 @@ describe(`Plant()`, () => {
             plantSex: null,
             plantDescription:
               'we found this plant in the backyard of our grandma',
-            plantCreatedAt: createdAt,
+            plantAddedAt: createdAt,
             plantModifiedAt: modifiedAt,
             genotypeId: 1,
             mediumId: 1
@@ -144,7 +144,7 @@ describe(`Plant()`, () => {
     });
 
     it(`should create a new plant and genotype entry if options.genotypeId is not set and return plant object + genotype object`, async () => {
-      let plant = await pj.Plant.create(
+      let plant = await pj.Plant.add(
         {
           generationId: 1,
           genotypeName: 'testGeno2',
@@ -154,10 +154,10 @@ describe(`Plant()`, () => {
       );
 
       let [createdAtPlant, modifiedAtPlant] = [
-        plant.plants[1].plantCreatedAt, plant.plants[1].plantModifiedAt
+        plant.plants[1].plantAddedAt, plant.plants[1].plantModifiedAt
       ];
       let [createdAtGenotype, modifiedAtGenotype] = [
-        plant.genotypes[2].genotypeCreatedAt,
+        plant.genotypes[2].genotypeAddedAt,
         plant.genotypes[2].genotypeModifiedAt
       ];
 
@@ -169,7 +169,7 @@ describe(`Plant()`, () => {
             genotypeDescription: 'foobar',
             genotypePlants: [1],
             generationId: 1,
-            genotypeCreatedAt: createdAtGenotype,
+            genotypeAddedAt: createdAtGenotype,
             genotypeModifiedAt: modifiedAtGenotype
           }
         },
@@ -181,7 +181,7 @@ describe(`Plant()`, () => {
             plantClones: [],
             plantSex: null,
             plantDescription: '',
-            plantCreatedAt: createdAtPlant,
+            plantAddedAt: createdAtPlant,
             plantModifiedAt: modifiedAtPlant,
             genotypeId: 2,
             mediumId: null
@@ -191,11 +191,11 @@ describe(`Plant()`, () => {
     });
 
     it(`should only create a new plant entry if options.plantClonedFrom is set, and not options.genotypeId is not set but resolve the genotypeId from the mother plant`, async () => {
-      await pj.Plant.create({genotypeId: 1, plantName: 'motherPlant1'});
-      let plantClone = await pj.Plant.create(
+      await pj.Plant.add({genotypeId: 1, plantName: 'motherPlant1'});
+      let plantClone = await pj.Plant.add(
         {plantName: 'clonePlant2', plantClonedFrom: 1});
       let [createdAtClone, modifiedAtClone] = [
-        plantClone.plants[2].plantCreatedAt,
+        plantClone.plants[2].plantAddedAt,
         plantClone.plants[2].plantModifiedAt
       ];
 
@@ -209,7 +209,7 @@ describe(`Plant()`, () => {
             plantClones: [],
             plantSex: null,
             plantDescription: '',
-            plantCreatedAt: createdAtClone,
+            plantAddedAt: createdAtClone,
             plantModifiedAt: modifiedAtClone,
             genotypeId: 1,
             mediumId: null
@@ -225,7 +225,7 @@ describe(`Plant()`, () => {
     });
 
     it(`should be possible to create a plant without setting genotypeName or genotypeId`, async () => {
-      let plant = await pj.Plant.create({plantName: 'motherPlant1'});
+      let plant = await pj.Plant.add({plantName: 'motherPlant1'});
 
       plant.should.containDeep(
         {
@@ -253,7 +253,7 @@ describe(`Plant()`, () => {
     });
 
     it(`should be possible to create a plant and a medium at once`, async () => {
-      let plant = await pj.Plant.create(
+      let plant = await pj.Plant.add(
         {plantName: 'motherPlant1', mediumName: 'testMedium'});
 
       plant.should.containDeep({
@@ -279,7 +279,7 @@ describe(`Plant()`, () => {
     });
 
     it(`should not create a medium if mediumId is null`, async () => {
-      let plant = await pj.Plant.create(
+      let plant = await pj.Plant.add(
         {plantName: 'motherPlant1', mediumId: null});
 
       plant.should.containDeep({

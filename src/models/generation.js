@@ -1,6 +1,6 @@
 'use strict';
 
-const GenerationCreate = require('./generation/generation-create');
+const GenerationAdd = require('./generation/generation-add');
 const GenerationFind = require('./generation/generation-find');
 const GenerationDelete = require('./generation/generation-delete');
 const GenerationUpdate = require('./generation/generation-update');
@@ -26,7 +26,7 @@ let Generation = exports;
  *           Name of this generation.
  * @property {FamilyId} familyId
  *           The familyId this family is member of.
- * @property {DatetimeUTC} generationCreatedAt
+ * @property {DatetimeUTC} generationAddedAt
  *           UTC Datetime when this generation got created.
  * @property {DatetimeUTC} generationModifiedAt
  *           UTC Datetime when this generation got modified the last time.
@@ -60,15 +60,15 @@ let Generation = exports;
  *         Object holding information about created generation. There should
  *         only be one key, which is the id of the newly created generation.
  */
-Generation.create = async function(options) {
-  return await GenerationCreate.create(options);
+Generation.add = async function(options) {
+  return await GenerationAdd.add(options);
 };
 
 /**
  * Find generations based on criteria and returns them. You can select the
  * generations to return based on various so called criterias.
- * Queryable Fields: familyId, familyName, familyCreatedAt, familyModifiedAt,
- * generationId, generationIdName, generationCreatedAt, generationModifiedAt
+ * Queryable Fields: familyId, familyName, familyAddedAt, familyModifiedAt,
+ * generationId, generationIdName, generationAddedAt, generationModifiedAt
  *
  * @memberof plantJournal.Generation
  * @async
@@ -92,8 +92,8 @@ Generation.find = async function(criteria) {
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which generations you want
  *         to delete. Queryable Attributes: familyId, familyName,
- *         familyCreatedAt, familyModifiedAt, generationId, generationName,
- *         generationModifiedAt, generationCreatedAt.
+ *         familyAddedAt, familyModifiedAt, generationId, generationName,
+ *         generationModifiedAt, generationAddedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {Object} returnGenerationDelete
@@ -119,7 +119,7 @@ Generation.delete = async function(criteria) {
  * and pick the ones you want to update. It behaves similiar (but not
  * equal) to Generation.find().
  * With update you can overwrite all attributes except generationId,
- * generationCreatedAt, generationModifiedAt, parentId. generationModifiedAt
+ * generationAddedAt, generationModifiedAt, parentId. generationModifiedAt
  * will be set to the current UTC datetime for all updated generations.
  * If you want to know how generation update works internally,
  * see src/controller/generation-update and src/controller/generic-update.

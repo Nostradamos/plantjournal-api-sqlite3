@@ -13,46 +13,46 @@ const UtilsQuery = require('../src/utils/utils-query');
 
 var UtilsTest = module.exports;
 
-UtilsTest.allShouldHaveCreatedAtAndModifiedAt = (retObj, plural, singular) => {
+UtilsTest.allShouldHaveAddedAtAndModifiedAt = (retObj, plural, singular) => {
   retObj.should.have.property(plural);
 
   for(let key of _.keys(retObj[plural])) {
     retObj[plural][key]
-      .should.have.property(singular + 'CreatedAt');
+      .should.have.property(singular + 'AddedAt');
     retObj[plural][key]
       .should.have.property(singular + 'ModifiedAt');
   }
 };
 
-UtilsTest.allFamiliesShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(retObj, 'families', 'family');
+UtilsTest.allFamiliesShouldHaveAddedAtAndModifiedAt = function(retObj) {
+  UtilsTest.allShouldHaveAddedAtAndModifiedAt(retObj, 'families', 'family');
 };
 
 
-UtilsTest.allGenerationsShouldHaveCreatedAtAndModifiedAt = (retObj) => {
-  // Make sure every generation has generationCreatedAt and
+UtilsTest.allGenerationsShouldHaveAddedAtAndModifiedAt = (retObj) => {
+  // Make sure every generation has generationAddedAt and
   // generationModifiedAt attributes.
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+  UtilsTest.allShouldHaveAddedAtAndModifiedAt(
     retObj, 'generations', 'generation');
 };
 
-UtilsTest.allGenotypesShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+UtilsTest.allGenotypesShouldHaveAddedAtAndModifiedAt = function(retObj) {
+  UtilsTest.allShouldHaveAddedAtAndModifiedAt(
     retObj, 'genotypes', 'genotype');
 };
 
-UtilsTest.allPlantsShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+UtilsTest.allPlantsShouldHaveAddedAtAndModifiedAt = function(retObj) {
+  UtilsTest.allShouldHaveAddedAtAndModifiedAt(
     retObj, 'plants', 'plant');
 };
 
-UtilsTest.allMediumsShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+UtilsTest.allMediumsShouldHaveAddedAtAndModifiedAt = function(retObj) {
+  UtilsTest.allShouldHaveAddedAtAndModifiedAt(
     retObj, 'mediums', 'medium');
 };
 
-UtilsTest.allEnvironmentsShouldHaveCreatedAtAndModifiedAt = function(retObj) {
-  UtilsTest.allShouldHaveCreatedAtAndModifiedAt(
+UtilsTest.allEnvironmentsShouldHaveAddedAtAndModifiedAt = function(retObj) {
+  UtilsTest.allShouldHaveAddedAtAndModifiedAt(
     retObj, 'environments', 'environment');
 };
 

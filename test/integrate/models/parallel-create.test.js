@@ -20,7 +20,7 @@ describe(`Parallel`, () => {
   it(`should be possible to create 100 families at once without getting race conditions`, async () => {
     let all = [];
     for(let i=0;i<50;i++) {
-      all.push(pj.Family.create({familyName: 'testFam'+i}));
+      all.push(pj.Family.add({familyName: 'testFam'+i}));
     }
     await Promise.all(all);
   });
@@ -28,7 +28,7 @@ describe(`Parallel`, () => {
   it(`should be possible to create 100 generations and families at once without getting race conditions`, async () => {
     let all = [];
     for(let i=0;i<50;i++) {
-      all.push(pj.Generation.create(
+      all.push(pj.Generation.add(
         {familyName: 'testFam'+i, generationName: 'F'+i}));
     }
     await Promise.all(all);

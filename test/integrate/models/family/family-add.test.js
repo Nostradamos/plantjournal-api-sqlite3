@@ -32,7 +32,7 @@ describe(`Family()`, () => {
         undefined
       ];
       for (let value in toTest) {
-        await pj.Family.create(value)
+        await pj.Family.add(value)
           .should.be.rejectedWith('First argument has to be an associative array');
         tested++;
       }
@@ -40,23 +40,23 @@ describe(`Family()`, () => {
     });
 
     it(`should throw 'options.familyName has to be set' error if no options.familyName is provided`, async () => {
-      await pj.Family.create({})
+      await pj.Family.add({})
         .should.be.rejectedWith('options.familyName has to be set');
     });
 
     it(`should throw error if options.familyName is not a string`, async () => {
-      await pj.Family.create({familyName: 1})
+      await pj.Family.add({familyName: 1})
         .should.be.rejectedWith('options.familyName has to be a string');
     });
 
     it(`should create a new Family and return family object`, async () => {
-      let family = await pj.Family.create({familyName: 'testName'});
-      let [familyCreatedAt, familyModifiedAt] = [
-        family.families[1].familyCreatedAt,
+      let family = await pj.Family.add({familyName: 'testName'});
+      let [familyAddedAt, familyModifiedAt] = [
+        family.families[1].familyAddedAt,
         family.families[1].familyModifiedAt
       ];
 
-      familyCreatedAt.should.eql(familyModifiedAt);
+      familyAddedAt.should.eql(familyModifiedAt);
       family.should.deepEqual(
         {
           families: {
@@ -65,7 +65,7 @@ describe(`Family()`, () => {
               familyName: 'testName',
               familyDescription: '',
               familyGenerations: [],
-              familyCreatedAt: familyCreatedAt,
+              familyAddedAt: familyAddedAt,
               familyModifiedAt: familyModifiedAt
             }
           }
@@ -77,7 +77,7 @@ describe(`Family()`, () => {
     });
 
     it(`should set familyDescription on create`, async () => {
-      let family = await pj.Family.create(
+      let family = await pj.Family.add(
         {
           familyName: 'testName3',
           familyDescription: 'This is a test family'

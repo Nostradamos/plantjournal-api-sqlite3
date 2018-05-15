@@ -16,38 +16,38 @@ describe(`Plant()`, () => {
       await pj.connect();
 
       //familyId: 1
-      await pj.Family.create({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFamily1'});
       //generationId: 1
-      await pj.Generation.create({generationName: 'F1', familyId: 1});
+      await pj.Generation.add({generationName: 'F1', familyId: 1});
       //generationId: 2
-      await pj.Generation.create({generationName: 'F2', familyId: 1});
+      await pj.Generation.add({generationName: 'F2', familyId: 1});
       //familyId: 2
-      await pj.Family.create({familyName: 'testFamily2'});
+      await pj.Family.add({familyName: 'testFamily2'});
       //generationId: 3
-      await pj.Generation.create({generationName: 'S1', familyId: 2});
+      await pj.Generation.add({generationName: 'S1', familyId: 2});
       //generationId: 4
-      await pj.Generation.create({generationName: 'S2', familyId: 2});
+      await pj.Generation.add({generationName: 'S2', familyId: 2});
       //genotypeId: 1
-      await pj.Genotype.create({genotypeName: 'F1Geno1', generationId: 1});
+      await pj.Genotype.add({genotypeName: 'F1Geno1', generationId: 1});
       //genotypeId: 2
-      await pj.Genotype.create({genotypeName: 'F1Geno2', generationId: 1});
+      await pj.Genotype.add({genotypeName: 'F1Geno2', generationId: 1});
       //genotypeId: 3
-      await pj.Genotype.create({genotypeName: 'F2Geno1', generationId: 2});
+      await pj.Genotype.add({genotypeName: 'F2Geno1', generationId: 2});
       //genotypeId: 4
-      await pj.Genotype.create({genotypeName: 'S1Geno1', generationId: 3});
+      await pj.Genotype.add({genotypeName: 'S1Geno1', generationId: 3});
       //genotypeId: 5
-      await pj.Genotype.create({genotypeName: 'S2Geno1', generationId: 4});
+      await pj.Genotype.add({genotypeName: 'S2Geno1', generationId: 4});
       //plantId: 1
-      await pj.Plant.create({plantName: 'F1Geno1Plant1', genotypeId: 1});
+      await pj.Plant.add({plantName: 'F1Geno1Plant1', genotypeId: 1});
       //plantId: 2
-      await pj.Plant.create({plantName: 'F1Geno2Plant2', genotypeId: 2});
+      await pj.Plant.add({plantName: 'F1Geno2Plant2', genotypeId: 2});
       //plantId: 3
-      await pj.Plant.create({
+      await pj.Plant.add({
         plantName: 'F1Geno2Plant2Clone1',
         genotypeId: 2,
         plantClonedFrom: 2});
       //plantId: 4
-      await pj.Plant.create({plantName: 'F2Geno1Plant1', genotypeId: 3});
+      await pj.Plant.add({plantName: 'F2Geno1Plant1', genotypeId: 3});
     });
 
     after(async () => {
@@ -179,20 +179,20 @@ describe(`Plant()`, () => {
       rowsPlant[0].plantModifiedAt.should.not.eql(1);
     });
 
-    it(`should not be possible to manually change plantCreatedAt`, async () => {
+    it(`should not be possible to manually change plantAddedAt`, async () => {
       let updatedPlant = await pj.Plant.update(
-        {plantCreatedAt: 1},
+        {plantAddedAt: 1},
         {where: {plantId: 1}}
       );
 
       updatedPlant.length.should.eql(0);
 
       let rowsPlant = await sqlite.all(`
-        SELECT ${CONSTANTS.ATTR_ID_PLANT}, ${CONSTANTS.ATTR_CREATED_AT_PLANT}
+        SELECT ${CONSTANTS.ATTR_ID_PLANT}, ${CONSTANTS.ATTR_ADDED_AT_PLANT}
         FROM ${CONSTANTS.TABLE_PLANT}
         WHERE ${CONSTANTS.ATTR_ID_PLANT} = 1`);
 
-      rowsPlant[0].plantCreatedAt.should.not.eql(1);
+      rowsPlant[0].plantAddedAt.should.not.eql(1);
     });
 
     it(`should be possible to update genotypeId`, async () => {

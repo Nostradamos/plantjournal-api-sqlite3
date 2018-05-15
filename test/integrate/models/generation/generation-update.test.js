@@ -15,21 +15,21 @@ describe(`Generation()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
       //familyId: 1
-      await pj.Family.create({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFamily1'});
       //generationId: 1
-      await pj.Generation.create({generationName: 'F1', familyId: 1});
+      await pj.Generation.add({generationName: 'F1', familyId: 1});
       //generationId: 2
-      await pj.Generation.create({generationName: 'F2', familyId: 1});
+      await pj.Generation.add({generationName: 'F2', familyId: 1});
       //familyId: 2
-      await pj.Family.create({familyName: 'testFamily2'});
+      await pj.Family.add({familyName: 'testFamily2'});
       //generationId: 3
-      await pj.Generation.create({generationName: 'S1', familyId: 2});
+      await pj.Generation.add({generationName: 'S1', familyId: 2});
       //plantId: 1
-      await pj.Plant.create({plantName: 'testPlant1', generationId: 1});
+      await pj.Plant.add({plantName: 'testPlant1', generationId: 1});
       //plantId: 2
-      await pj.Plant.create({plantName: 'testPlant2', generationId: 2});
+      await pj.Plant.add({plantName: 'testPlant2', generationId: 2});
       //generationId: 4
-      await pj.Generation.create(
+      await pj.Generation.add(
         {generationName: 'S2', familyId: 2, generationParents: [1,2]});
     });
 
@@ -120,9 +120,9 @@ describe(`Generation()`, () => {
       rowsGen[0].generationModifiedAt.should.not.eql(1);
     });
 
-    it(`should not be possible to manually change generationCreatedAt`, async () => {
+    it(`should not be possible to manually change generationAddedAt`, async () => {
       let updatedGenerations = await pj.Generation.update(
-        {generationCreatedAt: 1},
+        {generationAddedAt: 1},
         {where: {generationId: 1}}
       );
 
@@ -131,11 +131,11 @@ describe(`Generation()`, () => {
       let rowsGen = await sqlite.all(`
         SELECT
           ${CONSTANTS.ATTR_ID_GENERATION},
-          ${CONSTANTS.ATTR_CREATED_AT_GENERATION}
+          ${CONSTANTS.ATTR_ADDED_AT_GENERATION}
         FROM ${CONSTANTS.TABLE_GENERATION}
         WHERE ${CONSTANTS.ATTR_ID_GENERATION} = 1`);
 
-      rowsGen[0].generationCreatedAt.should.not.eql(1);
+      rowsGen[0].generationAddedAt.should.not.eql(1);
     });
 
     it(`should throw error if familyId to update is invalid`, async () => {

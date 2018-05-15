@@ -15,27 +15,27 @@ describe(`Genotype()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
       //familyId: 1
-      await pj.Family.create({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFamily1'});
       //generationId: 1
-      await pj.Generation.create({generationName: 'F1', familyId: 1});
+      await pj.Generation.add({generationName: 'F1', familyId: 1});
       //generationId: 2
-      await pj.Generation.create({generationName: 'F2', familyId: 1});
+      await pj.Generation.add({generationName: 'F2', familyId: 1});
       //familyId: 2
-      await pj.Family.create({familyName: 'testFamily2'});
+      await pj.Family.add({familyName: 'testFamily2'});
       //generationId: 3
-      await pj.Generation.create({generationName: 'S1', familyId: 2});
+      await pj.Generation.add({generationName: 'S1', familyId: 2});
       //generationId: 4
-      await pj.Generation.create({generationName: 'S2', familyId: 2});
+      await pj.Generation.add({generationName: 'S2', familyId: 2});
       //genotypeId: 1
-      await pj.Genotype.create({genotypeName: 'F1Geno1', generationId: 1});
+      await pj.Genotype.add({genotypeName: 'F1Geno1', generationId: 1});
       //genotypeId: 2
-      await pj.Genotype.create({genotypeName: 'F1Geno2', generationId: 1});
+      await pj.Genotype.add({genotypeName: 'F1Geno2', generationId: 1});
       //genotypeId: 3
-      await pj.Genotype.create({genotypeName: 'F2Geno1', generationId: 2});
+      await pj.Genotype.add({genotypeName: 'F2Geno1', generationId: 2});
       //genotypeId: 4
-      await pj.Genotype.create({genotypeName: 'S1Geno1', generationId: 3});
+      await pj.Genotype.add({genotypeName: 'S1Geno1', generationId: 3});
       //genotypeId: 5
-      await pj.Genotype.create({genotypeName: 'S2Geno1', generationId: 4});
+      await pj.Genotype.add({genotypeName: 'S2Geno1', generationId: 4});
     });
 
     after(async () => {
@@ -147,9 +147,9 @@ describe(`Genotype()`, () => {
       rowsGeno[0].genotypeModifiedAt.should.not.eql(1);
     });
 
-    it(`should not be possible to manually change genotypeCreatedAt`, async () => {
+    it(`should not be possible to manually change genotypeAddedAt`, async () => {
       let updatedGeno = await pj.Genotype.update(
-        {genotypeCreatedAt: 1},
+        {genotypeAddedAt: 1},
         {where: {genotypeId: 1}}
       );
 
@@ -158,11 +158,11 @@ describe(`Genotype()`, () => {
       let rowsGeno = await sqlite.all(`
         SELECT
           ${CONSTANTS.ATTR_ID_GENOTYPE},
-          ${CONSTANTS.ATTR_CREATED_AT_GENOTYPE}
+          ${CONSTANTS.ATTR_ADDED_AT_GENOTYPE}
         FROM ${CONSTANTS.TABLE_GENOTYPE}
         WHERE ${CONSTANTS.ATTR_ID_GENOTYPE} = 1`);
 
-      rowsGeno[0].genotypeCreatedAt.should.not.eql(1);
+      rowsGeno[0].genotypeAddedAt.should.not.eql(1);
     });
 
     it(`should be possible to update generationId`, async () => {

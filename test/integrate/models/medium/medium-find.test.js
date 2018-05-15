@@ -14,16 +14,16 @@ describe(`Medium()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Environment.create({
+      await pj.Environment.add({
         environmentName: 'testEnv1',
         environmentDescription: 'this is a test'});
-      await pj.Medium.create({
+      await pj.Medium.add({
         environmentId: 1, mediumName: 'testMed1',
         mediumDescription: 'medium test'});
-      await pj.Medium.create({
+      await pj.Medium.add({
         environmentId: 1, mediumName: 'testMed2',
         mediumDescription: 'another test'});
-      await pj.Medium.create({
+      await pj.Medium.add({
         environmentId: null, mediumName: 'testMed3'});
     });
 
@@ -69,9 +69,9 @@ describe(`Medium()`, () => {
       );
 
       UtilsTest
-        .allMediumsShouldHaveCreatedAtAndModifiedAt(mediums);
+        .allMediumsShouldHaveAddedAtAndModifiedAt(mediums);
       UtilsTest
-        .allEnvironmentsShouldHaveCreatedAtAndModifiedAt(mediums);
+        .allEnvironmentsShouldHaveAddedAtAndModifiedAt(mediums);
     });
 
     it(`should skip first medium with criteria.offset = 1`, async () => {
@@ -154,10 +154,10 @@ describe(`Medium()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Medium.create({mediumName: 'med1'});
-      await pj.Plant.create({plantName: 'plant1', mediumId: 1});
-      await pj.Plant.create({plantName: 'plant2', mediumId: 1});
-      await pj.Medium.create({mediumName: 'med2'});
+      await pj.Medium.add({mediumName: 'med1'});
+      await pj.Plant.add({plantName: 'plant1', mediumId: 1});
+      await pj.Plant.add({plantName: 'plant2', mediumId: 1});
+      await pj.Medium.add({mediumName: 'med2'});
     });
 
     after(async () => {

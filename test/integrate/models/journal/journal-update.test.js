@@ -15,19 +15,19 @@ describe(`Journal()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
 
-      await pj.Environment.create({environmentName: 'Greenhouse #1'});
+      await pj.Environment.add({environmentName: 'Greenhouse #1'});
 
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1337,
         journalType: 'temp-sensor',
         journalValue: 6.5,
         environmentId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1337,
         journalType: 'rlf-sensor',
         journalValue: 80,
         environmentId: 1});
-      await pj.Journal.create({
+      await pj.Journal.add({
         journalDatetime: 1437,
         journalType: 'rlf-sensor',
         journalValue: 78,

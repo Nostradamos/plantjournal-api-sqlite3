@@ -13,8 +13,8 @@ describe(`Medium()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Medium.create({mediumName: 'testMdium1'});
-      await pj.Medium.create({mediumName: 'testMdium2'});
+      await pj.Medium.add({mediumName: 'testMdium1'});
+      await pj.Medium.add({mediumName: 'testMdium2'});
     });
 
     after(async () => {

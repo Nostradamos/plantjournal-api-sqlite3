@@ -1,6 +1,6 @@
 'use strict';
 
-const FamilyCreate = require('./family/family-create');
+const FamilyAdd = require('./family/family-add');
 const FamilyFind = require('./family/family-find');
 const FamilyDelete = require('./family/family-delete');
 const FamilyUpdate = require('./family/family-update');
@@ -11,7 +11,7 @@ const FamilyUpdate = require('./family/family-update');
  *          This Object contains information about how many families were
  *          found in total, how many are left and which families were found.
  *          It also holds information about the various families like
- *          the familyName, familyCreatedAt...
+ *          the familyName, familyAddedAt...
  * @property {number} ReturnFind.count
  *         How many families were found in total. If you don't search for
  *         specific families, this will be the amount of all families we know.
@@ -84,7 +84,7 @@ var Family = {};
  *           Unique Identifier for this family.
  * @property {String} familyName
  *           Name of this family.
- * @property {DatetimeUTC} familyCreatedAt
+ * @property {DatetimeUTC} familyAddedAt
  *           UTC Datetime when this family got created.
  * @property {DatetimeUTC} familyModifiedAt
  *           UTC Datetime when this family got modified the last time.
@@ -92,7 +92,7 @@ var Family = {};
 
 /**
  * Creates a new Family entry and returns the created family Object.
- * Internally calls src/controller/family-create.
+ * Internally calls src/controller/family-add.
  * @memberof plantJournal.Family
  *
  *
@@ -108,8 +108,8 @@ var Family = {};
  *         Object holding information about created family. There should
  *         only be one key, which is the id of the newly created family.
  */
-Family.create = async function(options) {
-  return await FamilyCreate.create(options);
+Family.add = async function(options) {
+  return await FamilyAdd.add(options);
 };
 
 /**
@@ -121,7 +121,7 @@ Family.create = async function(options) {
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which families you want
  *         to return. Queryable Attributes: familyId, familyName,
- *         familyCreatedAt, familyModifiedAt.
+ *         familyAddedAt, familyModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {ReturnFindFamily} - Found families
@@ -138,7 +138,7 @@ Family.find = async function(criteria) {
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which families you want
  *         to delete. Queryable Attributes: familyId, familyName,
- *         familyCreatedAt, familyModifiedAt.
+ *         familyAddedAt, familyModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {Object} returnFamilyDelete

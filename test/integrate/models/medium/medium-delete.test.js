@@ -16,22 +16,22 @@ describe(`Medium()`, () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
 
-      await pj.Medium.create({mediumName: 'medium1'});
-      await pj.Medium.create({mediumName: 'medium2'});
+      await pj.Medium.add({mediumName: 'medium1'});
+      await pj.Medium.add({mediumName: 'medium2'});
 
       // familyId:1
-      await pj.Family.create({familyName: 'family1'});
+      await pj.Family.add({familyName: 'family1'});
       // generationId: 1
-      await pj.Generation.create(
+      await pj.Generation.add(
         {generationName : 'generation1', familyId: 1});
       // plantId: 1 genotypeId: 1
-      await pj.Plant.create(
+      await pj.Plant.add(
         {generationId: 1, plantName: 'plant1', mediumId: 1});
       // plantId: 2 genotypeId: 2
-      await pj.Plant.create(
+      await pj.Plant.add(
         {generationId: 1, plantName: 'plant2', mediumId: 1});
       // plantId: 3 genotypeId: 3
-      await pj.Plant.create(
+      await pj.Plant.add(
         {generationId: 1, plantName: 'plant3', mediumId: 2});
     });
 

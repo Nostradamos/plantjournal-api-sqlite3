@@ -5,20 +5,20 @@ const _ = require('lodash');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const GenericCreate = require('../generic/generic-create');
-const GenerationCreate = require('../generation/generation-create');
+const GenericAdd = require('../generic/generic-add');
+const GenerationAdd = require('../generation/generation-add');
 
 /**
  * GentopyeCreate Class which creates a new Genotype.
- * Gets internally called from Genotype.create(). If you want
+ * Gets internally called from Genotype.add(). If you want
  * to know how Create works internally, see
- * src/controller/generic-create.
- * If you want to know how to use the Genotype.create()
+ * src/controller/generic-add.
+ * If you want to know how to use the Genotype.add()
  * API from outside, see src/models/Genotype #create().
  * @private
- * @extends GenericCreate
+ * @extends GenericAdd
  */
-class GenotypeCreate extends GenericCreate {
+class GenotypeAdd extends GenericAdd {
 
   /**
    * We need to validate input and throw errors if we're
@@ -84,32 +84,32 @@ class GenotypeCreate extends GenericCreate {
   }
 }
 
-GenotypeCreate.PARENT = GenerationCreate;
+GenotypeAdd.PARENT = GenerationAdd;
 
-GenotypeCreate.TABLE = CONSTANTS.TABLE_GENOTYPE;
+GenotypeAdd.TABLE = CONSTANTS.TABLE_GENOTYPE;
 
-GenotypeCreate.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
+GenotypeAdd.ATTR_ID = CONSTANTS.ATTR_ID_GENOTYPE;
 
-GenotypeCreate.ATTR_CREATED_AT = CONSTANTS.ATTR_CREATED_AT_GENOTYPE;
+GenotypeAdd.ATTR_ADDED_AT = CONSTANTS.ATTR_ADDED_AT_GENOTYPE;
 
-GenotypeCreate.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENOTYPE;
+GenotypeAdd.ATTR_MODIFIED_AT = CONSTANTS.ATTR_MODIFIED_AT_GENOTYPE;
 
-GenotypeCreate.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_PLANTS_GENOTYPE;
+GenotypeAdd.ATTR_FILL_CHILD_IDS = CONSTANTS.ATTR_PLANTS_GENOTYPE;
 
-GenotypeCreate.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_PLANT;
+GenotypeAdd.ATTR_CHILD_ID = CONSTANTS.ATTR_ID_PLANT;
 
-GenotypeCreate.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENOTYPE;
+GenotypeAdd.ATTRIBUTES = CONSTANTS.ATTRIBUTES_GENOTYPE;
 
-GenotypeCreate.SKIP_ATTRIBUTES = [
+GenotypeAdd.SKIP_ATTRIBUTES = [
   CONSTANTS.ATTR_PLANTS_GENOTYPE
 ];
 
-GenotypeCreate.DEFAULT_VALUES_ATTRIBUTES = {
+GenotypeAdd.DEFAULT_VALUES_ATTRIBUTES = {
   [CONSTANTS.ATTR_DESCRIPTION_GENOTYPE]: '',
   [CONSTANTS.ATTR_NAME_GENOTYPE]: '',
   [CONSTANTS.ATTR_PLANTS_GENOTYPE]: []
 };
 
-GenotypeCreate.PLURAL = CONSTANTS.PLURAL_GENOTYPE;
+GenotypeAdd.PLURAL = CONSTANTS.PLURAL_GENOTYPE;
 
-module.exports = GenotypeCreate;
+module.exports = GenotypeAdd;

@@ -1,6 +1,6 @@
 'use strict';
 
-const EnvironmentCreate = require('./environment/environment-create');
+const EnvironmentAdd = require('./environment/environment-add');
 const EnvironmentFind = require('./environment/environment-find');
 const EnvironmentDelete = require('./environment/environment-delete');
 const EnvironmentUpdate = require('./environment/environment-update');
@@ -26,7 +26,7 @@ let Environment = exports;
  *           Name of this environment.
  * @property {String} [environmentDescription]
  *           Description for this environment.
- * @property {DatetimeUTC} [environmentCreatedAt]
+ * @property {DatetimeUTC} [environmentAddedAt]
  *           UTC Datetime when this environment got created.
  * @property {DatetimeUTC} [environmentModifiedAt]
  *           UTC Datetime when this environment got modified the last time.
@@ -38,7 +38,7 @@ let Environment = exports;
  * @async
  * @param {EnvironmentObject} options
  *        Subset of EnvironmentObject. On create we will ignore
- *        environmentId, environmentCreatedAt and environmentModifiedAt.
+ *        environmentId, environmentAddedAt and environmentModifiedAt.
  *        All other are needed, otherwise we will throw an error.
  * @throws {Error}
  *         Will throw error if an unexpected sqlite error happens.
@@ -48,8 +48,8 @@ let Environment = exports;
  *         only be one key, which is the id of the newly created plant.
  * @return {ReturnFind} plantCreate.environments
  */
-Environment.create = async function(options) {
-  return await EnvironmentCreate.create(options);
+Environment.add = async function(options) {
+  return await EnvironmentAdd.add(options);
 };
 
 /**
@@ -59,7 +59,7 @@ Environment.create = async function(options) {
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which families you want
  *         to return. Queryable Attributes: environmentId, environmentName,
- *         environmentDescription, environmentCreatedAt, environmentModifiedAt.
+ *         environmentDescription, environmentAddedAt, environmentModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {ReturnFind}
@@ -79,7 +79,7 @@ Environment.find = async function(criteria) {
  * @param  {Criteria} [criteria]
  *         Criteria Object. With this you can control which families you want
  *         to delete. Queryable Attributes: familyId, familyName,
- *         familyCreatedAt, familyModifiedAt.
+ *         familyAddedAt, familyModifiedAt.
  * @throws {Error}
  *         Should only throw error if an unexpected sqlite error happens.
  * @return {Object} returnEnvironmentDelete
@@ -103,7 +103,7 @@ Environment.delete = async function(criteria) {
  * @async
  * @param  {EnvironmentObject} update
  *         Subset of EnvironmentObject containing attributes which should get
- *         updated. You can't update environmentId, environmentCreatedAt
+ *         updated. You can't update environmentId, environmentAddedAt
  *         and environmentUpdatedAt.
  * @param  {Criteria} criteria
  *         With criteria you can control which environments should get deleted.

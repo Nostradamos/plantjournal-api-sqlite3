@@ -12,7 +12,7 @@ const GenericDelete = require('../generic/generic-delete');
  * deletions. The delete() method gets called internally from
  * Generation.delete().
  * If you want to know how delete works internally, see
- * {@link GenericCreate|src/controller/generic-create}.
+ * {@link GenericAdd|src/controller/generic-add}.
  * If you want to know how to use the Generation.delete()
  * API from outside, see {@link Generation|src/models/Generation #create()}.
  * @private

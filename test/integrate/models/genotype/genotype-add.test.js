@@ -13,8 +13,8 @@ describe(`Genotype()`, () => {
     beforeEach(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'});
-      await pj.Generation.create({familyId: 1, generationName: 'F1'});
+      await pj.Family.add({familyName: 'testFamily1'});
+      await pj.Generation.add({familyId: 1, generationName: 'F1'});
     });
 
     afterEach(async () => {
@@ -32,7 +32,7 @@ describe(`Genotype()`, () => {
         undefined
       ];
       for (let value in toTest) {
-        await pj.Genotype.create(value)
+        await pj.Genotype.add(value)
           .should.be.rejectedWith(
             'First argument has to be an associative array');
         tested++;
@@ -41,24 +41,24 @@ describe(`Genotype()`, () => {
     });
 
     it(`should throw error if options.generationId is not an integer`, async () => {
-      await pj.Genotype.create({generationId: '1'})
+      await pj.Genotype.add({generationId: '1'})
         .should.be.rejectedWith('options.generationId has to be an integer');
     });
 
     it(`should throw an error if options.generationId does not reference a generation`, async () => {
-      await pj.Genotype.create({generationId: 1337})
+      await pj.Genotype.add({generationId: 1337})
         .should.be.rejectedWith(
           'options.generationId does not reference an existing Generation');
     });
 
     it(`should throw error if options.genotypeName is not a string`, async () => {
-      await pj.Genotype.create({generationId: 1, genotypeName: 1})
+      await pj.Genotype.add({generationId: 1, genotypeName: 1})
         .should.be.rejectedWith(
           'options.genotypeName has to be a string');
     });
 
     it(`should create a new genotypes entry and return Genotypes Object`, async () => {
-      let genotype = await pj.Genotype.create(
+      let genotype = await pj.Genotype.add(
         {
           generationId: 1,
           genotypeName: 'testGenotype1',
@@ -67,7 +67,7 @@ describe(`Genotype()`, () => {
       );
 
       let [createdAt, modifiedAt] = [
-        genotype.genotypes[1].genotypeCreatedAt,
+        genotype.genotypes[1].genotypeAddedAt,
         genotype.genotypes[1].genotypeModifiedAt];
 
       genotype.genotypes[1].should.deepEqual({
@@ -76,7 +76,7 @@ describe(`Genotype()`, () => {
         genotypeDescription: 'this is a very special genotype',
         genotypePlants: [],
         generationId: 1,
-        genotypeCreatedAt: createdAt,
+        genotypeAddedAt: createdAt,
         genotypeModifiedAt: modifiedAt
       });
 
@@ -85,7 +85,7 @@ describe(`Genotype()`, () => {
     });
 
     it(`should be possible to create a new genotype with genotypeName not set`, async () => {
-      let genotype = await pj.Genotype.create({generationId: 1});
+      let genotype = await pj.Genotype.add({generationId: 1});
 
       genotype.genotypes[1].should.containDeep({
         genotypeId: 1,
@@ -94,7 +94,7 @@ describe(`Genotype()`, () => {
     });
 
     it(`should be possible to create a new genotype without a generationId`, async () => {
-      let genotype = await pj.Genotype.create(
+      let genotype = await pj.Genotype.add(
         {genotypeName: 'genoTest42'});
 
       genotype.genotypes[1].should.containDeep({
@@ -107,7 +107,7 @@ describe(`Genotype()`, () => {
     });
 
     it(`should not create a new genotype with a generation if generationId is null`, async () => {
-      let genotype = await pj.Genotype.create(
+      let genotype = await pj.Genotype.add(
         {genotypeName: 'genoTest42', generationId: null});
 
       genotype.genotypes[1].should.containDeep({
@@ -120,7 +120,7 @@ describe(`Genotype()`, () => {
     });
 
     it(`should be possible to create a new genotype and generation at once`, async () => {
-      let genotype = await pj.Genotype.create(
+      let genotype = await pj.Genotype.add(
         {genotypeName: 'genoTest43', generationName: 'F2', familyId: 1});
       genotype.should.containDeep({
         genotypes: {
@@ -140,7 +140,7 @@ describe(`Genotype()`, () => {
     });
 
     it(`should be possible to create a new genotype, generation and family at once`, async () => {
-      let genotype = await pj.Genotype.create({
+      let genotype = await pj.Genotype.add({
         genotypeName: 'genoTest43',
         generationName: 'F2',
         familyName: 'TestFamily2'});

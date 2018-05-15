@@ -16,9 +16,9 @@ describe(`Family()`, () => {
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
-      await pj.Family.create({familyName: 'testFamily1'});
-      await pj.Family.create({familyName: 'testFmily2'});
-      await pj.Family.create({familyName: 'testFmily3'});
+      await pj.Family.add({familyName: 'testFamily1'});
+      await pj.Family.add({familyName: 'testFmily2'});
+      await pj.Family.add({familyName: 'testFmily3'});
 
     });
 
@@ -94,20 +94,20 @@ describe(`Family()`, () => {
       rowsFam[0].familyModifiedAt.should.not.eql(1);
     });
 
-    it(`should not be possible to manually change familyCreatedAt`, async () => {
+    it(`should not be possible to manually change familyAddedAt`, async () => {
       let updatedFamilies = await pj.Family.update(
-        {familyCreatedAt: 1},
+        {familyAddedAt: 1},
         {where: {familyId: 2}}
       );
 
       updatedFamilies.length.should.eql(0);
 
       let rowsFam = await sqlite.all(`
-        SELECT ${CONSTANTS.ATTR_ID_FAMILY}, ${CONSTANTS.ATTR_CREATED_AT_FAMILY}
+        SELECT ${CONSTANTS.ATTR_ID_FAMILY}, ${CONSTANTS.ATTR_ADDED_AT_FAMILY}
         FROM ${CONSTANTS.TABLE_FAMILY}
         WHERE ${CONSTANTS.ATTR_ID_FAMILY} = 2`);
 
-      rowsFam[0].familyCreatedAt.should.not.eql(1);
+      rowsFam[0].familyAddedAt.should.not.eql(1);
     });
 
 
