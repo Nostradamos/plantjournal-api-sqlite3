@@ -490,3 +490,11 @@ UtilsQuery.stripSQL = function(sql) {
 
   return sql;
 };
+
+UtilsQuery.runSquel = async (sqlite, squel) => {
+  let query = squel.toParam();
+  let queryText = query.text;
+  let queryParams = query.values;
+
+  return sqlite.run(queryText, queryParams);
+}

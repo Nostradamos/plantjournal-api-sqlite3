@@ -1,6 +1,6 @@
 'use strict';
 
-const sqlite = require('sqlite');
+const knex = require('knex');
 const logger = require('./logger');
 
 /**
@@ -18,6 +18,7 @@ class plantJournal {
    */
   constructor(options) {
     this.options = options;
+    this.knex = null;
   }
 
   /**
@@ -29,13 +30,13 @@ class plantJournal {
    *         database.
    */
   async connect() {
-    await sqlite.open(this.options);
+    this.knex = require('knex')(this.options);
     logger.info('Creating default tables');
-    await require('./create-tables')();
+    //await require('./create-tables')();
 
     // Enable foreign keys
     try {
-      await sqlite.all('PRAGMA foreign_keys = ON;');
+      await knex.raw('PRAGMA foreign_keys = ON;');
     } catch (err) {
       // ToDo: Get the exact error message for this.
       throw new Error('SQLite Database does not support foreign keys. Recompile with foreign_keys support!');
@@ -44,9 +45,8 @@ class plantJournal {
     // Make sure we have json support
     // ToDo: Maybe this is obsolet and JSON is always enabled?!
     let row;
-
     try {
-      row = await sqlite.get(
+      row = await knex.raw(
         `SELECT json_extract('{"a":13, "b":42}', '$.b') as test;`);
     } catch (err) {
       throw err;
@@ -61,7 +61,7 @@ class plantJournal {
    * Disconnect from sqlite3 database
    */
   async disconnect() {
-    await sqlite.close();
+    return this.knex.destroy();
   }
 }
 

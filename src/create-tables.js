@@ -1,13 +1,12 @@
 'use strict';
 
-const sqlite = require('sqlite');
 const CONSTANTS = require('./constants');
 
 /**
  * This method creates all database tables.
  */
-module.exports =  async function createTables() {
-  await sqlite.run(`
+module.exports =  async function createTables(knex) {
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_ENVIRONMENT} (
       environmentId INTEGER,
       environmentName TEXT NOT NULL,
@@ -18,7 +17,7 @@ module.exports =  async function createTables() {
     );
   `);
 
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_MEDIUM} (
       mediumId INTEGER,
       mediumName TEXT NOT NULL,
@@ -32,7 +31,7 @@ module.exports =  async function createTables() {
     );
   `);
 
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_FAMILY} (
       familyId INTEGER,
       familyName TEXT NOT NULL,
@@ -43,7 +42,7 @@ module.exports =  async function createTables() {
     );
   `);
 
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${ CONSTANTS.TABLE_GENERATION} (
       generationId INTEGER,
       generationName TEXT NOT NULL,
@@ -57,7 +56,7 @@ module.exports =  async function createTables() {
     );
   `);
 
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_GENOTYPE} (
       genotypeId INTEGER,
       genotypeName TEXT NOT NULL DEFAULT '',
@@ -71,7 +70,7 @@ module.exports =  async function createTables() {
     );
   `);
 
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_PLANT} (
       plantId INTEGER,
       plantName TEXT NOT NULL,
@@ -94,7 +93,7 @@ module.exports =  async function createTables() {
 
   // We have to this after plant & generation creation becaus of the
   // foreign keys.
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_GENERATION_PARENT} (
       parentId INTEGER,
       generationId NOT NULL,
@@ -107,7 +106,7 @@ module.exports =  async function createTables() {
     );
   `);
 
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_JOURNAL} (
       journalId INTEGER,
       journalDatetime DATETIME NOT NULL,
@@ -128,7 +127,7 @@ module.exports =  async function createTables() {
     );
   `);
 
-  await sqlite.run(`
+  await knex.raw(`
     CREATE TABLE IF NOT EXISTS ${CONSTANTS.TABLE_ATTACHMENT} (
       ${CONSTANTS.ATTR_ID_ATTACHMENT} INTEGER,
       ${CONSTANTS.ATTR_FILENAME_ATTACHMENT} TEXT NOT NULL,
