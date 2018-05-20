@@ -24,7 +24,6 @@ class plantJournal {
     this.knex = null;
     this.logger = newLogger();
 
-    this.Family = new Family(this);
   }
 
   /**
@@ -36,7 +35,13 @@ class plantJournal {
    *         database.
    */
   async connect() {
-    this.knex = Knex(this.options);
+    let self = this;
+    this.knex = Knex(this.options)
+      .on('query', function(data) {
+        //self.logger.debug(self.knex.Client._formatQuery(data.sql, data.bindings));
+        let queryStr = self.knex.client._formatQuery(data.sql, data.bindings);
+        self.logger.debug('Query:', queryStr);
+      });
     this.logger.info('Creating default tables');
     await require('./create-tables')(this.knex);
 
@@ -46,6 +51,8 @@ class plantJournal {
     // Make sure we have json support
     // ToDo: Maybe this is obsolet and JSON is always enabled?!
     await this.sqlite3TestForJSONSupport();
+
+    this.Family = new Family(this);
   }
 
   /**
