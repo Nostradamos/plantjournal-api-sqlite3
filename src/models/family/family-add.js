@@ -9,27 +9,6 @@ const UtilsKnex = require('../../utils/utils-knex');
 
 
 class FamilyAdd extends AbstractModelAdd {
-  async add(options) {
-    let self = {insertRow: {}};
-    let context = {options, creatingClassName: this.name, addedAt: Utils.getDatetimeUTC()};
-
-    this.validate(self, context);
-    this.setFields(self, context);
-    this.setAddedAtAndModifiedAtFields(self, context);
-    this.logger.info(self, context);
-
-    let transaction = await UtilsKnex.newTransaction(this.knex);
-    try {
-      await this.insert(self, context, transaction);
-    } catch(err) {
-      this.logger.error(err);
-      this.logger.debug('Rolling back...');
-      await transaction.rollback();
-    }
-    await transaction.commit();
-
-    return this.buildReturnObject(self, context);
-  }
 
   /**
    * We need to validate the options.familyName property and throw
@@ -64,50 +43,6 @@ class FamilyAdd extends AbstractModelAdd {
     Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_FAMILY);
     Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_FAMILY);
     Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);
-  }
-
-  init(self, context) {
-    self.insertRow = {};
-  }
-
-  setFields(self, context) {
-    for(let attr of this.constructor.ATTRIBUTES) {
-      if (_.indexOf(this.constructor.SKIP_ATTRIBUTES, attr) !== -1) {
-        continue;
-      }
-      let value;
-      if (!_.isUndefined(context[attr])) {
-        value = context[attr];
-      } else if (!_.isUndefined(context.options[attr])) {
-        value = context.options[attr];
-      } else if (!_.isUndefined(this.constructor.DEFAULT_VALUES_ATTRIBUTES[attr])) {
-        value = this.constructor.DEFAULT_VALUES_ATTRIBUTES[attr];
-      } else {
-        value = null;
-      }
-      self.insertRow[attr] = value;
-    }
-  }
-
-  setAddedAtAndModifiedAtFields(self, context) {
-    self.insertRow[this.constructor.ATTR_ADDED_AT] = context.addedAt;
-    self.insertRow[this.constructor.ATTR_MODIFIED_AT] = context.addedAt;
-  }
-
-  async insert(self, context, transaction) {
-    let rows = await transaction.insert(self.insertRow).into(this.constructor.TABLE);
-    self.insertId = rows[0]; 
-  }
-
-  buildReturnObject(self, context) {
-    return {
-      [this.constructor.PLURAL]: {
-        [self.insertId]: {
-          [this.constructor.ATTR_ID]: self.insertId,
-          ...self.insertRow
-        }
-      }
-    }
   }
 }
 

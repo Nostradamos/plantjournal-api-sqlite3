@@ -2,9 +2,9 @@
 'use strict';
 
 require('should');
-const sqlite = require('sqlite');
+const plantJournal = require('../../../../src/plant-journal');
+const CONSTANTS = require('../../../../src/constants');
 
-const plantJournal = require('../../../../src/pj');
 
 describe(`Family()`, () => {
 
@@ -12,7 +12,12 @@ describe(`Family()`, () => {
     let pj;
 
     beforeEach(async () => {
-      pj = new plantJournal(':memory:');
+      pj = new plantJournal({
+        client: 'sqlite3',
+        connection: {
+          filename: ":memory:"
+        }
+      });
       await pj.connect();
     });
 
@@ -72,7 +77,7 @@ describe(`Family()`, () => {
         }
       );
 
-      let rows = await sqlite.all('SELECT * FROM families');
+      let rows = await pj.knex(CONSTANTS.TABLE_FAMILY).select('*');
       family.families[1].should.containDeep(rows[0]);
     });
 
@@ -92,7 +97,7 @@ describe(`Family()`, () => {
           familyGenerations: []
         }
       );
-      let rows = await sqlite.all('SELECT * FROM families');
+      let rows = await pj.knex(CONSTANTS.TABLE_FAMILY).select('*');
       family.families[1].should.containDeep(rows[0]);
     });
   });
