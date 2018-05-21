@@ -82,7 +82,7 @@ class GenerationAdd extends AbstractModelAdd {
     try {
       await super.insert(self, context, transaction);
     } catch(err) {
-      if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+      if (err.code === 'SQLITE_CONSTRAINT') {
         throw new Error('options.familyId does not reference an existing Family');
       }
       throw err;
@@ -106,7 +106,7 @@ class GenerationAdd extends AbstractModelAdd {
         .insert(self.insertParentRows)
         .into(this.constructor.TABLE_PARENTS);
     } catch (err) {
-      if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
+      if (err.code === 'SQLITE_CONSTRAINT') {
         throw new Error('options.generationParents contains at least one plantId which does not reference an existing plant');
       }
       throw err;

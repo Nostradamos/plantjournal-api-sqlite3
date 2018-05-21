@@ -7,28 +7,47 @@ const UtilsKnex = require('../../utils/utils-knex');
 
 
 class InSeriesCaller {
-  constructor(methodHolderObjects, context, selfGenerator) {
+  constructor(methodHolderObjects, context, selfGenerator, logger) {
+    this.logger = logger;
     this.methodHolderObjects = methodHolderObjects;
     this.selfs = methodHolderObjects.map(selfGenerator);
     this.context = context;
+    this.logger.debug(`${this.constructor.name} selfs:`, JSON.stringify(this.selfs));
   }
 
-  async _call(shouldAwait, functionName, ...args) {
-    this.methodHolderObjects.forEach((async (methodHolder, i) => {
-        let method = methodHolder[functionName];
-        let fullArgs = [this.selfs[i], this.context, ...args];
-        let boundMethod = method(fullArgs).bind(methodHolder);
-        console.log(fullArgs);
-        shouldAwait ? await boundMethod() : boundMethod();
-    }).bind(this));
+  async _call(shouldAwait, reverse, functionName, ...args) {
+    if(reverse) {
+      for(let i=this.methodHolderObjects.length-1;i>=0;i--) {
+        let methodHolder = this.methodHolderObjects[i];
+        await this._callMethodHolder(shouldAwait, methodHolder, i, functionName, ...args);
+      }
+    } else {
+      for(let i=0;i<this.methodHolderObjects.length;i++) {
+        let methodHolder = this.methodHolderObjects[i];
+        await this._callMethodHolder(shouldAwait, methodHolder, i, functionName, ...args);
+      }
+    }
   }
 
-  call(functionName, ...args) {
-    return this._call(false, functionName, ...args);
+  async _callMethodHolder(shouldAwait, methodHolder, i, functionName, ...args) {
+    let fullArgs = [this.selfs[i], this.context, ...args];
+    let method = methodHolder[functionName].bind(methodHolder);
+    this.logger.debug(`${this.constructor.name} calling ${methodHolder.constructor.name}.${functionName}(...)`);
+    shouldAwait ? await method(...fullArgs) : method(...fullArgs);
+  }
+
+  async call(functionName, ...args) {
+    console.log('a', functionName);
+    await this._call(false, false, functionName, ...args);
+    console.log('b', functionName);
   }
 
   async asyncCall(functionName, ...args) {
-    await this._call(true, functionName, ...args);
+    await this._call(true, false, functionName, ...args);
+  }
+
+  async asyncCallReverse(functionName, ...args) {
+    await this._call(true, true, functionName, ...args);
   }
 }
 
@@ -36,6 +55,7 @@ class AbstractModelAdd {
   constructor(model) {
     this.model = model;
     this.knex = this.model.plantJournal.knex;
+    this.plantJournal = this.model.plantJournal;
     this.logger = this.model.plantJournal.logger;
     this._resolveParentClasses();
   }
@@ -62,25 +82,26 @@ class AbstractModelAdd {
     };
 
     let instancesToCall = this.RELATED_INSTANCES.filter(
-      instance => instance.validate(context) !== false);
+      instance => instance.validate(context, instance === this) !== false);
 
-    let inSeriesCaller = new InSeriesCaller(instancesToCall, context, () => {insertRow: {}}); 
+    let inSeriesCaller = new InSeriesCaller(instancesToCall, context, () => {return {insertRow: {}}}, this.logger); 
 
-    inSeriesCaller.call('setFields');
-    inSeriesCaller.call('setAddedAtAndModifiedAtFields');
+    await inSeriesCaller.call('setFields');
+    await inSeriesCaller.call('setAddedAtAndModifiedAtFields');
 
     let transaction = await UtilsKnex.newTransaction(this.knex);
     try {
-      await inseriesCaller.asyncCall('insert', transaction);
+      await inSeriesCaller.asyncCallReverse('insert', transaction);
     } catch(err) {
-      this.logger.error(err);
+      this.logger.error(`${this.constructor.name} Error during insert:`, err);
       this.logger.debug('Rolling back...');
       await transaction.rollback();
+      throw err;
     }
     await transaction.commit();
     
     let returnObject = {};
-    inSeriesCaller.call('buildReturnObject', returnObject);
+    await inSeriesCaller.call('buildReturnObject', returnObject);
     this.logger.debug(`${this.constructor.name} returnObject: ${JSON.stringify(returnObject)}`);
     return returnObject;
   }
@@ -129,8 +150,21 @@ class AbstractModelAdd {
   }
 
   async insert(self, context, transaction) {
+    if(this.constructor.PARENT) {
+      let parentAttrId = this.plantJournal[this.constructor.PARENT].INSTANCE_ADD.constructor.ATTR_ID;
+      let parentId;
+      if(context.insertIds[parentAttrId]) {
+        parentId = context.insertIds[parentAttrId];
+      } else if(context.options[parentAttrId]) {
+        parentId = context.options[parentAttrId];
+      } else {
+        throw new Error(`${this.constructor.name} #insert() couldn't get parentId`);
+      }
+      self.insertRow[parentAttrId] = parentId;
+    }
+    this.logger.debug(`${this.constructor.name} insertRow:`, self.insertRow);
     let rows = await transaction.insert(self.insertRow).into(this.constructor.TABLE);
-    context.insertIds[this.constructor.ATTR_ID] = rows[0]; 
+    context.insertIds[this.constructor.ATTR_ID] = rows[0];
   }
 
   buildReturnObject(self, context, returnObject) {

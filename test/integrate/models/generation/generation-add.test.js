@@ -52,7 +52,7 @@ describe(`Generation()`, () => {
           'options.generationParents has to be an array of integers');
     });
 
-    it(`should throw Error if familyId does not reference an entry in families`, async () => {
+    it(`should throw error if familyId does not reference an entry in families`, async () => {
       await pj.Generation.add(
         {familyId: 1337, generationName: 'testGeneration3'})
         .should.be.rejectedWith(

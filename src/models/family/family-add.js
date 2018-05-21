@@ -25,20 +25,20 @@ class FamilyAdd extends AbstractModelAdd {
    *         Return false if we don't need to insert this record and this class
    *         reference and it's parents should get deleted from the callStack.
    */
-  validate(context) {
+  validate(context, isOrigin) {
     let options = context.options;
 
     // Some additional validations if we got called from a child class
-    /*if(context.creatingClassName !== this.name) {
+    if(!isOrigin) {
       if(_.has(options, CONSTANTS.ATTR_ID_FAMILY)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_FAMILY);
-        return true;
-    }
+        return false;
+      }
 
       if(!options[CONSTANTS.ATTR_NAME_FAMILY]) {
         throw new Error(`options.familyId is not set. Missing familyId or attributes to create a new family.`);
       }
-    }*/
+    }
 
     Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_FAMILY);
     Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_FAMILY);
