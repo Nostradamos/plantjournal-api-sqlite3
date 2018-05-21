@@ -3,14 +3,14 @@
 class AbstractModel {
   constructor(plantJournal) {
     this.plantJournal = plantJournal;
-    this.modelAdd = new this.constructor.CLASS_ADD(this);
-    this.modelDelete = null;
-    this.modelUpdate = null;
-    this.modelFind = null;
+    this.INSTANCE_ADD = new this.constructor.CLASS_ADD(this);
+    this.INSTANCE_DELETE = null;
+    this.INSTANCE_UPDATE = null;
+    this.INSTANCE_FIND = null;
   }
 
   async add(...args) {
-    return await this.modelAdd.add(...args);
+    return await this.INSTANCE_ADD.add(...args);
   }
 }
 

@@ -2,16 +2,21 @@
 'use strict';
 
 require('should');
+
 const CONSTANTS = require('../../../../src/constants');
-const plantJournal = require('../../../../src/pj');
-const sqlite = require('sqlite');
+const plantJournal = require('../../../../src/plant-journal');
 
 describe(`Generation()`, () => {
   describe(`#create()`, () => {
     let pj;
 
     beforeEach(async () => {
-      pj = new plantJournal(':memory:');
+      pj = new plantJournal({
+        client: 'sqlite3',
+        connection: {
+          filename: ":memory:"
+        }
+      });
       await pj.connect();
       await pj.Family.add({familyName: 'testName'});
     });
@@ -53,7 +58,7 @@ describe(`Generation()`, () => {
         .should.be.rejectedWith(
           'options.familyId does not reference an existing Family');
 
-      let result = await sqlite.all(`
+      let result = await pj.knex.raw(`
         SELECT
           ${CONSTANTS.ATTR_ID_FAMILY},
           ${CONSTANTS.ATTR_ID_GENERATION},
@@ -105,7 +110,7 @@ describe(`Generation()`, () => {
         }
       });
 
-      let rows = await sqlite.all(`
+      let rows = await pj.knex.raw(`
         SELECT
           ${CONSTANTS.ATTR_ID_GENERATION},
           ${CONSTANTS.ATTR_DESCRIPTION_GENERATION},
@@ -128,7 +133,7 @@ describe(`Generation()`, () => {
         generationDescription: '',
       });
 
-      let rows = await sqlite.all(`
+      let rows = await pj.knex.raw(`
         SELECT
           ${CONSTANTS.ATTR_ID_GENERATION},
           ${CONSTANTS.ATTR_DESCRIPTION_GENERATION}
@@ -176,7 +181,7 @@ describe(`Generation()`, () => {
 
   describe(`#create() (with options.generationParents)`, () => {
     let pj;
-
+    return;
     before(async () => {
       pj = new plantJournal(':memory:');
       await pj.connect();
@@ -216,7 +221,7 @@ describe(`Generation()`, () => {
           }
         }
       });
-      let rows = await sqlite.all('SELECT * FROM generation_parents');
+      let rows = await pj.knex.raw('SELECT * FROM generation_parents');
 
       rows.should.deepEqual([
         {parentId: 1, generationId: 2, plantId: 1},
@@ -233,7 +238,7 @@ describe(`Generation()`, () => {
         }
       ).should.be.rejectedWith('options.generationParents contains at least one plantId which does not reference an existing plant');
 
-      let rowsGen = await sqlite.all(`
+      let rowsGen = await pj.knex.raw(`
         SELECT
           ${CONSTANTS.ATTR_ID_GENERATION},
           ${CONSTANTS.ATTR_NAME_GENERATION}

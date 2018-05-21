@@ -22,10 +22,10 @@ class FamilyAdd extends AbstractModelAdd {
    *         all classes in callStack.
    * @throws {Error}
    * @return {Boolean}
-   *         Return true if we don't need to insert this record and this class
+   *         Return false if we don't need to insert this record and this class
    *         reference and it's parents should get deleted from the callStack.
    */
-  validate(self, context) {
+  validate(context) {
     let options = context.options;
 
     // Some additional validations if we got called from a child class

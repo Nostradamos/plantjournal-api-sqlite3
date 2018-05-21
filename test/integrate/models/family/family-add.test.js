@@ -7,7 +7,6 @@ const CONSTANTS = require('../../../../src/constants');
 
 
 describe(`Family()`, () => {
-
   describe(`#create()`, () => {
     let pj;
 

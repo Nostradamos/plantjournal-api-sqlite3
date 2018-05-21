@@ -1,10 +1,10 @@
 'use strict';
 
 const Knex = require('knex');
-const sqlite = require('sqlite');
 const newLogger = require('./logger');
 
 const Family = require('./models/family/family');
+const Generation = require('./models/generation/generation');
 
 /**
  * The main plantJournal class.
@@ -53,6 +53,7 @@ class plantJournal {
     await this.sqlite3TestForJSONSupport();
 
     this.Family = new Family(this);
+    this.Generation = new Generation(this);
   }
 
   /**
