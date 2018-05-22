@@ -34,14 +34,13 @@ class GenotypeAdd extends AbstractModelAdd {
    *         reference and it's parents should get deleted from the callStack.
    * @throws {Error}
    */
-  validate(self, context) {
+  validate(context, isOrigin) {
     let options = context.options;
-
     // Some additional validations if we got called from a child class
-    if(context.creatingClassName !== this.name) {
+    if(!isOrigin) {
       if(_.has(options, CONSTANTS.ATTR_ID_GENOTYPE)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENOTYPE);
-        return;
+        return false;
       }
 
       if(_.has(options, CONSTANTS.ATTR_CLONED_FROM_PLANT)) {

@@ -81,9 +81,17 @@ class AbstractModelAdd {
       insertIds: {}
     };
 
-    let instancesToCall = this.RELATED_INSTANCES.filter(
-      instance => instance.validate(context, instance === this) !== false);
+    let instancesToCall = [];
+    for(let instance of this.RELATED_INSTANCES) {
+      this.logger.debug(`${this.constructor.name} Calling ${instance.constructor.name}.validate(...)`);
+      if(instance.validate(context, instance === this) === false) {
+        this.logger.debug(`${this.constructor.name} skipping ${instance.constructor.name} and parents`);
+        break;
+      }
+      instancesToCall.push(instance);
+    }
 
+    this.logger.debug(`${this.constructor.name} instancesToCall: ${instancesToCall.map((ins => ins.constructor.name))}`);
     let inSeriesCaller = new InSeriesCaller(instancesToCall, context, () => {return {insertRow: {}}}, this.logger); 
 
     await inSeriesCaller.call('setFields');
@@ -152,13 +160,11 @@ class AbstractModelAdd {
   async insert(self, context, transaction) {
     if(this.constructor.PARENT) {
       let parentAttrId = this.plantJournal[this.constructor.PARENT].INSTANCE_ADD.constructor.ATTR_ID;
-      let parentId;
+      let parentId = null;
       if(context.insertIds[parentAttrId]) {
         parentId = context.insertIds[parentAttrId];
       } else if(context.options[parentAttrId]) {
         parentId = context.options[parentAttrId];
-      } else {
-        throw new Error(`${this.constructor.name} #insert() couldn't get parentId`);
       }
       self.insertRow[parentAttrId] = parentId;
     }

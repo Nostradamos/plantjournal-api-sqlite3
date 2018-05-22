@@ -84,7 +84,7 @@ describe(`Genotype()`, () => {
         genotypeModifiedAt: modifiedAt
       });
 
-      let rows = await sqlite.all(`SELECT * FROM genotypes`);
+      let rows = await pj.knex.raw(`SELECT * FROM genotypes`);
       genotype.genotypes[1].should.containDeep(rows[0]);
     });
 
@@ -106,7 +106,7 @@ describe(`Genotype()`, () => {
         generationId: null,
       });
 
-      let rows = await sqlite.all(`SELECT * FROM genotypes`);
+      let rows = await pj.knex.raw(`SELECT * FROM genotypes`);
       genotype.genotypes[1].should.containDeep(rows[0]);
     });
 
@@ -119,7 +119,7 @@ describe(`Genotype()`, () => {
         generationId: null,
       });
 
-      let rows = await sqlite.all(`SELECT * FROM generations`);
+      let rows = await pj.knex.raw(`SELECT * FROM generations`);
       rows.length.should.eql(1);
     });
 

@@ -39,7 +39,7 @@ class GenerationAdd extends AbstractModelAdd {
 
     // Some additional validations if we got called from a child class
     if(!isOrigin) {
-      if(options[CONSTANTS.ATTR_ID_GENERATION] === null) return true;
+      if(options[CONSTANTS.ATTR_ID_GENERATION] === null) return false;
 
       if(_.has(options, CONSTANTS.ATTR_ID_GENERATION)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
