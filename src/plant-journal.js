@@ -5,6 +5,7 @@ const newLogger = require('./logger');
 
 const Family = require('./models/family/family');
 const Generation = require('./models/generation/generation');
+const Genotype = require('./models/genotype/genotype');
 
 /**
  * The main plantJournal class.
@@ -54,6 +55,7 @@ class plantJournal {
 
     this.Family = new Family(this);
     this.Generation = new Generation(this);
+    this.Genotype = new Genotype(this);
   }
 
   /**

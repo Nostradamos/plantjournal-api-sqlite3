@@ -5,7 +5,8 @@ const _ = require('lodash');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const AbstractModelAdd = require('../abstract/abstract-model-add');
+const GenericAdd = require('../generic/generic-add');
+const GenerationAdd = require('../generation/generation-add');
 
 /**
  * GentopyeCreate Class which creates a new Genotype.
@@ -17,7 +18,7 @@ const AbstractModelAdd = require('../abstract/abstract-model-add');
  * @private
  * @extends GenericAdd
  */
-class GenotypeAdd extends AbstractModelAdd {
+class GenotypeAdd extends GenericAdd {
 
   /**
    * We need to validate input and throw errors if we're
@@ -34,19 +35,19 @@ class GenotypeAdd extends AbstractModelAdd {
    *         reference and it's parents should get deleted from the callStack.
    * @throws {Error}
    */
-  validate(self, context) {
+  static validate(self, context) {
     let options = context.options;
 
     // Some additional validations if we got called from a child class
     if(context.creatingClassName !== this.name) {
       if(_.has(options, CONSTANTS.ATTR_ID_GENOTYPE)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENOTYPE);
-        return;
+        return true;
       }
 
       if(_.has(options, CONSTANTS.ATTR_CLONED_FROM_PLANT)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_CLONED_FROM_PLANT);
-        return false;
+        return true;
       }
     }
 
@@ -69,13 +70,13 @@ class GenotypeAdd extends AbstractModelAdd {
    *         If generationId reference fails we will throw custom error,
    *         everything else should be a sqlite error.
    */
-  async insert(self, context, transaction) {
+  static async executeQuery(self, context) {
     try {
-      await super.insert(self, context, transaction);
+      await super.executeQuery(self, context);
     } catch (err) {
       // We only have one foreign key so we can safely assume, if a
       // foreign key constraint fails, it's the generationId constraint.
-      if (err.code === 'SQLITE_CONSTRAINT') {
+      if (err.message === 'SQLITE_CONSTRAINT: FOREIGN KEY constraint failed') {
         throw new Error('options.generationId does not reference an existing Generation');
       }
       throw err;
@@ -83,7 +84,7 @@ class GenotypeAdd extends AbstractModelAdd {
   }
 }
 
-GenotypeAdd.PARENT = 'Generation';
+GenotypeAdd.PARENT = GenerationAdd;
 
 GenotypeAdd.TABLE = CONSTANTS.TABLE_GENOTYPE;
 

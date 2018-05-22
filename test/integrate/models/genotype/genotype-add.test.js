@@ -2,16 +2,20 @@
 'use strict';
 
 require('should');
-const sqlite = require('sqlite');
 
-const plantJournal = require('../../../../src/pj');
+const plantJournal = require('../../../../src/plant-journal');
 
 describe(`Genotype()`, () => {
   describe(`#create()`, () => {
     let pj;
 
     beforeEach(async () => {
-      pj = new plantJournal(':memory:');
+      pj = new plantJournal({
+        client: 'sqlite3',
+        connection: {
+          filename: ":memory:"
+        }
+      });
       await pj.connect();
       await pj.Family.add({familyName: 'testFamily1'});
       await pj.Generation.add({familyId: 1, generationName: 'F1'});

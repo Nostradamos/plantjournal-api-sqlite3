@@ -34,16 +34,16 @@ class GenerationAdd extends AbstractModelAdd {
    *         Return true if we don't need to insert this record and this class
    *         reference and it's parents should get deleted from the callStack.
    */
-  validate(context) {
+  validate(context, isOrigin) {
     let options = context.options;
 
     // Some additional validations if we got called from a child class
-    /*if(context.creatingClassName !== this.name) {
+    if(!isOrigin) {
       if(options[CONSTANTS.ATTR_ID_GENERATION] === null) return true;
 
       if(_.has(options, CONSTANTS.ATTR_ID_GENERATION)) {
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENERATION);
-        return true;
+        return false;
       }
 
       // If we don't have any attributes available for creating a new
@@ -51,9 +51,9 @@ class GenerationAdd extends AbstractModelAdd {
       if(!options[CONSTANTS.ATTR_NAME_GENERATION] &&
          !options[CONSTANTS.ATTR_PARENTS_GENERATION] &&
          !options[CONSTANTS.ATTR_DESCRIPTION_GENERATION]) {
-        return true;
+        return false;
       }
-    }*/
+    }
 
     Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_GENERATION);
 
