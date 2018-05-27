@@ -61,14 +61,17 @@ class AbstractModelAdd {
   }
 
   _resolveParentClasses() {
-    this.RELATED_INSTANCES = [this];
-    let parent = this.constructor.PARENT;
-    let plantJournal = this.model.plantJournal;
-    if(parent) {
-      this.RELATED_INSTANCES = [this, ...plantJournal[parent].INSTANCE_ADD.RELATED_INSTANCES];
-    }
-    this.logger.debug(`${this.constructor.name} RELATED_INSTANCES: ${this.RELATED_INSTANCES.map((instance) => instance.constructor.name)}`);
+    this.RELATED_INSTANCES = [
+			this,
+			 ...this._resolveParentClassesFor(this.constructor.PARENT)];
+    
+		this.logger.debug(`${this.constructor.name} RELATED_INSTANCES: ${this.RELATED_INSTANCES.map((instance) => instance.constructor.name)}`);
   }
+
+	_resolveParentClassesFor(modelName) {
+		if(this.model.plantJournal[modelName] === undefined) return []
+		return this.model.plantJournal[modelName].INSTANCE_ADD.RELATED_INSTANCES;
+	}
 
   async add(options) {
     this.logger.debug(`${this.constructor.name} #create() options:`, JSON.stringify(options));

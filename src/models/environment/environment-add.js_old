@@ -5,7 +5,7 @@ const _ = require('lodash');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const AbstractModelAdd = require('../abstract/abstract-model-add');
+const GenericAdd = require('../generic/generic-add');
 
 /**
  * This class creates a new Environment and gets internally called from
@@ -15,7 +15,7 @@ const AbstractModelAdd = require('../abstract/abstract-model-add');
  * @private
  * @extends GenericAdd
  */
-class EnvironmentAdd extends AbstractModelAdd {
+class EnvironmentAdd extends GenericAdd {
   /**
    * We need to validate the properties for new environment.
    * @param  {object} self
@@ -30,11 +30,11 @@ class EnvironmentAdd extends AbstractModelAdd {
    *         Return true if we don't need to insert this record and this class
    *         reference and it's parents should get deleted from the callStack.
    */
-  validate(context, isOrigin) {
+  static validate(self, context) {
     let options = context.options;
 
     // Some additional validations if we got called from a child class
-    if(isOrigin === false) {
+    if(context.creatingClassName !== this.name) {
       if(_.has(options, CONSTANTS.ATTR_ID_ENVIRONMENT)) {
         if(options[CONSTANTS.ATTR_ID_ENVIRONMENT] === null) return true;
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_ENVIRONMENT);

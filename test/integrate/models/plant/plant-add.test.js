@@ -3,23 +3,27 @@
 
 
 require('should');
-const sqlite = require('sqlite');
 
-const plantJournal = require('../../../../src/pj');
+const plantJournal = require('../../../../src/plant-journal');
 
 describe(`Plant()`, () => {
   describe(`#create()`, () => {
     let pj;
 
     beforeEach(async () => {
-      pj = new plantJournal(':memory:');
+      pj = new plantJournal({
+        client: 'sqlite3',
+        connection: {
+          filename: ":memory:"
+        }
+      });
       await pj.connect();
       await pj.Family.add({familyName: 'testFamily1'});
       await pj.Generation.add({familyId: 1, generationName: 'F1'});
       await pj.Genotype.add(
         {generationId: 1, genotypeName: 'testGenotype1'});
-      await pj.Environment.add({environmentName: 'Greenhouse #1'});
-      await pj.Medium.add({mediumName: 'Medium #1', environmentId: 1});
+      //await pj.Environment.add({environmentName: 'Greenhouse #1'});
+      //await pj.Medium.add({mediumName: 'Medium #1', environmentId: 1});
     });
 
     afterEach(async () => {

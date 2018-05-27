@@ -6,6 +6,8 @@ const newLogger = require('./logger');
 const Family = require('./models/family/family');
 const Generation = require('./models/generation/generation');
 const Genotype = require('./models/genotype/genotype');
+const Plant = require('./models/plant/plant');
+const Environment = require('./models/environment/environment');
 
 /**
  * The main plantJournal class.
@@ -53,9 +55,12 @@ class plantJournal {
     // ToDo: Maybe this is obsolet and JSON is always enabled?!
     await this.sqlite3TestForJSONSupport();
 
+		this.Environment= new Environment(this);
+
     this.Family = new Family(this);
     this.Generation = new Generation(this);
     this.Genotype = new Genotype(this);
+		this.Plant = new Plant(this);
   }
 
   /**

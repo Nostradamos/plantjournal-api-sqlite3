@@ -1,15 +1,10 @@
 'use strict';
 
 const _ = require('lodash');
-const sqlite = require('sqlite');
 
+const AbstractModelAdd = require('../abstract/abstract-model-add');
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
-
-const GenericAdd = require('../generic/generic-add');
-const GenotypeAdd = require('../genotype/genotype-add');
-const MediumAdd =require('../medium/medium-add');
-
 
 /**
  * PlantAdd Class which creates a new Plant.
@@ -21,66 +16,14 @@ const MediumAdd =require('../medium/medium-add');
  * @private
  * @extends GenericAdd
  */
-class PlantAdd extends GenericAdd {
-  /**
-   * We need to resolve selfs/classStack for Genotype and it's parents and
-   * also for Medium and it's parents. Therefore we now also return a
-   * classStackAndSelfs object with two selfs and two classStack properties.
-   * @param  {Object}  context
-   *         Context object for this insert/create request.
-   * @return {{selfs: Object[], classStack: Object[],
-   *           selfs2: Object[], classStack2: Object[]}} classStackAndSelfs
-   *         Returns an object with four properties:
-   *         selfs property is the selfs object of PlantAdd, GenotypeAdd
-   *         and it's parents.
-   *         classStack property is the classStack for PlantAdd,
-   *         GenotypeAdd and it's parents.
-   *         selfs2 property is the selfs object of MediumAdd and it's
-   *         parents (EnvironmentAdd).
-   *         classStack2 property is the classStack array of MediumAdd and
-   *         it's parents (EnvironmentAdd).
-   */
-  static resolveClassStackAndBuildSelfs(context) {
-    let [selfs, classStack] = Utils.getSelfsAndClassStack(this);
-    let [selfs2, classStack2] = Utils.getSelfsAndClassStack(this.PARENT2);
+class PlantAdd extends AbstractModelAdd {
 
-    return {selfs, classStack, selfs2, classStack2};
-  }
-
-  /**
-   * This method calls the validate methods for classStack and classStack2 and
-   *  merges them again into one selfs/classStack object and returns them.
-   * @param {{selfs: Object[], classStack: Object[],
-   *         selfs2: Object[], classStack2: Object[]}} classStackAndSelfs
-   *         The classStackAndSelfs object returned from
-   *         PlantAdd.resolveClassStackAndBuildSelfs()
-   * @param  {Object}  context
-   *         Context object for this insert/create request.
-   * @return {classStackAndSelfs}
-   *         classStackAndSelfs object
-   */
-  static async callClassStackValidationMethods(classStackAndSelfs, context) {
-    let [selfs2, classStack2] = [
-      classStackAndSelfs.selfs2,
-      classStackAndSelfs.classStack2
-    ];
-    let classStackAndSelfs2 = {selfs: selfs2, classStack: classStack2};
-    classStackAndSelfs2 = await this.PARENT2.callClassStackValidationMethods(
-      classStackAndSelfs2, context);
-
-    classStackAndSelfs = await super.callClassStackValidationMethods(
-      classStackAndSelfs, context);
-
-    return {
-      selfs: [
-        ...classStackAndSelfs2.selfs,
-        ...classStackAndSelfs.selfs
-      ],
-      classStack: [
-        ...classStackAndSelfs2.classStack,
-        ...classStackAndSelfs.classStack
-      ]
-    };
+  _resolveParentClasses() {
+    this.RELATED_INSTANCES = [
+			this,
+			 ...this._resolveParentClassesFor(this.constructor.PARENT)];
+    
+		this.logger.debug(`${this.constructor.name} RELATED_INSTANCES: ${this.RELATED_INSTANCES.map((instance) => instance.constructor.name)}`);
   }
 
   /**
@@ -94,7 +37,7 @@ class PlantAdd extends GenericAdd {
    *         all classes in classStack.
    * @throws {Error}
    */
-  static validate(self, context) {
+  validate(self) {
     let options = context.options;
 
     Utils.hasToBeSet(options, 'plantName');
@@ -155,9 +98,9 @@ class PlantAdd extends GenericAdd {
   }
 }
 
-PlantAdd.PARENT = GenotypeAdd;
+PlantAdd.PARENT = 'Genotype';
 
-PlantAdd.PARENT2 = MediumAdd;
+PlantAdd.PARENT2 = 'Medium';
 
 PlantAdd.TABLE = CONSTANTS.TABLE_PLANT;
 

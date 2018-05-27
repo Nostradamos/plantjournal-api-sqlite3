@@ -1,4 +1,3 @@
-
 'use strict';
 
 const AbstractModel = require('../abstract/abstract-model');

@@ -1,11 +1,9 @@
 /* eslint-env node, mocha */
 'use strict';
 
-
 require('should');
-const sqlite = require('sqlite');
 
-const plantJournal = require('../../../../src/pj');
+const plantJournal = require('../../../../src/plant-journal');
 
 describe(`Environment()`, () => {
   describe(`#create()`, () => {
@@ -30,7 +28,7 @@ describe(`Environment()`, () => {
         .should.be.rejectedWith('options.environmentName has to be a string');
     });
 
-    it(`should only create a new plant entry if options.genotypeId is set and return plant object with plant attributes + genotypeId`, async () => {
+    it(`should create a new environement record and return the environment object`, async () => {
       let environment = await pj.Environment.add(
         {
           environmentName: 'Greenhouse #1',
@@ -56,7 +54,7 @@ describe(`Environment()`, () => {
         }
       });
 
-      let rowsEnvironments = await sqlite.all(
+      let rowsEnvironments = await pj.knex.raw(
         `SELECT * FROM environments`
       );
 
