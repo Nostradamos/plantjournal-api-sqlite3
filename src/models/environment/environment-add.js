@@ -36,12 +36,12 @@ class EnvironmentAdd extends AbstractModelAdd {
     // Some additional validations if we got called from a child class
     if(isOrigin === false) {
       if(_.has(options, CONSTANTS.ATTR_ID_ENVIRONMENT)) {
-        if(options[CONSTANTS.ATTR_ID_ENVIRONMENT] === null) return true;
+        if(options[CONSTANTS.ATTR_ID_ENVIRONMENT] === null) return false;
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_ENVIRONMENT);
-        return true;
+        return false;
       }
 
-      if(!_.has(options, CONSTANTS.ATTR_NAME_ENVIRONMENT)) return true;
+      if(!_.has(options, CONSTANTS.ATTR_NAME_ENVIRONMENT)) return false;
     }
 
     Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_ENVIRONMENT);

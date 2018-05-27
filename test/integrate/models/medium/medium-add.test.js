@@ -2,9 +2,8 @@
 'use strict';
 
 require('should');
-const sqlite = require('sqlite');
 
-const plantJournal = require('../../../../src/pj');
+const plantJournal = require('../../../../src/plant-journal');
 const CONSTANTS = require('../../../../src/constants');
 
 describe(`Medium()`, () => {
@@ -79,7 +78,7 @@ describe(`Medium()`, () => {
         }
       });
 
-      let rows = await sqlite.all(`SELECT * FROM mediums`);
+      let rows = await pj.knex.raw(`SELECT * FROM mediums`);
       medium.mediums[1].should.containDeep(rows[0]);
     });
 
@@ -100,9 +99,9 @@ describe(`Medium()`, () => {
         }
       });
 
-      let result = await sqlite.get(
+      let result = await pj.knex.raw(
         `SELECT count(*) FROM ${CONSTANTS.TABLE_ENVIRONMENT}`);
-      result['count(*)'].should.eql(1);
+      result[0]['count(*)'].should.eql(1);
     });
 
     it(`should be possible to create a new medium without an environment if environmentId is set to null`, async () => {
@@ -123,9 +122,9 @@ describe(`Medium()`, () => {
         }
       });
 
-      let result = await sqlite.get(
+      let result = await pj.knex.raw(
         `SELECT count(*) FROM ${CONSTANTS.TABLE_ENVIRONMENT}`);
-      result['count(*)'].should.eql(1);
+      result[0]['count(*)'].should.eql(1);
     });
 
 

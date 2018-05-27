@@ -3,11 +3,12 @@
 const Knex = require('knex');
 const newLogger = require('./logger');
 
+const Environment = require('./models/environment/environment');
+const Medium = require('./models/medium/medium');
 const Family = require('./models/family/family');
 const Generation = require('./models/generation/generation');
 const Genotype = require('./models/genotype/genotype');
 const Plant = require('./models/plant/plant');
-const Environment = require('./models/environment/environment');
 
 /**
  * The main plantJournal class.
@@ -56,6 +57,7 @@ class plantJournal {
     await this.sqlite3TestForJSONSupport();
 
 		this.Environment= new Environment(this);
+		this.Medium = new Medium(this);
 
     this.Family = new Family(this);
     this.Generation = new Generation(this);
