@@ -3,9 +3,6 @@
 
 const AbstractModel = require('../abstract/abstract-model');
 
-class Generation extends AbstractModel {
-}
-
-Generation.CLASS_ADD = require('./generation-add');
+class Generation extends AbstractModel {}
 
 module.exports = Generation;

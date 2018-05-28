@@ -3,11 +3,11 @@
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 
-const GenericAdd = require('../generic/generic-add');
+const AbstractModelAdd = require('../abstract/abstract-model-add');
 
-class AttachmentAdd extends GenericAdd {
+class AttachmentAdd extends AbstractModelAdd {
 
-  static validate(self, context) {
+  validate(context) {
     let options = context.options;
 
     Utils.hasToBeSet(options, CONSTANTS.ATTR_FILENAME_ATTACHMENT);

@@ -1,13 +1,14 @@
 'use strict';
 
 const _ = require('lodash');
+const squel = require('squel');
 
 const CONSTANTS = require('../../constants');
 const Utils = require('../../utils/utils');
 const UtilsJSON = require('../../utils/utils-json');
 const logger = require('../../logger');
 
-const AbstractModelAdd = require('../abstract/abstract-model-add');
+const GenericAdd = require('../generic/generic-add');
 
 /**
  * This class creates a new Journal and gets internally called from
@@ -15,9 +16,9 @@ const AbstractModelAdd = require('../abstract/abstract-model-add');
  * src/controller/generic-add. If you want to know how to use the
  * Journal.add() API from outside, see src/models/Journal #create().
  * @private
- * @extends AbstractModelAdd
+ * @extends GenericAdd
  */
-class JournalAdd extends AbstractModelAdd {
+class JournalAdd extends GenericAdd {
   /**
    * We need to validate the properties for new journal.
    * @param  {object} self
@@ -29,7 +30,7 @@ class JournalAdd extends AbstractModelAdd {
    *         all classes in callStack.
    * @throws {Error}
    */
-  validate(context) {
+  static validate(self, context) {
     // Figure out for which model this journal is for
     let options = context.options;
     self.journalFor = null;

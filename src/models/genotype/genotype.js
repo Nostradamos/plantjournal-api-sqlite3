@@ -2,9 +2,6 @@
 
 const AbstractModel = require('../abstract/abstract-model');
 
-class Genotype extends AbstractModel {
-}
-
-Genotype.CLASS_ADD = require('./genotype-add');
+class Genotype extends AbstractModel {}
 
 module.exports = Genotype;

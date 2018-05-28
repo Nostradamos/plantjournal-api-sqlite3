@@ -2,9 +2,6 @@
 
 const AbstractModel = require('../abstract/abstract-model');
 
-class Family extends AbstractModel {
-}
-
-Family.CLASS_ADD = require('./family-add');
+class Family extends AbstractModel {}
 
 module.exports = Family;

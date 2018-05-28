@@ -3,10 +3,7 @@
 
 const AbstractModel = require('../abstract/abstract-model');
 
-class Environment extends AbstractModel {
-}
-
-Environment.CLASS_ADD = require('./environment-add');
+class Environment extends AbstractModel {}
 
 module.exports = Environment;
 

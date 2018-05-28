@@ -9,6 +9,8 @@ const Family = require('./models/family/family');
 const Generation = require('./models/generation/generation');
 const Genotype = require('./models/genotype/genotype');
 const Plant = require('./models/plant/plant');
+const Attachment = require('./models/attachment/attachment.js');
+const Journal = require('./models/journal/journal.js');
 
 /**
  * The main plantJournal class.
@@ -27,7 +29,6 @@ class plantJournal {
     this.options = options;
     this.knex = null;
     this.logger = newLogger();
-
   }
 
   /**
@@ -63,6 +64,9 @@ class plantJournal {
     this.Generation = new Generation(this);
     this.Genotype = new Genotype(this);
 		this.Plant = new Plant(this);
+
+    this.Journal = new Journal(this);
+    this.Attachment = new Attachment(this);
   }
 
   /**

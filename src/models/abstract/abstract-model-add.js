@@ -57,25 +57,37 @@ class AbstractModelAdd {
     this.knex = this.model.plantJournal.knex;
     this.plantJournal = this.model.plantJournal;
     this.logger = this.model.plantJournal.logger;
-    this._resolveParentClasses();
-  }
-
-  _resolveParentClasses() {
-    this.RELATED_INSTANCES = [
-			this,
-			 ...this._resolveParentClassesFor(this.constructor.PARENT)];
-    
+    this.NEEDED_ADD_INSTANCES = this.getNeededAddInstances();
 		this.logger.debug(`${this.constructor.name} RELATED_INSTANCES: ${this.RELATED_INSTANCES.map((instance) => instance.constructor.name)}`);
   }
 
-	_resolveParentClassesFor(modelName) {
-		if(this.model.plantJournal[modelName] === undefined) return []
-		return this.model.plantJournal[modelName].INSTANCE_ADD.RELATED_INSTANCES;
+  
+  /**
+   * Returns an Array of AbstractModelAdd instances which have a relation to
+   * this class in terms that we maybe need to call functions from them.
+   * @returns {AbstractModelAdd[]} 
+   */
+  getNeededAddInstances() {
+    return this.constructor.PARENT !== undefined ?
+      this.getNeededAddInstancesFor(this.constructor.PARENT) : [];
+  }
+
+  /**
+   * Get needed add instances for a specific model.
+   * @returns {AbstractModelAdd[]}
+   */
+	getNeededAddInstancesFor(modelName) {
+    let modelInstanceAdd = this.plantJournal[modelName].INSTANCE_ADD;
+		return [modelInstanceAdd, ...modelInstanceAdd.RELATED_INSTANCES];
 	}
 
   async add(options) {
     this.logger.debug(`${this.constructor.name} #create() options:`, JSON.stringify(options));
     Utils.hasToBeAssocArray(options);
+    
+    let instancesToCall = this.callAllValidateMethods(options);
+
+    this.logger.debug(`${this.constructor.name} instancesToCall: ${instancesToCall.map((ins => ins.constructor.name))}`);
     
     let context = {
       options,
@@ -83,19 +95,10 @@ class AbstractModelAdd {
       addedAt: Utils.getDatetimeUTC(),
       insertIds: {}
     };
-
-    let instancesToCall = [];
-    for(let instance of this.RELATED_INSTANCES) {
-      this.logger.debug(`${this.constructor.name} Calling ${instance.constructor.name}.validate(...)`);
-      if(instance.validate(context, instance === this) === false) {
-        this.logger.debug(`${this.constructor.name} skipping ${instance.constructor.name} and parents`);
-        break;
-      }
-      instancesToCall.push(instance);
-    }
-
-    this.logger.debug(`${this.constructor.name} instancesToCall: ${instancesToCall.map((ins => ins.constructor.name))}`);
-    let inSeriesCaller = new InSeriesCaller(instancesToCall, context, () => {return {insertRow: {}}}, this.logger); 
+    
+    let inSeriesCaller = new InSeriesCaller(
+      instancesToCall,
+      context, () => {return {insertRow: {}}}, this.logger); 
 
     await inSeriesCaller.call('setFields');
     await inSeriesCaller.call('setAddedAtAndModifiedAtFields');
@@ -117,22 +120,38 @@ class AbstractModelAdd {
     return returnObject;
   }
 
+  callAllValidateMethods(options) {
+    return this._callAllValidateMethods(options, [this, ...this.RELATED_INSTANCES]);
+  }
+
+  _callAllValidateMethods(options, relatedInstances) {
+    let instancesToCall = [];
+    for(let instance of relatedInstances) {
+      this.logger.debug(`${this.constructor.name} Calling ${instance.constructor.name}.validate(...)`);
+      let isOrigin = instance === this;
+      let canSkip = instance.validate(options, isOrigin);
+      if(canSkip === true) {
+        this.logger.debug(`${this.constructor.name} skipping ${instance.constructor.name} and parents`);
+        break;
+      }
+      instancesToCall.push(instance);
+    }
+    return instancesToCall;
+  }
   /**
    * We need to validate the options.familyName property and throw
    * Error if we don't accept the input.
-   * @param  {object} self
-   *         Namespace/object only for the context of this class and this
-   *         creation process. Not shared across differenct classes in
-   *         callStack.
-   * @param  {object} context
+   * @param  {object} options
+   *         Unaltered options object passed to #add() method.
+   * @param  {boolean} isOrigin
    *         Namespace/object of this creation process. It's shared across
    *         all classes in callStack.
    * @throws {Error}
-   * @return {Boolean}
+   * @return {Boolean|undefined}
    *         Return true if we don't need to insert this record and this class
    *         reference and it's parents should get deleted from the callStack.
    */
-  validate(context) {
+  validate(options, isOrigin) {
     return false;
   }
 
@@ -161,6 +180,13 @@ class AbstractModelAdd {
   }
 
   async insert(self, context, transaction) {
+    this.insertSetPreviouslyCreatedIds(self, context);
+    this.logger.debug(`${this.constructor.name} insertRow:`, self.insertRow);
+    let rows = await transaction.insert(self.insertRow).into(this.constructor.TABLE);
+    context.insertIds[this.constructor.ATTR_ID] = rows[0];
+  }
+
+  insertSetPreviouslyCreatedIds(self, context) {
     if(this.constructor.PARENT) {
       let parentAttrId = this.plantJournal[this.constructor.PARENT].INSTANCE_ADD.constructor.ATTR_ID;
       let parentId = null;
@@ -171,9 +197,6 @@ class AbstractModelAdd {
       }
       self.insertRow[parentAttrId] = parentId;
     }
-    this.logger.debug(`${this.constructor.name} insertRow:`, self.insertRow);
-    let rows = await transaction.insert(self.insertRow).into(this.constructor.TABLE);
-    context.insertIds[this.constructor.ATTR_ID] = rows[0];
   }
 
   buildReturnObject(self, context, returnObject) {

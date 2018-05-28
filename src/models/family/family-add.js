@@ -25,8 +25,7 @@ class FamilyAdd extends AbstractModelAdd {
    *         Return false if we don't need to insert this record and this class
    *         reference and it's parents should get deleted from the callStack.
    */
-  validate(context, isOrigin) {
-    let options = context.options;
+  validate(options, isOrigin) {
 
     // Some additional validations if we got called from a child class
     if(!isOrigin) {
@@ -40,6 +39,7 @@ class FamilyAdd extends AbstractModelAdd {
       }
     }
 
+    console.log(options);
     Utils.hasToBeSet(options, CONSTANTS.ATTR_NAME_FAMILY);
     Utils.hasToBeString(options, CONSTANTS.ATTR_NAME_FAMILY);
     Utils.hasToBeString(options, CONSTANTS.ATTR_DESCRIPTION_FAMILY);

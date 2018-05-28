@@ -22,8 +22,9 @@ describe(`Plant()`, () => {
       await pj.Generation.add({familyId: 1, generationName: 'F1'});
       await pj.Genotype.add(
         {generationId: 1, genotypeName: 'testGenotype1'});
-      //await pj.Environment.add({environmentName: 'Greenhouse #1'});
-      //await pj.Medium.add({mediumName: 'Medium #1', environmentId: 1});
+      console.log(await pj.knex.raw(`SELECT * FROM mediums`));
+      await pj.Environment.add({environmentName: 'Greenhouse #1'});
+      await pj.Medium.add({mediumName: 'Medium #1', environmentId: 1});
     });
 
     afterEach(async () => {
@@ -134,10 +135,10 @@ describe(`Plant()`, () => {
         }
       });
 
-      let rowsPlants = await sqlite.all(`SELECT * FROM plants`);
+      let rowsPlants = await pj.knex.raw(`SELECT * FROM plants`);
       plant.plants[1].should.containDeep(rowsPlants[0]);
 
-      let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
+      let rowsGenotypes = await pj.knex.raw(`SELECT * FROM genotypes`);
       rowsGenotypes[0].should.containDeep(
         {
           genotypeId: 1,
@@ -220,10 +221,10 @@ describe(`Plant()`, () => {
           }
         }
       });
-      let rowsPlants = await sqlite.all(`SELECT * FROM plants`);
+      let rowsPlants = await pj.knex.raw(`SELECT * FROM plants`);
       plantClone.plants[2].should.containDeep(rowsPlants[1]);
 
-      let rowsGenotypes = await sqlite.all(`SELECT * FROM genotypes`);
+      let rowsGenotypes = await pj.knex.raw(`SELECT * FROM genotypes`);
       rowsGenotypes.should.containDeep(
         [{genotypeId: 1, genotypeName: 'testGenotype1', generationId: 1}]);
     });
@@ -259,7 +260,6 @@ describe(`Plant()`, () => {
     it(`should be possible to create a plant and a medium at once`, async () => {
       let plant = await pj.Plant.add(
         {plantName: 'motherPlant1', mediumName: 'testMedium'});
-
       plant.should.containDeep({
         plants: {
           1: {

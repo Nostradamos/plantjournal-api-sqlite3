@@ -39,6 +39,7 @@ class GenotypeAdd extends AbstractModelAdd {
     // Some additional validations if we got called from a child class
     if(!isOrigin) {
       if(_.has(options, CONSTANTS.ATTR_ID_GENOTYPE)) {
+				console.log('xxxxxthis', options);
         Utils.hasToBeInt(options, CONSTANTS.ATTR_ID_GENOTYPE);
         return false;
       }

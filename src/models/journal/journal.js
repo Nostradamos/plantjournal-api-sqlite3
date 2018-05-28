@@ -2,8 +2,7 @@
 
 const AbstractModel = require('../abstract/abstract-model');
 
-class Plant extends AbstractModel {}
+class Journal extends AbstractModel {}
 
-module.exports = Plant;
-
+module.exports = Journal;
 

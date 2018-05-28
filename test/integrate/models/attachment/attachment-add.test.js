@@ -2,9 +2,8 @@
 'use strict';
 
 require('should');
-const sqlite = require('sqlite');
 
-const plantJournal = require('../../../../src/pj');
+const plantJournal = require('../../../../src/plant-journal');
 
 describe(`Attachment()`, () => {
 
@@ -72,7 +71,7 @@ describe(`Attachment()`, () => {
         }
       );
 
-      let rows = await sqlite.all('SELECT * FROM attachments');
+      let rows = await pj.knex.raw('SELECT * FROM attachments');
       attachment.attachments[1].should.containDeep(rows[0]);
     });
   });

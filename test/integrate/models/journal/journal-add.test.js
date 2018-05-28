@@ -3,9 +3,8 @@
 
 const should = require('should');
 const _ = require('lodash');
-const sqlite = require('sqlite');
 
-const plantJournal = require('../../../../src/pj');
+const plantJournal = require('../../../../src/plant-journal');
 
 describe(`Journal()`, () => {
   describe(`#create()`, () => {

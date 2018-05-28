@@ -3,7 +3,11 @@
 class AbstractModel {
   constructor(plantJournal) {
     this.plantJournal = plantJournal;
-    this.INSTANCE_ADD = new this.constructor.CLASS_ADD(this);
+    
+    let classNameLower = this.constructor.name.toLowerCase();
+    let prefix = `../${classNameLower}/${classNameLower}-`;
+
+    this.INSTANCE_ADD = new (require(prefix + 'add'))(this);
     this.INSTANCE_DELETE = null;
     this.INSTANCE_UPDATE = null;
     this.INSTANCE_FIND = null;
@@ -13,10 +17,4 @@ class AbstractModel {
     return await this.INSTANCE_ADD.add(...args);
   }
 }
-
-AbstractModel.CLASS_ADD = require('./abstract-model-add');
-AbstractModel.CLASS_DELETE = null;
-AbstractModel.CLASS_UPDATE = null;
-AbstractModel.CLASS_FIND = null;
-
 module.exports = AbstractModel;
