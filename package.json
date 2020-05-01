@@ -20,7 +20,9 @@
     "lint": "eslint \"src/**/*\" \"test/**/*\"",
     "lint-fix": "eslint \"src/**/*\" \"test/**/*\" --fix",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "build": "npm run lint && npm run generate-docs && npm test"
+    "build": "npm run lint && npm run generate-docs && npm test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "devDependencies": {
     "coveralls": "^3.0.1",
@@ -35,6 +37,8 @@
     "lodash": "^4.17.10",
     "squel": "^5.12.1",
     "winston": "^2.4.2",
-    "zealit": "^2.4.1"
-  }
+    "zealit": "^2.4.1",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
